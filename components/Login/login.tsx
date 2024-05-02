@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react'
+import Link from 'next/link';
 
 export default function Login() {
     const [pharmacyId, setPharmacyId] = useState("");
@@ -40,7 +41,7 @@ export default function Login() {
                 id="pharmacyId"
                 type="text"
                 placeholder="Enter Pharmacy ID"
-                className="appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-300"
+                className="appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB]"
                 autoComplete="off"
                 value={pharmacyId}
                 onChange={(e) => setPharmacyId(e.target.value)}
@@ -57,7 +58,7 @@ export default function Login() {
                 id="password"
                 type="password"
                 placeholder="Enter Password"
-                className="appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-300"
+                className="appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB]"
                 autoComplete="off"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -68,9 +69,9 @@ export default function Login() {
                 <input type="checkbox" className="mr-2" />
                 <span className="text-sm text-gray-600">Remember me</span>
               </div>
-              <a href="#" className="text-sm text-blue-500">
+              <Link href="/forgot-password" className="text-sm text-blue-500">
                 Forgot Password
-              </a>
+              </Link>
             </div>
             <button
               type="submit"
