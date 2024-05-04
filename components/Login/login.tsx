@@ -15,11 +15,6 @@ export default function Login() {
       setPassword("");
     };
   
-    useEffect(() => {
-      // Clear input fields on component mount to prevent autofill
-      setPharmacyId("");
-      setPassword("");
-    }, []);
   
   return (
     <div className="bg-[#F9F9F9] flex justify-center items-center w-1/2 h-screen">
@@ -31,34 +26,33 @@ export default function Login() {
             </p>
             <div className="mb-4">
               <label
-                htmlFor="pharmacyId"
+                htmlFor="pharmacy_Id"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 Pharmacy ID
               </label>
               <input
-                id="pharmacyId"
+                id="pharmacy_Id"
+                name='pharmacy_id_input'
                 type="text"
                 placeholder="Enter Pharmacy ID"
                 className="appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB]"
-                autoComplete="off"
                 value={pharmacyId}
                 onChange={(e) => setPharmacyId(e.target.value)}
               />
             </div>
             <div className="mb-4">
               <label
-                htmlFor="password"
+                htmlFor="data_psInput"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 Password
               </label>
               <input
-                id="password"
+                id="data_psInput"
                 type="password"
                 placeholder="Enter Password"
                 className="appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB]"
-                autoComplete="off"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />

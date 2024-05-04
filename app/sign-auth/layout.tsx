@@ -22,7 +22,7 @@ export default function SignAuthLayout({
             <p className="my-4">Streamline your pharmacy with Procare - All-in-one system for sales, inventory, analysis & more!</p>
             </div>
             
-            <div className="w-full h-2/5">
+            <div className="w-full h-1/2">
               <Image className="w-full h-full" src="/assets/images/rafiki.jpg" width={50}  height={50} alt="rafiki" priority quality={100}/>
             </div>
             <div className="w-3/4 flex justify-around items-center text-[#323539]">
