@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link';
-
 export default function Login() {
     const [pharmacyId, setPharmacyId] = useState("");
     const [password, setPassword] = useState("");
@@ -23,10 +22,10 @@ export default function Login() {
     }, []);
   
   return (
-    <div className="bg-[#F9F9F9] flex justify-center items-center w-1/2">
-        <div className="bg-[#FFFFFF] w-[524px] h-[627px] p-8 rounded-lg shadow">
-          <form className="m-auto p-2 flex flex-col justify-center gap-3" onSubmit={handleSubmit}>
-            <h2 className="font-inter text-5xl font-bold leading-14 text-left mb-4">Login</h2>
+    <div className="bg-[#F9F9F9] flex justify-center items-center w-1/2 h-screen">
+        <div className="bg-[#FFFFFF] w-[524px] h-[560px] p-8 rounded-lg shadow">
+          <form className="m-auto flex flex-col justify-center gap-2" onSubmit={handleSubmit}>
+            <h2 className="font-inter text-4xl font-bold leading-14 text-left mb-4">Login</h2>
             <p className="text-gray-600 mb-4">
               Log in to access your account securely
             </p>
@@ -79,13 +78,14 @@ export default function Login() {
             >
               Submit
             </button>
-          </form>
-          <p className="mt-4 text-gray-600">
+            <p className="mt-4 text-gray-600">
             Not a registered member yet?{" "}
             <a href="#" className="text-blue-500">
               Register here
             </a>
           </p>
+          </form>
+         
         </div>
       </div>
   )

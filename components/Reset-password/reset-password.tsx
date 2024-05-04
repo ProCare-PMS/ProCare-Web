@@ -20,8 +20,8 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="bg-[#F9F9F9] flex justify-center items-center w-1/2">
-      <div className="bg-[#FFFFFF] w-[524px] h-[627px] p-8 rounded-lg shadow">
+    <div className="bg-[#F9F9F9] flex justify-center items-center w-1/2 h-screen">
+      <div className="bg-[#FFFFFF] w-[524px] h-[527px] p-8 rounded-lg shadow">
         <form
           className="m-auto p-2 flex flex-col justify-center gap-3"
           onSubmit={handleSubmit}
