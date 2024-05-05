@@ -23,7 +23,7 @@ export default function SignAuthLayout({
             </div>
             
             <div className="w-full h-1/2">
-              <Image className="w-full h-full" src="/assets/images/rafiki.jpg" width={50}  height={50} alt="rafiki" priority quality={100}/>
+              <Image className="w-full h-full" src="/assets/images/rafikisvg.svg" width={50}  height={50} alt="rafiki" priority quality={100}/>
             </div>
             <div className="w-3/4 flex justify-around items-center text-[#323539]">
               <span><a href="#">Privacy & Terms</a></span>
