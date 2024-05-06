@@ -1,9 +1,11 @@
 "use client";
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link';
 export default function Login() {
     const [pharmacyId, setPharmacyId] = useState("");
     const [password, setPassword] = useState("");
+    const router = useRouter()
   
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -13,6 +15,7 @@ export default function Login() {
       // Reset form fields after submission
       setPharmacyId("");
       setPassword("");
+      router.push('/profile')
     };
   
   
