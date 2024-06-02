@@ -1,6 +1,6 @@
 import React from 'react'
-import { ExpiryList } from './_components/ExpiryList'
-import { LowStock } from './_components/LowStockAlert'
+import { ExpiryList } from './ExpiryList'
+import { LowStock } from './LowStockAlert'
 
 const DashboardTables = () => {
     return (

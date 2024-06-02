@@ -2,7 +2,7 @@ import React from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import { ClipboardList, Settings, Workflow, LineChart, Store, GanttChart } from 'lucide-react';
-import DropDown from './_components/DropDown';
+import DropDown from './DropDown';
 
 const DashboardNav = () => {
     return (

@@ -9,7 +9,8 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import Link from "next/link"
-import PaginationTab from "./_components/PaginationTab"
+import PaginationTab from "./PaginationTab"
+import { ExternalLink } from 'lucide-react';
 
 const invoices = [
     {
@@ -68,7 +69,10 @@ export function DashboardMainTable() {
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-[#202224]">Recent Transactions</h2>
 
-                <Link href="/" className="text-[#2648EA] font-semibold text-sm">Open</Link>
+                <Link href="/" className="text-[#2648EA] flex items-center gap-1 font-semibold text-sm">
+                    Open
+                    <ExternalLink className="text-[#2648EA]" />
+                </Link>
             </div>
             <Table>
                 <TableHeader>
