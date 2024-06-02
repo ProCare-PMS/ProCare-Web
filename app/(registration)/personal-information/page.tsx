@@ -46,22 +46,23 @@ const RegistrationPage = () => {
 
 
     return (
-        <div className="max-w-[120rem] min-h-screen py-8 mx-auto px-8 bg-home">
-            <div className='flex gap-4 items-center ml-6'>
+        <div className="max-w-[120rem] min-h-screen mx-auto py-8 px-8 bg-home">
+            <div className='flex gap-4 items-center  md:ml-[2.25rem]'>
                 <Image
                     src="/Procare-Logo.png"
-                    width={100}
+                    width={155}
                     height={70}
+                    className="mt-[-0.8rem]"
                     alt="Procare Logo"
                 />
                 <span className="font-bold text-3xl">Registration</span>
             </div>
 
 
-            <div className='flex flex-col items-center mt-8 w justify-center'>
-                <h1 className="text-2xl md:text-5xl text-center font-bold mb-4">Personal Information</h1>
+            <div className='flex flex-col items-center mt-[6.12rem] justify-center'>
+                <h1 className="text-2xl md:text-5xl text-center font-bold mb-2">Personal Information</h1>
                 <p className='mb-8'>Admin Details</p>
-                <div className='flex items-center gap-2'>
+                <div className='flex items-center gap-2 px-4'>
                     <span className='text-main text-sm flex gap-2 items-center font-semibold'>
                         <IoIosCheckmarkCircle className="text-main text-4xl" />
                         Pharmacy Details
@@ -79,14 +80,13 @@ const RegistrationPage = () => {
                 </div>
 
                 <Form {...form}>
-                    <form action="" className="mt-8">
-                        <div className="flex flex-col md:gap-4 md:flex-row bg-white p-8 rounded-xl">
+                    <form action="" className="mt-8 mb-[5rem]">
+                        <div className="flex flex-col md:w-[55.5rem] md:h-[27rem] md:gap-4 md:flex-row bg-white px-[4.62rem] py-[2.12rem] rounded-2xl">
                             <PersonalNameForm />
                             <PersonalContactForm />
                         </div>
 
-                        <div className="flex flex-col md:flex-row items-center justify-between mt-4">
-
+                        <div className="flex flex-col md:flex-row gap-4 items-center justify-between mt-[2.81rem]">
                             <Link href="/" className="text-main border-main text-center w-[140px] border-2 rounded-[1px] px-5 py-2 font-semibold text-sm">
                                 Previous
                             </Link>

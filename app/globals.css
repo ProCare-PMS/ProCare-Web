@@ -80,3 +80,11 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+.nunito_sans {
+  font-family: var(--font-nunito-sans)
+}
+
+.sev {
+  font-family: var(--font-sevi);
+}

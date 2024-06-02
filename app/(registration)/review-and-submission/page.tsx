@@ -11,21 +11,21 @@ import { PiNumberCircleThree, PiNumberCircleTwo } from "react-icons/pi";
 const ReviewAndSubmission = () => {
 
 
-
     return (
         <div className="max-w-[120rem] min-h-screen py-8 mx-auto px-8 bg-home">
             <div className='flex gap-4 items-center ml-6'>
                 <Image
                     src="/Procare-Logo.png"
-                    width={165}
+                    width={155}
                     height={66}
+                    className="mt-[-0.8rem]"
                     alt="Procare Logo"
                 />
                 <span className="font-bold text-3xl">Registration</span>
             </div>
 
 
-            <div className='flex flex-col items-center mt-8 w justify-center'>
+            <div className='flex flex-col items-center mt-8 justify-center'>
                 <h1 className="text-2xl md:text-5xl text-center font-bold mb-4">Review And Submission</h1>
                 <p className='mb-8'>Review overall details</p>
                 <div className='flex items-center gap-2'>
@@ -46,7 +46,7 @@ const ReviewAndSubmission = () => {
                 </div>
 
                 <div className="mt-8">
-                    <div className="flex flex-col md:flex-row md:items-center h-[500px] md:h-[433px] bg-white p-8 text-left gap-8">
+                    <div className="flex flex-col md:flex-row md:items-center md:w-[55.5rem] h-[31rem] md:h-[27rem] bg-white p-8 text-left gap-8">
                         <div>
                             <h2 className='text-2xl mb-8'>Summary of Account Information:</h2>
                             <p>Facility Name: <span className="text-[#686868] font-normal"> Procare Pharma </span> </p>
