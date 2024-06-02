@@ -8,10 +8,10 @@ const FacilityNameForm = () => {
 
 
     return (
-        <div className='space-y-2'>
+        <div className='space-y-2 w-full'>
             <FormField control={control} name="facilityName" render={({ field }) => (
                 <FormItem>
-                    <FormLabel className="font-medium text-sm">Facility Name</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Facility Name</FormLabel>
                     <FormControl>
                         <Input {...field} className="bg-home" />
                     </FormControl>
@@ -21,7 +21,7 @@ const FacilityNameForm = () => {
             />
             <FormField control={control} name="facilityEmailAddress" render={({ field }) => (
                 <FormItem>
-                    <FormLabel className="font-medium text-sm">Facility Email Address</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Facility Email Address</FormLabel>
                     <FormControl>
                         <Input {...field} className="bg-home" />
                     </FormControl>
@@ -31,7 +31,7 @@ const FacilityNameForm = () => {
             />
              <FormField control={control} name="facilityCity" render={({ field }) => (
                 <FormItem>
-                    <FormLabel className="font-medium text-sm">City</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">City</FormLabel>
                     <FormControl>
                         <Input {...field} className="bg-home" />
                     </FormControl>
@@ -41,7 +41,7 @@ const FacilityNameForm = () => {
             />
              <FormField control={control} name="facilityLicenseNumber" render={({ field }) => (
                 <FormItem>
-                    <FormLabel className="font-medium text-sm">Facility License Number</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Facility License Number</FormLabel>
                     <FormControl>
                         <Input {...field} className="bg-home" />
                     </FormControl>

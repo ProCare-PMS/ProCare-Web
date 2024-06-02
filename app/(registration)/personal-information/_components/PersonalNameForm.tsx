@@ -8,12 +8,12 @@ const PersonalNameForm = () => {
 
 
     return (
-        <div className='space-y-2'>
+        <div className='space-y-2 w-full'>
             <FormField control={control} name="firstName" render={({ field }) => (
                 <FormItem>
-                    <FormLabel>First Name</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">First Name</FormLabel>
                     <FormControl>
-                        <Input {...field} className="bg-home" />
+                        <Input {...field} className="bg-home border border-[#E5E5E7]" />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
@@ -21,7 +21,7 @@ const PersonalNameForm = () => {
             />
             <FormField control={control} name="emailAddress" render={({ field }) => (
                 <FormItem>
-                    <FormLabel>Email Address</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Email Address</FormLabel>
                     <FormControl>
                         <Input {...field} className="bg-home" />
                     </FormControl>
@@ -31,9 +31,9 @@ const PersonalNameForm = () => {
             />
              <FormField control={control} name="password" render={({ field }) => (
                 <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Password</FormLabel>
                     <FormControl>
-                        <Input {...field} className="bg-home" />
+                        <Input {...field} className="bg-home w-full" />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
@@ -41,9 +41,9 @@ const PersonalNameForm = () => {
             />
              <FormField control={control} name="confirmPassword" render={({ field }) => (
                 <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Confirm Password</FormLabel>
                     <FormControl>
-                        <Input {...field} className="bg-home" />
+                        <Input {...field} className="bg-home w-full" />
                     </FormControl>
                     <FormMessage />
                 </FormItem>

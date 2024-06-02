@@ -7,12 +7,12 @@ const PersonalContactForm = () => {
     const { control } = useFormContext()
 
     return (
-        <div className='space-y-2'>
+        <div className='space-y-2 w-full'>
             <FormField control={control} name="lastName" render={({ field }) => (
                 <FormItem>
-                    <FormLabel>Last Name</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Last Name</FormLabel>
                     <FormControl>
-                        <Input {...field} className="bg-home" />
+                        <Input {...field} className="bg-home w-full" />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
@@ -20,9 +20,9 @@ const PersonalContactForm = () => {
             />
             <FormField control={control} name="facilityAddress" render={({ field }) => (
                 <FormItem>
-                    <FormLabel>Number</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Number</FormLabel>
                     <FormControl>
-                        <Input {...field} className="bg-home" />
+                        <Input {...field} className="bg-home w-full" />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
@@ -30,9 +30,9 @@ const PersonalContactForm = () => {
             />
             <FormField control={control} name="facilityRegion" render={({ field }) => (
                 <FormItem>
-                    <FormLabel>ID(Ghana Card Requirement)</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">ID(Ghana Card Requirement)</FormLabel>
                     <FormControl>
-                        <Input {...field} className="bg-home" />
+                        <Input {...field} className="bg-home w-full" />
                     </FormControl>
                     <FormMessage />
                 </FormItem>

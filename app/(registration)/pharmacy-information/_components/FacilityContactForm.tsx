@@ -8,10 +8,10 @@ const FacilityContactForm = () => {
 
 
     return (
-        <div className='space-y-2'>
+        <div className='space-y-2 w-full'>
             <FormField control={control} name="facilityContact" render={({ field }) => (
                 <FormItem>
-                    <FormLabel className="font-medium text-sm">Facility Contact</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Facility Contact</FormLabel>
                     <FormControl>
                         <Input {...field} className="bg-home" />
                     </FormControl>
@@ -21,7 +21,7 @@ const FacilityContactForm = () => {
             />
             <FormField control={control} name="facilityAddress" render={({ field }) => (
                 <FormItem>
-                    <FormLabel className="font-medium text-sm">Address</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Address</FormLabel>
                     <FormControl>
                         <Input {...field} className="bg-home" />
                     </FormControl>
@@ -31,7 +31,7 @@ const FacilityContactForm = () => {
             />
             <FormField control={control} name="facilityRegion" render={({ field }) => (
                 <FormItem>
-                    <FormLabel className="font-medium text-sm">Region</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Region</FormLabel>
                     <FormControl>
                         <Input {...field} className="bg-home" />
                     </FormControl>
@@ -41,7 +41,7 @@ const FacilityContactForm = () => {
             />
             <FormField control={control} name="facilityPostalAddress" render={({ field }) => (
                 <FormItem>
-                    <FormLabel className="font-medium text-sm">Postal Address</FormLabel>
+                    <FormLabel className="font-medium text-[0.87rem]">Postal Address</FormLabel>
                     <FormControl>
                         <Input {...field} className="bg-home" />
                     </FormControl>
