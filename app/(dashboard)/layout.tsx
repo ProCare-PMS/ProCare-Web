@@ -1,4 +1,4 @@
-import DashboardNav from "./DashboardNav"
+import DashboardNav from "./_components/DashboardNav"
 import { Inter, Nunito_Sans, Sevillana } from "next/font/google"
 
 const inter = Inter({ subsets: ["latin"] })
