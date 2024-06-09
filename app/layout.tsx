@@ -6,7 +6,7 @@ import Providers from "./Provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Procare Registration",
+  title: "Procare",
   description: "Pharmacy Information",
 };
 
