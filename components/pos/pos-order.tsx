@@ -22,7 +22,7 @@ const OrderList = () => {
   return (
     <div className='w-full h-full flex flex-col justify-between py-4'>
       <div className='my-6'>
-        <h1>Order List</h1>
+        <h1 className='font-medium'>Order List</h1>
       </div>
       <div className='h-[90%] overflow-y-auto'>
         <table className='w-full'>
@@ -59,10 +59,10 @@ const OrderList = () => {
       <div className='flex justify-between items-center mt-4'>
             <div className='text-[#202224] flex flex-col justify-between'>
               <div className=''>Total Price</div>
-              <div className=''>₵  -</div>
+              <div className='font-bold'>₵ 239,040.00</div>
             </div>
             <div>
-              <button className='bg-[#202224] text-white rounded px-3 py-1'>Complete Order</button>
+              <button className='bg-[#2648EA] text-white rounded px-8 py-2'>Complete Order</button>
             </div>
       </div>
     </div>

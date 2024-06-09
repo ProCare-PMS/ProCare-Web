@@ -25,7 +25,7 @@ const ProductList = () => {
   return (
     <div className='w-full h-full bg-white px-6 py-4 rounded-lg'>
       <div className='flex justify-between my-6'>
-        <h2>Products</h2>
+        <h2 className='font-medium'>Products</h2>
         <div className='searchProdut'>
           <input type='text' placeholder='Search for product' className='border border-[#EAEBF0] py-1.5 px-1 rounded-md w-72'/>
         </div>
