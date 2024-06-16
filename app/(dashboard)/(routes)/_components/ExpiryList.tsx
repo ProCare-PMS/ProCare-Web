@@ -14,22 +14,22 @@ import { ExternalLink } from 'lucide-react';
 const invoices = [
     {
         invoice: "Paracetamol - 500g",
-        paymentStatus: "180",
+        paymentStatus: "243",
         totalAmount: "12.09.2024",
     },
     {
         invoice: "Paracetamol - 500g",
-        paymentStatus: "360",
+        paymentStatus: "243",
         totalAmount: "12.09.2024",
     },
     {
         invoice: "Paracetamol - 500g",
-        paymentStatus: "360",
+        paymentStatus: "243",
         totalAmount: "12.09.2024",
     },
     {
         invoice: "Paracetamol - 500g",
-        paymentStatus: "180",
+        paymentStatus: "243",
         totalAmount: "12.09.2024",
     },
 ]
@@ -45,20 +45,20 @@ export function ExpiryList() {
                 <ExternalLink className="text-[#2648EA]" />
             </Link>
         </div>
-            <Table className="bg-white rounded-xl  p-6 ">
+            <Table className="bg-white rounded-xl p-6">
                 <TableHeader className="p-4 border-none">
-                    <TableRow className="bg-[#F1F4F9] p-1 w-full  rounded-lg">
-                        <TableHead className="w-[180px]">Product Name</TableHead>
-                        <TableHead>No.Remaining</TableHead>
-                        <TableHead className="w-[150px]">Expiry Date</TableHead>
+                    <TableRow className="bg-[#F1F4F9] p-1 w-full rounded-lg">
+                        <TableHead className="w-[180px] text-[#202224] font-bold">Product Name</TableHead>
+                        <TableHead className="text-[#202224] font-bold">No.Remaining</TableHead>
+                        <TableHead className="w-[150px] text-[#202224] font-bold">Expiry Date</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {invoices.map((invoice) => (
                         <TableRow key={invoice.invoice}>
-                            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                            <TableCell className="text-sm font-medium nunito_sans">{invoice.paymentStatus}</TableCell>
-                            <TableCell className="">{invoice.totalAmount}</TableCell>
+                            <TableCell className="font-semibold text-sm text-[#242525]">{invoice.invoice}</TableCell>
+                            <TableCell className="text-sm font-medium text-[#202224] nunito_sans">{invoice.paymentStatus}</TableCell>
+                            <TableCell className="font-semibold text-sm text-[#202224]">{invoice.totalAmount}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

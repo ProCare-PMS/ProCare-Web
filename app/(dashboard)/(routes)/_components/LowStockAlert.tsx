@@ -46,15 +46,15 @@ export function LowStock() {
             <Table className="bg-white rounded-xl p-6 ">
                 <TableHeader className="p-4 border-none">
                     <TableRow className="bg-[#F1F4F9] p-1 w-full  rounded-lg">
-                        <TableHead className="w-[180px]">Product Name</TableHead>
-                        <TableHead>Piece</TableHead>
-                        <TableHead className="w-[150px]">Last Restock</TableHead>
+                        <TableHead className="w-[180px] text-[#202224] font-bold">Product Name</TableHead>
+                        <TableHead className="text-[#202224] font-bold">Piece</TableHead>
+                        <TableHead className="w-[150px] text-[#202224] font-bold">Last Restock</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {invoices.map((invoice) => (
                         <TableRow key={invoice.invoice}>
-                            <TableCell className="font-medium">{invoice.invoice}</TableCell>
+                            <TableCell className="font-semibold text-sm text-[#242525]">{invoice.invoice}</TableCell>
                             <TableCell>
                                 <span 
                                 className="bg-[#FFEFEE] py-1 px-3 text-sm font-medium rounded-[30px] text-[#C8322B]">

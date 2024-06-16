@@ -21,7 +21,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
         <body className={`flex h-screen flex-col ${inter.className} ${nunito_sans.variable}`}>
             <DashboardNav />
-            <main className='px-20 pt-24 pb-24 bg-[#F5F5F5]'>
+            <main className=' pt-24 pb-24 bg-[#F5F5F5]'>
                 {children}
             </main>
         </body>

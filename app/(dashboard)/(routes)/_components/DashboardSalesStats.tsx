@@ -6,13 +6,13 @@ const DashboardSalesStats = () => {
     return (
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-16">
             {/* Daily Sale */}
-            <div className='flex flex-col shadow-custom rounded-xl p-4 bg-white w-[20rem]'>
+            <div className='flex flex-col shadow-custom rounded-xl p-4 bg-white w-full'>
                 <div className='flex items-center mb-4 justify-between'>
                     <h3 className='font-semibold  text-base'>Daily Sales</h3>
                     <span className='text-2xl text-[#858C95]'>...</span>
                 </div>
 
-                <div className='flex items-center gap-2'>
+                <div className='flex items-center justify-between gap-2'>
                     <div>
                         <h3 className='text-[1.62rem] mb-4 leading-9 font-semibold'>$300</h3>
                         <div className='flex  items-center gap-4 text-[#858C95] font-bold text-sm'>
@@ -32,7 +32,7 @@ const DashboardSalesStats = () => {
             </div>
 
             {/* Items Sold*/}
-            <div className='flex flex-col shadow-custom rounded-xl p-4 bg-white w-[20rem]'>
+            <div className='flex flex-col shadow-custom rounded-xl p-4 bg-white w-full'>
                 <div className='flex items-center mb-4 justify-between'>
                     <h3 className='font-semibold  text-base'>Items Sold</h3>
                     <span className='text-2xl text-[#858C95]'>...</span>
@@ -58,7 +58,7 @@ const DashboardSalesStats = () => {
             </div>
 
             {/* Profit Made*/}
-            <div className='flex flex-col shadow-custom rounded-xl  p-4 bg-white w-[20rem]'>
+            <div className='flex flex-col shadow-custom rounded-xl  p-4 bg-white w-full'>
                 <div className='flex items-center mb-4 justify-between'>
                     <h3 className='font-semibold  text-base'>Profit Made</h3>
                     <span className='text-2xl text-[#858C95]'>...</span>
@@ -84,7 +84,7 @@ const DashboardSalesStats = () => {
             </div>
 
             {/* Items In Stock */}
-            <div className='flex flex-col shadow-custom rounded-xl  p-4 bg-white w-[20rem]'>
+            <div className='flex flex-col shadow-custom rounded-xl  p-4 bg-white w-full'>
                 <div className='flex items-center mb-4 justify-between'>
                     <h3 className='font-semibold  text-base'>Items In Stock</h3>
                     <span className='text-2xl text-[#858C95]'>...</span>
