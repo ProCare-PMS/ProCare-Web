@@ -13,7 +13,7 @@ import DropDown from "./DropDown";
 
 const DashboardNav = () => {
   return (
-    <header className="fixed top-0 w-full z-20 left-0 bg-[#F5F5F5] backdrop-blur-[12px]">
+    <header className={`fixed top-0 w-full z-20 left-0 bg-white`}>
       <div className="container mx-auto px-16 ">
         <div className=" flex items-center  justify-between h-[5rem]">
           <div>
@@ -26,8 +26,8 @@ const DashboardNav = () => {
             />
           </div>
 
-          <nav className="hidden md:block">
-            <ul className="flex items-center justify-between gap-5">
+          <nav className="hidden md:block font-mono">
+            <ul className="flex items-center justify-between gap-5 font-inter">
               <li>
                 <Link
                   href="/"
@@ -40,7 +40,7 @@ const DashboardNav = () => {
               <li>
                 <Link
                   href="/"
-                  className="flex gap-2 items-center text-sm font-semibold text-[#858C95]"
+                  className="flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]"
                 >
                   <Store />
                   Pos
@@ -48,8 +48,8 @@ const DashboardNav = () => {
               </li>
               <li>
                 <Link
-                  href="/"
-                  className="flex gap-2 items-center text-sm font-semibold text-[#858C95]"
+                  href="/inventory"
+                  className="flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]"
                 >
                   <ClipboardList />
                   Inventory
@@ -58,7 +58,7 @@ const DashboardNav = () => {
               <li>
                 <Link
                   href="/"
-                  className="flex gap-2 items-center text-sm font-semibold text-[#858C95]"
+                  className="flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]"
                 >
                   <LineChart />
                   Analytics
@@ -67,7 +67,7 @@ const DashboardNav = () => {
               <li>
                 <Link
                   href="/"
-                  className="flex gap-2 items-center text-sm font-semibold text-[#858C95]"
+                  className="flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]"
                 >
                   <GanttChart />
                   Management
@@ -76,7 +76,7 @@ const DashboardNav = () => {
               <li>
                 <Link
                   href="/"
-                  className="flex gap-2 items-center text-sm font-semibold text-[#858C95]"
+                  className="flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]"
                 >
                   <Settings />
                   Settings
@@ -92,7 +92,7 @@ const DashboardNav = () => {
               src="/icons/Avatar.png"
               alt="Avatar Icon"
             />
-            <div>
+            <div className="font-inter">
               <h2 className="text-sm font-semibold sev">John Doe</h2>
               <span className="text-sm font-medium text-[#858C95]">
                 24/05/2024
