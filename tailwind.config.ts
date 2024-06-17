@@ -10,6 +10,14 @@ const config = {
 	],
   prefix: "",
   theme: {
+    fontFamily: {
+      // 👇 Add CSS variables
+      sans: ["var(--font-opensans)"],
+      mono: ["var(--font-roboto-mono)"],
+      inter: ["var(--font-inter)"],
+      nunito_sans: ["var(--font-nunito-sans)"],
+      roboto: ["var(--font-roboto)"],
+    },
     container: {
       center: true,
       padding: "2rem",

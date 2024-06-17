@@ -6,7 +6,7 @@ import { DashboardMainTable } from './_components/DashboardMainTable'
 
 const DashbaordHomePage = () => {
   return (
-    <div>
+    <div className='container px-16'>
         <div className="hidden md:block"
       >
         <DashboardNote />
