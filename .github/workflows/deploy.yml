@@ -1,32 +1,52 @@
-name: Build and Deploy staging
+name: deploy-image
+
 on:
   push:
     branches:
-      - staging
-      - config
+      - deploy
 
 jobs:
-  build:
-    name: Deploy to staging
+  deploy-main-service:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Copy Scripts to Staging
-        uses: appleboy/scp-action@master
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # - name: Generate .env file
+      #   run: echo "DB_HOST=SOMESECRET" > ./config/.env && echo "DB_NAME=SOMEPUBKEY" >> ./config/.env && echo "DB_PASSWORD=SOMEURL" >> ./config/.env && echo "DB_PORT=SOMEURL" >> ./config/.env && echo "DEBUG_MODE=SOMEURL" >> ./config/.env
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
         with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_STAGING_KEY }}
-          source: "apps/*, Dockerfile, docker-compose.yml, config/*, Dockerfile.dev, manage.py, requirements"
-          target: "staging/nnuropay"
-          rm: true
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: curmens/procare_frontend:latest
+          platforms: linux/amd64,linux/arm64
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Run scripts
         uses: appleboy/ssh-action@master
+        timeout-minutes: 600
         with:
           host: ${{ secrets.STAGING_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_STAGING_KEY }}
           script: |
-            cd staging
-            cp .env nnuropay/
-            docker compose -f docker-compose.stage.yml up redis-server order-service --build -d
+            cd web
+            docker compose pull
+            docker compose up --build -d
