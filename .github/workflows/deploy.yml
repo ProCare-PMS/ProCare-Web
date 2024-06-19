@@ -45,7 +45,7 @@ jobs:
         uses: appleboy/ssh-action@master
         timeout-minutes: 600
         with:
-          host: ${{ secrets.STAGING_HOST }}
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_STAGING_KEY }}
           script: |
