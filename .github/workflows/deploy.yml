@@ -47,7 +47,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_STAGING_KEY }}
+          key: ${{ secrets.STAGING_KEY }}
           script: |
             cd web
             docker compose pull
