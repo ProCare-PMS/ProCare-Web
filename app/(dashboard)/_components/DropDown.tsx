@@ -16,7 +16,7 @@ const DropDown = () => {
             <DropdownMenuTrigger>
                 <ChevronDown />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 mr-8 mt-2">
+            <DropdownMenuContent className="w-56 mr-8 mt-2 bg-white ">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Profile</DropdownMenuItem>
