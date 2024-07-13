@@ -68,7 +68,7 @@ const invoices = [
   },
 ];
 
-const ViewProductsSide = () => {
+const CategoriesTabSideBar = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -123,4 +123,4 @@ const ViewProductsSide = () => {
   );
 };
 
-export default ViewProductsSide;
+export default CategoriesTabSideBar;
