@@ -1,22 +1,38 @@
-import React from 'react'
-import DashboardNote from './_components/DashboardNote'
-import DashboardSalesStats from './_components/DashboardSalesStats'
-import DashboardTables from './_components/DashboardTables'
-import { DashboardMainTable } from './_components/DashboardMainTable'
+import React from "react";
+import DashboardNote from "./_components/DashboardNote";
+import DashboardSalesStats from "./_components/DashboardSalesStats";
+import DashboardTables from "./_components/DashboardTables";
+import { DashboardMainTable } from "./_components/DashboardMainTable";
+import DashboardStats from "@/components/Dashboard/DashboardStats";
+import { DashboardSubTables } from "@/components/Dashboard/DashboardSubTables";
+import DataTable from "@/components/Tables/data-table";
+import { dashboardTransactionColumns } from "@/components/Tables/columns";
+import { dashboardTransactions } from "@/type";
+import DashboardTableHeader from "@/components/Dashboard/DashboardTableHeader";
+
 
 const DashbaordHomePage = () => {
   return (
-    <div className='container px-16'>
-        <div className="hidden md:block"
-      >
+    <div className="container pb-12 px-16 pt-7 bg-[#F5F5F5]">
+      <div className="hidden md:block">
         <DashboardNote />
       </div>
-      <DashboardSalesStats />
-      <DashboardTables />
-      <DashboardMainTable />
+      <DashboardStats />
+      <div className="flex items-center gap-6 mb-12">
+        <DashboardSubTables title="Expiry List" />
+        <DashboardSubTables title="Low Stock Alert" />
+      </div>
+      <div className="bg-white shadow-custom p-4 mb-24 rounded-[8px]">
+        <DashboardTableHeader />
+        <DataTable
+          columns={dashboardTransactionColumns}
+          data={dashboardTransactions}
+        />
+      </div>
 
+      {/* <DashboardMainTable /> */}
     </div>
-  )
-}
+  );
+};
 
-export default DashbaordHomePage
+export default DashbaordHomePage;
