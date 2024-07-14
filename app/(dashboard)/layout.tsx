@@ -1,3 +1,4 @@
+import MainNav from "@/components/Main-Nav/MainNav";
 import DashboardNav from "./_components/DashboardNav"
 import { Open_Sans, Roboto_Mono, Inter, Nunito_Sans } from 'next/font/google'
 
@@ -26,14 +27,18 @@ const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',
 })
 
-
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <body className={`flex h-screen flex-col ${openSans.variable} ${nunito_sans.variable} ${inter.variable} ${robotoMono.variable}`}>
-            <DashboardNav />
-            <main className=' pt-24 pb-24 bg-[#F5F5F5]'>
-                {children}
-            </main>
-        </body>
-    );
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <body
+      className={`flex h-screen flex-col ${openSans.variable} ${nunito_sans.variable} ${inter.variable} ${robotoMono.variable}`}
+    >
+      <MainNav />
+      <main className=" pt-24 bg-[#F5F5F5] pb-24 max-h-screen">{children}</main>{" "}
+      {/* bg-[#F5F5F5] */}
+    </body>
+  );
 }
