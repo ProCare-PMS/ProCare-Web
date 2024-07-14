@@ -1,31 +1,31 @@
 import MainNav from "@/components/Main-Nav/MainNav";
-import DashboardNav from "./_components/DashboardNav";
-import { Open_Sans, Roboto_Mono, Inter, Nunito_Sans } from "next/font/google";
+import DashboardNav from "./_components/DashboardNav"
+import { Open_Sans, Roboto_Mono, Inter, Nunito_Sans } from 'next/font/google'
 
 const openSans = Open_Sans({
-  subsets: ["latin"],
-  display: "swap",
+  subsets: ['latin'],
+  display: 'swap',
   //👇 Add variable to our object
-  variable: "--font-opensans",
-});
+  variable: '--font-opensans',
+})
 
-const inter = Inter({
+const inter = Inter({ 
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: '--font-inter' ,
 });
 
 const nunito_sans = Nunito_Sans({
-  subsets: ["latin"],
+  subsets: ['latin'],
   display: "swap",
-  variable: "--font-nunito-sans",
-});
+  variable: '--font-nunito-sans',
+})
 
 //👇 Configure the object for our second font
 const robotoMono = Roboto_Mono({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-roboto-mono",
-});
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto-mono',
+})
 
 export default function DashboardLayout({
   children,
