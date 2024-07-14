@@ -33,9 +33,12 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <body className={`flex h-screen flex-col ${openSans.variable} ${nunito_sans.variable} ${inter.variable} ${robotoMono.variable}`}>
+    <body
+      className={`flex h-screen flex-col ${openSans.variable} ${nunito_sans.variable} ${inter.variable} ${robotoMono.variable}`}
+    >
       <MainNav />
-      <main className=" pt-24 pb-24 max-h-screen">{children}</main> {/* bg-[#F5F5F5] */}
+      <main className=" pt-24 bg-[#F5F5F5] pb-24 max-h-screen">{children}</main>{" "}
+      {/* bg-[#F5F5F5] */}
     </body>
   );
 }

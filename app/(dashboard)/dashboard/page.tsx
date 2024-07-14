@@ -9,6 +9,7 @@ import DataTable from "@/components/Tables/data-table";
 import { dashboardTransactionColumns } from "@/components/Tables/columns";
 import { dashboardTransactions } from "@/type";
 import DashboardTableHeader from "@/components/Dashboard/DashboardTableHeader";
+import { DashbaordChart } from "@/components/Dashboard/DashboardChart";
 
 
 const DashbaordHomePage = () => {
@@ -18,9 +19,10 @@ const DashbaordHomePage = () => {
         <DashboardNote />
       </div>
       <DashboardStats />
-      <div className="flex items-center gap-6 mb-12">
+      <div className="flex flex-col md:flex-row items-center gap-6 mb-12">
         <DashboardSubTables title="Expiry List" />
         <DashboardSubTables title="Low Stock Alert" />
+        <DashbaordChart />
       </div>
       <div className="bg-white shadow-custom p-4 mb-24 rounded-[8px]">
         <DashboardTableHeader />
