@@ -1,52 +1,59 @@
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 
 const statsCounts = [
   {
     icon: "/assets/images/stock.png",
     title: "STOCK COUNT",
     count: "312",
+    link: "inventory/stock-count",
   },
   {
     icon: "/assets/images/categorystats.png",
     title: "CATEGORIES",
     count: "40",
+    link: "inventory/categories",
   },
   {
     icon: "/assets/images/supplierstats.png",
     title: "SUPPLIERS",
     count: "68",
+    link: "inventory/suppliers",
   },
   {
     icon: "/assets/images/stockstats.png",
     title: "LOW STOCK",
     count: "27",
+    link: "inventory/low-stock",
   },
   {
     icon: "/assets/images/expirystats.png",
     title: "EXPIRY",
     count: "5",
+    link: "inventory/expiry",
   },
 ];
 
 const ProductsTabStats = () => {
   return (
     <div className="flex items-center lg:gap-8 justify-between">
-      {statsCounts.map((statItem) => (
-        <div
-          key={statItem.title}
-          className=" flex items-center w-[248px] gap-14 py-4 px-5 rounded-[8px] justify-between border border-[#D0D5DD]"
-        >
-          <Image src={statItem.icon} alt="stock svg" width={35} height={35} />
-          <div className="flex flex-col text-right">
-            <span className="font-inter text-xs inline-flex text-nowrap font-medium text-[#848199]">
-              {statItem.title}
-            </span>
-            <span className="text-[#344054] text-right font-inter font-bold text-2xl">
-              {statItem.count}
-            </span>
+      {statsCounts.map((statItem: any, index: number) => (
+        <Link href={statItem.link} key={index}>
+          <div
+            className=" flex items-center w-[248px] gap-14 py-4 px-5 rounded-[8px] justify-between border border-[#D0D5DD]"
+          >
+            <Image src={statItem.icon} alt="stock svg" width={35} height={35} />
+            <div className="flex flex-col text-right">
+              <span className="font-inter text-xs inline-flex text-nowrap font-medium text-[#848199]">
+                {statItem.title}
+              </span>
+              <span className="text-[#344054] text-right font-inter font-bold text-2xl">
+                {statItem.count}
+              </span>
+            </div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

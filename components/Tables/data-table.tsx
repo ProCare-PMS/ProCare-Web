@@ -23,7 +23,7 @@ interface DataTableProps<TData extends { type?: string }, TValue> {
 
 type Props = {};
 
-export function DataTable<TData extends { type: string }, TValue>({
+ function DataTable<TData extends { type: string }, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {

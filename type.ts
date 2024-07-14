@@ -538,3 +538,13 @@ export const purchaseTabTable = [
 
 
 export type PurchaseTabTable = (typeof purchaseTabTable)[number];
+
+export type lowStockType = {
+  name: string;
+  unit: string;
+  brand: string;
+  itemRemaining: number;
+  lastRestockDate: string;
+  lastRestockTime: string;
+  type: string;
+}
