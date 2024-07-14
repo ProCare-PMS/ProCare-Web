@@ -9,6 +9,7 @@ import SuppliersTab from "./SuppliersTab/SuppliersTab";
 import PurchasesTab from "./PurchasesTab/PurchasesTab";
 import ExpiryReportTab from "./ExpiryReportTab/ExpiryReportTab";
 import StockTransferTab from "./StockTransferTab/StockTransferTab";
+import Link from "next/link";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -47,9 +48,9 @@ export default function InventoryMainTabs() {
   };
 
   return (
-    <Box sx={{ width: "100%", marginInline: "auto",  }}>
+    <Box sx={{ width: "100%", marginInline: "auto" }}>
       <Box
-        sx={{ backgroundColor: "#F5F5F5", paddingBlock: "20px",  width: "100%" }}
+        sx={{ backgroundColor: "#F5F5F5", paddingBlock: "20px", width: "100%" }}
       >
         <Tabs
           value={value}
@@ -89,8 +90,15 @@ export default function InventoryMainTabs() {
           />
         </Tabs>
       </Box>
-      <Box sx={{ width: "100%", minHeight: "100%", marginInline: "auto", paddingInline: "64px",  }}>
-        <CustomTabPanel  value={value} index={0}>
+      <Box
+        sx={{
+          width: "100%",
+          minHeight: "100%",
+          marginInline: "auto",
+          paddingInline: "64px",
+        }}
+      >
+        <CustomTabPanel value={value} index={0}>
           <ProductsTab />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
