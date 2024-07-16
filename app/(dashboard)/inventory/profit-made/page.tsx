@@ -39,7 +39,7 @@ function ProfitMade() {
       <div className="mt-5 p-2 bg-white">
         <div className="flex justify-between items-center my-2">
             <h3 className="font-bold text-lg">Profit List</h3>
-            <div className="flex items-center justify-between gap-4 bg-[#FCFDFD] border border-stone-200 p-2 rounded-xl">
+            <div className="flex items-center justify-between gap-3 bg-[#FCFDFD] border border-stone-200 p-2 rounded-xl">
             <div>
               <Image
                 src="/assets/images/calenderz.svg"
