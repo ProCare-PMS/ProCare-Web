@@ -7,7 +7,7 @@ import { Column } from './Column';
 import BackButton from '@/components/BackButtton/BackButton';
 
 
-function ItemSold() {
+function DailySales() {
     return (
         <>
           <div className="container-fluid bg-white rounded-xl mx-4 p-5">
@@ -16,7 +16,7 @@ function ItemSold() {
                 <span className="block">
                   <BackButton />
                 </span>
-                 <h3 className="font-bold text-lg">Low Stock List</h3>
+                 <h3 className="font-bold text-lg">Items in Stock</h3>
               </div>
               <div>
                 <div className="flex gap-4">
@@ -53,4 +53,4 @@ function ItemSold() {
       );
 }
 
-export default ItemSold
+export default DailySales
