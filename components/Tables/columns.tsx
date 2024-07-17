@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { useState } from "react";
 import DashboardModal from "../Modals/DashboardModal";
+import clsx from "clsx";
 
 interface ActionsCellProps {
   row: {
@@ -64,6 +65,22 @@ export const dashboardTransactionColumns: ColumnDef<DashboardTransactions>[] = [
   {
     accessorKey: "type",
     header: "Type",
+    cell: (value: any) => (
+      <p className="rounded-3xl font-inter text-sm font-normal">
+        <span
+          className={clsx(" rounded-3xl font-inter text-sm font-normal", {
+            "text-[#219653] bg-[#21965314] !w-[40px] py-2 rounded-3xl px-3 ":
+              value.getValue() === "Bank",
+            "text-[#FFA70B] bg-[#FFA70B14] px-3 !w-[40px] py-2":
+              value.getValue() === "Momo",
+            "text-[#D34053] bg-[#D3405314] px-3 !w-[40px] py-2 ":
+              value.getValue() === "Cash",
+          })}
+        >
+          {value.getValue()}
+        </span>
+      </p>
+    ),
   },
   {
     id: "actions",

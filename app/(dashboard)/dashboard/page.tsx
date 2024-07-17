@@ -14,7 +14,7 @@ import { DashbaordChart } from "@/components/Dashboard/DashboardChart";
 
 const DashbaordHomePage = () => {
   return (
-    <div className="container pb-12 px-16 pt-7 bg-[#F5F5F5]">
+    <div className="container pb-6 px-16 pt-7 bg-[#F5F5F5]">
       <div className="hidden md:block">
         <DashboardNote />
       </div>
@@ -24,7 +24,7 @@ const DashbaordHomePage = () => {
         <DashboardSubTables title="Low Stock Alert" />
         <DashbaordChart />
       </div>
-      <div className="bg-white shadow-custom p-4 mb-24 rounded-[8px]">
+      <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px]">
         <DashboardTableHeader />
         <DataTable
           columns={dashboardTransactionColumns}

@@ -16,14 +16,14 @@ import {
 } from "@/components/ui/table";
 import clsx from "clsx";
 
-interface DataTableProps<TData extends { type?: string }, TValue> {
+interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
 type Props = {};
 
- function DataTable<TData extends { type: string }, TValue>({
+function DataTable<TData,  TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -71,36 +71,14 @@ type Props = {};
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
-                {row.getVisibleCells().map((cell) => {
+                {row.getVisibleCells().map((cell) => (
                   // Log the context separately
                   //console.log(cell.getContext());
                   //console.log(cell.getValue());
-                  return (
-                    <TableCell
-                      key={cell.id}
-                      className="py-4 text-[#202224] font-normal"
-                    >
-                      <span
-                        className={clsx(
-                          " rounded-3xl font-inter text-sm font-normal",
-                          {
-                            "text-[#219653] bg-[#21965314] !w-[40px] py-2 rounded-3xl px-3 ":
-                              cell.getValue() === "Bank",
-                            "text-[#FFA70B] bg-[#FFA70B14] px-3 !w-[40px] py-2":
-                              cell.getValue() === "Momo",
-                            "text-[#D34053] bg-[#D3405314] px-3 !w-[40px] py-2 ":
-                              cell.getValue() === "Cash",
-                          }
-                        )}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </span>
-                    </TableCell>
-                  );
-                })}
+                  <TableCell key={cell.id} className="font-inter">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
               </TableRow>
             ))
           ) : (
@@ -114,21 +92,21 @@ type Props = {};
       </Table>
       <div className="flex items-center justify-end space-x-2 py-4">
         <button
-          className="border border-[#D0D5DD]  py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm"
+          className="border border-[#D0D5DD] font-inter py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           Previous
         </button>
         <button
-          className="border border-[#D0D5DD]  py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm"
+          className="border border-[#D0D5DD] font-inter py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           Next
         </button>
         <div className="flex justify-between items-center py-2">
-          <p className="text-nowrap text-[#344054] font-medium text-sm">
+          <p className="text-nowrap text-[#344054] font-inter font-medium text-sm">
             Results {currentPage} of {totalPages}
           </p>
         </div>

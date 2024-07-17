@@ -93,9 +93,8 @@ export default function InventoryMainTabs() {
       <Box
         sx={{
           width: "100%",
-          minHeight: "100%",
+          minHeight: "100vh",
           marginInline: "auto",
-          paddingInline: "64px",
         }}
       >
         <CustomTabPanel value={value} index={0}>

@@ -468,74 +468,163 @@ export const purchaseTabTable = [
     purchaseId: "#58547",
     supplier: "The Med Pharma",
     quantity: 538,
-    totalPrice: "65,000",
+    unitPrice: "65,000",
     date: "12/09/2024",
+    amount: "243,589",
+    purchases: [
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        amount: "12/09/2024",
+      },
+    ],
   },
   {
     purchaseId: "#58547",
     supplier: "The Med Pharma",
     quantity: 538,
-    totalPrice: "65,000",
+    unitPrice: "65,000",
     date: "12/09/2024",
+    amount: "243,589",
+    purchases: [
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        amount: "12/09/2024",
+      },
+    ],
   },
   {
     purchaseId: "#58547",
     supplier: "The Med Pharma",
     quantity: 538,
-    totalPrice: "65,000",
+    unitPrice: "65,000",
     date: "12/09/2024",
+    amount: "243,589",
+    purchases: [
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        amount: "12/09/2024",
+      },
+    ],
   },
   {
     purchaseId: "#58547",
     supplier: "The Med Pharma",
     quantity: 538,
-    totalPrice: "65,000",
+    unitPrice: "65,000",
     date: "12/09/2024",
+    amount: "243,589",
+    purchases: [
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        amount: "12/09/2024",
+      },
+    ],
   },
   {
     purchaseId: "#58547",
     supplier: "The Med Pharma",
     quantity: 538,
-    totalPrice: "65,000",
+    unitPrice: "65,000",
     date: "12/09/2024",
+    amount: "243,589",
+    purchases: [
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        amount: "12/09/2024",
+      },
+    ],
   },
   {
     purchaseId: "#58547",
     supplier: "The Med Pharma",
     quantity: 538,
-    totalPrice: "65,000",
+    unitPrice: "65,000",
     date: "12/09/2024",
+    amount: "243,589",
+    purchases: [
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        amount: "12/09/2024",
+      },
+    ],
   },
   {
     purchaseId: "#58547",
     supplier: "The Med Pharma",
     quantity: 538,
-    totalPrice: "65,000",
+    unitPrice: "65,000",
     date: "12/09/2024",
+    amount: "243,589",
+    purchases: [
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        amount: "12/09/2024",
+      },
+    ],
   },
   {
     purchaseId: "#58547",
     supplier: "The Med Pharma",
     quantity: 538,
-    totalPrice: "65,000",
+    unitPrice: "65,000",
     date: "12/09/2024",
+    amount: "243,589",
+    purchases: [
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        amount: "12/09/2024",
+      },
+    ],
   },
   {
     purchaseId: "#58547",
     supplier: "The Med Pharma",
     quantity: 538,
-    totalPrice: "65,000",
+    unitPrice: "65,000",
     date: "12/09/2024",
+    amount: "243,589",
+    purchases: [
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        amount: "12/09/2024",
+      },
+    ],
   },
   {
     purchaseId: "#58547",
     supplier: "The Med Pharma",
     quantity: 538,
-    totalPrice: "65,000",
+    unitPrice: "65,000",
     date: "12/09/2024",
+    amount: "243,589",
+    purchases: [
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        amount: "12/09/2024",
+      },
+    ],
   },
 ];
-
 
 export type PurchaseTabTable = (typeof purchaseTabTable)[number];
 
@@ -547,4 +636,45 @@ export type lowStockType = {
   lastRestockDate: string;
   lastRestockTime: string;
   type: string;
-}
+};
+
+export const expiryReportTable = [
+  {
+    productName: "Paracetamol 250mg",
+    unit: "Pack",
+    brand: "Krunch Labs",
+    expiryDate: "12/12/2024",
+    expiryStatus: "6+ Months",
+    quantity: "25",
+    totalPrice: "34, 605",
+  },
+  {
+    productName: "Paracetamol 250mg",
+    unit: "Pack",
+    brand: "Krunch Labs",
+    expiryDate: "12/12/2024",
+    expiryStatus: "Expired",
+    quantity: "25",
+    totalPrice: "34, 605",
+  },
+  {
+    productName: "Paracetamol 250mg",
+    unit: "Pack",
+    brand: "Krunch Labs",
+    expiryDate: "12/12/2024",
+    expiryStatus: "3-6 Months",
+    quantity: "25",
+    totalPrice: "34, 605",
+  },
+  {
+    productName: "Paracetamol 250mg",
+    unit: "Pack",
+    brand: "Krunch Labs",
+    expiryDate: "12/12/2024",
+    expiryStatus: "<3 Months",
+    quantity: "25",
+    totalPrice: "34, 605",
+  },
+];
+
+export type ExpiryReportTable = (typeof expiryReportTable)[number];

@@ -85,16 +85,16 @@ export function DashbaordChart() {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="bg-black text-3xl font-bold"
+                          className="fill-muted-foreground"
                         >
-                          {totalVisitors.toLocaleString()}
+                          Total
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
+                          className="bg-black text-3xl font-bold"
                         >
-                          Total
+                          {totalVisitors.toLocaleString()}
                         </tspan>
                       </text>
                     );
