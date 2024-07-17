@@ -12,7 +12,7 @@ const MainNav = () => {
 
   return (
     <header className="fixed top-0 w-full z-20 left-0 bg-white">
-      <div className='className="container mx-auto px-16 '>
+      <div className='container mx-auto px-16 '>
         <div className=" flex items-center  justify-between h-[5rem]">
           {/* Logo */}
           <div>

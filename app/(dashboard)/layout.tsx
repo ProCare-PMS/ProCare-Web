@@ -34,10 +34,10 @@ export default function DashboardLayout({
 }) {
   return (
     <body
-      className={`flex h-screen flex-col ${openSans.variable} ${nunito_sans.variable} ${inter.variable} ${robotoMono.variable}`}
+      className={`flex min-h-screen flex-col ${openSans.variable} ${nunito_sans.variable} ${inter.variable} ${robotoMono.variable}`}
     >
       <MainNav />
-      <main className=" pt-24 bg-[#F5F5F5] pb-24 max-h-screen">{children}</main>{" "}
+      <main className=" pt-24 bg-[#F5F5F5] ">{children}</main>{" "}
       {/* bg-[#F5F5F5] */}
     </body>
   );

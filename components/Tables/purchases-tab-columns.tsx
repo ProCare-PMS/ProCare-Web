@@ -3,6 +3,7 @@ import { useState } from "react";
 import { PurchaseTabTable } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
 import DashboardModal from "../Modals/DashboardModal";
+import PurchasesTableModal from "../Modals/PurchasesTableModal";
 
 interface ActionsCellProps {
   row: {
@@ -28,8 +29,7 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
         View
       </span>
       {selectedItem && (
-        <DashboardModal
-          title="Transaction Details"
+        <PurchasesTableModal
           item={selectedItem}
           setModal={() => setSelectedItem(null)}
         />
@@ -38,7 +38,7 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
   );
 };
 
-export const purchaseTabColumn: ColumnDef<PurchaseTabTable>[] = [
+export const purchasesTabColumns: ColumnDef<PurchaseTabTable>[] = [
   {
     accessorKey: "purchaseId",
     header: "Purchase ID",
@@ -49,14 +49,18 @@ export const purchaseTabColumn: ColumnDef<PurchaseTabTable>[] = [
   },
   {
     accessorKey: "quantity",
-    header: "Qunatity",
+    header: "Quantity",
   },
   {
-    accessorKey: "totalPrice",
+    accessorKey: "unitPrice",
     header: "Total Price",
   },
   {
     accessorKey: "date",
     header: "Date",
   },
+  {
+    id: "actions",
+    cell: ActionsCell
+  }
 ];
