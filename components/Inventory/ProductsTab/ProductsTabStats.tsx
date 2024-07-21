@@ -1,37 +1,31 @@
 import Image from "next/image";
 import React from "react";
-import Link from "next/link";
 
 const statsCounts = [
   {
     icon: "/assets/images/stock.png",
     title: "STOCK COUNT",
     count: "312",
-    link: "inventory/stock-count",
   },
   {
     icon: "/assets/images/categorystats.png",
     title: "CATEGORIES",
     count: "40",
-    link: "inventory/categories",
   },
   {
     icon: "/assets/images/supplierstats.png",
     title: "SUPPLIERS",
     count: "68",
-    link: "inventory/suppliers",
   },
   {
     icon: "/assets/images/stockstats.png",
     title: "LOW STOCK",
     count: "27",
-    link: "inventory/low-stock",
   },
   {
     icon: "/assets/images/expirystats.png",
     title: "EXPIRY",
     count: "5",
-    link: "inventory/expiry",
   },
 ];
 
@@ -39,7 +33,7 @@ const ProductsTabStats = () => {
   return (
     <div className="flex items-center lg:gap-8 justify-between">
       {statsCounts.map((statItem: any, index: number) => (
-        <Link href={statItem.link} key={index}>
+        <>
           <div
             className=" flex items-center py-4 px-2 rounded-[8px] justify-between border border-[#D0D5DD]"
           >
@@ -53,7 +47,7 @@ const ProductsTabStats = () => {
               </span>
             </div>
           </div>
-        </Link>
+        </>
       ))}
     </div>
   );
