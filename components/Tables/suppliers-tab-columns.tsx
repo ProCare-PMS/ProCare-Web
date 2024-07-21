@@ -4,6 +4,12 @@ import { SuppliersTabTable } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
 import { useState, useEffect, useRef } from "react";
 import { BiDotsVertical } from "react-icons/bi";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface SuppliersCellProps {
   row: {
@@ -14,6 +20,8 @@ interface SuppliersCellProps {
 const ProductActionCell = ({ row }: SuppliersCellProps) => {
   const [showAction, setShowAction] = useState(false);
   return (
+    <>
+      {/*
     <div className="relative cursor-pointer transition">
       <BiDotsVertical onClick={() => setShowAction(!showAction)} />
       {showAction && (
@@ -23,11 +31,23 @@ const ProductActionCell = ({ row }: SuppliersCellProps) => {
             <hr />
             <span className="py-2 px-3 text-[#344054]">Edit</span>
             <hr />
-            <span className="py-2 px-3 text-[#344054]">Delete</span>
+            <span className="py-2 px-3 text-[#344054]">Delete</span> 
           </div>
         </div>
       )}
     </div>
+    */}
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <BiDotsVertical />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="bg-white w-[150px] mr-12">
+          <DropdownMenuItem>View Details</DropdownMenuItem>
+          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem>Delete</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 };
 

@@ -5,33 +5,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useState, useEffect, useRef } from "react";
 import { BiDotsVertical } from "react-icons/bi";
 import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
-  PlusCircle,
-  Settings,
-  User,
-  UserPlus,
-  Users,
-} from "lucide-react";
-import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -49,13 +25,10 @@ const ProductActionCell = ({ row }: ProductsCellProps) => {
       <DropdownMenuTrigger>
         <BiDotsVertical />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-white">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
+      <DropdownMenuContent className="bg-white w-[150px] mr-12">
+        <DropdownMenuItem>View Details</DropdownMenuItem>
+        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <DropdownMenuItem>Delete</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
