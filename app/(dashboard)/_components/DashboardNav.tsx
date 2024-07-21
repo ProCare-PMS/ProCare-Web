@@ -14,7 +14,7 @@ import {
 import DropDown from "./DropDown";
 
 const DashboardNav = () => {
-  const [activeLink, setActiveLink] = React.useState<string>("");
+  const [activeLink, setActiveLink] = React.useState<string>("Dashboard");
   const pathname = usePathname();
 
   React.useEffect(() => {
