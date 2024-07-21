@@ -44,7 +44,7 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
 export const dashboardTransactionColumns: ColumnDef<DashboardTransactions>[] = [
   {
     accessorKey: "transactionId",
-    header: "TransactionID",
+    header: "Transaction ID",
   },
   {
     accessorKey: "date",
@@ -60,7 +60,16 @@ export const dashboardTransactionColumns: ColumnDef<DashboardTransactions>[] = [
   },
   {
     accessorKey: "amount",
-    header: "Amount",
+    header: () => <div className="text-left">Amount</div> ,
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("amount"))
+      const formatted = new Intl.NumberFormat("en-GH", {
+        style: "currency",
+        currency: "ghs",
+      }).format(amount)
+ 
+      return <div className="!text-left ">{formatted}</div>
+    },
   },
   {
     accessorKey: "type",

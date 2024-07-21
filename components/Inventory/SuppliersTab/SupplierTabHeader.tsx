@@ -29,8 +29,8 @@ const SupplierTabHeader = () => {
           Add Supplier
         </Button>
 
-        <div className="border p-2  cursor-pointer border-main rounded-[12px]">
-          <SlidersVertical className="text-main" />
+        <div className="border p-2  cursor-pointer border-[#494A50] rounded-[12px]">
+          <SlidersVertical className="text-[#494A50]" />
         </div>
       </div>
     </div>

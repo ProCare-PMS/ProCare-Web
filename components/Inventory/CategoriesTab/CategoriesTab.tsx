@@ -4,7 +4,7 @@ import CategoriesTabProducts from './CategoriesTabProducts'
 
 const CategoriesTab = () => {
   return (
-    <div className="container mx-auto px-16">
+    <div className="container mx-auto px-12">
       <CategoriesTabStats />
       <CategoriesTabProducts />
     </div>

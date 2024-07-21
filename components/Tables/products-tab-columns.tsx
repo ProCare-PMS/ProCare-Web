@@ -2,8 +2,39 @@
 
 import { ProductsTabTable } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
-import { useState, useEffect, useRef  } from "react";
+import { useState, useEffect, useRef } from "react";
 import { BiDotsVertical } from "react-icons/bi";
+import {
+  Cloud,
+  CreditCard,
+  Github,
+  Keyboard,
+  LifeBuoy,
+  LogOut,
+  Mail,
+  MessageSquare,
+  Plus,
+  PlusCircle,
+  Settings,
+  User,
+  UserPlus,
+  Users,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 interface ProductsCellProps {
   row: {
@@ -14,20 +45,19 @@ interface ProductsCellProps {
 const ProductActionCell = ({ row }: ProductsCellProps) => {
   const [showAction, setShowAction] = useState(false);
   return (
-    <div className="relative cursor-pointer">
-      <BiDotsVertical onClick={() => setShowAction(!showAction)} />
-      {showAction && (
-        <div className="absolute bg-blue-500 min-w-[180px] z-50 shadow-md transition top-12 hover:shadow-lg right-0 z-80 rounded-[4px]">
-          <div className="grid transition">
-            <span className="py-2 px-3 text-[#344054]">View Details</span>
-            <hr />
-            <span className="py-2 px-3 text-[#344054]">Edit</span>
-            <hr />
-            <span className="py-2 px-3 text-[#344054]">Delete</span>
-          </div>
-        </div>
-      )}
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <BiDotsVertical />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="bg-white">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>Profile</DropdownMenuItem>
+        <DropdownMenuItem>Billing</DropdownMenuItem>
+        <DropdownMenuItem>Team</DropdownMenuItem>
+        <DropdownMenuItem>Subscription</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
@@ -55,6 +85,15 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
   {
     accessorKey: "unitPrice",
     header: "Unit Price",
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("unitPrice"));
+      const formatted = new Intl.NumberFormat("en-GH", {
+        style: "currency",
+        currency: "ghs",
+      }).format(amount);
+
+      return <div className="!text-left ">{formatted}</div>;
+    },
   },
   {
     accessorKey: "status",

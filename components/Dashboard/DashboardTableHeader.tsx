@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import Image from "next/image";
 
 const DashboardTableHeader = () => {
   return (
@@ -10,10 +11,20 @@ const DashboardTableHeader = () => {
         Recent Transactions
       </h2>
 
-      <div className="flex items-center gap-6">
-        <span className="text-xs font-inter text-[#2B303466] border border-[#D4D4D4] px-2 py-1 font-medium">
-          October
-        </span>
+      <div className="flex items-center justify-between  gap-4">
+        <div className="flex items-center justify-between border border-[#D0D5DD] rounded-[6px] gap-3 py-1 px-1.5">
+          <div>
+            <Image
+              src="/assets/images/calenderz.svg"
+              width={13}
+              height={13}
+              alt="arrow-down"
+            />
+          </div>
+          <span className="text-[#5C5D65] font-medium text-sm">
+            12 October, 2024
+          </span>
+        </div>
 
         <Link
           href="/"

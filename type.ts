@@ -154,7 +154,7 @@ export type DashboardTransactions = (typeof dashboardTransactions)[number];
 
 export const productsTabTable = [
   {
-    productName: "Paracetamol 250mg",
+    productName: "Paracetamol Krunch 250mg",
     unit: "Pack",
     brandName: "Brand Name",
     quantity: 13,

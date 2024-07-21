@@ -7,7 +7,7 @@ import PurchasesTabEmptyState from "./PurchasesTabEmptyState";
 
 const PurchasesTab = () => {
   return (
-    <div className="container mx-auto px-16">
+    <div className="container mx-auto px-12">
       {purchaseTabTable.length === 0 ? (
         <PurchasesTabEmptyState />
       ) : (

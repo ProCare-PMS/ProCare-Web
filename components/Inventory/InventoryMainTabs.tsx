@@ -48,9 +48,9 @@ export default function InventoryMainTabs() {
   };
 
   return (
-    <Box sx={{ width: "100%", marginInline: "auto" }}>
+    <Box sx={{ width: "100%", marginInline: "auto", marginTop: "-20px" }}>
       <Box
-        sx={{ backgroundColor: "#F5F5F5", paddingBlock: "20px", width: "100%" }}
+        sx={{ backgroundColor: "#F5F5F5", paddingBlock: "20px",  width: "100%" }}
       >
         <Tabs
           value={value}
