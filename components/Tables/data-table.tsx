@@ -14,7 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import clsx from "clsx";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,12 +36,12 @@ function DataTable<TData,  TValue>({
   const totalPages = table.getPageCount();
 
   return (
-    <div className="">
+    <div className="!rounded-[6px]">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow
-              className="bg-[#F1F4F9] font-inter p-1 w-full  rounded-lg"
+              className="bg-[#F1F4F9] font-inter p-1 w-full !rounded-[60px] hover:bg-[#dbdee2]"
               key={headerGroup.id}
             >
               {headerGroup.headers.map((header) => {
@@ -75,7 +74,7 @@ function DataTable<TData,  TValue>({
                   // Log the context separately
                   //console.log(cell.getContext());
                   //console.log(cell.getValue());
-                  <TableCell key={cell.id} className="font-inter">
+                  <TableCell key={cell.id} className="font-inter text-[#202224] text-sm font-normal">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

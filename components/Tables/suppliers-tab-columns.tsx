@@ -55,6 +55,15 @@ export const suppliersTabColumns: ColumnDef<SuppliersTabTable>[] = [
   {
     accessorKey: "totalPurchase",
     header: "Total Purchase",
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("totalPurchase"));
+      const formatted = new Intl.NumberFormat("en-GH", {
+        style: "currency",
+        currency: "ghs",
+      }).format(amount);
+
+      return <div className="!text-left">{formatted}</div>;
+    },
   },
   {
     id: "actions",

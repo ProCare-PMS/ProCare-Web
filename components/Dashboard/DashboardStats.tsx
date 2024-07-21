@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -59,41 +60,68 @@ const data = [
 ];
 
 const DashboardStats = () => {
+  const [showDetails, setShowDetails] = React.useState<number | null>(null);
+
+  const handleShowDetails = (index: number) => {
+    console.log('kkk', index, showDetails);
+    
+    setShowDetails((prevIndex) => (prevIndex === index ? null : index));
+  };
+
   return (
     <>
       <div className="flex flex-col md:flex-row items-center font-inter justify-between gap-4 py-5">
         {data.map((item, index) => (
-          <Link
-            href={item.links}
-            key={index}
-            className="flex flex-col shadow-custom rounded-xl px-5 py-4 bg-white w-full"
-          >
-            <div className="flex items-center mb-4 justify-between">
-              <h3 className="font-semibold font-inter text-base">
-                {item.title}
-              </h3>
-              <span className="text-2xl font-inter text-[#858C95]">...</span>
-            </div>
-
-            <div className="flex items-center justify-between gap-2">
-              <div>
-                <h3 className="text-2xl font-inter mb-4 font-semibold">
-                  {item.amount || item.itemAmount}
+          <>
+            <div
+              key={index}
+              className="flex flex-col shadow-custom rounded-xl px-5 py-4 bg-white w-[18rem] relative"
+            >
+              <div className="flex items-center mb-4 justify-between">
+                <h3 className="font-semibold font-inter text-base">
+                  {item.title}
                 </h3>
-                <div className="flex items-center gap-4 text-[#858C95] font-bold text-xs">
-                  <span
-                    className={`bg-[${item.growth.background}] font-inter rounded-[7rem] text-xs font-medium px-3 py-1 text-[${item.growth.color}]`}
-                  >
-                    {item.growth.mainLabel}
+                <div className="dotHolder">
+                  <span className="text-2xl font-inter text-[#858C95]">
+                    <button onClick={() => handleShowDetails(index)} className="">
+                     <span>...</span> 
+                    </button>
                   </span>
-                  {item.growth.label}
+                  {showDetails === index && (
+                    <div className="detailsCard bg-white text-black text-sm absolute top-12 right-5 px-6 py-2 rounded-[0.4rem] shadow-2xl">
+                      <Link href={item.links} key={index}>
+                        View Details
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className="">
-                <Image width={40} height={40} src={item.icon} alt={item?.alt} />
+
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <h3 className="text-2xl font-inter mb-4 font-semibold">
+                    {item.amount || item.itemAmount}
+                  </h3>
+                  <div className="flex items-center gap-4 text-[#858C95] font-bold text-xs">
+                    <span
+                      className={`bg-[${item.growth.background}] font-inter rounded-[7rem] text-xs font-medium px-3 py-1 text-[${item.growth.color}]`}
+                    >
+                      {item.growth.mainLabel}
+                    </span>
+                    {item.growth.label}
+                  </div>
+                </div>
+                <div className="">
+                  <Image
+                    width={40}
+                    height={40}
+                    src={item.icon}
+                    alt={item?.alt}
+                  />
+                </div>
               </div>
             </div>
-          </Link>
+          </>
         ))}
       </div>
     </>

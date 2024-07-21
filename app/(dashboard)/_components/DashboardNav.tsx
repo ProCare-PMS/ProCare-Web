@@ -1,6 +1,8 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import {
   ClipboardList,
   Settings,
@@ -12,10 +14,47 @@ import {
 import DropDown from "./DropDown";
 
 const DashboardNav = () => {
+  const [activeLink, setActiveLink] = React.useState<string>("Dashboard");
+  const pathname = usePathname();
+
+  React.useEffect(() => {
+    switch (pathname) {
+      case "/dashboard":
+        setActiveLink("Dashboard");
+        break;
+      case "/pos":
+        setActiveLink("Pos");
+        break;
+      case "/inventory":
+        setActiveLink("Inventory");
+        break;
+      case "/analytics":
+        setActiveLink("Analytics");
+        break;
+      case "/management":
+        setActiveLink("Management");
+        break;
+      case "/settings":
+        setActiveLink("Settings");
+        break;
+      default:
+        setActiveLink("");
+    }
+  }, [pathname]);
+
+  const handleLinkClick = (linkName: string) => {
+    setActiveLink(linkName);
+  };
+
+  const linkClasses = (linkName: string) =>
+    activeLink === linkName
+      ? "flex gap-2 border-2 border-[#2648EA] rounded-[5px] px-5 justify-center mx-auto py-1 bg-white items-center text-sm font-semibold text-[#2648EA]"
+      : "flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]";
+
   return (
-    <header className={`fixed top-0 w-full z-20 left-0 bg-white`}>
-      <div className="container mx-auto px-16 ">
-        <div className=" flex items-center  justify-between h-[5rem]">
+    <header className="fixed top-0 w-full z-20 left-0 bg-white">
+      <div className="container mx-auto px-12">
+        <div className="flex items-center justify-between h-[5rem]">
           <div>
             <Image
               src="/Procare-Logo.png"
@@ -30,8 +69,9 @@ const DashboardNav = () => {
             <ul className="flex items-center justify-between gap-5 font-inter">
               <li>
                 <Link
-                  href="/"
-                  className="flex gap-2 border-2 border-[#2648EA] rounded-[5px] px-5 justify-center mx-auto py-1 bg-white items-center text-sm font-semibold text-[#2648EA]"
+                  href="/dashboard"
+                  className={linkClasses("Dashboard")}
+                  onClick={() => handleLinkClick("Dashboard")}
                 >
                   <Workflow />
                   Dashboard
@@ -39,8 +79,9 @@ const DashboardNav = () => {
               </li>
               <li>
                 <Link
-                  href="/"
-                  className="flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]"
+                  href="/pos"
+                  className={linkClasses("Pos")}
+                  onClick={() => handleLinkClick("Pos")}
                 >
                   <Store />
                   Pos
@@ -49,7 +90,8 @@ const DashboardNav = () => {
               <li>
                 <Link
                   href="/inventory"
-                  className="flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]"
+                  className={linkClasses("Inventory")}
+                  onClick={() => handleLinkClick("Inventory")}
                 >
                   <ClipboardList />
                   Inventory
@@ -57,8 +99,9 @@ const DashboardNav = () => {
               </li>
               <li>
                 <Link
-                  href="/"
-                  className="flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]"
+                  href="/analytics"
+                  className={linkClasses("Analytics")}
+                  onClick={() => handleLinkClick("Analytics")}
                 >
                   <LineChart />
                   Analytics
@@ -66,8 +109,9 @@ const DashboardNav = () => {
               </li>
               <li>
                 <Link
-                  href="/"
-                  className="flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]"
+                  href="/management"
+                  className={linkClasses("Management")}
+                  onClick={() => handleLinkClick("Management")}
                 >
                   <GanttChart />
                   Management
@@ -75,8 +119,9 @@ const DashboardNav = () => {
               </li>
               <li>
                 <Link
-                  href="/"
-                  className="flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]"
+                  href="/settings"
+                  className={linkClasses("Settings")}
+                  onClick={() => handleLinkClick("Settings")}
                 >
                   <Settings />
                   Settings

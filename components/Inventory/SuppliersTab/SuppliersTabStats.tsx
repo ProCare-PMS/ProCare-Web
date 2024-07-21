@@ -30,11 +30,11 @@ const SuppliersTabStats = () => {
       {statsCounts.map((statItem) => (
         <div
           key={statItem.title}
-          className=" flex items-center w-fit  gap-14 py-4 px-5 rounded-[8px] justify-between border border-[#D0D5DD]"
+          className="flex items-center w-[20rem] gap-4 py-4 px-5 rounded-[8px] justify-between border border-[#D0D5DD]"
         >
           <Image src={statItem.icon} alt="stock svg" width={35} height={35} />
-          <div className="flex flex-col text-right">
-            <span className="font-inter text-xs  inline-flex text-nowrap font-medium text-[#848199]">
+          <div className="flex flex-col items-end text-right">
+            <span className="font-inter text-xs tracking-wide text-right inline-flex text-nowrap font-medium text-[#848199]">
               {statItem.title}
             </span>
             <span className="text-[#344054] text-right text-nowrap font-inter font-bold text-base">

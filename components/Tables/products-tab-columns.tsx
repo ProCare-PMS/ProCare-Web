@@ -85,6 +85,15 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
   {
     accessorKey: "unitPrice",
     header: "Unit Price",
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("unitPrice"));
+      const formatted = new Intl.NumberFormat("en-GH", {
+        style: "currency",
+        currency: "ghs",
+      }).format(amount);
+
+      return <div className="!text-left ">{formatted}</div>;
+    },
   },
   {
     accessorKey: "status",

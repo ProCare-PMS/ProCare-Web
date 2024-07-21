@@ -93,13 +93,13 @@ const ProductsTabHeader = () => {
           </div>
 
           <div className="relative">
-            <div className="border p-2  cursor-pointer border-main rounded-[12px]">
+            <div className="border p-2 cursor-pointer border-[#494A50] rounded-[12px]">
               <SlidersVertical
                 onClick={() => {
                   setShowFilter(!showFilters);
                   setShowMenu(false);
                 }}
-                className="text-main"
+                className="text-[#494A50]"
               />
             </div>
             {showFilters && <FilterDropdown />}

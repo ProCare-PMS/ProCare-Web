@@ -14,8 +14,9 @@ interface ActionsCellProps {
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const payment = row.original;
   const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] =
-    useState<PurchaseTabTable | null>(null);
+  const [selectedItem, setSelectedItem] = useState<PurchaseTabTable | null>(
+    null
+  );
 
   return (
     <div>
@@ -54,6 +55,15 @@ export const purchasesTabColumns: ColumnDef<PurchaseTabTable>[] = [
   {
     accessorKey: "unitPrice",
     header: "Total Price",
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("unitPrice"));
+      const formatted = new Intl.NumberFormat("en-GH", {
+        style: "currency",
+        currency: "ghs",
+      }).format(amount);
+
+      return <div className="!text-left">{formatted}</div>;
+    },
   },
   {
     accessorKey: "date",
@@ -61,6 +71,6 @@ export const purchasesTabColumns: ColumnDef<PurchaseTabTable>[] = [
   },
   {
     id: "actions",
-    cell: ActionsCell
-  }
+    cell: ActionsCell,
+  },
 ];
