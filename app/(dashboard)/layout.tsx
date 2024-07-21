@@ -42,7 +42,7 @@ export default function DashboardLayout({
     // </body>
 
     <body>
-      <MainNav />
+      {/* <MainNav /> */}
       <DashboardNav />
       <main className=" pt-24 bg-[#F5F5F5] ">{children}</main>{" "}
       {/* bg-[#F5F5F5] */}
