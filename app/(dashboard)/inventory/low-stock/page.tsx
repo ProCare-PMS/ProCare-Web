@@ -1,12 +1,17 @@
 "use client"
-import React from "react";
+import React, { useState } from "react";
 import Image from 'next/image'
 import DataTable from "@/components/Tables/data-table";
 import { Data } from "./Data";
 import { Column } from "./Column";
 import { useRouter } from 'next/navigation' 
+import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 
 function Page() {
+  const [searchValues, setSetSearchValues] = useState<string>("");
+  const handleSearchValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSetSearchValues(event.target.value);
+  };
     const router = useRouter()
   return (
     <>
@@ -22,18 +27,7 @@ function Page() {
           </div>
           <div>
             <div className="flex gap-4">
-                <div className="iconInputholder flex items-center gap-4 border-2 border-[#EAEBF0] rounded-2xl px-2">
-                    <span className="w-7 h-10 flex justify-center items-center px-1">
-                        <Image src="/assets/images/searchVector.svg" alt="search icon" width={100} height={100}/>
-                    </span>
-                    <span className="inputHolder">
-                        <input
-                            type="text"
-                            className="outline-0 h-6 border-none"
-                            placeholder="Search for product"
-                        />
-                    </span>
-                </div>
+                <SearchFieldInput value={searchValues} onChange={handleSearchValueChange}/>
 
               <span className="iconHolder w-10 h-10">
                 <Image src="/assets/images/filterFrame.svg" alt="filter icon" width={100} height={100} />
