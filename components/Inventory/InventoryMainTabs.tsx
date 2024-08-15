@@ -59,32 +59,32 @@ export default function InventoryMainTabs() {
           aria-label="basic tabs example"
         >
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] "
+            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
             label="Products"
             {...a11yProps(0)}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95]"
+            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
             label="Categories"
             {...a11yProps(1)}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95]"
+            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
             label="Suppliers"
             {...a11yProps(2)}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95]"
+            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
             label="Purchases"
             {...a11yProps(3)}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95]"
+            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
             label="Expiry Report"
             {...a11yProps(4)}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95]"
+            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
             label="Stock Transfer"
             {...a11yProps(5)}
           />
