@@ -5,6 +5,9 @@ import DropDown from "@/app/(dashboard)/_components/DropDown";
 import MainNavRoutes from "./MainNavRoutes";
 import { FaChevronDown } from "react-icons/fa";
 import AvatarDropDown from "../DropDown/AvatarDropdown";
+import { LogOut } from "lucide-react";
+import { CircleUser } from "lucide-react";
+import { Info } from "lucide-react";
 import Link from "next/link";
 
 const MainNav = () => {
@@ -50,24 +53,36 @@ const MainNav = () => {
               />
               {showMenu && (
                 <div className="bg-white absolute w-[180px] shadow-md transition top-12 hover:shadow-lg right-0 z-20 rounded-[8px]">
-                  <ul className="flex flex-col">
-                    <Link
-                      href="profile"
-                      className="py-3 px-4 text-[#344054] font-normal text-sm"
-                    >
-                      Profile
-                    </Link>
+                  <ul className="flex flex-col justify-center">
+                    <li>
+                      <Link
+                        href="profile"
+                        className="py-3 px-6 text-[#344054] font-normal flex items-center gap-2 text-sm"
+                      >
+                        <CircleUser />
+                        Profile
+                      </Link>
+                    </li>
                     <hr />
-                    <Link
-                      href="/help"
-                      className="py-3 px-6 text-[#344054] font-normal text-sm"
-                    >
-                      Help
-                    </Link>
+                    <li>
+                      <Link
+                        href="/help"
+                        className="py-3 px-6 text-[#344054] font-normal flex items-center gap-2 text-sm"
+                      >
+                        <Info />
+                        Help
+                      </Link>
+                    </li>
                     <hr />
-                    <span className="py-3 px-6 text-[#344054] font-normal text-sm">
-                      <Link href={"/login"}>`Log Out`</Link>
-                    </span>
+                    <li>
+                      <Link
+                        href="/login"
+                        className="py-3 px-6 text-[#344054] font-normal flex items-center gap-2 text-sm"
+                      >
+                        <LogOut />
+                        End Shift
+                      </Link>
+                    </li>
                   </ul>
                 </div>
               )}
