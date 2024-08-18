@@ -27,7 +27,7 @@ const DashboardTableHeader = () => {
         </div>
 
         <Link
-          href="/"
+          href="/dashboard/recent_transaction"
           className="text-[#2648EA] font-inter flex items-center gap-1 font-semibold text-sm"
         >
           Open
