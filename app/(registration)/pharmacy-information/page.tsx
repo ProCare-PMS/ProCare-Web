@@ -97,7 +97,7 @@ const RegistrationPage = () => {
                 </Link>
               </p>
 
-              <Button type="submit" className="text-white font-inter" size="sm"  variant="secondary">
+              <Button type="submit" className="text-white font-inter rounded-[6px]" size="sm"  variant="secondary">
                 Next
               </Button>
             </div>
