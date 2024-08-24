@@ -51,13 +51,15 @@ const RegistrationPage = () => {
     <div className="min-h-screen py-8 mx-auto px-8 bg-home">
       <div className="flex gap-4 items-center md:ml-6">
         <Image
-          src="/Procare-Logo.png"
+          src="/RxPMSlogo.svg"
           width={145}
           height={70}
           alt="Procare Logo"
           className="mt-[-0.8rem]"
         />
-        <span className="font-bold text-2xl font-inter md:text-3xl">Registration</span> 
+        <span className="font-bold text-2xl font-inter md:text-3xl">
+          Registration
+        </span>
       </div>
 
       <div className="flex flex-col items-center mt-24 justify-center">
@@ -92,12 +94,20 @@ const RegistrationPage = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between mt-[2.81rem]">
               <p className="text-center font-inter md:text-justify">
                 Already have an account? <br />
-                <Link href="/" className="text-main font-inter font-semibold text-sm">
+                <Link
+                  href="/"
+                  className="text-main font-inter font-semibold text-sm"
+                >
                   Login Here
                 </Link>
               </p>
 
-              <Button type="submit" className="text-white font-inter" size="sm"  variant="secondary">
+              <Button
+                type="submit"
+                className="text-white font-inter"
+                size="sm"
+                variant="secondary"
+              >
                 Next
               </Button>
             </div>

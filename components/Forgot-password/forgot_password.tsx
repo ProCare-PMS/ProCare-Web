@@ -20,7 +20,7 @@ export default function Forgot_password() {
   };
   return (
     <div className="bg-[#F9F9F9] w-1/2 h-screen flex justify-center items-center">
-      <div className="bg-[#FFFFFF] w-[524px] h-[527px] p-8 rounded-lg shadow flex justify-center items-center">
+      <div className="bg-[#FFFFFF] w-[524px] h-[522px] p-8 rounded-lg shadow flex justify-center items-center">
         <div className="bg-[#FFFFFF] w-full">
           <div className="flex flex-col justify-center items-center text-center px-2 gap-4 mb-6">
             <h3 className="font-inter text-lg font-semibold leading-6 tracking-tighter text-center">
