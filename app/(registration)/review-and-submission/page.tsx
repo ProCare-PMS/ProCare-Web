@@ -12,7 +12,7 @@ const ReviewAndSubmission = () => {
     <div className="min-h-screen py-8 mx-auto px-8 bg-home">
       <div className="flex gap-4 items-center ml-6">
         <Image
-          src="/Procare-Logo.png"
+          src="/RxPMSlogo.svg"
           width={155}
           height={66}
           className="mt-[-0.8rem]"
@@ -44,10 +44,11 @@ const ReviewAndSubmission = () => {
         </div>
 
         <div className="mt-8">
-          <div 
-          className="flex flex-col md:flex-row w-full bg-white px-11 py-9 text-left gap-8">
+          <div className="flex flex-col md:flex-row w-full bg-white px-11 py-9 text-left gap-8">
             <div>
-              <h2 className="text-2xl mb-8 font-inter">Summary of Account Information:</h2>
+              <h2 className="text-2xl mb-8 font-inter">
+                Summary of Account Information:
+              </h2>
               <p className="font-inter font-normal text-[#1A1A1A]">
                 Facility Name:{" "}
                 <span className="text-[#686868] font-normal">
@@ -104,7 +105,7 @@ const ReviewAndSubmission = () => {
                 First Name:{" "}
                 <span className="text-[#686868] font-normal"> John </span>
               </p>
-              <p  className="font-inter my-2 font-normal text-[#1A1A1A]">
+              <p className="font-inter my-2 font-normal text-[#1A1A1A]">
                 Last Name:{" "}
                 <span className="text-[#686868] font-normal"> Doe </span>
               </p>

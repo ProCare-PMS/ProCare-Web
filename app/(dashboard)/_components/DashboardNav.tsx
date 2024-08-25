@@ -54,14 +54,14 @@ const DashboardNav = () => {
   return (
     <header className="fixed top-0 w-full z-20 left-0 bg-white">
       <div className="container mx-auto px-12">
-        <div className="flex items-center justify-between h-[5rem]">
+        <div className="flex items-center justify-between h-[5rem] p-2">
           <div>
             <Image
-              src="/Procare-Logo.png"
+              src="/RxPMSlogo.svg"
               width={155}
               height={66}
               className="mt-[-0.8rem]"
-              alt="Procare Logo"
+              alt="ProHealium"
             />
           </div>
 
