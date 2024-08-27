@@ -21,8 +21,8 @@ const MainNav = () => {
           <div>
             <Image
               src="/assets/images/RxPmsLogo.svg"
-              width={155}
-              height={66}
+              width={80}
+              height={76}
               className="mt-[-0.8rem]"
               alt="Procare Logo"
             />

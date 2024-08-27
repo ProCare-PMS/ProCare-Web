@@ -74,7 +74,10 @@ export default function Forgot_password() {
                   alt="check-icon"
                 />
               </span>
-              <p className=" text-white font-inter text-sm font-normal leading-5 text-left">{`we’ve sent you an email which you can us to rest your password . check your spam folder if you haven't received it after a few minutes`}</p>
+              <p className=" text-white font-inter text-sm font-normal leading-5 text-left">
+                {`We’ve sent you an email which you can us to reset your password . 
+                Check your spam folder if you haven't received it after a few minutes`}
+              </p>
             </div>
           )}
           {!resetSent ? (
