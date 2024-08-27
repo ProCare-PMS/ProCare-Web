@@ -12,7 +12,7 @@ const ReviewAndSubmission = () => {
     <div className="min-h-screen py-8 mx-auto px-8 bg-home">
       <div className="flex gap-4 items-center ml-6">
         <Image
-          src="/assets/images/RxPmsLogo.svg"
+          src="/RxPMSlogo.svg"
           width={155}
           height={66}
           className="mt-[-0.8rem]"

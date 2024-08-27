@@ -16,15 +16,15 @@ const MainNav = () => {
   return (
     <header className="fixed top-0 w-full z-20 left-0 bg-white">
       <div className="container mx-auto px-16 ">
-        <div className=" flex items-center  justify-between h-[5rem]">
+        <div className=" flex items-center  justify-between h-[5rem] p-2">
           {/* Logo */}
           <div>
             <Image
-              src="/assets/images/RxPmsLogo.svg"
-              width={80}
-              height={76}
+              src="/RxPMSlogo.svg"
+              width={100}
+              height={40}
               className="mt-[-0.8rem]"
-              alt="Procare Logo"
+              alt="ProHealium"
             />
           </div>
 

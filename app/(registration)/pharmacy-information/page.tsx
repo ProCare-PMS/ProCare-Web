@@ -51,8 +51,8 @@ const RegistrationPage = () => {
     <div className="min-h-screen py-8 mx-auto px-8 bg-home">
       <div className="flex gap-4 items-center md:ml-6">
         <Image
-          src="/assets/images/RxPmsLogo.svg"
-          width={95}
+          src="/RxPMSlogo.svg"
+          width={145}
           height={70}
           alt="Procare Logo"
           className="mt-[-0.8rem]"
@@ -104,7 +104,7 @@ const RegistrationPage = () => {
 
               <Button
                 type="submit"
-                className="text-white font-inter rounded-[6px]"
+                className="text-white font-inter"
                 size="sm"
                 variant="secondary"
               >
