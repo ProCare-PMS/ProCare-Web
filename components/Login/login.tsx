@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 export default function Login() {
-  const [pharmacyId, setPharmacyId] = useState(" "); //close the "" is you are to continue using this functionality
-  const [password, setPassword] = useState(" "); //close the "" is you are to continue using this functionality
+  const [pharmacyId, setPharmacyId] = useState(""); //close the "" is you are to continue using this functionality
+  const [password, setPassword] = useState(""); //close the "" is you are to continue using this functionality
   const router = useRouter();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -44,10 +44,9 @@ export default function Login() {
               type="text"
               placeholder="Enter Pharmacy ID"
               className="appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB]"
+              autoComplete="off"
               value={pharmacyId}
               onChange={(e) => setPharmacyId(e.target.value)}
-              //do not allow auto fill
-              autoComplete="off"
             />
           </div>
           <div className="mb-4">
@@ -62,6 +61,7 @@ export default function Login() {
               type="password"
               placeholder="Enter Password"
               className="appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB]"
+              autoComplete="off"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -83,9 +83,12 @@ export default function Login() {
           </button>
           <p className="mt-4 text-gray-600">
             Not a registered member yet?{" "}
-            <a href="#" className="text-blue-500">
+            <Link
+              href="/personal-information"
+              className="text-sm text-blue-500"
+            >
               Register here
-            </a>
+            </Link>
           </p>
         </form>
       </div>

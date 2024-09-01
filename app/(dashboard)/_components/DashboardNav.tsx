@@ -57,7 +57,7 @@ const DashboardNav = () => {
         <div className="flex items-center justify-between h-[5rem] p-2">
           <div>
             <Image
-              src="/RxPMSlogo.svg"
+              src="/RxPMSlogo.png"
               width={155}
               height={66}
               className="mt-[-0.8rem]"

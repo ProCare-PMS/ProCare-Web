@@ -47,9 +47,9 @@ const RegistrationPage = () => {
     <div className="min-h-screen mx-auto py-8 px-8 bg-home">
       <div className="flex gap-4 items-center  md:ml-[2.25rem]">
         <Image
-          src="/RxPMSlogo.svg"
-          width={155}
-          height={70}
+          src="/RxPMSlogo.png"
+          width={150}
+          height={100}
           className="mt-[-0.8rem]"
           alt="Procare Logo"
         />

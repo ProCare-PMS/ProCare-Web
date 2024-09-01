@@ -21,17 +21,11 @@ export default function ResetPassword() {
 
   return (
     <div className="bg-[#F9F9F9] flex justify-center items-center w-1/2 h-screen">
-      <div className="bg-[#FFFFFF] w-[524px] h-[527px] p-8 rounded-lg shadow">
+      <div className="bg-[#FFFFFF] w-[524px] h-[500px] p-8 rounded-lg shadow">
         <form
           className="m-auto p-2 flex flex-col justify-center gap-3"
           onSubmit={handleSubmit}
         >
-          <h2 className="font-inter text-5xl font-bold leading-14 text-left mb-4">
-            Reset Password
-          </h2>
-          {/* <p className="text-gray-600 mb-4">
-              Log in to access your account securely
-            </p> */}
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -54,7 +48,7 @@ export default function ResetPassword() {
               htmlFor="password"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
-             Enter new Password
+              Enter new Password
             </label>
             <input
               id="password"
