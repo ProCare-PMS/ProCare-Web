@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import DashboardNote from "./_components/DashboardNote";
 import DashboardStats from "@/components/Dashboard/DashboardStats";
@@ -7,7 +8,6 @@ import { dashboardTransactionColumns } from "@/components/Tables/columns";
 import { dashboardTransactions } from "@/type";
 import DashboardTableHeader from "@/components/Dashboard/DashboardTableHeader";
 import { DashbaordChart } from "@/components/Dashboard/DashboardChart";
-
 
 const DashbaordHomePage = () => {
   return (

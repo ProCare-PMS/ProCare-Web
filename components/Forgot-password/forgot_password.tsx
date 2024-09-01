@@ -20,7 +20,7 @@ export default function Forgot_password() {
   };
   return (
     <div className="bg-[#F9F9F9] w-1/2 h-screen flex justify-center items-center">
-      <div className="bg-[#FFFFFF] w-[524px] h-[522px] p-8 rounded-lg shadow flex justify-center items-center">
+      <div className="bg-[#FFFFFF] w-[524px] h-[500px] p-8 rounded-lg shadow flex justify-center items-center">
         <div className="bg-[#FFFFFF] w-full">
           <div className="flex flex-col justify-center items-center text-center px-2 gap-4 mb-6">
             <h3 className="font-inter text-lg font-semibold leading-6 tracking-tighter text-center">
@@ -75,8 +75,7 @@ export default function Forgot_password() {
                 />
               </span>
               <p className=" text-white font-inter text-sm font-normal leading-5 text-left">
-                {`We’ve sent you an email which you can us to reset your password . 
-                Check your spam folder if you haven't received it after a few minutes`}
+                {`We’ve sent you an email which you can use to rest your password. Check your spam folder if you haven't received it after a few minutes. `}
               </p>
             </div>
           )}
@@ -88,7 +87,8 @@ export default function Forgot_password() {
             </div>
           ) : (
             <div className="w-full text-center text-slate-400 mt-3">
-              <Link href={"/login"}>Back to sign in</Link>
+              {/* <Link href={"/login"}>Back to sign in</Link> */}
+              <Link href="/reset-password">Reset Password</Link>
             </div>
           )}
         </div>

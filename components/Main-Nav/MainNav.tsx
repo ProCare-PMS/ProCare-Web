@@ -20,9 +20,9 @@ const MainNav = () => {
           {/* Logo */}
           <div>
             <Image
-              src="/RxPMSlogo.svg"
-              width={100}
-              height={40}
+              src="/RxPMSlogo.png"
+              width={180}
+              height={100}
               className="mt-[-0.8rem]"
               alt="ProHealium"
             />
