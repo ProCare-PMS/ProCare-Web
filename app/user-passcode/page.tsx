@@ -1,12 +1,12 @@
-import UserPasscode from '@/components/user_passcode/UserPasscode'
-import React from 'react'
+import UserPasscode from "@/components/user_passcode/UserPasscode";
+import React from "react";
 
 const UserPasscodePage = () => {
   return (
     <div>
-        <UserPasscode />
+      <UserPasscode />
     </div>
-  )
-}
+  );
+};
 
-export default UserPasscodePage
+export default UserPasscodePage;

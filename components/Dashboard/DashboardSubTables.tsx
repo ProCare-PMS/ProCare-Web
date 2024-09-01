@@ -1,3 +1,4 @@
+
 import {
   Table,
   TableBody,
@@ -39,6 +40,8 @@ interface TableProps {
 }
 
 export function DashboardSubTables({ title }: TableProps) {
+ 
+
   return (
     <div className="bg-white p-6 rounded-xl w-[450px] h-[428px] flex-1">
       <div className="flex items-center justify-between mb-6">
@@ -47,7 +50,7 @@ export function DashboardSubTables({ title }: TableProps) {
         </h2>
 
         <Link
-          href="/page_under_construction"
+          href="/inventory?tab=4" 
           className="text-[#2648EA] font-inter flex items-center gap-1 font-semibold text-sm"
         >
           Open

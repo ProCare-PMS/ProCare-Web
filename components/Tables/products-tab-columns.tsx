@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { ArrowUpDown } from "lucide-react"
 
 interface ProductsCellProps {
   row: {
@@ -37,7 +38,18 @@ const ProductActionCell = ({ row }: ProductsCellProps) => {
 export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
   {
     accessorKey: "productName",
-    header: "Product Name",
+    //header: "Product Name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Product Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "unit",

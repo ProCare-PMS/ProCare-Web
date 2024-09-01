@@ -632,9 +632,19 @@ export type lowStockType = {
   name: string;
   unit: string;
   brand: string;
-  itemRemaining: number;
-  lastRestockDate: string;
-  lastRestockTime: string;
+  itemSold: number;
+  date: string;
+  time: string;
+  amount: number;
+  type: string;
+};
+
+export type dailySalesType = {
+  transactionId: string;
+  itemSold: number;
+  date: string;
+  time: string;
+  amount: number;
   type: string;
 };
 

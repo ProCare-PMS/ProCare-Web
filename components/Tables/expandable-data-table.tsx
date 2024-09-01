@@ -19,6 +19,7 @@ import {
 import clsx from "clsx";
 import { Button } from "../ui/button";
 import { StepButton } from "@mui/material";
+import ProductEmptyState from "../Inventory/ProductsTab/ProductEmptyState";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -66,6 +67,7 @@ export function ExpandableDataTable<TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
+
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
@@ -97,43 +99,45 @@ export function ExpandableDataTable<TData, TValue>({
               </TableRow>
             ))
           ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+            <TableRow className="">
+              <TableCell colSpan={columns.length} className="mt-24 h-[400px]">
+                <ProductEmptyState />
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-between">
-        <p className="text-[#596574] text-sm font-normal">
-          Total number of products:{" "}
-          <span className="text-[#344054] text-base font-semibold">
-            {data.length}
-          </span>{" "}
-        </p>
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <button
-            className="border border-[#D0D5DD] w-full py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </button>
-          <button
-            className="border border-[#D0D5DD] w-full py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </button>
-          <div className="flex justify-between items-center py-2">
-            <p className="text-nowrap text-[#344054] font-medium text-sm">
-              Results {currentPage} of {totalPages}
-            </p>
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between">
+          <p className="text-[#596574] text-sm font-normal">
+            Total number of products:{" "}
+            <span className="text-[#344054] text-base font-semibold">
+              {data.length}
+            </span>{" "}
+          </p>
+          <div className="flex items-center justify-end space-x-2 py-4">
+            <button
+              className="border border-[#D0D5DD] w-full py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </button>
+            <button
+              className="border border-[#D0D5DD] w-full py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </button>
+            <div className="flex justify-between items-center py-2">
+              <p className="text-nowrap text-[#344054] font-medium text-sm">
+                Results {currentPage} of {totalPages}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

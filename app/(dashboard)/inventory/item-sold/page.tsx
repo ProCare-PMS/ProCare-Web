@@ -16,14 +16,14 @@ function ItemSold() {
   };
 
     return (
-        <>
-          <div className="container-fluid bg-white rounded-xl mx-4 p-5">
+        <div className='min-h-screen'>
+          <div className="container-fluid bg-white rounded-xl mx-16 p-5">
             <div className="flex justify-between items-center">
               <div className="flex justify-between items-center gap-5">
                 <span className="block">
                   <BackButton />
                 </span>
-                 <h3 className="font-bold text-lg">Items Sold</h3>
+                 <h3 className="font-bold text-lg font-inter">Items Sold</h3>
               </div>
               <div>
                 <div className="flex gap-4">
@@ -46,7 +46,7 @@ function ItemSold() {
                 </div>
             {/* table content end */}
           </div>
-        </>
+        </div>
       );
 }
 
