@@ -83,9 +83,12 @@ export default function Login() {
           </button>
           <p className="mt-4 text-gray-600">
             Not a registered member yet?{" "}
-            <a href="#" className="text-blue-500">
+            <Link
+              href="/personal-information"
+              className="text-sm text-blue-500"
+            >
               Register here
-            </a>
+            </Link>
           </p>
         </form>
       </div>
