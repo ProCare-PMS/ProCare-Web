@@ -14,8 +14,9 @@ import { productsTabColumns } from "@/components/Tables/products-tab-columns";
 import { productsTabTable } from "@/type";
 
 const ProductsTabHeader = () => {
-  const [showTab, setShowTab] = useState(<ExpandableDataTable columns={productsTabColumns}
-    data={productsTabTable}  />);
+  const [showTab, setShowTab] = useState(
+    <ExpandableDataTable columns={productsTabColumns} data={productsTabTable} />
+  );
   const [activeTab, setActiveTab] = useState("Products");
   const [showMenu, setShowMenu] = useState(false);
   const [showFilters, setShowFilter] = useState(false);
@@ -24,7 +25,7 @@ const ProductsTabHeader = () => {
     <div>
       <div className="flex items-center justify-between">
         {/* Tabs Section */}
-        <div className="flex items-center bg-[#858C95]/50 gap-6 p-1 rounded-[10px] mb-8">
+        <div className="flex items-center bg-[#F5F5F5] gap-6 p-1 rounded-[8px] mb-8">
           <button
             onClick={() => {
               setShowTab(
@@ -39,7 +40,7 @@ const ProductsTabHeader = () => {
               "px-5 py-1 text-base font-medium",
               activeTab === "Products"
                 ? "bg-white rounded-[8px] shadow-md text-[#0B2B23]"
-                : "text-gray-50"
+                : "text-[#858C95]"
             )}
           >
             Products
@@ -53,10 +54,10 @@ const ProductsTabHeader = () => {
               "px-5 py-1 text-base font-medium transition",
               activeTab === "Stocks"
                 ? "bg-white rounded-[8px] shadow-md text-[#0B2B23]"
-                : "text-gray-50"
+                : "text-[#858C95]"
             )}
           >
-            Stocks 
+            Stocks
           </button>
         </div>
 
@@ -87,18 +88,30 @@ const ProductsTabHeader = () => {
               Add Product
             </Button>
             {showMenu && (
-              <div className="bg-white absolute top-12 shadow-md hover:shadow-lg left-0 z-20 rounded-[8px]">
+              <div
+                className={`bg-white absolute top-12 left-0 z-20 rounded-[8px] shadow-md transform transition-all duration-300 ease-in-out ${
+                  showMenu
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-95 pointer-events-none"
+                }`}
+              >
                 <ul>
                   <li>
-                    <AddProducts title="Add individually" className="text-sm px-6 py-4 font-inter font-normal text-[#344054]" />
+                    <AddProducts
+                      title="Add individually"
+                      className="text-sm px-6 py-4 font-inter font-normal text-[#344054]"
+                    />
                   </li>
                   <hr />
                   <li>
-                    <ImportProductsModal title="Import Products" className="text-sm px-6 py-4 font-inter font-normal text-[#344054]" />
+                    <ImportProductsModal
+                      title="Import Products"
+                      className="text-sm px-6 py-4 font-inter font-normal text-[#344054]"
+                    />
                   </li>
                 </ul>
               </div>
-            )} 
+            )}
           </div>
 
           <div className="relative">
