@@ -42,7 +42,7 @@ export default function SignAuthLayout({
                 src="/assets/images/rafikisvg.svg"
                 width={50}
                 height={50}
-                alt="rafiki"
+                alt="rafikis"
                 priority
                 quality={100}
               />
