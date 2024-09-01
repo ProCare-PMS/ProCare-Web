@@ -8,12 +8,13 @@ export default function SignAuthLayout({
 }) {
   return (
     <div className="h-screen w-full relative">
-      <nav className="bg-transparent h-12 w-40 absolute top-3 left-0">
+      <nav className="bg-transparent w-40 absolute -top-5 left-0">
         <Image
           className="w-full h-full"
-          src="/RxPMSlogo.svg"
-          width={100}
-          height={40}
+          src="/RxPMSlogo.png"
+          width={500}
+          height={500}
+          quality={75}
           alt="logo"
         />
       </nav>

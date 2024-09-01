@@ -14,9 +14,9 @@ const MakePaymentPage = () => {
     <div className="min-h-screen py-8 mx-auto px-8 bg-home">
       <div className="flex gap-4 items-center ml-6">
         <Image
-          src="/assets/images/RxPmsLogo.svg"
-          width={85}
-          height={66}
+          src="/assets/images/RxPmsLogo.png"
+          width={150}
+          height={100}
           className="mt-[-0.8rem]"
           alt="Procare Logo"
         />
