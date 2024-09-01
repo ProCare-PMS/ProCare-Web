@@ -48,6 +48,8 @@ const ProductsMiddleSection = () => {
             </FormLabel>
             <FormControl>
               <Input
+                type="number"
+                min={0}
                 {...field}
                 className="bg-white border text-[#858C95] font-normal text-sm font-inter border-[#E5E5E7] rounded"
                 placeholder="Enter quantity"

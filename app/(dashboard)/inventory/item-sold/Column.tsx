@@ -1,11 +1,17 @@
 import { ColumnDef, CellContext } from "@tanstack/react-table";
 import { lowStockType } from "@/type";
 import { formatDateMonthToYear } from "@/components/CustomFunction/CustomFunction";
+import clsx from "clsx";
 
 export const Column: ColumnDef<lowStockType>[] = [
   {
-    header: "Name",
+    header: "Product Name",
     accessorKey: "name",
+    cell: (value: any) => (
+      <p className="font-semibold text-[#242525]">
+        <span>{value.getValue()}</span>
+      </p>
+    ),
   },
   {
     header: "Unit",
@@ -16,23 +22,29 @@ export const Column: ColumnDef<lowStockType>[] = [
     accessorKey: "brand",
   },
   {
-    header: "Items Remaining",
-    accessorKey: "itemRemaining",
-    cell: (value: any) => (
-      <p className="w-full ms-6">
-        <span className="w-10 bg-red-200 p-2 rounded-xl flex justify-center items-center">
-          {value.getValue()}
-        </span>
-      </p>
-    ),
+    header: "Items Sold",
+    accessorKey: "itemSold",
   },
   {
-    header: "Last Restock Date",
-    accessorKey: "lastRestockDate",
+    header: "Date",
+    accessorKey: "date",
     cell: (value: any) => <div>{formatDateMonthToYear(value.getValue())}</div>,
   },
   {
-    header: "Last Restock Time",
-    accessorKey: "lastRestockTime",
+    header: "Time",
+    accessorKey: "time",
+  },
+  {
+    header: "Amount",
+    accessorKey: "amount",
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("amount"));
+      const formatted = new Intl.NumberFormat("en-GH", {
+        style: "currency",
+        currency: "ghs",
+      }).format(amount);
+
+      return <div className="!text-left">{formatted}</div>;
+    },
   },
 ];

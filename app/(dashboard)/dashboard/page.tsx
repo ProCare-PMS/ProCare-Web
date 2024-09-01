@@ -1,8 +1,5 @@
 import React from "react";
 import DashboardNote from "./_components/DashboardNote";
-import DashboardSalesStats from "./_components/DashboardSalesStats";
-import DashboardTables from "./_components/DashboardTables";
-import { DashboardMainTable } from "./_components/DashboardMainTable";
 import DashboardStats from "@/components/Dashboard/DashboardStats";
 import { DashboardSubTables } from "@/components/Dashboard/DashboardSubTables";
 import DataTable from "@/components/Tables/data-table";

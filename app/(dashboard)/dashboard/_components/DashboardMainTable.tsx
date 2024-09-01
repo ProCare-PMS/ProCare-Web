@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
-import PaginationTab from "./PaginationTab";
 import { ExternalLink } from "lucide-react";
 import clsx from "clsx";
 
@@ -154,7 +153,6 @@ export function DashboardMainTable() {
           ))}
         </TableBody>
       </Table>
-      <PaginationTab />
     </div>
   );
 }

@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
@@ -22,28 +22,32 @@ const formSchema = z.object({
   productName: z.string({
     required_error: "Product Name is required",
   }),
-  productStrenth: z.string({
+  productStrength: z.string({
     required_error: "Product Strength is required",
   }),
   unit: z.string().min(1, "Unit is required"),
   quantity: z.coerce.number({
     required_error: "Quantity is required",
+    invalid_type_error: "Must be a valid number",
   }),
   expiryDate: z.date({
     required_error: "Date is required",
     invalid_type_error: "Format invalid",
   }),
-  reOrderLevel: z.string({
+  reOrderLevel: z.coerce.number({
     required_error: "Re-Order Level is required",
+    invalid_type_error: "Must be a valid number",
   }),
-  costPrice: z.string({
+  costPrice: z.coerce.number({
     required_error: "Cost Price is required",
   }),
-  markUp: z.string({
+  markUp: z.coerce.number({
     required_error: "Mark Up Percentage is required",
+    invalid_type_error: "Must be a valid number",
   }),
-  sellingPrice: z.string({
+  sellingPrice: z.coerce.number({
     required_error: "Selling Price is required",
+    invalid_type_error: "Must be a valid number",
   }),
   category: z.string({
     required_error: "Category is required",
@@ -58,19 +62,24 @@ const formSchema = z.object({
 
 type ProductSchema = z.infer<typeof formSchema>;
 
-const AddProducts = () => {
+interface AddProductProps {
+  title: string;
+  className?: string;
+}
+
+const AddProducts = ({ title, className }: AddProductProps) => {
   const form = useForm<ProductSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       expiryDate: new Date(),
     },
   });
+
+  
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="text-sm px-6 py-4 font-inter font-normal text-[#344054]">
-          Add Individually
-        </Button>
+        <Button className={className}>{title}</Button>
       </DialogTrigger>
       <DialogContent className="max-w-[900px] bg-white">
         <DialogHeader>

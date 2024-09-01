@@ -129,6 +129,7 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   useReactTable,
+  SortingState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -145,21 +146,27 @@ interface DataTableProps<TData, TValue> {
   searchValue?: string;
 }
 
-function DataTable<TData, TValue>({ columns, data, searchValue = "" }: DataTableProps<TData, TValue>) {
-  const [globalFilter, setGlobalFilter] = useState(""); 
- 
-  
+function DataTable<TData, TValue>({
+  columns,
+  data,
+  searchValue = "",
+}: DataTableProps<TData, TValue>) {
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
     data,
     columns,
     state: {
       globalFilter, // Added global filter state
+      sorting
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(), // Added sorted row model
     getFilteredRowModel: getFilteredRowModel(), // Added global filtered row model
     onGlobalFilterChange: setGlobalFilter, // Handle global filter change
+    onSortingChange: setSorting,
+    
   });
 
   const currentPage = table.getState().pagination.pageIndex + 1;
@@ -185,29 +192,26 @@ function DataTable<TData, TValue>({ columns, data, searchValue = "" }: DataTable
                     key={header.id}
                     onClick={header.column.getToggleSortingHandler()} // Added sorting handler
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : (
-                        <div className="flex items-center">
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                    {header.isPlaceholder ? null : (
+                      <div className="flex items-center font-inter">
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
 
-                          {header.column.getIsSorted() ?
-                            header.column.getIsSorted() === "desc" ? (
-                              <span className="ml-2"> 🔽</span>
-                            ) : (
-                              <span className="ml-2"> 🔼</span>
-                            ) : null
-                          }
-                          {/* {{
+                        {header.column.getIsSorted() ? (
+                          header.column.getIsSorted() === "desc" ? (
+                            <span className="ml-2"> 🔽</span>
+                          ) : (
+                            <span className="ml-2"> 🔼</span>
+                          )
+                        ) : null}
+                        {/* {{
                             asc: ' 🔼', // Sorting direction indicator
                             desc: ' 🔽'
                           }[header.column.getIsSorted()  ? 'asc' : 'desc'] ?? null} */}
-                          
-                        </div>
-                      )}
+                      </div>
+                    )}
                   </TableHead>
                 );
               })}
@@ -223,7 +227,10 @@ function DataTable<TData, TValue>({ columns, data, searchValue = "" }: DataTable
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="font-inter text-[#202224] text-sm font-normal">
+                  <TableCell
+                    key={cell.id}
+                    className="font-inter text-[#202224] text-sm font-normal"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -264,4 +271,3 @@ function DataTable<TData, TValue>({ columns, data, searchValue = "" }: DataTable
 }
 
 export default DataTable;
-

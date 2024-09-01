@@ -56,7 +56,7 @@ const ProductsTabHeader = () => {
                 : "text-gray-50"
             )}
           >
-            Stocks
+            Stocks 
           </button>
         </div>
 
@@ -90,15 +90,15 @@ const ProductsTabHeader = () => {
               <div className="bg-white absolute top-12 shadow-md hover:shadow-lg left-0 z-20 rounded-[8px]">
                 <ul>
                   <li>
-                    <AddProducts />
+                    <AddProducts title="Add individually" className="text-sm px-6 py-4 font-inter font-normal text-[#344054]" />
                   </li>
                   <hr />
                   <li>
-                    <ImportProductsModal />
+                    <ImportProductsModal title="Import Products" className="text-sm px-6 py-4 font-inter font-normal text-[#344054]" />
                   </li>
                 </ul>
               </div>
-            )}
+            )} 
           </div>
 
           <div className="relative">

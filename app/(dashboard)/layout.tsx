@@ -1,6 +1,6 @@
 import MainNav from "@/components/Main-Nav/MainNav";
 import DashboardNav from "./_components/DashboardNav"
-// import { Open_Sans, Roboto_Mono, Inter, Nunito_Sans } from 'next/font/google'
+ import { Open_Sans, Roboto_Mono, Inter, Nunito_Sans } from 'next/font/google'
 
 // const openSans = Open_Sans({
 //   subsets: ['latin'],
@@ -9,10 +9,10 @@ import DashboardNav from "./_components/DashboardNav"
 //   variable: '--font-opensans',
 // })
 
-// const inter = Inter({ 
-//   subsets: ["latin"],
-//   variable: '--font-inter' ,
-// });
+ const inter = Inter({ 
+   subsets: ["latin"],
+   variable: '--font-inter' ,
+ });
 
 // const nunito_sans = Nunito_Sans({
 //   subsets: ['latin'],
@@ -41,7 +41,7 @@ export default function DashboardLayout({
     //   {/* bg-[#F5F5F5] */}
     // </body>
 
-    <body>
+    <body className={`${inter.variable}`}>
       <MainNav />
       {/* <DashboardNav /> */}
       <main className=" pt-24 bg-[#F5F5F5] ">{children}</main>{" "}

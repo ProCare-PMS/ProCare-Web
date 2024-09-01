@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -9,15 +8,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 const ProductMiddleBottomSection = () => {
   const { control } = useFormContext();
@@ -34,6 +24,8 @@ const ProductMiddleBottomSection = () => {
             </FormLabel>
             <FormControl>
               <Input
+                type="number"
+                min={0}
                 {...field}
                 placeholder="Enter cost price"
                 className="bg-white border border-[#E5E5E7] rounded text-[#858C95] font-normal text-sm font-inter"
@@ -55,6 +47,8 @@ const ProductMiddleBottomSection = () => {
             </FormLabel>
             <FormControl>
               <Input
+                type="number"
+                min={0}
                 {...field}
                 placeholder="Enter mark up %"
                 className="bg-white border border-[#E5E5E7] rounded text-[#858C95] font-normal text-sm font-inter"
@@ -76,6 +70,8 @@ const ProductMiddleBottomSection = () => {
             </FormLabel>
             <FormControl>
               <Input
+                type="number"
+                min={0}
                 {...field}
                 placeholder="Enter selling price"
                 className="bg-white border border-[#E5E5E7] rounded text-[#858C95] font-normal text-sm font-inter"

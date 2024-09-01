@@ -10,12 +10,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-const ImportProductsModal = () => {
+interface ImportProductsModalProps {
+  title: string;
+  className?: string
+}
+
+const ImportProductsModal = ({ title, className } : ImportProductsModalProps) => {
   return (
-    <Dialog>
+    <Dialog> 
       <DialogTrigger asChild>
-        <Button className="text-sm px-6 py-4 font-inter font-normal text-[#344054]">
-          Import Products
+        <Button className={className}>
+         {title}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[900px] bg-white">
@@ -29,15 +34,7 @@ const ImportProductsModal = () => {
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter>
-          <Button
-            className="text-white w-[140px] font-inter rounded"
-            variant="secondary"
-            type="submit"
-          >
-            Save changes
-          </Button>
-        </DialogFooter>
+        
       </DialogContent>
     </Dialog>
   );
