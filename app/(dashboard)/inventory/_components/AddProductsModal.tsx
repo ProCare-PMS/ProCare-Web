@@ -79,7 +79,7 @@ const AddProducts = ({ title, className }: AddProductProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className={className}>{title}</Button>
+        <Button className={className}>{title}</Button> 
       </DialogTrigger>
       <DialogContent className="max-w-[900px] bg-white">
         <DialogHeader>
