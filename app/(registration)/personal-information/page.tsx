@@ -74,7 +74,7 @@ const RegistrationPage = () => {
           </span>
           <span className="text-sm flex gap-2 items-center font-inter font-semibold">
             <TbSquareRoundedNumber3 className="text-3xl text-slate-400" />
-            Review and submit
+           Make Payment
           </span>
         </div>
 
@@ -93,12 +93,12 @@ const RegistrationPage = () => {
                 Previous
               </Link>
 
-              <Button
+              <Button asChild
                 type="submit"
                 className="text-white w-[140px] font-inter"
                 variant="secondary"
               >
-                Next
+                <Link href="/make-payment">Next</Link>
               </Button>
             </div>
           </form>
