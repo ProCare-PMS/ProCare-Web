@@ -1,56 +1,83 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import * as React from "react";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
-export const description = "A linear line chart"
+export const description = "An interactive line chart";
 
 const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
+  { month: "JAN", desktop: 200, mobile: 300 },
+  { month: "FEB", desktop: 500, mobile: 530 },
+  { month: "MAR", desktop: 330, mobile: 0 },
+  { month: "APR", desktop: 560, mobile: 539 },
+  { month: "MAY", desktop: 560, mobile: 0 },
+  { month: "JUN", desktop: 610, mobile: 340 },
+  { month: "JUL", desktop: 230, mobile: 180 },
+  { month: "AUG", desktop: 240, mobile: 420 },
+  { month: "SEP", desktop: 700, mobile: 600 },
+  { month: "OCT", desktop: 640, mobile: 590 },
+  { month: "NOV", desktop: 327, mobile: 350 },
+  { month: "DEC", desktop: 292, mobile: 210 },
+];
 
 const chartConfig = {
+  views: {
+    label: "Page Views",
+  },
   desktop: {
     label: "Desktop",
-    color: "hsl(var(--chart-1))",
+    color: "#03124f",
   },
-} satisfies ChartConfig
+  mobile: {
+    label: "Mobile",
+    color: "#03124f",
+  },
+} satisfies ChartConfig;
 
 export function ProfitMadeGraph() {
+  const [activeChart, setActiveChart] =
+    React.useState<keyof typeof chartConfig>("desktop");
+
+  const total = React.useMemo(
+    () => ({
+      desktop: chartData.reduce((acc, curr) => acc + curr.desktop, 0),
+      mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0),
+    }),
+    []
+  );
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Line Chart - Linear</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
+    <div>
+      <div className="">
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-auto h-[250px] w-full"
+        >
           <LineChart
             accessibilityLayer
             data={chartData}
             margin={{
-              left: 12,
-              right: 12,
             }}
           >
             <CartesianGrid vertical={false} />
@@ -59,30 +86,24 @@ export function ProfitMadeGraph() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              minTickGap={32}
             />
+            <YAxis />
             <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              cursor={true}
+              content={<ChartTooltipContent indicator="dot"  />}
             />
+            <Tooltip />
             <Line
-              dataKey="desktop"
-              type="linear"
-              stroke="var(--color-desktop)"
+              dataKey={activeChart}
+              type="monotone"
+              stroke="#03124f"
               strokeWidth={2}
               dot={false}
             />
           </LineChart>
         </ChartContainer>
-      </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
-    </Card>
-  )
+      </div>
+    </div>
+  );
 }

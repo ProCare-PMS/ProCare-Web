@@ -46,7 +46,7 @@ const MakePaymentPage = () => {
         </div>
 
         <div className="mt-8">
-          <div className="flex">
+          <div className="flex h-[480px]">
             {/* Left Side */}
             <PackageInput />
 
