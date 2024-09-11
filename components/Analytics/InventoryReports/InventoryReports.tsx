@@ -1,5 +1,5 @@
 import React from "react";
-import { StockLevelChart } from "../StockLevel/StockLevel";
+import { StockLevelChart } from "./StockLevel/StockLevel";
 
 function InventoryReports() {
   return (
