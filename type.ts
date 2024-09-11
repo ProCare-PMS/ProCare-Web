@@ -688,3 +688,39 @@ export const expiryReportTable = [
 ];
 
 export type ExpiryReportTable = (typeof expiryReportTable)[number];
+
+/*Stock Transfer */
+export const stockTransferTable = [
+  {
+    pharmacyId: "AAA-YY-NN",
+    pharmacyName: "Medi Pharma Ltd",
+    location: "Konohagakure",
+    contact: "020000000",
+  },
+  {
+    pharmacyId: "AAA-YY-NN",
+    pharmacyName: "Medi Pharma Ltd",
+    location: "Konohagakure",
+    contact: "020000000",
+  },
+  {
+    pharmacyId: "AAA-YY-NN",
+    pharmacyName: "Medi Pharma Ltd",
+    location: "Konohagakure",
+    contact: "020000000",
+  },
+  {
+    pharmacyId: "AAA-YY-NN",
+    pharmacyName: "Medi Pharma Ltd",
+    location: "Konohagakure",
+    contact: "020000000",
+  },
+  {
+    pharmacyId: "AAA-YY-NN",
+    pharmacyName: "Medi Pharma Ltd",
+    location: "Konohagakure",
+    contact: "020000000",
+  },
+];
+
+export type StockTransferTable = (typeof stockTransferTable)[number];
