@@ -9,12 +9,7 @@ import InventorySuppliers from "./InventorySuppliers";
 import Purchases from "./Purchases";
 import ExpiryReport from "./ExpiryReport";
 import StockTransfer from "./StockTransfer";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
+import { TabPanelProps } from "@/lib/Types";
 
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -54,13 +49,44 @@ export default function BasicTabs() {
           onChange={handleChange}
           centered
           aria-label="basic tabs example"
+          sx={{ textTransform: "none" }}
         >
-          <Tab className="font-inter text-sm font-semibold text-[#858C95]" label="Products" {...a11yProps(0)} />
-          <Tab className="font-inter text-sm font-semibold text-[#858C95]" label="Categories" {...a11yProps(1)} />
-          <Tab className="font-inter text-sm font-semibold text-[#858C95]" label="Suppliers" {...a11yProps(2)} />
-          <Tab className="font-inter text-sm font-semibold text-[#858C95]" label="Purchases" {...a11yProps(3)} />
-          <Tab className="font-inter text-sm font-semibold text-[#858C95]" label="Expiry Report" {...a11yProps(4)} />
-          <Tab className="font-inter text-sm font-semibold text-[#858C95]" label="Stock Transfer" {...a11yProps(5)} />
+          <Tab
+            className="font-inter text-sm font-semibold text-[#858C95]"
+            label="Products"
+            {...a11yProps(0)}
+            sx={{ textTransform: "none" }}
+          />
+          <Tab
+            className="font-inter text-sm font-semibold text-[#858C95]"
+            label="Categories"
+            {...a11yProps(1)}
+            sx={{ textTransform: "none" }}
+          />
+          <Tab
+            className="font-inter text-sm font-semibold text-[#858C95]"
+            label="Suppliers"
+            {...a11yProps(2)}
+            sx={{ textTransform: "none" }}
+          />
+          <Tab
+            className="font-inter text-sm font-semibold text-[#858C95]"
+            label="Purchases"
+            {...a11yProps(3)}
+            sx={{ textTransform: "none" }}
+          />
+          <Tab
+            className="font-inter text-sm font-semibold text-[#858C95]"
+            label="Expiry Report"
+            {...a11yProps(4)}
+            sx={{ textTransform: "none" }}
+          />
+          <Tab
+            className="font-inter text-sm font-semibold text-[#858C95]"
+            label="Stock Transfer"
+            {...a11yProps(5)}
+            sx={{ textTransform: "none" }}
+          />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
