@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { StockTransferTable } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
+import { MoveRight } from 'lucide-react';
 import StockTransferModal from "../Modals/StockTransferModal";
 
 interface ActionsCellProps {
@@ -20,13 +21,14 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
   return (
     <div>
       <span
-        className="bg-[#2648EA] px-4 py-1 rounded-[16px] text-white cursor-pointer font-semibold text-sm"
+        className="bg-[#2648EA] flex items-center gap-1 w-[80px] px-4 py-1 rounded-[16px] text-white cursor-pointer font-semibold text-sm"
         onClick={() => {
           setModal(true);
           setSelectedItem(payment);
         }}
       >
         View
+        <MoveRight size={25} />
       </span>
       {selectedItem && (
         <StockTransferModal
@@ -42,6 +44,7 @@ export const stockTransferColumns: ColumnDef<StockTransferTable>[] = [
   {
     accessorKey: "pharmacyId",
     header: "Pharmacy ID",
+    
   },
   {
     accessorKey: "pharmacyName",
