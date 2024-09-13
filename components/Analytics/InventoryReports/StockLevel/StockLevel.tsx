@@ -2,6 +2,7 @@
 
 import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import Image from "next/image";
 
 import {
   Card,
@@ -24,6 +25,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import { useState } from "react";
 
 export const description = "A linear area chart";
@@ -106,9 +109,9 @@ const chartConfig = {
 export function StockLevelChart() {
   const [timeRange, setTimeRange] = useState("90d");
   return (
-    <div className="w-full">
+    <div className="w-full bg-white">
       <Card>
-        <CardHeader className=" my-1 flex items-center gap-2 space-y-0 border-b py-2 sm:flex-row">
+        <CardHeader className="my-1 flex items-center gap-2 space-y-0 border-b py-2 sm:flex-row">
           <div className="grid flex-1 gap-1 text-center sm:text-left">
             <CardTitle>Stock Levels</CardTitle>
             <CardDescription>
@@ -117,28 +120,44 @@ export function StockLevelChart() {
             </CardDescription>
           </div>
 
-          <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger
-              className="w-[160px] rounded-lg sm:ml-auto"
-              aria-label="Select a value"
-            >
-              <SelectValue placeholder="Last 3 months" />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              <SelectItem value="90d" className="rounded-lg">
-                Last 3 months
-              </SelectItem>
-              <SelectItem value="30d" className="rounded-lg">
-                Last 30 days
-              </SelectItem>
-              <SelectItem value="7d" className="rounded-lg">
-                Last 7 days
-              </SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex gap-2">
+            <Select value={timeRange} onValueChange={setTimeRange}>
+              <SelectTrigger
+                className="w-[160px] rounded-[0.5rem] sm:ml-auto"
+                aria-label="Select a value"
+              >
+                <SelectValue placeholder="All Stock" />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl">
+                <SelectItem value="90d" className="rounded-lg">
+                  All Stock
+                </SelectItem>
+                <SelectItem value="30d" className="rounded-lg">
+                  Last 30 days
+                </SelectItem>
+                <SelectItem value="7d" className="rounded-lg">
+                  Last 7 days
+                </SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
+              <span>
+                <CalendarMonthIcon />
+              </span>
+              <span>October</span>
+            </div>
+
+            <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
+              <span>
+                <CloudUploadOutlinedIcon />
+              </span>
+              <span>Export</span>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="h-[200px] w-full">
+          <ChartContainer config={chartConfig} className="h-[300px] w-full">
             <AreaChart
               accessibilityLayer
               data={chartData}
@@ -197,15 +216,16 @@ export function StockLevelChart() {
           </ChartContainer>
         </CardContent>
         <CardFooter>
-          <div className="flex w-full items-start gap-2 text-sm">
-            <div className="grid gap-2">
-              <div className="flex items-center gap-2 font-medium leading-none">
-                Trending up by 5.2% this month{" "}
-                <TrendingUp className="h-4 w-4" />
+          <div className="flex justify-between w-full text-sm">
+            <div>
+              <p>Day against Stock remaining</p>
+            </div>
+            <div className="flex gap-3">
+              <div className="w-full">
+                <span className="w-[50px] h-[20px] bg-sky-600 rounded-full"></span>
+                September
               </div>
-              <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                January - June 2024
-              </div>
+              <div>October</div>
             </div>
           </div>
         </CardFooter>
