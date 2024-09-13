@@ -6,7 +6,7 @@ import { Plus, SlidersVertical } from "lucide-react";
 const PurchasesTabHeader = () => {
   return (
     <div className="flex items-center justify-between mb-6">
-      <h2 className="text-[#202224] font-semibold text-2xl">Suppliers</h2>
+      <h2 className="text-[#202224] font-semibold text-2xl">Purchases</h2>
 
       <div className="flex items-center gap-3">
         <div className="flex flex-row border-2 border-[#EAEBF0] rounded-xl items-center flex-1 gap-2 bg-transparent p-1">

@@ -6,7 +6,7 @@ const InventoryPage = () => {
     <div className="bg-[#FAFBFC]">
       <InventoryMainTabs />
     </div>
-  );
+  ); 
 };
 
 export default InventoryPage;
