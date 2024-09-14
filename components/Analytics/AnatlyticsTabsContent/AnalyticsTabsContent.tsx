@@ -7,6 +7,7 @@ import { TabPanelProps } from "@/lib/Types";
 import InventoryReports from "../InventoryReports/InventoryReports";
 import SalesAnalyticsPage from "../SalesAnalytics";
 import PurchaseAnalyticsPage from "../PurchaseAnalytics";
+import FinancialReporting from "../FinancialReporting";
 
 export default function AnalyticsTabsContent() {
   const [value, setValue] = React.useState(0);
@@ -90,7 +91,7 @@ export default function AnalyticsTabsContent() {
         <PurchaseAnalyticsPage />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
-        Item 4
+        <FinancialReporting />
       </CustomTabPanel>
     </Box>
   );
