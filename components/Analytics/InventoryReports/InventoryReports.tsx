@@ -2,7 +2,8 @@ import React from "react";
 import { StockLevelChart } from "./StockLevel/StockLevel";
 import UnderPerformingProductTable from "./LowPerformingProduct";
 import BestPerformingProductTable from "./BestPerformingProduct";
-import StockAdjustmentTable from "../StockAdjustment";
+import InventoryAgingReportTable from "./InventoryAgingReport";
+import StockAdjustment from "./StockAdjustment";
 
 function InventoryReports() {
   return (
@@ -12,7 +13,8 @@ function InventoryReports() {
         <BestPerformingProductTable />
         <UnderPerformingProductTable />
       </div>
-      <StockAdjustmentTable />
+      <StockAdjustment />
+      <InventoryAgingReportTable />
     </>
   );
 }

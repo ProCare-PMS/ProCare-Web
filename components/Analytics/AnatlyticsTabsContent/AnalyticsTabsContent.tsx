@@ -6,6 +6,7 @@ import { Tabs } from "@mui/material";
 import { TabPanelProps } from "@/lib/Types";
 import InventoryReports from "../InventoryReports/InventoryReports";
 import SalesAnalyticsPage from "../SalesAnalytics";
+import PurchaseAnalyticsPage from "../PurchaseAnalytics";
 
 export default function AnalyticsTabsContent() {
   const [value, setValue] = React.useState(0);
@@ -86,7 +87,7 @@ export default function AnalyticsTabsContent() {
         <SalesAnalyticsPage />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        <PurchaseAnalyticsPage />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
         Item 4

@@ -8,7 +8,7 @@ import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 
-function StockAdjustmentTable() {
+function StockAdjustment() {
   const [searchValues, setSetSearchValues] = useState<string>("");
 
   const handleSearchValueChange = (
@@ -21,14 +21,28 @@ function StockAdjustmentTable() {
     <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px] mt-8">
       <div className="flex justify-between items-center my-3">
         <h2 className="text-2xl font-bold font-nunito_sans text-[#202224]">
-          Inventory Aging Report
+          Stock Adjustments
         </h2>
 
         <div className="flex gap-4">
-          <SearchFieldInput
+          <div className="flex items-center justify-between border border-[#D0D5DD] rounded-[6px] gap-3 py-1 px-1.5">
+            <div>
+              <Image
+                src="/assets/images/calenderz.svg"
+                width={13}
+                height={13}
+                alt="arrow-down"
+              />
+            </div>
+            <span className="text-[#5C5D65] font-medium text-sm">
+              12 October, 2024
+            </span>
+          </div>
+
+          {/* <SearchFieldInput
             value={searchValues}
             onChange={handleSearchValueChange}
-          />
+          /> */}
 
           <span className="iconHolder w-10 h-10">
             <Image
@@ -59,4 +73,4 @@ function StockAdjustmentTable() {
   );
 }
 
-export default StockAdjustmentTable;
+export default StockAdjustment;
