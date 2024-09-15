@@ -1,14 +1,14 @@
 import DataTable from "@/components/Tables/data-table";
 import React, { useState } from "react";
 import Image from "next/image";
-import { Columns } from "./Columns";
 import { Data } from "./Data";
+import { Columns } from "./Column";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 
-function InventoryAgingReportTable() {
+function BestSellingProductTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
 
   const handleSearchValueChange = (
@@ -21,7 +21,7 @@ function InventoryAgingReportTable() {
     <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px] mt-8">
       <div className="flex justify-between items-center my-3">
         <h2 className="text-2xl font-bold font-nunito_sans text-[#202224]">
-          Inventory Aging Report
+          Best-Selling Profit
         </h2>
 
         <div className="flex gap-4">
@@ -59,4 +59,4 @@ function InventoryAgingReportTable() {
   );
 }
 
-export default InventoryAgingReportTable;
+export default BestSellingProductTable;

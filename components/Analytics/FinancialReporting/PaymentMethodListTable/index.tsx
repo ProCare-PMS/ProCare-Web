@@ -1,20 +1,20 @@
 import React from "react";
 import DataTable from "@/components/Tables/data-table";
-import { Column } from "./Column";
+import { Columns } from "./Column";
 import { Data } from "./Data";
 import { MiniSubTable } from "@/components/MiniSubTable/MiniSubTable";
 
-function UnderPerformingProductTable() {
+function PaymentMethodListTable() {
   return (
     <div>
       <MiniSubTable
-        columns={Column}
+        columns={Columns}
         data={Data}
-        title="Underperforming Product"
+        title="Payment Mehtod List"
         link="/page_under_construction"
       />
     </div>
   );
 }
 
-export default UnderPerformingProductTable;
+export default PaymentMethodListTable;

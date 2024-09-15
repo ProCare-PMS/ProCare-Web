@@ -76,7 +76,7 @@ export function MiniSubTable({ title, columns, data, link }: TableProps) {
                   key={header.id}
                   className="text-[#202224] font-nunito_sans font-bold p-2"
                   style={{
-                    width: index === 0 ? "45%" : "auto", // First column gets 50% width
+                    width: index === 0 ? "30%" : "auto", // First column gets 50% width
                   }}
                 >
                   {flexRender(
@@ -101,9 +101,9 @@ export function MiniSubTable({ title, columns, data, link }: TableProps) {
                 <TableCell
                   key={cell.id}
                   className="font-semibold text-sm font-inter text-[#242525] p-2"
-                  style={{
-                    width: cellIndex === 0 ? "50%" : "auto", // First column in body gets 50% width
-                  }}
+                  // style={{
+                  //   width: cellIndex === 0 ? "50%" : "auto", // First column in body gets 50% width
+                  // }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>

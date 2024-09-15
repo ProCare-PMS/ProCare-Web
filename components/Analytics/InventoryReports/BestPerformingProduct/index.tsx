@@ -11,7 +11,7 @@ function BestPerformingProductTable() {
         columns={Column}
         data={Data}
         title="Best Performing Products"
-        link="/links"
+        link="/page_under_construction"
       />
     </div>
   );

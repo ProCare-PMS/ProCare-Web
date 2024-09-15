@@ -59,7 +59,7 @@ function StockAdjustment() {
             <span>Export</span>
           </div>
           <Link
-            href={"/empty"}
+            href={"/page_under_construction"}
             className="text-[#2648EA] font-inter flex items-center gap-1 font-semibold text-sm"
           >
             Open
