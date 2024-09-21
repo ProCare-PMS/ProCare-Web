@@ -1,9 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { MoveLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 function UnderConstruction() {
+  const router = useRouter();
+
   return (
     <div>
       <div className="bg-white h-full w-full m-auto">
@@ -24,15 +29,15 @@ function UnderConstruction() {
             <p className="text-[#848199] mb-7 font-inter font-normal text-sm">
               Kindly try again to access the full functionality
             </p>
-            <Link
-              href="/dashboard"
+            <button
+              onClick={() => router.back()}
               className="text-white font-semibold text-sm 
             bg-[#2648EA] py-2 px-9 relative 
             flex items-center gap-4 rounded-[12px] font-inter "
             >
               <MoveLeft />
               Go Back
-            </Link>
+            </button>
           </div>
         </div>
       </div>

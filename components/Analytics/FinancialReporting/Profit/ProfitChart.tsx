@@ -32,96 +32,83 @@ import { useState } from "react";
 export const description = "A linear area chart";
 
 const chartData = [
-  { day: "1", stock: 450 },
-  { day: "2", stock: 760 },
-  { day: "3", stock: 920 },
-  { day: "4", stock: 530 },
-  { day: "5", stock: 610 },
-  { day: "6", stock: 870 },
-  { day: "7", stock: 740 },
-  { day: "8", stock: 680 },
-  { day: "9", stock: 820 },
-  { day: "10", stock: 330 },
-  { day: "11", stock: 750 },
-  { day: "12", stock: 620 },
-  { day: "13", stock: 900 },
-  { day: "14", stock: 430 },
-  { day: "15", stock: 820 },
-  { day: "16", stock: 780 },
-  { day: "17", stock: 920 },
-  { day: "18", stock: 250 },
-  { day: "19", stock: 770 },
-  { day: "20", stock: 980 },
-  { day: "21", stock: 840 },
-  { day: "22", stock: 660 },
-  { day: "23", stock: 350 },
-  { day: "24", stock: 800 },
-  { day: "25", stock: 910 },
-  { day: "26", stock: 220 },
-  { day: "27", stock: 710 },
-  { day: "28", stock: 940 },
-  { day: "29", stock: 380 },
-  { day: "30", stock: 870 },
-  { day: "31", stock: 560 },
+  { month: "January", profit: 500 },
+  { month: "February", profit: 800 },
+  { month: "March", profit: 300 },
+  { month: "April", profit: 750 },
+  { month: "May", profit: 600 },
+  { month: "June", profit: 400 },
+  { month: "July", profit: 900 },
+  { month: "August", profit: 350 },
+  { month: "September", profit: 650 },
+  { month: "October", profit: 700 },
+  { month: "November", profit: 950 },
+  { month: "December", profit: 500 },
 ];
 
-const chartData2 = [
-  { day: "1", stock: 300 },
-  { day: "2", stock: 450 },
-  { day: "3", stock: 600 },
-  { day: "4", stock: 400 },
-  { day: "5", stock: 520 },
-  { day: "6", stock: 690 },
-  { day: "7", stock: 530 },
-  { day: "8", stock: 620 },
-  { day: "9", stock: 740 },
-  { day: "10", stock: 280 },
-  { day: "11", stock: 670 },
-  { day: "12", stock: 540 },
-  { day: "13", stock: 710 },
-  { day: "14", stock: 380 },
-  { day: "15", stock: 680 },
-  { day: "16", stock: 750 },
-  { day: "17", stock: 800 },
-  { day: "18", stock: 290 },
-  { day: "19", stock: 650 },
-  { day: "20", stock: 880 },
-  { day: "21", stock: 730 },
-  { day: "22", stock: 590 },
-  { day: "23", stock: 310 },
-  { day: "24", stock: 710 },
-  { day: "25", stock: 830 },
-  { day: "26", stock: 250 },
-  { day: "27", stock: 650 },
-  { day: "28", stock: 850 },
-  { day: "29", stock: 320 },
-  { day: "30", stock: 700 },
-  { day: "31", stock: 490 },
-];
+// const chartData2 = [
+//   { day: "1", stock: 300 },
+//   { day: "2", stock: 450 },
+//   { day: "3", stock: 600 },
+//   { day: "4", stock: 400 },
+//   { day: "5", stock: 520 },
+//   { day: "6", stock: 690 },
+//   { day: "7", stock: 530 },
+//   { day: "8", stock: 620 },
+//   { day: "9", stock: 740 },
+//   { day: "10", stock: 280 },
+//   { day: "11", stock: 670 },
+//   { day: "12", stock: 540 },
+//   { day: "13", stock: 710 },
+//   { day: "14", stock: 380 },
+//   { day: "15", stock: 680 },
+//   { day: "16", stock: 750 },
+//   { day: "17", stock: 800 },
+//   { day: "18", stock: 290 },
+//   { day: "19", stock: 650 },
+//   { day: "20", stock: 880 },
+//   { day: "21", stock: 730 },
+//   { day: "22", stock: 590 },
+//   { day: "23", stock: 310 },
+//   { day: "24", stock: 710 },
+//   { day: "25", stock: 830 },
+//   { day: "26", stock: 250 },
+//   { day: "27", stock: 650 },
+//   { day: "28", stock: 850 },
+//   { day: "29", stock: 320 },
+//   { day: "30", stock: 700 },
+//   { day: "31", stock: 490 },
+// ];
 
 const chartConfig = {
   desktop: {
-    label: "Stock",
+    label: "Profit",
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
 
-export function StockLevelChart() {
+export function ProfitChart() {
   const [timeRange, setTimeRange] = useState("90d");
+  const [selectedMonth, setSelectedMonth] = useState("");
+
+  const handleMonthChange = (e: any) => {
+    setSelectedMonth(e.target.value);
+  };
+
   return (
-    <div className="w-full bg-white">
-      <Card>
+    <div className="w-full bg-white rounded-2xl">
+      <Card className="rounded-2xl">
         <CardHeader className="my-1 flex items-center gap-2 space-y-0 border-b py-2 sm:flex-row">
           <div className="grid flex-1 gap-1 text-center sm:text-left">
-            <CardTitle>Stock Levels</CardTitle>
+            <CardTitle>Profit</CardTitle>
             <CardDescription>
-              Current Stock Level:{" "}
-              <span className="text-blue-700 font-bold">120</span>
+              Total Profit:{" "}
+              <span className="text-blue-700 font-bold">₵ 839.27</span>
             </CardDescription>
           </div>
 
           <div className="flex gap-2">
-            <Select value={timeRange} onValueChange={setTimeRange}>
+            {/* <Select value={timeRange} onValueChange={setTimeRange}>
               <SelectTrigger
                 className="w-[160px] rounded-[0.5rem] sm:ml-auto"
                 aria-label="Select a value"
@@ -139,7 +126,30 @@ export function StockLevelChart() {
                   Last 7 days
                 </SelectItem>
               </SelectContent>
-            </Select>
+            </Select> */}
+            <div className="w-44">
+              <select
+                id="month"
+                name="month"
+                value={selectedMonth}
+                onChange={handleMonthChange}
+                className="mt-1 block w-full border border-gray-500 px-1 py-2 focus:border-gray-500 focus:ring-opacity-50 rounded-xl"
+              >
+                <option value="">Month</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
 
             <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
               <span>
@@ -165,21 +175,16 @@ export function StockLevelChart() {
                 left: 12,
                 right: 12,
               }}
-              //className="h-[200px]"
             >
               <defs>
                 <linearGradient id="gradientColor" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(38, 72, 234, 0.3)" />
-                  <stop offset="100%" stopColor="rgba(255, 255, 255, 0)" />
-                </linearGradient>
-                <linearGradient id="gradientColor2" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(153, 153, 153, 0.5)" />
+                  <stop offset="0%" stopColor="rgba(33, 150, 83, 0.3)" />
                   <stop offset="100%" stopColor="rgba(255, 255, 255, 0)" />
                 </linearGradient>
               </defs>
               <CartesianGrid vertical={true} />
               <XAxis
-                dataKey="day"
+                dataKey="month"
                 tickLine={true}
                 axisLine={true}
                 tickMargin={8}
@@ -198,34 +203,19 @@ export function StockLevelChart() {
                 content={<ChartTooltipContent indicator="dot" hideLabel />}
               />
               <Area
-                dataKey="stock"
+                dataKey="profit"
                 type="linear"
                 fill="url(#gradientColor)"
                 fillOpacity={0.4}
-                stroke="#2648EA"
-              />
-              <Area
-                dataKey="stock"
-                type="linear"
-                fill="url(#gradientColor2)"
-                fillOpacity={0.4}
-                stroke="#BABABA"
-                data={chartData2}
+                stroke="#219653"
               />
             </AreaChart>
           </ChartContainer>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="border-t pt-5">
           <div className="flex justify-between w-full text-sm">
             <div>
-              <p>Day against Stock remaining</p>
-            </div>
-            <div className="flex gap-3">
-              <div className="w-full">
-                <span className="w-[50px] h-[20px] bg-sky-600 rounded-full"></span>
-                September
-              </div>
-              <div>October</div>
+              <p>Day against Profit</p>
             </div>
           </div>
         </CardFooter>

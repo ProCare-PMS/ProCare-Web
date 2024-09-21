@@ -1,7 +1,6 @@
 "use client";
 import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 
 import {
   Card,
@@ -19,21 +18,20 @@ import {
 } from "@/components/ui/chart";
 import { useState } from "react";
 
-export const description = "Months and Sales";
+export const description = "Volumes and Frequency";
 
 const chartData = [
-  { month: "January", sales: 16000 },
-  { month: "February", sales: 2000 },
-  { month: "March", sales: 4000 },
-  { month: "April", sales: 1000 },
-  { month: "May", sales: 7000 },
-  { month: "June", sales: 3000 },
-  { month: "July", sales: 13000 },
-  { month: "August", sales: 17000 },
-  { month: "September", sales: 14000 },
-  { month: "October", sales: 9000 },
-  { month: "November", sales: 19000 },
-  { month: "December", sales: 16000 },
+  { volumes: "Bottles", frequency: 16000 },
+  { volumes: "Sachets", frequency: 2000 },
+  { volumes: "Packs", frequency: 4000 },
+  { volumes: "Containers", frequency: 1000 },
+  { volumes: "Ampoules", frequency: 7000 },
+  { volumes: "Paper", frequency: 3000 },
+  { volumes: "Cartons", frequency: 13000 },
+  { volumes: "Syringes", frequency: 17000 },
+  { volumes: "Strip", frequency: 14000 },
+  { volumes: "Lamitubes", frequency: 9000 },
+  { volumes: "Packaging", frequency: 19000 },
 ];
 
 const chartConfig = {
@@ -43,7 +41,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function SalesBarChart() {
+export function OrderVolumeFChart() {
   const [selectedMonth, setSelectedMonth] = useState("");
 
   const handleMonthChange = (e: any) => {
@@ -52,44 +50,30 @@ export function SalesBarChart() {
   return (
     <Card className="bg-white rounded-2xl">
       <CardHeader className="mb-2 flex justify-between items-center gap-2 space-y-0 border-b py-3 sm:flex-row">
-        <div>
-          <CardTitle>Sales</CardTitle>
-          <CardDescription>
-            Total Sales:{" "}
-            <span className="text-blue-700 font-bold">₵ 839.27</span>
-          </CardDescription>
-        </div>
-
-        <div className="flex gap-2">
-          <div className="w-44">
-            <select
-              id="month"
-              name="month"
-              value={selectedMonth}
-              onChange={handleMonthChange}
-              className="mt-1 block w-full border border-gray-500 px-1 py-2 focus:border-gray-500 focus:ring-opacity-50 rounded-xl"
-            >
-              <option value="">Month</option>
-              <option value="1">January</option>
-              <option value="2">February</option>
-              <option value="3">March</option>
-              <option value="4">April</option>
-              <option value="5">May</option>
-              <option value="6">June</option>
-              <option value="7">July</option>
-              <option value="8">August</option>
-              <option value="9">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
-            </select>
-          </div>
-          <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2 py-0">
-            <span>
-              <CloudUploadOutlinedIcon />
-            </span>
-            <span>Export</span>
-          </div>
+        <CardTitle>Order Volumes Frequency</CardTitle>
+        {/* <CardDescription>January - June 2024</CardDescription> */}
+        <div className="w-44">
+          <select
+            id="month"
+            name="month"
+            value={selectedMonth}
+            onChange={handleMonthChange}
+            className="mt-1 block w-full border border-gray-500 px-1 py-2 focus:border-gray-500 focus:ring-opacity-50 rounded-xl"
+          >
+            <option value="">Month</option>
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
         </div>
       </CardHeader>
       <CardContent>
@@ -104,7 +88,7 @@ export function SalesBarChart() {
 
             {/* XAxis for volume labels */}
             <XAxis
-              dataKey="month"
+              dataKey="volumes"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
@@ -128,7 +112,7 @@ export function SalesBarChart() {
             />
 
             {/* Bar chart data */}
-            <Bar dataKey="sales" fill="blue" radius={8} />
+            <Bar dataKey="frequency" fill="blue" radius={8} />
           </BarChart>
         </ChartContainer>
       </CardContent>
@@ -138,7 +122,7 @@ export function SalesBarChart() {
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div> */}
         <div className="leading-none text-muted-foreground">
-          Month against Volume
+          Volume against Order Frequency
         </div>
       </CardFooter>
     </Card>

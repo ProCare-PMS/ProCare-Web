@@ -106,17 +106,17 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function StockLevelChart() {
+export function DailySalesChart() {
   const [timeRange, setTimeRange] = useState("90d");
   return (
-    <div className="w-full bg-white">
-      <Card>
+    <>
+      <Card className="w-full bg-white rounded-2xl">
         <CardHeader className="my-1 flex items-center gap-2 space-y-0 border-b py-2 sm:flex-row">
           <div className="grid flex-1 gap-1 text-center sm:text-left">
-            <CardTitle>Stock Levels</CardTitle>
+            <CardTitle>Daily Sales</CardTitle>
             <CardDescription>
-              Current Stock Level:{" "}
-              <span className="text-blue-700 font-bold">120</span>
+              Total Sales Today:{" "}
+              <span className="text-blue-700 font-bold">₵ 839.27</span>
             </CardDescription>
           </div>
 
@@ -130,7 +130,7 @@ export function StockLevelChart() {
               </SelectTrigger>
               <SelectContent className="rounded-xl">
                 <SelectItem value="90d" className="rounded-lg">
-                  All Stock
+                  Month
                 </SelectItem>
                 <SelectItem value="30d" className="rounded-lg">
                   Last 30 days
@@ -218,18 +218,18 @@ export function StockLevelChart() {
         <CardFooter>
           <div className="flex justify-between w-full text-sm">
             <div>
-              <p>Day against Stock remaining</p>
+              <p>Day against amount sold</p>
             </div>
             <div className="flex gap-3">
               <div className="w-full">
                 <span className="w-[50px] h-[20px] bg-sky-600 rounded-full"></span>
-                September
+                Today
               </div>
-              <div>October</div>
+              <div>Yesterday</div>
             </div>
           </div>
         </CardFooter>
       </Card>
-    </div>
+    </>
   );
 }
