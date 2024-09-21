@@ -44,7 +44,7 @@ export default function DashboardLayout({
     <body className={`${inter.variable}`}>
       <MainNav />
       {/* <DashboardNav /> */}
-      <main className=" pt-24 bg-[#F5F5F5] ">{children}</main>{" "}
+      <main className=" pt-12 bg-[#F5F5F5] ">{children}</main>{" "}
       {/* bg-[#F5F5F5] */}
     </body>
   );
