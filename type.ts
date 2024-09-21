@@ -760,3 +760,20 @@ export const stockTransferHistoryTable = [
 
 export type StockTransferHistoryTable =
   (typeof stockTransferHistoryTable)[number];
+
+
+
+  /* Stock Transfer Requests */
+export const stockTransferRequestsTable = [
+  {
+    transferId: "Transfer #45434",
+    requestedBy: "Nikola Tesla",
+    pharmacyId: "P#469806",
+    location: "East Legon",
+    date: "12/0/2019",
+    time: "12:00PM"
+  },
+];
+
+export type StockTransferRequestsTable =
+  (typeof stockTransferRequestsTable)[number];

@@ -63,14 +63,14 @@ const DashboardStats = () => {
   const [showDetails, setShowDetails] = React.useState<number | null>(null);
 
   const handleShowDetails = (index: number) => {
-    console.log('kkk', index, showDetails);
-    
+    console.log("kkk", index, showDetails);
+
     setShowDetails((prevIndex) => (prevIndex === index ? null : index));
   };
 
   return (
     <>
-      <div className="flex flex-col md:flex-row items-center font-inter justify-between gap-4 py-5">
+      <div className="flex flex-col md:flex-row items-center font-inter justify-between gap-3  py-2">
         {data.map((item, index) => (
           <>
             <div
@@ -78,13 +78,16 @@ const DashboardStats = () => {
               className="flex flex-col shadow-custom rounded-xl px-5 py-4 bg-white w-[18rem] relative"
             >
               <div className="flex items-center mb-4 justify-between">
-                <h3 className="font-semibold font-inter text-base">
+                <h3 className="font-medium text-[#202224] text-xl font-inter">
                   {item.title}
                 </h3>
                 <div className="dotHolder">
                   <span className="text-2xl font-inter text-[#858C95]">
-                    <button onClick={() => handleShowDetails(index)} className="">
-                     <span>...</span> 
+                    <button
+                      onClick={() => handleShowDetails(index)}
+                      className=""
+                    >
+                      <span>...</span>
                     </button>
                   </span>
                   {showDetails === index && (
@@ -97,24 +100,28 @@ const DashboardStats = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between gap-2">
+              <div className="flex justify-between gap-2">
                 <div>
                   <h3 className="text-2xl font-inter mb-4 font-semibold">
                     {item.amount || item.itemAmount}
                   </h3>
-                  <div className="flex items-center gap-4 text-[#858C95] font-bold text-xs">
+                  <div className="flex items-center gap-2 text-[#858C95]  text-xs">
                     <span
-                      className={`bg-[${item.growth.background}] font-inter rounded-[7rem] text-xs font-medium px-3 py-1 text-[${item.growth.color}]`}
+                      className="font-inter rounded-[7rem] text-xs font-medium px-3 py-1"
+                      style={{
+                        backgroundColor: item.growth.background,
+                        color: item.growth.color,
+                      }}
                     >
                       {item.growth.mainLabel}
                     </span>
                     {item.growth.label}
                   </div>
                 </div>
-                <div className="">
+                <div className="pt-4">
                   <Image
-                    width={40}
-                    height={40}
+                    width={60}
+                    height={60}
                     src={item.icon}
                     alt={item?.alt}
                   />

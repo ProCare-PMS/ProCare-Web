@@ -12,6 +12,7 @@ import FilterDropdown from "@/components/DropDown/FilterDropDown";
 import { ExpandableDataTable } from "@/components/Tables/expandable-data-table";
 import { productsTabColumns } from "@/components/Tables/products-tab-columns";
 import { productsTabTable } from "@/type";
+import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 
 const ProductsTabHeader = () => {
   const [showTab, setShowTab] = useState(
@@ -20,6 +21,14 @@ const ProductsTabHeader = () => {
   const [activeTab, setActiveTab] = useState("Products");
   const [showMenu, setShowMenu] = useState(false);
   const [showFilters, setShowFilter] = useState(false);
+
+  const [searchValues, setSetSearchValues] = useState<string>("");
+
+  const handleSearchValueChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSetSearchValues(event.target.value);
+  };
 
   return (
     <div>
@@ -73,6 +82,7 @@ const ProductsTabHeader = () => {
               className="text-sm p-1 w-full focus:outline-none bg-transparent"
             />
           </div>
+          <SearchFieldInput  value={searchValues} onChange={handleSearchValueChange} />
 
           <div className="relative">
             <Button

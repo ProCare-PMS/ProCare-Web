@@ -45,7 +45,7 @@ export function DashboardSubTables({ title }: TableProps) {
   return (
     <div className="bg-white p-6 rounded-xl w-[450px] h-[428px] flex-1">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold font-nunito_sans text-[#202224]">
+        <h2 className="text-2xl font-medium font-nunito_sans text-[#202224]">
           {title}
         </h2>
 
