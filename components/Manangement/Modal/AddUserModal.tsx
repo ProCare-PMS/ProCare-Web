@@ -285,7 +285,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
       >
         {stepNumber}
       </div>
-      <p className="text-sm mt-2">{label}</p>
+      <p className="text-sm mt-2 p-0">{label}</p>
     </div>
   );
 };
