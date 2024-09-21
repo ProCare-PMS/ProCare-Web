@@ -15,7 +15,7 @@ function ItemSold() {
     setSetSearchValues(event.target.value);
   };
 
-    return (
+    return (   
         <div className='min-h-screen'>
           <div className="container-fluid bg-white rounded-xl mx-16 p-5">
             <div className="flex justify-between items-center">

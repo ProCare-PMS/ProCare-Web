@@ -11,17 +11,17 @@ import { DashbaordChart } from "@/components/Dashboard/DashboardChart";
 
 const DashbaordHomePage = () => {
   return (
-    <div className="container pb-6 px-16 pt-7 bg-[#F5F5F5]">
+    <div className="container grid gap-y-8 pb-6 px-8 pt-7 bg-[#F5F5F5]">
       <div className="hidden md:block">
         <DashboardNote />
       </div>
       <DashboardStats />
-      <div className="flex flex-col md:flex-row items-center gap-6 mb-12">
+      <div className="flex flex-col md:flex-row items-center gap-6">
         <DashboardSubTables title="Expiry List" />
         <DashboardSubTables title="Low Stock Alert" />
         <DashbaordChart />
       </div>
-      <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px]">
+      <div className="bg-white shadow-custom p-4 mb-12 mt-4 rounded-[8px]">
         <DashboardTableHeader />
         <DataTable
           columns={dashboardTransactionColumns}

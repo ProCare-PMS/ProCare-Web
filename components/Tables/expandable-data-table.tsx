@@ -1,3 +1,7 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+
 import {
   ColumnDef,
   flexRender,
@@ -5,6 +9,8 @@ import {
   getPaginationRowModel,
   getExpandedRowModel,
   useReactTable,
+  getFilteredRowModel,
+  SortingState,
 } from "@tanstack/react-table";
 
 import {
@@ -22,23 +28,38 @@ import { Fragment } from "react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-
+  searchValue?: string;
 }
 
 export function ExpandableDataTable<TData, TValue>({
   columns,
   data,
+  searchValue = "",
 }: DataTableProps<TData, TValue>) {
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getExpandedRowModel: getExpandedRowModel(), // Enable expandable rows
+    state: {
+      globalFilter, // Added global filter state
+      sorting,
+    },
+    getFilteredRowModel: getFilteredRowModel(), // Added global filtered row model
+    onGlobalFilterChange: setGlobalFilter, // Handle global filter change
+    onSortingChange: setSorting,
   });
 
   const currentPage = table.getState().pagination.pageIndex + 1;
   const totalPages = table.getPageCount();
+
+  useEffect(() => {
+    setGlobalFilter(searchValue); // Update global filter when searchValue changes
+  }, [searchValue]);
 
   return (
     <div className="rounded-md">
