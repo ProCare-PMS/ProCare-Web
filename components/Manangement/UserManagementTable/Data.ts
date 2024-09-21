@@ -1,0 +1,58 @@
+export const Data = [
+  {
+    name: "Kwabena Owusu Ansah",
+    email: "kwabena@pharm.com",
+    contact: "024 085 9484",
+    role: "Pharmacist",
+    workingDays: [2, 3, 4, 5, 6],
+  },
+  {
+    name: "Kwabena Owusu Ansah",
+    email: "kwabena@pharm.com",
+    contact: "024 085 9484",
+    role: "Pharmacist",
+    workingDays: [3, 4, 5, 6, 7],
+  },
+  {
+    name: "Kwabena Owusu Ansah",
+    email: "kwabena@pharm.com",
+    contact: "024 085 9484",
+    role: "Pharmacist",
+    workingDays: [1, 2, 3, 4, 5],
+  },
+  {
+    name: "Kwabena Owusu Ansah",
+    email: "kwabena@pharm.com",
+    contact: "024 085 9484",
+    role: "Pharmacist",
+    workingDays: [1, 2, 7],
+  },
+  {
+    name: "Kwabena Owusu Ansah",
+    email: "kwabena@pharm.com",
+    contact: "024 085 9484",
+    role: "Pharmacist",
+    workingDays: [1, 2, 3, 4, 5, 6, 7],
+  },
+  {
+    name: "Kwabena Owusu Ansah",
+    email: "kwabena@pharm.com",
+    contact: "024 085 9484",
+    role: "Pharmacist",
+    workingDays: [1, 2, 3, 4, 5, 6, 7],
+  },
+  {
+    name: "Kwabena Owusu Ansah",
+    email: "kwabena@pharm.com",
+    contact: "024 085 9484",
+    role: "Pharmacist",
+    workingDays: [1, 3, 4, 7],
+  },
+  {
+    name: "Kwabena Owusu Ansah",
+    email: "kwabena@pharm.com",
+    contact: "024 085 9484",
+    role: "Pharmacist",
+    workingDays: [1, 2, 6, 7],
+  },
+];
