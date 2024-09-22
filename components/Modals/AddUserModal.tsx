@@ -33,8 +33,8 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   if (!isOpen) return null; // Don't render if modal is not open
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className=" relative bg-white w-[90rem] h-[30rem] max-w-6xl p-6 rounded-lg shadow-lg">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-5">
+      <div className="relative bg-white w-[90rem] h-[30rem] max-w-6xl p-6 shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">{title} User</h2>
           <button className="text-dark" onClick={onClose}>
