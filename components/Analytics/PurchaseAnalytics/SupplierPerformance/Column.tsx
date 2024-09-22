@@ -61,7 +61,7 @@ export const Columns: ColumnDef<any>[] = [
   {
     accessorKey: "amount",
     header: "Amount",
-    cell: ({ getValue }) => `$${getValue()}`,
+    cell: ({ getValue }) => `₵ ${getValue()}`,
   },
   {
     id: "actions",

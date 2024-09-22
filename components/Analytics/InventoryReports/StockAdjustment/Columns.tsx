@@ -66,10 +66,11 @@ export const Columns: ColumnDef<any>[] = [
         style={{
           width: "5px !important",
           textAlign: "center",
-          backgroundColor: "green",
         }}
       >
-        fish
+        <span className="text-[#2648EA] cursor-pointer font-semibold text-sm underline">
+          View
+        </span>
       </div> // Placeholder cell content
     ),
   },

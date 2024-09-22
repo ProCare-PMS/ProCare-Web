@@ -10,7 +10,7 @@ function PaymentMethodListTable() {
       <MiniSubTable
         columns={Columns}
         data={Data}
-        title="Payment Mehtod List"
+        title="Payment Method List"
         link="/page_under_construction"
       />
     </div>

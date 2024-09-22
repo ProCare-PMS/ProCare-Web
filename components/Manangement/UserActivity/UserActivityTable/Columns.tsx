@@ -1,8 +1,7 @@
 "use client";
 
-import { DashboardTransactions, dashboardTransactions } from "@/type";
+import { DashboardTransactions } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 import { useState } from "react";
 import DashboardModal from "@/components/Modals/DashboardModal";
 import clsx from "clsx";
@@ -16,26 +15,28 @@ interface ActionsCellProps {
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const payment = row.original;
   const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] =
-    useState<DashboardTransactions | null>(null);
+
+  const handleOpenModal = () => {
+    setModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setModal(false);
+  };
 
   return (
     <div>
       <span
-        className="text-[#2648EA] cursor-pointer font-semibold text-sm underline w-4"
-        style={{ width: "6px" }}
-        onClick={() => {
-          setModal(true);
-          setSelectedItem(payment);
-        }}
+        className="text-[#2648EA] cursor-pointer font-semibold text-sm underline"
+        onClick={handleOpenModal}
       >
         View
       </span>
-      {selectedItem && (
+      {modal && (
         <DashboardModal
           title="Transaction Details"
-          item={selectedItem}
-          setModal={() => setSelectedItem(null)}
+          item={payment}
+          setModal={handleCloseModal}
         />
       )}
     </div>
@@ -44,13 +45,39 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
 
 export const Columns: ColumnDef<any>[] = [
   {
-    accessorKey: "adjustmentId",
-    header: "Product Name",
+    accessorKey: "id",
+    header: "Transaction ID",
     cell: ({ getValue }) => `Receipt# ${getValue()}`,
+  },
+  {
+    accessorKey: "user",
+    header: "User",
+    cell: ({ row }) => {
+      // Explicitly cast the value to the expected type
+      const user = (
+        row.getValue("user") as { userName: string; email: string }[]
+      )[0];
+
+      return (
+        <div>
+          <span className="font-bold block">{user.userName}</span>
+          <span className="text-sm text-gray-500 block">{user.email}</span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "date",
     header: "Date",
+  },
+  {
+    accessorKey: "time",
+    header: "Time",
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
+    cell: ({ getValue }) => `₵  ${getValue()}`,
   },
   {
     accessorKey: "type",
@@ -62,12 +89,12 @@ export const Columns: ColumnDef<any>[] = [
             "text-[#219653] bg-[#21965314]  py-2 rounded-3xl px-3 ":
               value.getValue() === "Bank",
             "text-[#FFA70B] bg-[#FFA70B14] px-3  py-2":
-              value.getValue() === "Cash",
-            "text-[#D34053] bg-[#D3405314] py-2 ":
-              value.getValue() === `Operational Expense`,
+              value.getValue() === "Momo",
+            "text-[#D34053] bg-[#D3405314] py-2 px-3":
+              value.getValue() === `Cash`,
 
             "text-[#f5f83f] bg-[#ccaf0b14] px-2 py-2 ":
-              value.getValue() === `Momo`,
+              value.getValue() === `Momos`,
           })}
         >
           {value.getValue()}
@@ -77,6 +104,6 @@ export const Columns: ColumnDef<any>[] = [
   },
   {
     id: "actions",
-    cell: ActionsCell, // Ensure you have the ActionsCell defined elsewhere in your code
+    cell: ActionsCell,
   },
 ];

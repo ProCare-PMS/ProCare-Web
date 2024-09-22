@@ -1,10 +1,10 @@
-import UserManagementTable from "@/components/Manangement/UserManagementTable";
+import UserManagementTabContent from "@/components/Manangement/UserManagementTabContent/UserManagementTabContent";
 import React from "react";
 
 function ManagementPage() {
   return (
-    <div className="px-4">
-      <UserManagementTable />
+    <div className="mt-[3rem]">
+      <UserManagementTabContent />
     </div>
   );
 }
