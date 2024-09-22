@@ -6,6 +6,7 @@ import { Tabs } from "@mui/material";
 import { TabPanelProps } from "@/lib/Types";
 import UserManagementTable from "../UserManagementTable";
 import UserActivityTable from "../UserActivity/UserActivityTable";
+import UserAnalyticsContent from "../UserAnalytics/UserAnalyticsContent";
 
 export default function UserManagementTabContent() {
   const [value, setValue] = React.useState(0);
@@ -79,7 +80,9 @@ export default function UserManagementTabContent() {
       <CustomTabPanel value={value} index={1}>
         <UserActivityTable />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}></CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <UserAnalyticsContent />
+      </CustomTabPanel>
     </Box>
   );
 }
