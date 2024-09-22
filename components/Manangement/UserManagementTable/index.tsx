@@ -6,7 +6,7 @@ import { Columns } from "./Columns";
 import { Data } from "./Data";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
-import AddUserModal from "../Modal/AddUserModal";
+import AddUserModal from "../../Modals/AddUserModal";
 
 function UserManagementTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
@@ -63,7 +63,7 @@ function UserManagementTable() {
       <DataTable columns={Columns} data={Data} searchValue={searchValues} />
 
       {/* Add User Modal */}
-      <AddUserModal isOpen={showModal} onClose={handleCloseModal} />
+      <AddUserModal isOpen={showModal} onClose={handleCloseModal} title="Add" />
     </div>
   );
 }

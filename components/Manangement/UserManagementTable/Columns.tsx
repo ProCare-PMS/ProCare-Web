@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AddUserModal from "../../Modals/AddUserModal";
+import ActivateDeactivateUserModal from "@/components/Modals/ActivateDeactivateModal";
 
 export const Columns: ColumnDef<any>[] = [
   {
@@ -65,9 +67,112 @@ export const Columns: ColumnDef<any>[] = [
 ];
 
 // ActionMenu Component for handling the popup
+// const ActionMenu = () => {
+//   const [isOpen, setIsOpen] = useState(false); // Toggle popup visibility
+//   const menuRef = useRef<HTMLDivElement>(null); // Reference to the action menu div
+//   const [showModal, setShowModal] = useState<boolean>(false);
+
+//   // Toggle popup visibility
+//   const togglePopup = () => setIsOpen(!isOpen);
+
+//   // Handle click outside the popup
+//   const handleClickOutside = (event: MouseEvent) => {
+//     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+//       setIsOpen(false);
+//     }
+//   };
+
+//   const handleCloseModal = () => {
+//     setShowModal(false); // Close modal
+//   };
+
+//   const handleEdit = () => {
+//     setShowModal(true);
+//     setIsOpen(false);
+//   };
+
+//   // Add event listener for click outside
+//   useEffect(() => {
+//     document.addEventListener("mousedown", handleClickOutside);
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, []);
+
+//   return (
+//     <div style={{ position: "relative" }}>
+//       {/* Icon button to toggle popup */}
+//       <div
+//         style={{
+//           width: "30px",
+//           height: "30px",
+//           display: "flex",
+//           justifyContent: "center",
+//           alignItems: "center",
+//           cursor: "pointer",
+//         }}
+//         onClick={togglePopup}
+//       >
+//         <MoreVertIcon />
+//       </div>
+
+//       {/* Popup card */}
+//       {isOpen && (
+//         <div
+//           ref={menuRef}
+//           style={{
+//             position: "absolute",
+//             top: "35px",
+//             right: "0",
+//             width: "150px",
+//             padding: "10px",
+//             backgroundColor: "#fff",
+//             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+//             borderRadius: "8px",
+//             zIndex: 10,
+//           }}
+//         >
+//           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+//             <li
+//               style={{
+//                 padding: "8px 0",
+//                 cursor: "pointer",
+//                 borderBottom: "1px solid #eee",
+//               }}
+//               onClick={handleEdit}
+//             >
+//               Edit Details
+//             </li>
+//             <li
+//               style={{
+//                 padding: "8px 0",
+//                 cursor: "pointer",
+//               }}
+//               onClick={() => {
+//                 setIsOpen(false);
+//               }}
+//             >
+//               Activate
+//             </li>
+//           </ul>
+//         </div>
+//       )}
+//       <AddUserModal
+//         isOpen={showModal}
+//         onClose={handleCloseModal}
+//         title="Edit"
+//       />
+//     </div>
+//   );
+// };
+
 const ActionMenu = () => {
   const [isOpen, setIsOpen] = useState(false); // Toggle popup visibility
   const menuRef = useRef<HTMLDivElement>(null); // Reference to the action menu div
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [actionType, setActionType] = useState<"activate" | "deactivate">(
+    "deactivate"
+  ); // For managing modal type
 
   // Toggle popup visibility
   const togglePopup = () => setIsOpen(!isOpen);
@@ -77,6 +182,28 @@ const ActionMenu = () => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setIsOpen(false);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false); // Close modal
+  };
+
+  const handleEdit = () => {
+    setShowModal(true);
+    setIsOpen(false);
+  };
+
+  const handleToggleActivation = () => {
+    setActionType((prevType) =>
+      prevType === "deactivate" ? "activate" : "deactivate"
+    );
+    setShowModal(true); // Show the modal with the correct action type
+    setIsOpen(false); // Close the action menu
+  };
+
+  const handleModalSubmit = (password: string) => {
+    console.log("Password entered:", password);
+    handleCloseModal(); // Close the modal after submission
   };
 
   // Add event listener for click outside
@@ -127,10 +254,7 @@ const ActionMenu = () => {
                 cursor: "pointer",
                 borderBottom: "1px solid #eee",
               }}
-              onClick={() => {
-                console.log("Edit details clicked");
-                setIsOpen(false);
-              }}
+              onClick={handleEdit}
             >
               Edit Details
             </li>
@@ -139,16 +263,27 @@ const ActionMenu = () => {
                 padding: "8px 0",
                 cursor: "pointer",
               }}
-              onClick={() => {
-                console.log("Activate clicked");
-                setIsOpen(false);
-              }}
+              onClick={handleToggleActivation}
             >
-              Activate
+              {actionType === "deactivate" ? "Activate" : "Deactivate"}
             </li>
           </ul>
         </div>
       )}
+
+      <AddUserModal
+        isOpen={showModal}
+        onClose={handleCloseModal}
+        title="Edit"
+      />
+
+      {/* Reusable Modal for Activation/Deactivation */}
+      <ActivateDeactivateUserModal
+        isOpen={showModal}
+        onClose={handleCloseModal}
+        actionType={actionType}
+        onSubmit={handleModalSubmit}
+      />
     </div>
   );
 };

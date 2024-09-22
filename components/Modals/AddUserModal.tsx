@@ -10,6 +10,7 @@ import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
+  title?: string;
 }
 
 interface StepIndicatorProps {
@@ -19,7 +20,11 @@ interface StepIndicatorProps {
   activeStep: number; // The currently active step number
 }
 
-const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose }) => {
+const AddUserModal: React.FC<AddUserModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+}) => {
   const [step, setStep] = useState<number>(1); // Step management
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
@@ -31,33 +36,43 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className=" relative bg-white w-[90rem] h-[30rem] max-w-6xl p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Add User</h2>
+          <h2 className="text-2xl font-bold">{title} User</h2>
           <button className="text-dark" onClick={onClose}>
             <CloseOutlinedIcon />
           </button>
         </div>
 
-        {/* Wizard Steps */}
-        {/* Wizard Steps */}
-        <div className="wizard-steps flex justify-between mb-6">
-          <StepIndicator
-            stepNumber={1}
-            Icon={Person3OutlinedIcon}
-            label="User Details"
-            activeStep={step}
-          />
-          <StepIndicator
-            stepNumber={2}
-            Icon={ManageHistoryIcon}
-            label="User Role"
-            activeStep={step}
-          />
-          <StepIndicator
-            stepNumber={3}
-            Icon={ManageAccountsOutlinedIcon}
-            label="Working Hours"
-            activeStep={step}
-          />
+        <div className="mx-auto w-[60%]">
+          <div className="wizard-steps flex justify-between items-center mb-6">
+            <div className="flex flex-col items-center w-full">
+              <StepIndicator
+                stepNumber={1}
+                Icon={Person3OutlinedIcon}
+                label="User Details"
+                activeStep={step}
+              />
+            </div>
+            <div className="h-1 w-full bg-slate-500"></div>{" "}
+            <div className="flex flex-col items-center w-full">
+              {/* Vertical line */}
+              <StepIndicator
+                stepNumber={2}
+                Icon={ManageAccountsOutlinedIcon}
+                label="User Role"
+                activeStep={step}
+              />
+            </div>
+            <div className="h-1 w-full bg-slate-500"></div>{" "}
+            <div className="flex flex-col items-center w-full">
+              {/* Vertical line */}
+              <StepIndicator
+                stepNumber={3}
+                Icon={ManageHistoryIcon}
+                label="Working Hours"
+                activeStep={step}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Wizard Content */}
@@ -135,7 +150,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose }) => {
           )}
 
           {step === 3 && (
-            <div className="stepThree">
+            <div className="stepThree mx-auto">
               <div className="flex gap-4">
                 <div className="flex items-center my-2 w-1/2">
                   <input type="checkbox" />
@@ -243,25 +258,27 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Wizard Actions */}
-        <div className="flex justify-between mt-6 absolute bottom-0 left-0 w-full bg-white p-4 shadow-lg">
-          <button
-            className={`bg-gray-300 text-black px-4 py-2 rounded-lg ${
-              step === 1 ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            onClick={prevStep}
-            disabled={step === 1}
-          >
-            Previous
-          </button>
-          <button
-            className={`bg-indigo-600 text-white px-4 py-2 rounded-lg ${
-              step === 3 ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            onClick={nextStep}
-            disabled={step === 3}
-          >
-            Next
-          </button>
+        <div className="flex justify-end mt-6 absolute bottom-0 left-0 w-full bg-white p-4 shadow-lg">
+          <div className="flex gap-3">
+            <button
+              className={`bg-gray-300 text-black px-4 py-2 rounded-[0.5rem] w-[10rem] ${
+                step === 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={prevStep}
+              disabled={step === 1}
+            >
+              Previous
+            </button>
+            <button
+              className={`bg-indigo-600 text-white px-6 py-2 rounded-[0.5rem] w-[10rem] ${
+                step === 3 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={nextStep}
+              disabled={step === 3}
+            >
+              {step === 3 ? "Save" : "Next"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -273,17 +290,18 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
   stepNumber,
   label,
   activeStep,
+  Icon,
 }) => {
   const isActive = activeStep === stepNumber;
 
   return (
-    <div className="text-center">
+    <div className="flex flex-col justify-center items-center">
       <div
         className={`w-8 h-8 rounded-full flex items-center justify-center ${
           isActive ? "bg-indigo-600 text-white" : "bg-gray-300 text-black"
         }`}
       >
-        {stepNumber}
+        <Icon />
       </div>
       <p className="text-sm mt-2 p-0">{label}</p>
     </div>
