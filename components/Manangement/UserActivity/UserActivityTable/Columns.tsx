@@ -1,14 +1,15 @@
 "use client";
 
-import { DashboardTransactions } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
-import DashboardModal from "@/components/Modals/DashboardModal";
+import TransactionDetails, {
+  TransactionItem,
+} from "../TransactionDetails/TransactionDetails";
 import clsx from "clsx";
 
 interface ActionsCellProps {
   row: {
-    original: DashboardTransactions;
+    original: TransactionItem;
   };
 }
 
@@ -33,7 +34,7 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
         View
       </span>
       {modal && (
-        <DashboardModal
+        <TransactionDetails
           title="Transaction Details"
           item={payment}
           setModal={handleCloseModal}
