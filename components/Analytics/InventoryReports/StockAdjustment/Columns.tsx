@@ -13,33 +13,33 @@ interface ActionsCellProps {
   };
 }
 
-const ActionsCell = ({ row }: ActionsCellProps) => {
-  const payment = row.original;
-  const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] =
-    useState<DashboardTransactions | null>(null);
+// const ActionsCell = ({ row }: ActionsCellProps) => {
+//   const payment = row.original;
+//   const [modal, setModal] = useState(false);
+//   const [selectedItem, setSelectedItem] =
+//     useState<DashboardTransactions | null>(null);
 
-  return (
-    <div>
-      <span
-        className="text-[#2648EA] cursor-pointer font-semibold text-sm underline"
-        onClick={() => {
-          setModal(true);
-          setSelectedItem(payment);
-        }}
-      >
-        View
-      </span>
-      {selectedItem && (
-        <DashboardModal
-          title="Transaction Details"
-          item={selectedItem}
-          setModal={() => setSelectedItem(null)}
-        />
-      )}
-    </div>
-  );
-};
+//   return (
+//     <div className="w-3">
+//       <span
+//         className="text-[#2648EA] cursor-pointer font-semibold text-sm underline"
+//         onClick={() => {
+//           setModal(true);
+//           setSelectedItem(payment);
+//         }}
+//       >
+//         View
+//       </span>
+//       {selectedItem && (
+//         <DashboardModal
+//           title="Transaction Details"
+//           item={selectedItem}
+//           setModal={() => setSelectedItem(null)}
+//         />
+//       )}
+//     </div>
+//   );
+// };
 
 export const Columns: ColumnDef<any>[] = [
   {
@@ -61,6 +61,17 @@ export const Columns: ColumnDef<any>[] = [
   },
   {
     id: "actions",
-    cell: ActionsCell, // Ensure you have the ActionsCell defined elsewhere in your code
+    cell: ({ getValue }) => (
+      <div
+        style={{
+          width: "5px !important",
+          textAlign: "center",
+        }}
+      >
+        <span className="text-[#2648EA] cursor-pointer font-semibold text-sm underline">
+          View
+        </span>
+      </div> // Placeholder cell content
+    ),
   },
 ];

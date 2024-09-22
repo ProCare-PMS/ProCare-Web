@@ -3,9 +3,9 @@ import React from "react";
 
 function AnalyticsPage() {
   return (
-    <>
+    <div className="mt-[3rem]">
       <AnalyticsMainPage />
-    </>
+    </div>
   );
 }
 

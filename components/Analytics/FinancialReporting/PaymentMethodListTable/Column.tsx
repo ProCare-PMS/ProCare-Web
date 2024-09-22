@@ -52,18 +52,6 @@ export const Columns: ColumnDef<any>[] = [
     accessorKey: "date",
     header: "Date",
   },
-  //   {
-  //     accessorKey: "quantity",
-  //     header: "Quantity",
-  //   },
-  //   {
-  //     accessorKey: "amount",
-  //     header: "Amount",
-  //     cell: ({ getValue }) => {
-  //       const amount = getValue<number>();
-  //       return `₵ ${new Intl.NumberFormat().format(amount)}`;
-  //     },
-  //   },
   {
     accessorKey: "type",
     header: "Type",

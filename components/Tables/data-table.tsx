@@ -152,21 +152,20 @@ function DataTable<TData, TValue>({
   searchValue = "",
 }: DataTableProps<TData, TValue>) {
   const [globalFilter, setGlobalFilter] = useState("");
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const table = useReactTable({
     data,
     columns,
     state: {
       globalFilter, // Added global filter state
-      sorting
+      sorting,
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(), // Added sorted row model
     getFilteredRowModel: getFilteredRowModel(), // Added global filtered row model
     onGlobalFilterChange: setGlobalFilter, // Handle global filter change
     onSortingChange: setSorting,
-    
   });
 
   const currentPage = table.getState().pagination.pageIndex + 1;
