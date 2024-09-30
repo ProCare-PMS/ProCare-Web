@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Providers from "./Provider";
-
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 export const metadata: Metadata = {
   title: "Procare",
@@ -15,9 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Providers>
+      <>
         <body>{children}</body>
-      </Providers>
+      </>
     </html>
   );
 }

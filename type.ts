@@ -468,7 +468,7 @@ export const purchaseTabTable = [
     purchaseId: "#58547",
     supplier: "The Med Pharma",
     quantity: 538,
-    unitPrice: "65,000",
+    unitPrice: "70,000",
     date: "12/09/2024",
     amount: "243,589",
     purchases: [
@@ -476,7 +476,7 @@ export const purchaseTabTable = [
         name: "Paracetamol",
         quantity: 120,
         unitPrice: "1230",
-        amount: "12/09/2024",
+        amount: "3000",
       },
     ],
   },
@@ -632,9 +632,19 @@ export type lowStockType = {
   name: string;
   unit: string;
   brand: string;
-  itemRemaining: number;
-  lastRestockDate: string;
-  lastRestockTime: string;
+  itemSold: number;
+  date: string;
+  time: string;
+  amount: number;
+  type: string;
+};
+
+export type dailySalesType = {
+  transactionId: string;
+  itemSold: number;
+  date: string;
+  time: string;
+  amount: number;
   type: string;
 };
 
@@ -678,3 +688,92 @@ export const expiryReportTable = [
 ];
 
 export type ExpiryReportTable = (typeof expiryReportTable)[number];
+
+/*Stock Transfer */
+export const stockTransferTable = [
+  {
+    pharmacyId: "AAA-YY-NN",
+    pharmacyName: "Medi Pharma Ltd",
+    location: "Konohagakure",
+    contact: "020000000",
+  },
+  {
+    pharmacyId: "AAA-YY-NN",
+    pharmacyName: "Medi Pharma Ltd",
+    location: "Konohagakure",
+    contact: "020000000",
+  },
+  {
+    pharmacyId: "AAA-YY-NN",
+    pharmacyName: "Medi Pharma Ltd",
+    location: "Konohagakure",
+    contact: "020000000",
+  },
+  {
+    pharmacyId: "AAA-YY-NN",
+    pharmacyName: "Medi Pharma Ltd",
+    location: "Konohagakure",
+    contact: "020000000",
+  },
+  {
+    pharmacyId: "AAA-YY-NN",
+    pharmacyName: "Medi Pharma Ltd",
+    location: "Konohagakure",
+    contact: "020000000",
+  },
+];
+
+export type StockTransferTable = (typeof stockTransferTable)[number];
+
+/* Stock Transfer History */
+export const stockTransferHistoryTable = [
+  {
+    transferId: "Transfer #45434",
+    reviewedBy: "Nikola Tesla",
+    contact: "0243458923",
+    date: "12/0/2019",
+    time: "12:00PM",
+    reason:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet suscipit accusamus necessitatibus quis perspiciatis iusto ipsum, numquam porro maiores provident? Maiores   molestias eveniet quae id nihil voluptates esse ipsam itaque  tenetur voluptas quis magni quas, reiciendis impedit  voluptate ad sed, quos libero deserunt quo eius commodi qui! Voluptatem, quaerat ratione!",
+    transfers: [
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        status: "Pending",
+      },
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        status: "Accepted",
+      },
+      {
+        name: "Paracetamol",
+        quantity: 120,
+        unitPrice: "1230",
+        status: "Rejected",
+      },
+    ],
+  },
+];
+
+export type StockTransferHistoryTable =
+  (typeof stockTransferHistoryTable)[number];
+
+
+
+  /* Stock Transfer Requests */
+export const stockTransferRequestsTable = [
+  {
+    transferId: "Transfer #45434",
+    requestedBy: "Nikola Tesla",
+    pharmacyId: "P#469806",
+    location: "East Legon",
+    date: "12/0/2019",
+    time: "12:00PM"
+  },
+];
+
+export type StockTransferRequestsTable =
+  (typeof stockTransferRequestsTable)[number];

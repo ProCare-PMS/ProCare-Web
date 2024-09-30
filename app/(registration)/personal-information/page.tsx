@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { MdLinearScale } from "react-icons/md";
-import { TbSquareRoundedNumber2, TbSquareRoundedNumber3 } from "react-icons/tb"; 
+import { TbSquareRoundedNumber2, TbSquareRoundedNumber3 } from "react-icons/tb";
 import PersonalNameForm from "./_components/PersonalNameForm";
 
 const formSchema = z.object({
@@ -47,9 +47,9 @@ const RegistrationPage = () => {
     <div className="min-h-screen mx-auto py-8 px-8 bg-home">
       <div className="flex gap-4 items-center  md:ml-[2.25rem]">
         <Image
-          src="/Procare-Logo.png"
-          width={155}
-          height={70}
+          src="/RxPMSlogo.png"
+          width={150}
+          height={100}
           className="mt-[-0.8rem]"
           alt="Procare Logo"
         />
@@ -74,7 +74,7 @@ const RegistrationPage = () => {
           </span>
           <span className="text-sm flex gap-2 items-center font-inter font-semibold">
             <TbSquareRoundedNumber3 className="text-3xl text-slate-400" />
-            Review and submit
+           Make Payment
           </span>
         </div>
 
@@ -93,12 +93,12 @@ const RegistrationPage = () => {
                 Previous
               </Link>
 
-              <Button
+              <Button asChild
                 type="submit"
                 className="text-white w-[140px] font-inter"
                 variant="secondary"
               >
-                Next
+                <Link href="/make-payment">Next</Link>
               </Button>
             </div>
           </form>

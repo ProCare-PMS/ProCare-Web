@@ -34,6 +34,7 @@ const ProductsTopSection = () => {
             </FormLabel>
             <FormControl>
               <Input
+              type="text"
                 {...field}
                 placeholder="Enter product name"
                 className="bg-white border border-[#E5E5E7] rounded text-[#858C95] font-normal text-sm font-inter"
@@ -54,6 +55,7 @@ const ProductsTopSection = () => {
             <FormControl>
               <Input
                 {...field}
+                type="text"
                 placeholder="Enter product strength"
                 className="bg-white border border-[#E5E5E7] rounded text-[#858C95] font-normal text-sm font-inter"
               />
