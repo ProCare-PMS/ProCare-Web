@@ -18,7 +18,7 @@ const navRoutes = [
   },
   {
     icon: Store,
-    label: "Pos",
+    label: "POS",
     href: "/pos",
   },
   {
