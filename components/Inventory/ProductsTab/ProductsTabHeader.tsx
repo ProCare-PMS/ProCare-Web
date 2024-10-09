@@ -72,17 +72,10 @@ const ProductsTabHeader = () => {
 
         {/* Search and Filter Section */}
         <div className="flex items-center gap-3">
-          <div className="flex flex-row border-2 border-[#EAEBF0] rounded-[14px] items-center flex-1 gap-2 bg-transparent p-1">
-            <CiSearch />
-            <input
-              type="search"
-              name="search"
-              placeholder="Search for product"
-              id=""
-              className="text-sm p-1 w-full focus:outline-none bg-transparent"
-            />
-          </div>
-          <SearchFieldInput  value={searchValues} onChange={handleSearchValueChange} />
+          <SearchFieldInput
+            value={searchValues}
+            onChange={handleSearchValueChange}
+          />
 
           <div className="relative">
             <Button

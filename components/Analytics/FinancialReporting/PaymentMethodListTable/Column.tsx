@@ -45,7 +45,7 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
 export const Columns: ColumnDef<any>[] = [
   {
     accessorKey: "adjustmentId",
-    header: "Product Name",
+    header: "Transaction",
     cell: ({ getValue }) => `Receipt# ${getValue()}`,
   },
   {

@@ -8,6 +8,7 @@ import { dashboardTransactionColumns } from "@/components/Tables/columns";
 import { dashboardTransactions } from "@/type";
 import DashboardTableHeader from "@/components/Dashboard/DashboardTableHeader";
 import { DashbaordChart } from "@/components/Dashboard/DashboardChart";
+import { DashboardLowStockAlert } from "@/components/Dashboard/DashboardLowStock";
 
 const DashbaordHomePage = () => {
   return (
@@ -18,7 +19,7 @@ const DashbaordHomePage = () => {
       <DashboardStats />
       <div className="flex flex-col md:flex-row items-center gap-6">
         <DashboardSubTables title="Expiry List" />
-        <DashboardSubTables title="Low Stock Alert" />
+        <DashboardLowStockAlert title="Low Stock Alert" />
         <DashbaordChart />
       </div>
       <div className="bg-white shadow-custom p-4 mb-12 mt-4 rounded-[8px]">

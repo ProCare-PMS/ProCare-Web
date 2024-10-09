@@ -119,7 +119,7 @@ export function DashbaordChart() {
                 </span>
               </div>
               <span className="text-black font-medium font-inter text-sm">
-                ${chart.totalCost}
+                ₵{chart.totalCost}
               </span>
             </div>
             <hr />

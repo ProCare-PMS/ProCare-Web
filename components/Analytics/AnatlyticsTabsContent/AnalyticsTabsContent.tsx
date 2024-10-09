@@ -43,7 +43,6 @@ export default function AnalyticsTabsContent() {
     <Box sx={{ width: "100%", typography: "body1" }}>
       <Box
         sx={{
-          //borderBottom: 1,
           borderColor: "divider",
           textDecoration: "lowercase",
         }}
