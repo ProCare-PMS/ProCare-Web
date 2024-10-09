@@ -4,9 +4,9 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Link from "next/link";
-import PosSalesPoint from "../PosSalesPoint/SalesPoint";
-import PosCustomers from "../PosCustomers/PosCustomers";
-import PosReturns from "../PosReturns/PosReturns";
+import SalesPoint from "../SalesPoint";
+import Customers from "../Customers";
+import Returns from "../Returns";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -37,7 +37,7 @@ function a11yProps(index: number) {
   };
 }
 
-export default function PosTabs() {
+export default function PosMainPage() {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -60,6 +60,7 @@ export default function PosTabs() {
             label="Sales Point"
             {...a11yProps(0)}
           />
+          
           <Tab
             className="font-inter text-sm font-semibold text-[#858C95] capitalize"
             label="Customers"
@@ -80,13 +81,13 @@ export default function PosTabs() {
         }}
       >
         <CustomTabPanel value={value} index={0}>
-          <PosSalesPoint />
+          <SalesPoint />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <PosCustomers />
+          <Customers />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <PosReturns />
+          <Returns />
         </CustomTabPanel>
       </Box>
     </Box>

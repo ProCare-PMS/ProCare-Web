@@ -1,6 +1,6 @@
 import ProductList from "@/components/pos/pos-product";
 import OrderList from "@/components/pos/pos-order";
-import PosTabs from "@/components/pos/PosTabs";
+import PosTabs from "@/components/POS/PosMainTab/PosTabs";
 
 const POS = () => {
   return (
