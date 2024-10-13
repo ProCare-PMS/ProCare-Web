@@ -5,6 +5,7 @@ import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import OrderList from "./OrderList";
 import PaymentOptions from "./PaymentOptions";
 import { CircleUserRound } from "lucide-react";
+import CustomerList from "./CustomerList";
 
 const productData: Product[] = [
   { productName: "Product A", quantity: 10, price: "100" },
@@ -17,7 +18,8 @@ const ProductsSection = () => {
   const [data, setData] = useState(productData);
   const [orderList, setOrderList] = useState<Product[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  const [isOrderListVisible, setIsOrderListVisible] = useState(true); // Add visibility state for OrderList
+  const [isOrderListVisible, setIsOrderListVisible] = useState(false);
+  const [showCustomers, setShowCustomer] = useState(false);
 
   // Update quantity handler for both data and orderList
   const updateQuantity = (productName: string, delta: number) => {
@@ -38,20 +40,31 @@ const ProductsSection = () => {
     );
   };
 
+  // Add to Order function that also ensures OrderList visibility
   const addToOrder = (product: Product) => {
     setOrderList((prevOrderList) => {
       const existingProduct = prevOrderList.find(
         (item) => item.productName === product.productName
       );
       if (existingProduct) {
-        return prevOrderList.map((item) =>
+        // Updating quantity if the product exists
+        const updatedOrderList = prevOrderList.map((item) =>
           item.productName === product.productName
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
+        setOrderList(updatedOrderList);
       } else {
-        return [...prevOrderList, { ...product, quantity: 1 }];
+        // Adding a new product if it doesn't exist
+        setOrderList([...prevOrderList, { ...product, quantity: product.quantity }]);
       }
+
+      // Make sure OrderList is visible when items are added
+      if (!isOrderListVisible) {
+        setIsOrderListVisible(true);
+      }
+
+      return prevOrderList;
     });
   };
 
@@ -71,7 +84,17 @@ const ProductsSection = () => {
 
   // Handle toggle visibility of OrderList
   const handleToggleOrderList = () => {
-    setIsOrderListVisible((prevVisible) => !prevVisible);
+    setIsOrderListVisible((prevState) => !prevState);
+  };
+
+  //Open Customer List Modal
+  const openCustomersList = () => {
+    setShowCustomer(true);
+  };
+
+  //Close Customer List Modal
+  const closeCustomerList = () => {
+    setShowCustomer(false);
   };
 
   return (
@@ -88,7 +111,11 @@ const ProductsSection = () => {
 
           <div className="flex gap-4">
             <div className="bg-[#0A77FF] rounded-[4px] p-2">
-              <CircleUserRound className="text-white" color="white" />
+              <CircleUserRound
+                onClick={openCustomersList}
+                className="text-white cursor-pointer"
+                color="white"
+              />
             </div>
             <SearchFieldInput
               value={searchValues}
@@ -104,16 +131,16 @@ const ProductsSection = () => {
         />
       </div>
 
+      {/* Modal for Customer List */}
+      {showCustomers && <CustomerList onClose={closeCustomerList} />}
+
       {isOrderListVisible && orderList.length > 0 && (
-        <div className="grid gap-y-2">
-          <OrderList
-            orderList={orderList}
-            updateQuantity={updateQuantity}
-            totalPrice={totalPrice}
-            onToggleOrderList={handleToggleOrderList} // Pass down the toggle function
-          />
-          <PaymentOptions />
-        </div>
+        <OrderList
+          orderList={orderList}
+          updateQuantity={updateQuantity}
+          totalPrice={totalPrice}
+          onToggleOrderList={handleToggleOrderList}
+        />
       )}
     </div>
   );
