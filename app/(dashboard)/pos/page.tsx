@@ -1,4 +1,6 @@
-import PosTabs from "@/components/pos/PosMainTab/PosTabs";
+
+import PosTabs from "@/components/POS/PosMainTab/PosTabs";
+
 
 const POS = () => {
   return (

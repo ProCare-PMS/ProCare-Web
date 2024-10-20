@@ -10,7 +10,7 @@ import { stockTransferRequestColumns } from "@/components/Tables/stock-transfer-
 
 const StockTransferTab = () => {
   return (
-    <div className="container mx-auto px-12">
+    <div className="">
       {/* 
       <div className="bg-white mt shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)] p-6 rounded-[8px]">
         <StockTransferTabHeader />

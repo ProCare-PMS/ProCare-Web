@@ -1,5 +1,5 @@
 import AnalyticsMainPage from "@/components/Analytics/AnalyticsMainPage/AnalyticsMainPage";
-import React from "react";
+import React from "react"; 
 
 function AnalyticsPage() {
   return (
