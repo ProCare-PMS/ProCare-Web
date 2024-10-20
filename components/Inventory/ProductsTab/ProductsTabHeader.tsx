@@ -15,6 +15,8 @@ import { productsTabTable } from "@/type";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 
 const ProductsTabHeader = () => {
+
+
   const [showTab, setShowTab] = useState(
     <ExpandableDataTable columns={productsTabColumns} data={productsTabTable} />
   );
@@ -41,6 +43,7 @@ const ProductsTabHeader = () => {
                 <ExpandableDataTable
                   columns={productsTabColumns}
                   data={productsTabTable}
+                  searchValue={searchValues}
                 />
               );
               setActiveTab("Products");
@@ -72,16 +75,7 @@ const ProductsTabHeader = () => {
 
         {/* Search and Filter Section */}
         <div className="flex items-center gap-3">
-          <div className="flex flex-row border-2 border-[#EAEBF0] rounded-[14px] items-center flex-1 gap-2 bg-transparent p-1">
-            <CiSearch />
-            <input
-              type="search"
-              name="search"
-              placeholder="Search for product"
-              id=""
-              className="text-sm p-1 w-full focus:outline-none bg-transparent"
-            />
-          </div>
+          
           <SearchFieldInput  value={searchValues} onChange={handleSearchValueChange} />
 
           <div className="relative">

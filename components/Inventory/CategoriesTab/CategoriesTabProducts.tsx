@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { HiDotsVertical } from "react-icons/hi";
 import { LayoutGrid } from "lucide-react";
 import { Products } from "@/lib/definition";
 import ViewProductsSide from "../../../app/(dashboard)/inventory/_categoryProducts/ViewProductsSide";
 import CategoriesTabSideBar from "./CategoriesTabSideBar";
+import AddCategoryTable from "./AntiMalarialTable";
+import AntiMalarialTable from "./AntiMalarialTable";
 
 const products: Products[] = [
   {
@@ -44,15 +46,44 @@ const products: Products[] = [
     id: 6,
     productTitle: "Cosmetics",
   },
+  {
+    id: 7,
+    productTitle: "Cosmetics",
+  },
+  {
+    id: 8,
+    productTitle: "Cosmetics",
+  },
+  {
+    id: 9,
+    productTitle: "Cosmetics",
+  },
+  {
+    id: 10,
+    productTitle: "Cosmetics",
+  },
 ];
 
 const CategoriesTabProducts = () => {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const openCategoryTable = () => {
+    setIsModalOpen(true)
+  };
+
+  const onClose = () => {
+    setIsModalOpen(false);
+  }
+
+
   return (
     <div className="mt-8">
-      <div className="grid grid-cols-4 gap-7">
+      <div className="grid grid-cols-5 gap-8">
         {products.map((product) => (
           <div
-            className="border border-[#D0D5DD] w-[260px] rounded-[8px] py-8 px-6"
+            className="border border-[#D0D5DD] w-[230px] rounded-[8px] py-8 px-6"
             key={product.id}
           >
             <div className="flex justify-between mb-6">
@@ -68,13 +99,15 @@ const CategoriesTabProducts = () => {
               <h1 className="text-[#344054] mb-2 font-inter font-semibold text-xl">
                 Anti-malarials
               </h1>
-              <span className="text-left text-[#2648EA] underline">
-                <CategoriesTabSideBar />
+              <span className="text-left text-[#2648EA] font-medium font-inter text-base cursor-pointer underline" onClick={openCategoryTable}>
+                View 23 products
               </span>
             </div>
           </div>
         ))}
       </div>
+
+      {isModalOpen && <AntiMalarialTable  onClose={onClose} /> }
     </div>
   );
 };

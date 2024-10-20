@@ -30,7 +30,7 @@ const ExpiryReportStats = () => {
       {expiryStats.map((stat) => (
         <div
           key={stat.title}
-          className="flex border w-[220px] border-[#D0D5DD] rounded-[8px] py-4 px-5 items-center justify-between"
+          className="flex border w-[290px] border-[#D0D5DD] rounded-[8px] py-4 px-5 items-center justify-between"
         >
           <Image src={stat.icon} width={50} height={50} alt={stat.title} />
 

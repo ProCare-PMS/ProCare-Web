@@ -11,6 +11,13 @@ const productData: Product[] = [
   { productName: "Product A", quantity: 10, price: "100" },
   { productName: "Product B", quantity: 5, price: "50" },
   { productName: "Product C", quantity: 20, price: "200" },
+  { productName: "Aspirin", quantity: 20, price: "200" },
+  { productName: "Penicillin", quantity: 20, price: "200" },
+  { productName: "Insulin", quantity: 20, price: "200" },
+  { productName: "Ibuprofen", quantity: 20, price: "200" },
+  { productName: "Tumeric", quantity: 20, price: "200" },
+  { productName: "Ginseng", quantity: 20, price: "200" },
+  { productName: "Product E", quantity: 20, price: "200" },
 ];
 
 const ProductsSection = () => {
@@ -50,7 +57,7 @@ const ProductsSection = () => {
         // Updating quantity if the product exists
         const updatedOrderList = prevOrderList.map((item) =>
           item.productName === product.productName
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity }
             : item
         );
         setOrderList(updatedOrderList);
@@ -98,7 +105,7 @@ const ProductsSection = () => {
   };
 
   return (
-    <div className="container mx-auto flex gap-x-6 px-6 mt-8">
+    <div className=" flex gap-x-6  mt-8">
       <div
         className={`${
           isOrderListVisible && orderList.length > 0 ? "w-[60%]" : "w-full"

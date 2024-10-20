@@ -11,7 +11,7 @@ import { DashbaordChart } from "@/components/Dashboard/DashboardChart";
 
 const DashbaordHomePage = () => {
   return (
-    <div className="container grid gap-y-8 pb-6 px-8 pt-7 bg-[#F5F5F5]">
+    <div className="container grid gap-y-8 pb-6 px-6 pt-7 bg-[#F5F5F5]">
       <div className="hidden md:block">
         <DashboardNote />
       </div>
