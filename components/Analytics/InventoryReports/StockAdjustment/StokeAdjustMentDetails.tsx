@@ -19,7 +19,7 @@ export interface StockAdjustMentTypes {
 
 interface StockAdjustMentModalProps {
   title: string;
-  details: StockAdjustMentTypes; // Change from `StockAdjustMentTypes[]` to `StockAdjustMentTypes`
+  details: StockAdjustMentTypes;
   setModal: () => void;
 }
 

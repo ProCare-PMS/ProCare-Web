@@ -49,7 +49,7 @@ const chartConfig = {
 
 export function PaymentMethodChart() {
   return (
-    <Card className="flex flex-col w-full bg-white rounded-2xl">
+    <Card className="flex flex-col w-full bg-white rounded-2xl h-96">
       <div className="flex justify-between py-4 px-3">
         <div>
           <CardTitle>Payment Method</CardTitle>

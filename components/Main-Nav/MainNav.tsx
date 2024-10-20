@@ -9,9 +9,19 @@ import { LogOut } from "lucide-react";
 import { CircleUser } from "lucide-react";
 import { Info } from "lucide-react";
 import Link from "next/link";
+import EndShiftModal from "../Modals/EndShiftModal";
 
 const MainNav = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <header className="fixed top-0 w-full z-20 left-0 bg-white">
@@ -75,18 +85,23 @@ const MainNav = () => {
                     </li>
                     <hr />
                     <li>
-                      <Link
-                        href="/login"
-                        className="py-3 px-6 text-[#344054] font-normal flex items-center gap-2 text-sm"
+                      <span
+                        onClick={handleOpenModal}
+                        className="py-3 px-6 text-[#344054] font-normal flex items-center gap-2 text-sm cursor-pointer"
                       >
                         <LogOut />
                         End Shift
-                      </Link>
+                      </span>
                     </li>
                   </ul>
                 </div>
               )}
             </div>
+            {isModalOpen && (
+              <EndShiftModal
+                setModal={handleCloseModal} // Pass the selected row data to the modal
+              />
+            )}
           </div>
         </div>
       </div>

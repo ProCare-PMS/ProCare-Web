@@ -9,19 +9,25 @@ export default function User_profile() {
         <h2 className="text-[#2648EA] font-semibold text-3xl">
           Who’s on Shift?
         </h2>
-        <Link href="/user-passcode">
-          <div className="bg-white w-40 h-40 flex justify-center items-center rounded-lg">
-            <div className="w-[50%] h-[50%]">
-              <Image
-                className="w-full h-full"
-                src="/assets/images/profile.jpg"
-                width={50}
-                height={50}
-                alt="profileImage"
-              />
+        <div className="flex flex-col justify-center items-center gap-2">
+          <Link href="/user-passcode">
+            <div className="w-52 h-52 bg-white flex justify-center items-center rounded-xl">
+              <div className="w-[50%] h-[50%]">
+                <Image
+                  className="w-full h-full"
+                  src="/assets/images/profile.jpg"
+                  width={50}
+                  height={50}
+                  alt="profileImage"
+                />
+              </div>
             </div>
+          </Link>
+          <div>
+            <span className="font-bold">Admin</span>
           </div>
-        </Link>
+        </div>
+
         <div>
           <span>Back to</span>{" "}
           <a href="/login" className="text-[#2648EA]">
