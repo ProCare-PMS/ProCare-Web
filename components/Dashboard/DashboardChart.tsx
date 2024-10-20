@@ -62,7 +62,12 @@ export function DashbaordChart() {
           <PieChart>
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={
+                <ChartTooltipContent
+                  hideLabel
+                  className="bg-white cursor-pointer"
+                />
+              }
             />
             <Pie
               data={chartData}

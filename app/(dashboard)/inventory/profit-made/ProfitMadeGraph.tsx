@@ -74,12 +74,7 @@ export function ProfitMadeGraph() {
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <LineChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-            }}
-          >
+          <LineChart accessibilityLayer data={chartData} margin={{}}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
@@ -91,7 +86,12 @@ export function ProfitMadeGraph() {
             <YAxis />
             <ChartTooltip
               cursor={true}
-              content={<ChartTooltipContent indicator="dot"  />}
+              content={
+                <ChartTooltipContent
+                  indicator="dot"
+                  className="bg-white cursor-pointer"
+                />
+              }
             />
             <Tooltip />
             <Line

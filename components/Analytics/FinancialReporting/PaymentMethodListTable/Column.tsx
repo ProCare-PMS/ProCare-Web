@@ -46,7 +46,7 @@ export const Columns: ColumnDef<any>[] = [
   {
     accessorKey: "adjustmentId",
     header: "Transaction",
-    cell: ({ getValue }) => `Receipt# ${getValue()}`,
+    cell: ({ getValue }) => `# ${getValue()}`,
   },
   {
     accessorKey: "date",

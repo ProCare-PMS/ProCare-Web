@@ -20,7 +20,7 @@ const ProfileSchema = z.object({
 type ProfileFormValues = z.infer<typeof ProfileSchema>;
 
 const PersonalInfo = () => {
-  const [profileImage, setProfileImage] = useState("/placeholderimage.png");
+  const [profileImage, setProfileImage] = useState("/imgPlace.jpeg");
 
   // React Hook Form with Zod validation
   const {

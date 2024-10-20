@@ -117,7 +117,12 @@ export function ClockInOutBars() {
 
               <ChartTooltip
                 cursor={false}
-                content={<ChartTooltipContent indicator="dashed" />}
+                content={
+                  <ChartTooltipContent
+                    indicator="dashed"
+                    className="bg-white cursor-pointer"
+                  />
+                }
               />
               <Bar dataKey="clockIn" fill="#2648EA" radius={4} />
               <Bar dataKey="clockOut" fill="#6FAFFF" radius={4} />
