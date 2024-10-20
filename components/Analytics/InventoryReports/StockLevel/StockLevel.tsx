@@ -109,8 +109,8 @@ const chartConfig = {
 export function StockLevelChart() {
   const [timeRange, setTimeRange] = useState("90d");
   return (
-    <div className="w-full bg-white">
-      <Card>
+    <div className="w-full bg-white rounded-xl">
+      <Card className="rounded-xl">
         <CardHeader className="my-1 flex items-center gap-2 space-y-0 border-b py-2 sm:flex-row">
           <div className="grid flex-1 gap-1 text-center sm:text-left">
             <CardTitle>Stock Levels</CardTitle>
@@ -195,7 +195,13 @@ export function StockLevelChart() {
 
               <ChartTooltip
                 cursor={false}
-                content={<ChartTooltipContent indicator="dot" hideLabel />}
+                content={
+                  <ChartTooltipContent
+                    indicator="dot"
+                    hideLabel
+                    className="bg-white cursor-pointer"
+                  />
+                }
               />
               <Area
                 dataKey="stock"
@@ -221,11 +227,14 @@ export function StockLevelChart() {
               <p>Day against Stock remaining</p>
             </div>
             <div className="flex gap-3">
-              <div className="w-full">
-                <span className="w-[50px] h-[20px] bg-sky-600 rounded-full"></span>
-                September
+              <div className="flex items-center gap-2">
+                <span className="block w-2 h-2 bg-blue-500 rounded-full"></span>
+                <span className="block">October</span>
               </div>
-              <div>October</div>
+              <div className="flex items-center gap-2">
+                <span className="block w-2 h-2 bg-gray-500 rounded-full"></span>
+                <span className="block">September</span>
+              </div>
             </div>
           </div>
         </CardFooter>

@@ -124,11 +124,17 @@ export function SalesBarChart() {
             {/* Tooltip for hover interaction */}
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={
+                <ChartTooltipContent
+                  hideLabel
+                  cursor
+                  className="bg-white cursor-pointer"
+                />
+              }
             />
 
             {/* Bar chart data */}
-            <Bar dataKey="sales" fill="blue" radius={8} />
+            <Bar dataKey="sales" fill="#2648EA" radius={8} />
           </BarChart>
         </ChartContainer>
       </CardContent>

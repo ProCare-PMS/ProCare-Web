@@ -16,7 +16,7 @@ function DailySales() {
     setSetSearchValues(event.target.value);
   };
   return (
-    <>
+    <div className="mt-[3rem]">
       <div className="container-fluid bg-white rounded-xl mx-4 p-5">
         <div className="flex justify-between items-center">
           <div className="flex justify-between items-center gap-5">
@@ -57,7 +57,7 @@ function DailySales() {
         </div>
         {/* table content end */}
       </div>
-    </>
+    </div>
   );
 }
 

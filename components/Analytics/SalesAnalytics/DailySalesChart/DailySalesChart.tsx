@@ -195,7 +195,13 @@ export function DailySalesChart() {
 
               <ChartTooltip
                 cursor={false}
-                content={<ChartTooltipContent indicator="dot" hideLabel />}
+                content={
+                  <ChartTooltipContent
+                    indicator="dot"
+                    hideLabel
+                    className="bg-white cursor-pointer"
+                  />
+                }
               />
               <Area
                 dataKey="stock"

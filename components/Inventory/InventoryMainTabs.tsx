@@ -50,7 +50,7 @@ export default function InventoryMainTabs() {
   return (
     <Box sx={{ width: "100%", marginInline: "auto", marginTop: "-20px" }}>
       <Box
-        sx={{ backgroundColor: "#F5F5F5", paddingBlock: "20px",  width: "100%" }}
+        sx={{ backgroundColor: "#F5F5F5", paddingBlock: "20px", width: "100%" }}
       >
         <Tabs
           value={value}
@@ -85,7 +85,7 @@ export default function InventoryMainTabs() {
           />
           <Tab
             className="font-inter text-sm font-semibold text-[#858C95] capitalize"
-            label="Stock Transfer"
+            label="BranchSync"
             {...a11yProps(5)}
           />
         </Tabs>

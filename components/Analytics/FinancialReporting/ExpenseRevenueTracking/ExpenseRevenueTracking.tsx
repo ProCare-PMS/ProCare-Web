@@ -75,7 +75,12 @@ export function ExpenseRevenueTracking() {
 
               <ChartTooltip
                 cursor={false}
-                content={<ChartTooltipContent indicator="dashed" />}
+                content={
+                  <ChartTooltipContent
+                    indicator="dashed"
+                    className="bg-white cursor-pointer"
+                  />
+                }
               />
               <Bar dataKey="revenue" fill="#2648EA" radius={4} />
               <Bar dataKey="expense" fill="#6FAFFF" radius={4} />

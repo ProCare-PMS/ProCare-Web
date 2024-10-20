@@ -7,7 +7,7 @@ import StockAdjustment from "./StockAdjustment";
 
 function InventoryReports() {
   return (
-    <>
+    <div>
       <StockLevelChart />
       <div className="mt-5 flex gap-4">
         <BestPerformingProductTable />
@@ -15,7 +15,7 @@ function InventoryReports() {
       </div>
       <StockAdjustment />
       <InventoryAgingReportTable />
-    </>
+    </div>
   );
 }
 

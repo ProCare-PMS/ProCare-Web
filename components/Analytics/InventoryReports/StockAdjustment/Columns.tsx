@@ -1,45 +1,47 @@
 "use client";
 
-import { DashboardTransactions, dashboardTransactions } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 import { useState } from "react";
-import DashboardModal from "@/components/Modals/DashboardModal";
-import clsx from "clsx";
+import StockAdjustMentDetails, {
+  StockAdjustMentTypes,
+} from "./StokeAdjustMentDetails";
 
 interface ActionsCellProps {
   row: {
-    original: DashboardTransactions;
+    original: StockAdjustMentTypes;
   };
 }
 
-// const ActionsCell = ({ row }: ActionsCellProps) => {
-//   const payment = row.original;
-//   const [modal, setModal] = useState(false);
-//   const [selectedItem, setSelectedItem] =
-//     useState<DashboardTransactions | null>(null);
+const ActionsCell = ({ row }: ActionsCellProps) => {
+  const details = row.original;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-//   return (
-//     <div className="w-3">
-//       <span
-//         className="text-[#2648EA] cursor-pointer font-semibold text-sm underline"
-//         onClick={() => {
-//           setModal(true);
-//           setSelectedItem(payment);
-//         }}
-//       >
-//         View
-//       </span>
-//       {selectedItem && (
-//         <DashboardModal
-//           title="Transaction Details"
-//           item={selectedItem}
-//           setModal={() => setSelectedItem(null)}
-//         />
-//       )}
-//     </div>
-//   );
-// };
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  return (
+    <div>
+      <span
+        className="text-[#2648EA] cursor-pointer font-semibold text-sm underline"
+        onClick={handleOpenModal}
+      >
+        View
+      </span>
+      {isModalOpen && (
+        <StockAdjustMentDetails
+          title="View Stock Adjustment"
+          details={details}
+          setModal={handleCloseModal} // Pass the selected row data to the modal
+        />
+      )}
+    </div>
+  );
+};
 
 export const Columns: ColumnDef<any>[] = [
   {
@@ -61,17 +63,6 @@ export const Columns: ColumnDef<any>[] = [
   },
   {
     id: "actions",
-    cell: ({ getValue }) => (
-      <div
-        style={{
-          width: "5px !important",
-          textAlign: "center",
-        }}
-      >
-        <span className="text-[#2648EA] cursor-pointer font-semibold text-sm underline">
-          View
-        </span>
-      </div> // Placeholder cell content
-    ),
+    cell: ActionsCell,
   },
 ];

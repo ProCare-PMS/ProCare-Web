@@ -2,8 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
-import StarRateIcon from "@mui/icons-material/StarRate";
-import clsx from "clsx";
 
 interface ActionsCellProps {
   row: {
@@ -64,9 +62,6 @@ export const Columns: ColumnDef<any>[] = [
     header: () => (
       <div className="flex gap-1 w-full items-center whitespace-nowrap">
         <span>Customer Satisfaction</span>
-        <span className="text-[#FFAE43]">
-          <StarRateIcon />
-        </span>
       </div>
     ),
   },
