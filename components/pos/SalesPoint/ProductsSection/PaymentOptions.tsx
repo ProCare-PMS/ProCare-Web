@@ -1,14 +1,30 @@
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import PaymentModal from "./PaymentModal";
 
 const PaymentOptions = () => {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const handlePaymentOptions = () => {
+    setIsModalOpen(true)
+  };
+
+  const onClose = () => {
+    setIsModalOpen(false);
+  }
+
+
+
   return (
+    <>
     <div className=" transition-all bg-white shadow-custom p-4 mb-12 rounded-[8px] mt-8">
       <h2 className="text-[#202224] font-inter text-2xl font-semibold">
         Payment method
       </h2>
       <div className="grid grid-cols-3 gap-4 mt-5">
-        <div className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3">
+        <div className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3 cursor-pointer" onClick={handlePaymentOptions}>
           <div className="bg-[#EFF0FE] rounded-full p-3">
             <Image
               src="/icons/credit-card.png"
@@ -21,7 +37,8 @@ const PaymentOptions = () => {
             Credit Card
           </span>
         </div>
-        <div className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3">
+
+        <div className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3 cursor-pointer" onClick={handlePaymentOptions}>
           <div className="bg-[#EFF0FE] rounded-full p-3">
             <Image
               src="/icons/money.png"
@@ -79,6 +96,10 @@ const PaymentOptions = () => {
         </div>
       </div>
     </div>
+
+
+    {isModalOpen && <PaymentModal onClose={onClose} /> }
+    </>
   );
 };
 

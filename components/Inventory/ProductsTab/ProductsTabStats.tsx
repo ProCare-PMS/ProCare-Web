@@ -35,7 +35,7 @@ const ProductsTabStats = () => {
       {statsCounts.map((statItem: any, index: number) => (
         <>
           <div
-            className=" flex items-center py-4 px-2 rounded-[8px] justify-between border border-[#D0D5DD]"
+            className=" flex items-center py-4 w-[250px] px-2 rounded-[8px] justify-between border border-[#D0D5DD]"
           >
             <Image src={statItem.icon} alt="stock svg" width={35} height={35} />
             <div className="flex flex-col text-right">

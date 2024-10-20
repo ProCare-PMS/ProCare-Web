@@ -26,7 +26,7 @@ function CustomersTable() {
     <div>
       {showCustomer ? (
         <div>
-            <AddCustomerModal    />
+          <AddCustomerModal />
         </div>
       ) : (
         <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px] mt-8  ">

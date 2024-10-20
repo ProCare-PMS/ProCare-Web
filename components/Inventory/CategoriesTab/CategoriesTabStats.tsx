@@ -21,7 +21,7 @@ const CategoriesTabStats = () => {
 
       <div className="border w-[250px] flex gap-5 items-center border-[#D0D5DD] py-3 px-5 rounded-[8px]">
         <Image
-          src="/assets/images/stock.png"
+          src="/assets/images/top.png"
           alt="stock svg"
           width={35}
           height={35}

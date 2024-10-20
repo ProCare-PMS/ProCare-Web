@@ -15,8 +15,8 @@ const MainNav = () => {
 
   return (
     <header className="fixed top-0 w-full z-20 left-0 bg-white">
-      <div className="container mx-auto px-8">
-        <div className="flex items-center   justify-between h-[5rem] p-2">
+      <div className="container mx-auto px-2">
+        <div className="flex items-center justify-between h-[5rem] p-3">
           {/* Logo */}
           <div className="">
             <Image
@@ -25,7 +25,7 @@ const MainNav = () => {
               height={100}
               className="mt-[-0.8rem]"
               alt="RxPMS"
-            />
+            /> 
           </div>
 
           {/* Navigation Routes */}
