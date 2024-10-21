@@ -1,4 +1,3 @@
-
 import {
   Table,
   TableBody,
@@ -11,28 +10,10 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { dashboardSubTables } from "@/type";
 
-const invoices = [
-  {
-    invoice: "Paracetamol - 500g",
-    paymentStatus: "243",
-    totalAmount: "12.09.2024",
-  },
-  {
-    invoice: "Paracetamol - 500g",
-    paymentStatus: "243",
-    totalAmount: "12.09.2024",
-  },
-  {
-    invoice: "Paracetamol - 500g",
-    paymentStatus: "243",
-    totalAmount: "12.09.2024",
-  },
-  {
-    invoice: "Paracetamol - 500g",
-    paymentStatus: "243",
-    totalAmount: "12.09.2024",
-  },
+const invoices: dashboardSubTables[] = [
+  // Add your invoice data here, or leave it empty to test
 ];
 
 interface TableProps {
@@ -40,8 +21,6 @@ interface TableProps {
 }
 
 export function DashboardSubTables({ title }: TableProps) {
- 
-
   return (
     <div className="bg-white p-6 rounded-xl w-[450px] h-[428px] flex-1">
       <div className="flex items-center justify-between mb-6">
@@ -50,7 +29,7 @@ export function DashboardSubTables({ title }: TableProps) {
         </h2>
 
         <Link
-          href="/inventory?tab=4" 
+          href="/inventory?tab=4"
           className="text-[#2648EA] font-inter flex items-center gap-1 font-semibold text-sm"
         >
           Open
@@ -64,7 +43,7 @@ export function DashboardSubTables({ title }: TableProps) {
               Product Name
             </TableHead>
             <TableHead className="text-[#202224] font-nunito_sans font-bold">
-              No.Remaining
+              No. Remaining
             </TableHead>
             <TableHead className="w-[150px] text-[#202224] font-nunito_sans font-bold">
               Expiry Date
@@ -72,19 +51,33 @@ export function DashboardSubTables({ title }: TableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
+          {invoices.length === 0 ? (
+            <TableRow>
               <TableCell className="font-semibold text-sm font-inter text-[#242525]">
-                {invoice.invoice}
+                -
               </TableCell>
-              <TableCell className="text-sm font-medium font-nunito_sans text-[#202224] nunito_sans">
-                {invoice.paymentStatus}
+              <TableCell className="text-sm font-medium font-nunito_sans text-[#202224]">
+                -
               </TableCell>
               <TableCell className="font-semibold text-sm font-nunito_sans text-[#202224]">
-                {invoice.totalAmount}
+                -
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            invoices.map((invoice) => (
+              <TableRow key={invoice.productName}>
+                <TableCell className="font-semibold text-sm font-inter text-[#242525]">
+                  {invoice.productName}
+                </TableCell>
+                <TableCell className="text-sm font-medium font-nunito_sans text-[#202224]">
+                  {invoice.noRemaining}
+                </TableCell>
+                <TableCell className="font-semibold text-sm font-nunito_sans text-[#202224]">
+                  {invoice.expriyDate}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>
