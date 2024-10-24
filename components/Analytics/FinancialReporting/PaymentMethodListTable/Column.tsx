@@ -45,8 +45,8 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
 export const Columns: ColumnDef<any>[] = [
   {
     accessorKey: "adjustmentId",
-    header: "Product Name",
-    cell: ({ getValue }) => `Receipt# ${getValue()}`,
+    header: "Transaction",
+    cell: ({ getValue }) => `# ${getValue()}`,
   },
   {
     accessorKey: "date",

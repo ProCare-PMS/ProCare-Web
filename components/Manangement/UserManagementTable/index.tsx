@@ -27,7 +27,7 @@ function UserManagementTable() {
   };
 
   return (
-    <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px] mt-8">
+    <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px]">
       <div className="flex justify-between items-center my-3">
         <h2 className="text-2xl font-bold font-nunito_sans text-[#202224]">
           User Management

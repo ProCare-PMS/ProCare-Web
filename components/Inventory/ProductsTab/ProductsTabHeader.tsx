@@ -75,8 +75,10 @@ const ProductsTabHeader = () => {
 
         {/* Search and Filter Section */}
         <div className="flex items-center gap-3">
+
           
           <SearchFieldInput  value={searchValues} onChange={handleSearchValueChange} />
+
 
           <div className="relative">
             <Button

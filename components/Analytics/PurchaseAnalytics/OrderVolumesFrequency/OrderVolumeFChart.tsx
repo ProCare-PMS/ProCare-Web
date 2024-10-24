@@ -108,7 +108,12 @@ export function OrderVolumeFChart() {
             {/* Tooltip for hover interaction */}
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={
+                <ChartTooltipContent
+                  hideLabel
+                  className="bg-white cursor-pointer"
+                />
+              }
             />
 
             {/* Bar chart data */}

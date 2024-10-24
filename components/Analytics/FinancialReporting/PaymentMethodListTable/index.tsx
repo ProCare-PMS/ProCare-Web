@@ -12,6 +12,7 @@ function PaymentMethodListTable() {
         data={Data}
         title="Payment Method List"
         link="/page_under_construction"
+        height="96"
       />
     </div>
   );

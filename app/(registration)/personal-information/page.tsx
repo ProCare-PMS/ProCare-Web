@@ -4,44 +4,34 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import PersonalContactForm from "./_components/PersonalContactForm";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { MdLinearScale } from "react-icons/md";
 import { TbSquareRoundedNumber2, TbSquareRoundedNumber3 } from "react-icons/tb";
 import PersonalNameForm from "./_components/PersonalNameForm";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { CircleAlert, Eye, EyeOff } from "lucide-react";
+import { userRegistrationSchema } from "@/lib/schema/schema";
 
-const formSchema = z.object({
-  firstName: z.string({
-    required_error: "First Name is required",
-  }),
-  emailAddress: z.string({
-    required_error: "Email Address is required",
-  }),
-  lastName: z.string({
-    required_error: "Last Name is required",
-  }),
-  number: z.string({
-    required_error: "Number is required",
-  }),
-  password: z.string({
-    required_error: "Password is required",
-  }),
-  confirmPassword: z.string({
-    required_error: "Facility Address is required",
-  }),
-  ghanaCardNumber: z.string({
-    required_error: "Region is required",
-  }),
-});
 
-type FacilityFormData = z.infer<typeof formSchema>;
+
+type FacilityFormData = z.infer<typeof userRegistrationSchema>;
 
 const RegistrationPage = () => {
   const form = useForm<FacilityFormData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(userRegistrationSchema),
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="min-h-screen mx-auto py-8 px-8 bg-home">
@@ -74,15 +64,171 @@ const RegistrationPage = () => {
           </span>
           <span className="text-sm flex gap-2 items-center font-inter font-semibold">
             <TbSquareRoundedNumber3 className="text-3xl text-slate-400" />
-           Make Payment
+            Make Payment
           </span>
         </div>
 
         <Form {...form}>
           <form action="" className="mt-8 mb-[5rem]">
             <div className="flex flex-col md:w-[55.5rem] md:h-[27rem] md:gap-4 md:flex-row bg-white px-[4.62rem] py-[2.12rem] rounded-2xl">
-              <PersonalNameForm />
-              <PersonalContactForm />
+              <div className="flex flex-col gap-4 w-full">
+                <FormField
+                  control={form.control}
+                  name="first_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
+                        First Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="text"
+                          autoFocus
+                          className="bg-home border rounded-[5px] border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                          placeholder="John"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="last_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
+                        Last Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="text"
+                          autoFocus
+                          className="bg-home rounded-[5px] w-full border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
+                        Password
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            {...field}
+                            type={showPassword ? "text" : "password"}
+                            className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-0 px-3 py-2 text-sm"
+                          >
+                            {showPassword ? <EyeOff /> : <Eye />}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password2"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
+                        Confirm Password
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            {...field}
+                            type={showPassword ? "text" : "password"}
+                            className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-0 px-3 py-2 text-sm"
+                          >
+                            {showPassword ? <EyeOff /> : <Eye />}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="space-y-4 w-full">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
+                        Email Address
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-home border rounded-[5px] border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                          placeholder="Doe"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone_number"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
+                        Number
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="ghana_card"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
+                        ID(Ghana Card Requirement)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
 
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between mt-[2.81rem]">
@@ -93,7 +239,8 @@ const RegistrationPage = () => {
                 Previous
               </Link>
 
-              <Button asChild
+              <Button
+                asChild
                 type="submit"
                 className="text-white w-[140px] font-inter"
                 variant="secondary"

@@ -761,9 +761,7 @@ export const stockTransferHistoryTable = [
 export type StockTransferHistoryTable =
   (typeof stockTransferHistoryTable)[number];
 
-
-
-  /* Stock Transfer Requests */
+/* Stock Transfer Requests */
 export const stockTransferRequestsTable = [
   {
     transferId: "Transfer #45434",
@@ -771,7 +769,7 @@ export const stockTransferRequestsTable = [
     pharmacyId: "P#469806",
     location: "East Legon",
     date: "12/0/2019",
-    time: "12:00PM"
+    time: "12:00PM",
   },
 ];
 

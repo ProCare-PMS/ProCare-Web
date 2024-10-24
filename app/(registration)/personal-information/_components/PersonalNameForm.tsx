@@ -10,7 +10,7 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 
 const PersonalNameForm = () => {
-  const { control } = useFormContext();
+  const { control, register } = useFormContext();
 
   return (
     <div className="flex flex-col gap-4 w-full">

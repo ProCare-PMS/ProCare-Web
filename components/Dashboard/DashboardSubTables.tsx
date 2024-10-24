@@ -14,7 +14,8 @@ import { dashboardSubTables } from "@/type";
 
 const invoices: dashboardSubTables[] = [
   // Add your invoice data here, or leave it empty to test
-];
+]
+
 
 interface TableProps {
   title: string;

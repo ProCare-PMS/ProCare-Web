@@ -45,10 +45,12 @@ export const Columns: ColumnDef<any>[] = [
   {
     accessorKey: "productName",
     header: "Product Name",
+    size: 900,
   },
   {
     accessorKey: "batchId",
     header: "Batch ID",
+    size: 100,
   },
   {
     accessorKey: "unit",
@@ -92,6 +94,7 @@ export const Columns: ColumnDef<any>[] = [
   },
   {
     id: "actions",
-    cell: ActionsCell, // Ensure you have the ActionsCell defined elsewhere in your code
+    cell: ActionsCell,
+    size: 40,
   },
 ];

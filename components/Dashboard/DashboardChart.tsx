@@ -62,7 +62,12 @@ export function DashbaordChart() {
           <PieChart>
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={
+                <ChartTooltipContent
+                  hideLabel
+                  className="bg-white cursor-pointer"
+                />
+              }
             />
             <Pie
               data={chartData}
@@ -119,7 +124,7 @@ export function DashbaordChart() {
                 </span>
               </div>
               <span className="text-black font-medium font-inter text-sm">
-                ${chart.totalCost}
+                ₵{chart.totalCost}
               </span>
             </div>
             <hr />

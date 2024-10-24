@@ -15,7 +15,7 @@ import clsx from "clsx";
 const invoices = [
   {
     invoice: "INV001",
-    date: "30/05/2024",
+    date: "30.05.2024",
     time: "12:53PM",
     sold: 43,
     totalAmount: "$250.00",
@@ -23,7 +23,7 @@ const invoices = [
   },
   {
     invoice: "INV002",
-    date: "30/05/2024",
+    date: "30.05.2024",
     time: "12:53PM",
     sold: 43,
     totalAmount: "$250.00",
@@ -31,7 +31,7 @@ const invoices = [
   },
   {
     invoice: "INV003",
-    date: "30/05/2024",
+    date: "30.05.2024",
     time: "12:53PM",
     sold: 43,
     totalAmount: "$250.00",
@@ -39,7 +39,7 @@ const invoices = [
   },
   {
     invoice: "INV004",
-    date: "30/05/2024",
+    date: "30.05.2024",
     time: "12:53PM",
     sold: 43,
     totalAmount: "$250.00",
@@ -47,7 +47,7 @@ const invoices = [
   },
   {
     invoice: "INV005",
-    date: "30/05/2024",
+    date: "30.05.2024",
     time: "12:53PM",
     sold: 43,
     totalAmount: "$250.00",
@@ -55,7 +55,7 @@ const invoices = [
   },
   {
     invoice: "INV006",
-    date: "30/05/2024",
+    date: "30.05.2024",
     time: "12:53PM",
     sold: 43,
     totalAmount: "$250.00",

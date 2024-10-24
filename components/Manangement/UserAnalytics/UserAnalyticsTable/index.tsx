@@ -29,7 +29,7 @@ function UserAnalyticTable() {
 
   return (
     <div>
-      <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px] mt-8">
+      <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px]">
         <div className="flex justify-between items-center my-3">
           <div className="bg-gray-100 flex gap-3 p-2 rounded-xl">
             <span
