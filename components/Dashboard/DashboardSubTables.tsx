@@ -10,29 +10,12 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { dashboardSubTables } from "@/type";
 
-const invoices = [
-  {
-    invoice: "Paracetamol - 500g",
-    paymentStatus: "243",
-    totalAmount: "12/09/2024",
-  },
-  {
-    invoice: "Paracetamol - 500g",
-    paymentStatus: "243",
-    totalAmount: "12/09/2024",
-  },
-  {
-    invoice: "Paracetamol - 500g",
-    paymentStatus: "243",
-    totalAmount: "12/09/2024",
-  },
-  {
-    invoice: "Paracetamol - 500g",
-    paymentStatus: "243",
-    totalAmount: "12/09/2024",
-  },
-];
+const invoices: dashboardSubTables[] = [
+  // Add your invoice data here, or leave it empty to test
+]
+
 
 interface TableProps {
   title: string;
@@ -61,7 +44,7 @@ export function DashboardSubTables({ title }: TableProps) {
               Product Name
             </TableHead>
             <TableHead className="text-[#202224] font-nunito_sans font-bold">
-              No.Remaining
+              No. Remaining
             </TableHead>
             <TableHead className="w-[150px] text-[#202224] font-nunito_sans font-bold">
               Expiry Date
@@ -69,19 +52,33 @@ export function DashboardSubTables({ title }: TableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
+          {invoices.length === 0 ? (
+            <TableRow>
               <TableCell className="font-semibold text-sm font-inter text-[#242525]">
-                {invoice.invoice}
+                -
               </TableCell>
-              <TableCell className="text-sm font-medium font-nunito_sans text-[#202224] nunito_sans">
-                {invoice.paymentStatus}
+              <TableCell className="text-sm font-medium font-nunito_sans text-[#202224]">
+                -
               </TableCell>
               <TableCell className="font-semibold text-sm font-nunito_sans text-[#202224]">
-                {invoice.totalAmount}
+                -
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            invoices.map((invoice) => (
+              <TableRow key={invoice.productName}>
+                <TableCell className="font-semibold text-sm font-inter text-[#242525]">
+                  {invoice.productName}
+                </TableCell>
+                <TableCell className="text-sm font-medium font-nunito_sans text-[#202224]">
+                  {invoice.noRemaining}
+                </TableCell>
+                <TableCell className="font-semibold text-sm font-nunito_sans text-[#202224]">
+                  {invoice.expriyDate}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>
