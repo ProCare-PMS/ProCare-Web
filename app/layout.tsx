@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import QueryProvider from "./QueryProvider";
+import Providers from "./Provider";
 
 export const metadata: Metadata = {
   title: "Procare",
@@ -14,10 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <>
-        <body>{children}</body>
-      </>
-    </html>
+    <Providers>
+      <html lang="en">
+        <QueryProvider>{children}</QueryProvider>
+      </html>
+    </Providers>
   );
 }
