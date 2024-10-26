@@ -10,7 +10,7 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 
 const PersonalContactForm = () => {
-  const { control } = useFormContext();
+  const { control } = useFormContext(); 
 
   return (
     <div className="space-y-4 w-full">

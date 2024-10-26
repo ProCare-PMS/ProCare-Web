@@ -775,3 +775,11 @@ export const stockTransferRequestsTable = [
 
 export type StockTransferRequestsTable =
   (typeof stockTransferRequestsTable)[number];
+
+
+
+export type dashboardSubTables = {
+  productName: string;
+  noRemaining: number;
+  expriyDate: string;
+}
