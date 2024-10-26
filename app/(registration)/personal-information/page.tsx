@@ -22,8 +22,6 @@ import { useState } from "react";
 import { CircleAlert, Eye, EyeOff } from "lucide-react";
 import { userRegistrationSchema } from "@/lib/schema/schema";
 
-
-
 type FacilityFormData = z.infer<typeof userRegistrationSchema>;
 
 const RegistrationPage = () => {

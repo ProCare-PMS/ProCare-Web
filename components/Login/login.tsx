@@ -122,7 +122,7 @@ export default function Login() {
   // Form submission handler
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    router.push("/dashboard");
     const formData = {
       custom_pharmacy_id: (
         event.currentTarget.elements.namedItem(
