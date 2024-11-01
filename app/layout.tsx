@@ -4,7 +4,7 @@ import QueryProvider from "./QueryProvider";
 import Providers from "./Provider";
 
 export const metadata: Metadata = {
-  title: "Procare",
+  title: "ProHelium",
   description: "Pharmacy Information",
 };
 
@@ -16,7 +16,9 @@ export default function RootLayout({
   return (
     <Providers>
       <html lang="en">
-        <QueryProvider>{children}</QueryProvider>
+        <body>
+          <QueryProvider>{children}</QueryProvider>
+        </body>
       </html>
     </Providers>
   );

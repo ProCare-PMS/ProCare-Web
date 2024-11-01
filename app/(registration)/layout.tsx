@@ -1,4 +1,5 @@
 import { Open_Sans, Roboto, Inter, Nunito_Sans } from "next/font/google";
+import { Toaster } from "sonner";
 
 //👇 Configure our font object
 const openSans = Open_Sans({
@@ -24,6 +25,7 @@ export default function Registration({
 }) {
   return (
     <main className={`${roboto.variable} ${inter.variable} bg-blue-600`}>
+      <Toaster richColors position="top-right" duration={10000} expand={true} />
       {children}
     </main>
   );

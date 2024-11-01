@@ -3,24 +3,21 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/ui/form";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { MdLinearScale } from "react-icons/md";
 import { TbSquareRoundedNumber2, TbSquareRoundedNumber3 } from "react-icons/tb";
-import PersonalNameForm from "./_components/PersonalNameForm";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { CircleAlert, Eye, EyeOff } from "lucide-react";
 import { userRegistrationSchema } from "@/lib/schema/schema";
+import { endpoints } from "@/api/Endpoints";
+import customAxios from "@/api/CustomAxios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useRouter } from "next/navigation";
 
 type FacilityFormData = z.infer<typeof userRegistrationSchema>;
 
@@ -28,12 +25,77 @@ const RegistrationPage = () => {
   const form = useForm<FacilityFormData>({
     resolver: zodResolver(userRegistrationSchema),
   });
-
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const queryClient = useQueryClient();
+  const pharmacyId = useSelector((state: RootState) => state.pharmacyId?.id);
+
+  // Mutation function
+  const postPersonalInformation = useMutation({
+    mutationFn: async (value: any) => {
+      console.log("Sending data to API:", value.formData); // Debugging log
+      try {
+        const res = await customAxios.post(endpoints.signup, value.formData);
+        console.log("API Response:", res); // Log the entire response
+        return res;
+      } catch (error) {
+        console.error("API Error:", error); // Log the entire error
+        throw error; // Re-throw to trigger onError
+      }
+    },
+  });
+
+  // Handle form submission
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
+    const data = {
+      first_name: formData.get("first_name"),
+      last_name: formData.get("last_name"),
+      email: formData.get("email"),
+      phone_number: formData.get("phone_number"),
+      password: formData.get("password"),
+      password2: formData.get("password2"),
+      ghana_card: formData.get("ghana_card"),
+      pharmacy: pharmacyId,
+    };
+
+    postPersonalInformation.mutate(
+      {
+        formData: data,
+        method: "POST",
+      },
+      {
+        onSuccess: (data) => {
+          console.log("Mutation success, response data:", data); // Log success data
+          if (data.status === 201) {
+            toast.success("Personal Information created");
+            toast.info("Please check your email");
+            queryClient.invalidateQueries({
+              queryKey: ["personalInformation"],
+            });
+            toast.info("Your are being redirected to the login page");
+            router.push("/login");
+          } else {
+            console.log("Registration failed:", data.data.message);
+            toast.error("Personal Information Not Created");
+          }
+        },
+        onError: (error: any) => {
+          console.error(
+            "Request failed with error:",
+            error.toJSON ? error.toJSON() : error
+          ); // Log detailed error info
+        },
+      }
+    );
+  };
 
   return (
-    <div className="min-h-screen mx-auto py-8 px-8 bg-home">
-      <div className="flex gap-4 items-center  md:ml-[2.25rem]">
+    <div className="w-full h-screen mx-auto py-6 px-8 bg-home">
+      <div className="flex gap-4 items-center  md:ml-[2.25rem] h-3">
         <Image
           src="/RxPMSlogo.png"
           width={150}
@@ -41,14 +103,14 @@ const RegistrationPage = () => {
           className="mt-[-0.8rem]"
           alt="Procare Logo"
         />
-        <span className="font-bold text-3xl font-inter">Registration</span>
+        <span className="font-bold text-2xl font-inter">Registration</span>
       </div>
 
-      <div className="flex flex-col items-center mt-24 justify-center">
-        <h1 className="text-2xl md:text-5xl font-inter text-center font-bold mb-2">
+      <div className="flex flex-col items-center justify-center">
+        <h1 className="text-2xl md:text-3xl font-inter text-center font-bold mb-2">
           Personal Information
         </h1>
-        <p className="mb-8 font-roboto">Admin Details</p>
+        <p className="font-roboto">Admin Details</p>
         <div className="flex items-center gap-2 px-4">
           <span className="text-main text-sm flex gap-2 font-inter items-center font-semibold">
             <IoIosCheckmarkCircle className="text-main text-4xl" />
@@ -66,188 +128,140 @@ const RegistrationPage = () => {
           </span>
         </div>
 
-        <Form {...form}>
-          <form action="" className="mt-8 mb-[5rem]">
-            <div className="flex flex-col md:w-[55.5rem] md:h-[27rem] md:gap-4 md:flex-row bg-white px-[4.62rem] py-[2.12rem] rounded-2xl">
-              <div className="flex flex-col gap-4 w-full">
-                <FormField
-                  control={form.control}
+        <form onSubmit={handleSubmit} className="">
+          <div className="flex flex-col md:w-[55.5rem]  md:gap-4 md:flex-row bg-white px-[4.62rem] py-[2.62rem] rounded-2xl my-4">
+            <div className="flex flex-col gap-4 w-full">
+              <div>
+                <label htmlFor="first_name" className="font-bold">
+                  First Name
+                </label>
+                <Input
+                  id="first_name"
                   name="first_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
-                        First Name
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="text"
-                          autoFocus
-                          className="bg-home border rounded-[5px] border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                          placeholder="John"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="last_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
-                        Last Name
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="text"
-                          autoFocus
-                          className="bg-home rounded-[5px] w-full border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
-                        Password
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            {...field}
-                            type={showPassword ? "text" : "password"}
-                            className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 right-0 px-3 py-2 text-sm"
-                          >
-                            {showPassword ? <EyeOff /> : <Eye />}
-                          </button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password2"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
-                        Confirm Password
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            {...field}
-                            type={showPassword ? "text" : "password"}
-                            className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 right-0 px-3 py-2 text-sm"
-                          >
-                            {showPassword ? <EyeOff /> : <Eye />}
-                          </button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  type="text"
+                  autoFocus
+                  className="bg-home border rounded-[5px] border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                  placeholder="First Name"
                 />
               </div>
 
-              <div className="space-y-4 w-full">
-                <FormField
-                  control={form.control}
+              <div>
+                <label htmlFor="email" className="font-bold">
+                  email
+                </label>
+                <Input
+                  id="email"
                   name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
-                        Email Address
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="bg-home border rounded-[5px] border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                          placeholder="Doe"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  type="email"
+                  className="bg-home border rounded-[5px] border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                  placeholder="Email Address"
                 />
-                <FormField
-                  control={form.control}
-                  name="phone_number"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
-                        Number
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="ghana_card"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-medium text-sm font-inter text-[#323539]">
-                        ID(Ghana Card Requirement)
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              </div>
+
+              <div>
+                <label htmlFor="password" className="font-bold">
+                  Password
+                </label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                    placeholder="Password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 px-3 py-2 text-sm"
+                  >
+                    {showPassword ? <EyeOff /> : <Eye />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="password2" className="font-bold">
+                  Confirm Password
+                </label>
+
+                <div className="relative">
+                  <Input
+                    id="password2"
+                    name="password2"
+                    type={showPassword ? "text" : "password"}
+                    className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                    placeholder="Confirm Password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 px-3 py-2 text-sm"
+                  >
+                    {showPassword ? <EyeOff /> : <Eye />}
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between mt-[2.81rem]">
-              <Link
-                href="/"
-                className="text-main border-main font-inter text-center w-[140px] border-2 rounded-[5px] px-5 py-2 font-semibold text-sm"
-              >
-                Previous
-              </Link>
+            <div className="space-y-4 w-full">
+              <div>
+                <label htmlFor="last_name" className="font-bold">
+                  Last Name
+                </label>
+                <Input
+                  id="last_name"
+                  name="last_name"
+                  type="text"
+                  className="bg-home rounded-[5px] w-full border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                  placeholder="Last Name"
+                />
+              </div>
 
-              <Button
-                asChild
-                type="submit"
-                className="text-white w-[140px] font-inter"
-                variant="secondary"
-              >
-                <Link href="/make-payment">Next</Link>
-              </Button>
+              <div>
+                <label htmlFor="phone_number" className="font-bold">
+                  Phone Number
+                </label>
+                <Input
+                  id="phone_number"
+                  name="phone_number"
+                  type="tel"
+                  className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                  placeholder="Phone Number"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="ghana_card" className="font-bold">
+                  Ghana Card
+                </label>
+                <Input
+                  id="ghana_card"
+                  name="ghana_card"
+                  type="text"
+                  className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                  placeholder="ID (Ghana Card Requirement)"
+                />
+              </div>
             </div>
-          </form>
-        </Form>
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+            <Link
+              href="/pharmacy-information"
+              className="text-main border-main font-inter text-center w-[140px] border-2 rounded-[5px] px-5 py-2 font-semibold text-sm"
+            >
+              Previous
+            </Link>
+
+            <button
+              type="submit"
+              className="w-[140px] bg-blue-600 text-white rounded-[5px] px-5 py-2 font-semibold text-sm"
+            >
+              Next
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
