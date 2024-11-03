@@ -1,12 +1,44 @@
 import React, { useState } from "react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { logoutAction } from "@/redux/authActions";
+import { AppDispatch } from "@/redux/store";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 
 interface EndShiftModalProps {
   setModal: () => void;
 }
 
 const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+
+  // Define logoutUser to dispatch the logout and handle redirection
+  const logoutUser = async () => {
+    dispatch(logoutAction());
+    router.push("/login");
+  };
+
+  // Define mutation for the logout action
+  const logoutMutation = useMutation({
+    mutationKey: ["logout"],
+    mutationFn: logoutUser,
+    onSuccess: () => {
+      toast.success("User logged out successfully");
+    },
+    onError: (error) => {
+      toast.error("Failed to log out");
+    },
+  });
+
+  // Call the mutation when you want to log the user out
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-lg w-[60%] p-6 relative">
@@ -111,12 +143,13 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                   Cancel
                 </button>
 
-                <Link
-                  href={"/login"}
+                <button
+                  type="button"
+                  onClick={handleLogout}
                   className="px-6 py-2 bg-[#2648EA] text-white text-center shadow-md hover:bg-blue-600 w-56 rounded-[0.3rem]"
                 >
                   End Shift
-                </Link>
+                </button>
               </div>
             </div>
           </div>

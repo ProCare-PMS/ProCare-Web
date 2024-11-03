@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import QueryProvider from "./QueryProvider";
 import Providers from "./Provider";
+import LoadingWrapper from "@/components/Loader/LoadingWrapper";
 
 export const metadata: Metadata = {
   title: "ProHelium",
@@ -17,7 +18,9 @@ export default function RootLayout({
     <Providers>
       <html lang="en">
         <body>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <LoadingWrapper>{children}</LoadingWrapper>
+          </QueryProvider>
         </body>
       </html>
     </Providers>

@@ -3,6 +3,8 @@ import axios from "axios";
 import { AppDispatch } from "./store";
 import { loginSuccess, loginFailure, logout } from "./authSlice";
 import { LoginCredentials, User } from "@/Types";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 // Login action
 export const login =
@@ -56,9 +58,10 @@ export const login =
 
 // Logout action
 export const logoutAction = () => (dispatch: AppDispatch) => {
-  axios.post("/logout-all").finally(() => {
+  customAxios.post(endpoints.logout).finally(() => {
     // Clear token from localStorage
     localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
     dispatch(logout());
   });
 };

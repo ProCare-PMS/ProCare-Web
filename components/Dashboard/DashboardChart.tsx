@@ -111,12 +111,9 @@ export function DashbaordChart() {
         </ChartContainer>
       </CardContent>
       <div className="flex-col gap-2 text-sm -mt-8">
-        {chartData.map((chart) => (
-          <>
-            <div
-              className="flex items-center p-2 justify-between"
-              key={chart.products}
-            >
+        {chartData.map((chart, index) => (
+          <div key={index}>
+            <div className="flex items-center p-2 justify-between" key={index}>
               <div className="flex items-center gap-3">
                 <RiCheckboxBlankFill style={{ color: `${chart.fill}` }} />
                 <span className="text-black font-medium font-inter text-sm">
@@ -128,7 +125,7 @@ export function DashbaordChart() {
               </span>
             </div>
             <hr />
-          </>
+          </div>
         ))}
       </div>
       <div className="flex items-center justify-between py-3 px-4">

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react"; // Import useState
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { z } from "zod";
@@ -8,6 +8,7 @@ import { loginSuccess, loginFailure } from "@/redux/authSlice";
 import { endpoints } from "@/api/Endpoints";
 import customAxios, { _baseUrl } from "@/api/CustomAxios";
 import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 
 // Define Zod schema for validation
 const loginSchema = z.object({
@@ -19,80 +20,92 @@ export default function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // Form submission handler
+  // State for error messages
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const loginMutation = useMutation({
+    mutationFn: async (value: { formData: any }) => {
+      try {
+        const res = await customAxios.post(
+          `${_baseUrl + endpoints.login}`,
+          value.formData
+        );
+        return res.data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    },
+  });
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    //router.push("/dashboard");
-    const formData = {
-      custom_pharmacy_id: (
-        event.currentTarget.elements.namedItem(
-          "pharmacy_id_input"
-        ) as HTMLInputElement
-      ).value,
-      password: (
-        event.currentTarget.elements.namedItem("password") as HTMLInputElement
-      ).value,
+    const formData = new FormData(event.currentTarget);
+    const data = {
+      custom_pharmacy_id: formData.get("pharmacy_id_input"),
+      password: formData.get("password"),
     };
 
     // Validate input data using Zod
-    const result = loginSchema.safeParse(formData);
-    //console.log({ result });
+    const result = loginSchema.safeParse(data);
     if (!result.success) {
-      // Show validation errors (console.log here, but can be replaced with a proper UI display)
-      console.log("Validation Errors:", result.error.format());
+      // Create an object to hold error messages
+      const newErrors: { [key: string]: string } = {};
+      const formattedErrors = result.error.format();
+
+      for (const [key, value] of Object.entries(formattedErrors)) {
+        if (typeof value === "object" && value !== null && "_errors" in value) {
+          if (Array.isArray(value._errors) && value._errors.length > 0) {
+            newErrors[key] = value._errors.join(", ");
+          }
+        } else if (Array.isArray(value) && value.length > 0) {
+          newErrors[key] = value.join(", ");
+        }
+      }
+
+      setErrors(newErrors); // Set the error state
+      toast.error("Please correct the validation errors.");
       return;
     }
 
-    try {
-      const response = await customAxios.post(
-        `${_baseUrl + endpoints.login}`,
-        formData
-      );
-      const { token, user } = response.data;
+    // Clear errors if validation is successful
+    setErrors({});
 
-      console.log({ token }, user);
-
-      if (token && user) {
-        // Save token and user data to localStorage
-        localStorage.setItem("authToken", token);
-        localStorage.setItem("user", JSON.stringify(user));
-
-        toast.success("Login successful! Redirecting to the dashboard.");
-        // Dispatch login success to Redux
-        dispatch(loginSuccess({ token, user }));
-
-        // Navigate to the dashboard
-        router.push("/dashboard");
+    // Trigger the mutation with validated form data
+    loginMutation.mutate(
+      { formData: data },
+      {
+        onSuccess: (responseData) => {
+          console.log({ responseData });
+          const { token, user } = responseData;
+          if (token && user) {
+            localStorage.setItem("authToken", token);
+            localStorage.setItem("user", JSON.stringify(user));
+            toast.success("Login successful! Redirecting to the dashboard.");
+            dispatch(loginSuccess({ token, user }));
+            router.push("/dashboard");
+          }
+        },
+        onError: (error: any) => {
+          if (error.response && error.response.data) {
+            const apiErrors = error.response.data;
+            if (
+              apiErrors.non_field_errors &&
+              apiErrors.non_field_errors.length > 0
+            ) {
+              toast.error(apiErrors.non_field_errors[0]);
+            } else {
+              toast.error("An unexpected error occurred. Please try again.");
+            }
+            dispatch(loginFailure("An unexpected error occurred"));
+          } else {
+            toast.error(
+              "A network or unexpected error occurred. Please try again."
+            );
+          }
+        },
       }
-    } catch (error: any) {
-      // Check if it's an API error with a specific message
-      if (error.response && error.response.data) {
-        const apiErrors = error.response.data;
-
-        // Extract the specific error message, e.g., non_field_errors
-        if (
-          apiErrors.non_field_errors &&
-          apiErrors.non_field_errors.length > 0
-        ) {
-          toast.error(apiErrors.non_field_errors[0]);
-        } else {
-          toast.error("An unexpected error occurred. Please try again.");
-        }
-
-        // Optionally, dispatch error message to Redux or other state management
-        dispatch(
-          loginFailure(
-            apiErrors.non_field_errors?.[0] || "An unexpected error occurred"
-          )
-        );
-      } else {
-        console.log(error);
-        toast.error(
-          "A network or unexpected error occurred. Please try again."
-        );
-        dispatch(loginFailure("An unexpected error occurred"));
-      }
-    }
+    );
   };
 
   return (
@@ -102,41 +115,58 @@ export default function Login() {
           className="m-auto flex flex-col justify-center gap-2"
           onSubmit={handleSubmit}
         >
-          <h2 className="font-inter text-4xl font-bold leading-14 text-left mb-4">
+          <h2 className="font-inter text-4xl font-bold leading-14 text-left mb-8">
             Login
           </h2>
-          <p className="text-gray-600 mb-4">
+          {/* <p className="text-gray-600 mb-4">
             Log in to access your account securely
-          </p>
+          </p> */}
           <div className="mb-4">
-            <label
-              htmlFor="pharmacy_Id"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Pharmacy ID
-            </label>
+            <div className="flex justify-between">
+              <label
+                htmlFor="pharmacy_Id"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Pharmacy ID
+              </label>
+              {errors.custom_pharmacy_id && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.custom_pharmacy_id}
+                </p>
+              )}
+            </div>
+
             <input
               id="pharmacy_Id"
               name="pharmacy_id_input"
               type="text"
               placeholder="Enter Pharmacy ID"
-              className="appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB]"
+              className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                errors.custom_pharmacy_id ? "border-red-500" : ""
+              }`}
               autoComplete="off"
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="data_psInput"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Password
-            </label>
+            <div className="flex justify-between">
+              <label
+                htmlFor="data_psInput"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Password
+              </label>
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+              )}
+            </div>
             <input
               id="data_psInput"
               name="password"
               type="password"
               placeholder="Enter Password"
-              className="appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB]"
+              className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                errors.password ? "border-red-500" : ""
+              }`}
               autoComplete="off"
             />
           </div>

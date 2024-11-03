@@ -100,7 +100,7 @@ const RegistrationPage = () => {
         method: "POST",
       },
       {
-        onSuccess: (data) => {
+        onSuccess: (data: any) => {
           if (data.status === 201) {
             const pharmacyId = data?.data?.id; // get the pharmacy id from the response data
             dispatch(setFacilityId(pharmacyId));
@@ -109,9 +109,12 @@ const RegistrationPage = () => {
               queryKey: ["personalInformation"],
             });
             router.push("/personal-information");
+          } else if (data.status === 400) {
+            toast.error("Error creating personal information");
+            toast.error("Error creating personal information");
           } else {
-            console.log("Registration failed:", data.data.message);
-            toast.error("Personal Information Not Created");
+            console.log("Registration failed:", data?.message);
+            toast.error(data?.message);
           }
         },
         onError: (error: any) => {
