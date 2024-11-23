@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { X } from "lucide-react";
-import { DashboardTransactions, dashboardTransactions, PurchaseTabTable } from "@/type";
+import {
+  DashboardTransactions,
+  dashboardTransactions,
+  PurchaseTabTable,
+} from "@/type";
 import clsx from "clsx";
 
 type ModalProps = {
@@ -8,7 +12,7 @@ type ModalProps = {
   item: PurchaseTabTable;
 };
 
-const PurchasesTableModal = ({ setModal, item,  }: ModalProps) => {
+const PurchasesTableModal = ({ setModal, item }: ModalProps) => {
   useEffect(() => {
     // Disable scrolling when the modal is open
     document.body.style.overflow = "hidden";
@@ -31,7 +35,10 @@ const PurchasesTableModal = ({ setModal, item,  }: ModalProps) => {
         <hr className="mb-6" />
 
         {/* Modal Stats */}
-        <div className="grid grid-cols-4 gap-10 bg-[#F8F9FB] border py-2 px-4 rounded-[8px]" key={item.purchaseId}>
+        <div
+          className="grid grid-cols-4 gap-10 bg-[#F8F9FB] border py-2 px-4 rounded-[8px]"
+          key={item.purchaseId}
+        >
           <div className="grid w-full gap-1">
             <span className="text-[#858C95] text-sm font-normal">
               PURCHASE ID
@@ -47,29 +54,41 @@ const PurchasesTableModal = ({ setModal, item,  }: ModalProps) => {
             </span>
           </div>
           <div className="grid w-full gap-1">
-            <span  className="text-[#858C95] text-sm font-normal">Quantity</span>
-            <span className="text-[#202224] text-base font-normal">{item.quantity}</span>
+            <span className="text-[#858C95] text-sm font-normal">Quantity</span>
+            <span className="text-[#202224] text-base font-normal">
+              {item.quantity}
+            </span>
           </div>
           <div className="grid gap-2">
-            <span className="text-[#858C95] text-sm font-normal">Unit Price</span>
-            <span className="text-[#202224] text-base font-normal">{item.unitPrice}</span>
+            <span className="text-[#858C95] text-sm font-normal">
+              Unit Price
+            </span>
+            <span className="text-[#202224] text-base font-normal">
+              {item.unitPrice}
+            </span>
           </div>
           <div className="grid gap-1">
             <span>AMOUNT</span>
-            <span className="text-[#202224] text-base font-normal">{item.amount}</span>
+            <span className="text-[#202224] text-base font-normal">
+              {item.amount}
+            </span>
           </div>
           <div className="grid gap-1">
-            <span  className="text-[#858C95] text-sm font-normal">Date</span>
-            <span className="text-[#202224] text-base font-normal">{item.date}</span>
+            <span className="text-[#858C95] text-sm font-normal">Date</span>
+            <span className="text-[#202224] text-base font-normal">
+              {item.date}
+            </span>
           </div>
         </div>
 
         <hr className="my-6" />
 
         {/* Products */}
-        <div className=" "> {/* overflow-y-auto h-[200px] p-3 */}
+        <div className=" ">
+          {" "}
+          {/* overflow-y-auto h-[200px] p-3 */}
           {item.purchases.map((purchase, index) => (
-            <>
+            <div key={index + purchase.name}>
               <div
                 className="flex items-center justify-between"
                 key={purchase.name}
@@ -102,7 +121,7 @@ const PurchasesTableModal = ({ setModal, item,  }: ModalProps) => {
                 </div>
               </div>
               <hr className="my-6" />
-            </>
+            </div>
           ))}
         </div>
       </div>

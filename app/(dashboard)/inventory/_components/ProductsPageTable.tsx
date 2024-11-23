@@ -72,7 +72,6 @@ const ProductsPageTable = () => {
             {showFilters && <FilterDropdown />}
           </div>
         </div>
-        
       </div>
       <TabsContent value="products">
         <ProductsTable />

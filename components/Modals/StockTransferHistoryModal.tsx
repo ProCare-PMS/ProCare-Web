@@ -76,7 +76,7 @@ const StockTransferHistoryModal = ({ item, setModal }: ModalProps) => {
           {" "}
           {/* overflow-y-auto h-[200px] p-3 */}
           {item.transfers.map((transfer, index) => (
-            <>
+            <div key={index}>
               <div
                 className="flex items-center justify-between"
                 key={transfer.name}
@@ -123,7 +123,7 @@ const StockTransferHistoryModal = ({ item, setModal }: ModalProps) => {
                 </div>
               </div>
               <hr className="my-6" />
-            </>
+            </div>
           ))}
         </div>
 

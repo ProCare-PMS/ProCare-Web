@@ -6,12 +6,12 @@ import DailySalesTransactionTable from "./DailyTransactionTable";
 
 function SalesAnalyticsPage() {
   return (
-    <>
+    <div>
       <SalesBarChart />
       <BestSellingProductTable />
       <DailySalesChart />
       <DailySalesTransactionTable />
-    </>
+    </div>
   );
 }
 

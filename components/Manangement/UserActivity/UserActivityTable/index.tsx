@@ -82,11 +82,7 @@ function UserActivityTable() {
         {toggleShow === 1 && (
           <DataTable columns={Columns} data={Data} searchValue={searchValues} />
         )}
-        {toggleShow === 2 && (
-          <>
-            <ActivityLog />
-          </>
-        )}
+        {toggleShow === 2 && <ActivityLog />}
       </div>
     </div>
   );

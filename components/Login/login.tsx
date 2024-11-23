@@ -9,6 +9,7 @@ import { endpoints } from "@/api/Endpoints";
 import customAxios, { _baseUrl } from "@/api/CustomAxios";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
+import { User } from "@/Types";
 
 // Define Zod schema for validation
 const loginSchema = z.object({
@@ -68,7 +69,6 @@ export default function Login() {
       return;
     }
 
-    // Clear errors if validation is successful
     setErrors({});
 
     // Trigger the mutation with validated form data
@@ -77,12 +77,16 @@ export default function Login() {
       {
         onSuccess: (responseData) => {
           console.log({ responseData });
-          const { token, user } = responseData;
+          const token = responseData?.access;
+          const user = responseData?.user;
+          const refreshToken = responseData?.refresh;
+          //const { token, user } = responseData;
           if (token && user) {
             localStorage.setItem("authToken", token);
+            localStorage.setItem("refreshToken", refreshToken);
             localStorage.setItem("user", JSON.stringify(user));
             toast.success("Login successful! Redirecting to the dashboard.");
-            dispatch(loginSuccess({ token, user }));
+            dispatch(loginSuccess({ token, refreshToken, user }));
             router.push("/dashboard");
           }
         },

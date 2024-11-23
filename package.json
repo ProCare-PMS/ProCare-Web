@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 6325",
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev -p 6325",
     "build": "next build",
     "start": "next start -p 6325",
     "lint": "next lint"
@@ -54,6 +54,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "cross-env": "^7.0.3",
     "eslint": "^8",
     "eslint-config-next": "14.1.3",
     "postcss": "^8",

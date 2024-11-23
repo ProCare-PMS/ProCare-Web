@@ -4,6 +4,7 @@ export interface User {
   first_name: string;
   last_name: string;
   custom_pharmacy_id: string;
+  token: string;
 }
 
 export interface AuthState {

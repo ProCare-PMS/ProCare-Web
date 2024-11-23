@@ -1,53 +1,36 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import React, { useState } from "react";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/ui/form";
-import ProductsTopSection from "../_addProductsComponents/ProductsTopSection";
-import ProductsMiddleSection from "../_addProductsComponents/ProductsMiddleSection";
-import ProductsBottomSection from "../_addProductsComponents/ProductsBottomSection";
-import ProductMiddleBottomSection from "../_addProductsComponents/ProductMiddleBottomSection";
+import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 const formSchema = z.object({
-  productName: z.string({
-    required_error: "Product Name is required",
+  name: z.string({
+    required_error: "Required",
   }),
-  productStrength: z.string({
-    required_error: "Product Strength is required",
+  strength: z.string(),
+  unit: z.string({
+    required_error: "Required",
   }),
-  unit: z.string().min(1, "Unit is required"),
-  quantity: z.coerce.number({
-    required_error: "Quantity is required",
-    invalid_type_error: "Must be a valid number",
+  quantity: z.number(),
+  expiry_date: z.string({
+    required_error: "Required",
   }),
-  expiryDate: z.date({
-    required_error: "Date is required",
-    invalid_type_error: "Format invalid",
+  reorder_level: z.coerce.number({
+    required_error: "Required",
   }),
-  reOrderLevel: z.coerce.number({
-    required_error: "Re-Order Level is required",
-    invalid_type_error: "Must be a valid number",
+  cost_price: z.string({
+    required_error: "Required",
   }),
-  costPrice: z.coerce.number({
-    required_error: "Cost Price is required",
+  markup_percentage: z.string({
+    required_error: "Required",
   }),
-  markUp: z.coerce.number({
-    required_error: "Mark Up Percentage is required",
-    invalid_type_error: "Must be a valid number",
-  }),
-  sellingPrice: z.coerce.number({
-    required_error: "Selling Price is required",
-    invalid_type_error: "Must be a valid number",
+  selling_price: z.string({
+    required_error: "Required",
   }),
   category: z.string({
     required_error: "Category is required",
@@ -55,7 +38,7 @@ const formSchema = z.object({
   supplier: z.string({
     required_error: "Supplier is required",
   }),
-  brandName: z.string({
+  brand: z.string({
     required_error: "Brand Name is required",
   }),
 });
@@ -64,54 +47,416 @@ type ProductSchema = z.infer<typeof formSchema>;
 
 interface AddProductProps {
   title: string;
-  className?: string;
+  setModal: () => void;
 }
 
-const AddProducts = ({ title, className }: AddProductProps) => {
+const AddProducts = ({ title, setModal }: AddProductProps) => {
+  // State for error messages
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   const form = useForm<ProductSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      expiryDate: new Date(),
+      name: "",
     },
   });
 
-  
+  const postProductMutation = useMutation({
+    mutationFn: async (value: any) => {
+      const res = await customAxios
+        .post(endpoints.inventorycreate, value.formData)
+        .then((res) => res);
+      return res;
+    },
+  });
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const data = {
+      name: formData.get("name"),
+      reorder_level: formData.get("reorder_level"),
+      cost_price: formData.get("cost_price"),
+      markup_percentage: formData.get("markup_percentage"),
+      selling_price: formData.get("selling_price"),
+      category: formData.get("category"),
+      supplier: formData.get("supplier"),
+      brand: formData.get("brand"),
+      expiry_date: formData.get("expiry_date")
+        ? new Date(formData.get("expiry_date") as string).toISOString()
+        : null,
+      strength: formData.get("strength"),
+      unit: formData.get("unit"),
+      quantity: Number(formData.get("quantity")),
+    };
+    // Validate input data using Zod
+    const result = formSchema.safeParse(data);
+    console.log({ data });
+    if (!result.success) {
+      // Create an object to hold error messages
+      const newErrors: { [key: string]: string } = {};
+      const formattedErrors = result.error.format();
+
+      for (const [key, value] of Object.entries(formattedErrors)) {
+        if (typeof value === "object" && value !== null && "_errors" in value) {
+          if (Array.isArray(value._errors) && value._errors.length > 0) {
+            newErrors[key] = value._errors.join(", ");
+          }
+        } else if (Array.isArray(value) && value.length > 0) {
+          newErrors[key] = value.join(", ");
+        }
+      }
+
+      setErrors(newErrors); // Set the error state
+      toast.error("Please correct the validation errors.");
+      return;
+    }
+
+    setErrors({});
+
+    postProductMutation.mutate(
+      { formData: data },
+      {
+        onSuccess: () => {
+          toast.success("Product added successfully!");
+          //setModal();
+        },
+        onError: (error) => {
+          console.error(error);
+        },
+      }
+    );
+  };
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className={className}>{title}</Button> 
-      </DialogTrigger>
-      <DialogContent className="max-w-[900px] bg-white">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-inter pb-6 font-bold text-[#202224]">
-            Add Product
-          </DialogTitle>
-          <hr className="pb-6" />
-          <DialogDescription className="font-inter text-base font-bold text-[#202224]">
-            Products Details
-          </DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          <form>
-            <div className="grid gap-4">
-              <ProductsTopSection />
-              <ProductsMiddleSection />
-              <ProductMiddleBottomSection />
-              <ProductsBottomSection />
-            </div>
-          </form>
-        </Form>
-        <DialogFooter>
-          <Button
-            className="text-white w-[140px] font-inter rounded"
-            variant="secondary"
-            type="submit"
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-2xl shadow-lg w-[60%] p-6 relative">
+        <div className="flex justify-between items-center border-b mb-2">
+          <h2 className="text-lg font-bold mb-4">{title}</h2>
+          <button
+            className="text-gray-500 hover:text-gray-800"
+            onClick={setModal}
           >
-            Save changes
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+            <CloseOutlinedIcon />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* First Row */}
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="name"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Product Name
+                </label>
+                {errors.name && (
+                  <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                )}
+              </div>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Enter Product Name"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.name ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="strength"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Product Strength
+                </label>
+                {errors.strength && (
+                  <p className="text-red-500 text-xs mt-1">{errors.strength}</p>
+                )}
+              </div>
+              <input
+                id="strength"
+                name="strength"
+                type="text"
+                placeholder="Enter Product Strength"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.strength ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="unit"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Unit
+                </label>
+                {errors.unit && (
+                  <p className="text-red-500 text-xs mt-1">{errors.unit}</p>
+                )}
+              </div>
+              <input
+                id="unit"
+                name="unit"
+                placeholder="Enter Unit"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.unit ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          {/* Second Row */}
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="quantity"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Quantity
+                </label>
+                {errors.quantity && (
+                  <p className="text-red-500 text-xs mt-1">{errors.quantity}</p>
+                )}
+              </div>
+              <input
+                id="quantity"
+                type="number"
+                name="quantity"
+                placeholder="Enter Quantity"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.quantity ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="expiry_date"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Expiry Date
+                </label>
+                {errors.expiry_date && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.expiry_date}
+                  </p>
+                )}
+              </div>
+              <input
+                id="expiry_date"
+                type="date"
+                name="expiry_date"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.expiry_date ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="reorder_level"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Re-Order Level
+                </label>
+                {errors.reorder_level && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.reorder_level}
+                  </p>
+                )}
+              </div>
+              <input
+                id="reorder_level"
+                type="number"
+                name="reorder_level"
+                placeholder="Enter Re-Order Level"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.reorder_level ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          {/* Third Row */}
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="cost_price"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Cost Price
+                </label>
+                {errors.cost_price && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.cost_price}
+                  </p>
+                )}
+              </div>
+              <input
+                id="cost_price"
+                type="number"
+                name="cost_price"
+                placeholder="Enter Cost Price"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.cost_price ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="markup_percentage"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Mark Up Percentage
+                </label>
+                {errors.markup_percentage && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.markup_percentage}
+                  </p>
+                )}
+              </div>
+              <input
+                id="markup_percentage"
+                type="number"
+                name="markup_percentage"
+                placeholder="Enter Mark Up Percentage"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.markup_percentage ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="selling_price"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Selling Price
+                </label>
+                {errors.selling_price && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.selling_price}
+                  </p>
+                )}
+              </div>
+              <input
+                id="selling_price"
+                type="number"
+                name="selling_price"
+                placeholder="Enter Selling Price"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.selling_price ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          {/* Fourth Row */}
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="category"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Category
+                </label>
+                {errors.category && (
+                  <p className="text-red-500 text-xs mt-1">{errors.category}</p>
+                )}
+              </div>
+              <input
+                id="category"
+                name="category"
+                placeholder="Enter Category"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.category ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="supplier"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Supplier
+                </label>
+                {errors.supplier && (
+                  <p className="text-red-500 text-xs mt-1">{errors.supplier}</p>
+                )}
+              </div>
+              <input
+                id="supplier"
+                name="supplier"
+                type="text"
+                placeholder="Enter Supplier"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.supplier ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between">
+                <label
+                  htmlFor="brand"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Brand Name
+                </label>
+                {errors.brand && (
+                  <p className="text-red-500 text-xs mt-1">{errors.brand}</p>
+                )}
+              </div>
+              <input
+                id="brand"
+                name="brand"
+                type="brand"
+                placeholder="Enter Brand Name"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                  errors.brand ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 w-[140px]"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 

@@ -3,4 +3,5 @@ export const endpoints = {
   logout: "/logout-all/",
   signup: "/user-signup/",
   pharmacySignup: "/pharmacy/",
+  inventorycreate: "/inventories/products/",
 };

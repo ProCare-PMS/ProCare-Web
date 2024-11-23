@@ -6,9 +6,9 @@ import { UserPerformanceTableProps } from "../UserPerfomance";
 
 function AttendanceTable({ searchValues }: UserPerformanceTableProps) {
   return (
-    <>
+    <div>
       <DataTable columns={Columns} data={Data} searchValue={searchValues} />
-    </>
+    </div>
   );
 }
 

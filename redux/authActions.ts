@@ -27,6 +27,7 @@ export const login =
         first_name,
         last_name,
         custom_pharmacy_id,
+        token,
       };
 
       // Save token to localStorage for persistence

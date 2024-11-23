@@ -39,11 +39,11 @@ const LoadingWrapper = ({ children }: { children: React.ReactNode }) => {
   }, [pathname, router]);
 
   return (
-    <>
+    <div>
       <Toaster richColors position="top-right" duration={8000} />
       {isLoading && <Loading />}
       {children}
-    </>
+    </div>
   );
 };
 

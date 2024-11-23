@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from "react";
+// inventory with add product individually
+import React, { useEffect, useState } from "react";
 import ProductMiniTable from "./ProductMiniTable";
 import ProductStockTable from "./ProductStockTable";
-import { CiSearch } from "react-icons/ci";
 import clsx from "clsx";
 import { Plus, SlidersVertical } from "lucide-react";
 import AddProducts from "@/app/(dashboard)/inventory/_components/AddProductsModal";
@@ -15,16 +15,23 @@ import { productsTabTable } from "@/type";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 
 const ProductsTabHeader = () => {
-
-
   const [showTab, setShowTab] = useState(
     <ExpandableDataTable columns={productsTabColumns} data={productsTabTable} />
   );
   const [activeTab, setActiveTab] = useState("Products");
   const [showMenu, setShowMenu] = useState(false);
   const [showFilters, setShowFilter] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [searchValues, setSetSearchValues] = useState<string>("");
+
+  const handleOpenModal = () => {
+    setShowMenu(false);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -75,10 +82,10 @@ const ProductsTabHeader = () => {
 
         {/* Search and Filter Section */}
         <div className="flex items-center gap-3">
-
-          
-          <SearchFieldInput  value={searchValues} onChange={handleSearchValueChange} />
-
+          <SearchFieldInput
+            value={searchValues}
+            onChange={handleSearchValueChange}
+          />
 
           <div className="relative">
             <Button
@@ -86,6 +93,7 @@ const ProductsTabHeader = () => {
               className="text-white relative flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
               variant="secondary"
               onClick={() => {
+                console.log("clicked");
                 setShowMenu(!showMenu);
                 setShowFilter(false);
               }}
@@ -95,25 +103,33 @@ const ProductsTabHeader = () => {
             </Button>
             {showMenu && (
               <div
-                className={`bg-white absolute top-12 left-0 z-20 rounded-[8px] shadow-md transform transition-all duration-300 ease-in-out ${
+                className={`bg-white absolute top-12 left-0 z-20 rounded-[8px] shadow-lg transform transition-all duration-300 ease-in-out ${
                   showMenu
                     ? "opacity-100 scale-100"
                     : "opacity-0 scale-95 pointer-events-none"
                 }`}
               >
-                <ul>
-                  <li>
-                    <AddProducts
-                      title="Add individually"
-                      className="text-sm px-6 py-4 font-inter font-normal text-[#344054]"
-                    />
+                <ul className="flex justify-center flex-col items-center divide-y divide-gray-300">
+                  <li className="px-3 py-2">
+                    {/* MODAL COMPONENTS SHOULD ONLY OPEN WHEN THE LI IS CLICKED */}
+                    {/* <AddProducts title="" setModal={handleCloseModal} /> */}
+                    <button
+                      type="button"
+                      className="text-center"
+                      onClick={handleOpenModal}
+                    >
+                      Add Individually
+                    </button>
                   </li>
                   <hr />
-                  <li>
-                    <ImportProductsModal
+                  <li className="px-3 py-2">
+                    {/* <ImportProductsModal
                       title="Import Products"
                       className="text-sm px-6 py-4 font-inter font-normal text-[#344054]"
-                    />
+                    /> */}
+                    <button type="button" className="text-center">
+                      Import Products
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -139,6 +155,9 @@ const ProductsTabHeader = () => {
       {showTab}
 
       {/* Add Product Button */}
+      {isModalOpen && (
+        <AddProducts title="Add Product" setModal={handleCloseModal} />
+      )}
     </div>
   );
 };

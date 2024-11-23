@@ -15,7 +15,7 @@ const AddCategory = () => {
   };
 
   return (
-    <>
+    <div>
       <div className="flex items-start justify-end">
         <Button
           type="button"
@@ -29,7 +29,7 @@ const AddCategory = () => {
       </div>
 
       {isModalOpen && <AddCategoryModal onClose={onClose} />}
-    </>
+    </div>
   );
 };
 

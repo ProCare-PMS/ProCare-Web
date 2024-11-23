@@ -4,11 +4,9 @@ import { UserPerformanceTableProps } from "../UserPerfomance";
 
 function AttendanceContent({ searchValues }: UserPerformanceTableProps) {
   return (
-    <>
-      <div>
-        <AttendanceTable searchValues={searchValues} />
-      </div>
-    </>
+    <div>
+      <AttendanceTable searchValues={searchValues} />
+    </div>
   );
 }
 

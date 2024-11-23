@@ -13,7 +13,7 @@ function SearchFieldInput({
   placeholder = "Search...",
 }: SearchInputProps) {
   return (
-    <>
+    <div>
       <div className="iconInputholder flex items-center gap-4 border-2 border-[#EAEBF0] rounded-2xl px-2">
         <span className="w-7 h-10 flex justify-center items-center px-1">
           <Image
@@ -33,7 +33,7 @@ function SearchFieldInput({
           />
         </span>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { useDispatch, UseDispatch } from "react-redux";
 import { setFacilityId } from "@/redux/facilitySlice";
 import { AppDispatch } from "@/redux/store";
+import { useState } from "react";
 
 const facilitySchema = z.object({
   facility_name: z.string().min(1, { message: "Facility name is required" }),
@@ -30,6 +31,8 @@ const facilitySchema = z.object({
 });
 
 const RegistrationPage = () => {
+  // State for error messages
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const dispatch = useDispatch<AppDispatch>();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -55,44 +58,41 @@ const RegistrationPage = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Retrieve form values
+    const dataFormat = new FormData(event.currentTarget);
+
     const formData = {
-      facility_name: (
-        event.currentTarget.elements.namedItem(
-          "facility_name"
-        ) as HTMLInputElement
-      ).value,
-      facility_number: (
-        event.currentTarget.elements.namedItem(
-          "facility_number"
-        ) as HTMLInputElement
-      ).value,
-      facility_email: (
-        event.currentTarget.elements.namedItem(
-          "facility_email"
-        ) as HTMLInputElement
-      ).value,
-      address: (
-        event.currentTarget.elements.namedItem("address") as HTMLInputElement
-      ).value,
-      city: (event.currentTarget.elements.namedItem("city") as HTMLInputElement)
-        .value,
-      region: (
-        event.currentTarget.elements.namedItem("region") as HTMLInputElement
-      ).value,
-      ghana_post_address: (
-        event.currentTarget.elements.namedItem(
-          "ghana_post_address"
-        ) as HTMLInputElement
-      ).value,
-      license_number: (
-        event.currentTarget.elements.namedItem(
-          "license_number"
-        ) as HTMLInputElement
-      ).value,
+      facility_name: dataFormat.get("facility_name"),
+      facility_number: dataFormat.get("facility_number"),
+      facility_email: dataFormat.get("facility_email"),
+      address: dataFormat.get("address"),
+      city: dataFormat.get("city"),
+      region: dataFormat.get("region"),
+      ghana_post_address: dataFormat.get("ghana_post_address"),
+      license_number: dataFormat.get("license_number"),
     };
 
-    console.log("Form data prepared:", formData); // Debugging log
+    const result = facilitySchema.safeParse(formData);
+    if (!result.success) {
+      // Create an object to hold error messages
+      const newErrors: { [key: string]: string } = {};
+      const formattedErrors = result.error.format();
+
+      for (const [key, value] of Object.entries(formattedErrors)) {
+        if (typeof value === "object" && value !== null && "_errors" in value) {
+          if (Array.isArray(value._errors) && value._errors.length > 0) {
+            newErrors[key] = value._errors.join(", ");
+          }
+        } else if (Array.isArray(value) && value.length > 0) {
+          newErrors[key] = value.join(", ");
+        }
+      }
+
+      setErrors(newErrors); // Set the error state
+      toast.error("Please correct the validation errors.");
+      return;
+    }
+
+    setErrors({});
 
     postPharmacyInformation.mutate(
       {
@@ -164,12 +164,20 @@ const RegistrationPage = () => {
             <div className="flex flex-col md:w-[55.5rem] md:flex-row bg-white px-[1.62rem] py-6 rounded-xl">
               <div className="grid grid-cols-2 w-full gap-4 my-0 p-0">
                 <div>
-                  <label
-                    htmlFor="facility_name"
-                    className="block text-gray-700 text-sm font-bold"
-                  >
-                    Facility Name
-                  </label>
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="facility_name"
+                      className="block text-gray-700 text-sm font-bold"
+                    >
+                      Facility Name
+                    </label>
+                    {errors.facility_name && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.facility_name}
+                      </p>
+                    )}
+                  </div>
+
                   <input
                     id="facility_name"
                     name="facility_name"
@@ -179,12 +187,20 @@ const RegistrationPage = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="facility_number"
-                    className="block text-gray-700 text-sm font-bold"
-                  >
-                    Facility Number
-                  </label>
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="facility_number"
+                      className="block text-gray-700 text-sm font-bold"
+                    >
+                      Facility Number
+                    </label>
+                    {errors.facility_number && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.facility_number}
+                      </p>
+                    )}
+                  </div>
+
                   <input
                     id="facility_number"
                     name="facility_number"
@@ -194,12 +210,20 @@ const RegistrationPage = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="facility_email"
-                    className="block text-gray-700 text-sm font-bold"
-                  >
-                    Facility Email
-                  </label>
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="facility_email"
+                      className="block text-gray-700 text-sm font-bold"
+                    >
+                      Facility Email
+                    </label>
+                    {errors.facility_email && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.facility_email}
+                      </p>
+                    )}
+                  </div>
+
                   <input
                     id="facility_email"
                     name="facility_email"
@@ -209,12 +233,20 @@ const RegistrationPage = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="address"
-                    className="block text-gray-700 text-sm font-bold"
-                  >
-                    Address
-                  </label>
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="address"
+                      className="block text-gray-700 text-sm font-bold"
+                    >
+                      Address
+                    </label>
+                    {errors.address && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.address}
+                      </p>
+                    )}
+                  </div>
+
                   <input
                     id="address"
                     name="address"
@@ -224,12 +256,18 @@ const RegistrationPage = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="city"
-                    className="block text-gray-700 text-sm font-bold"
-                  >
-                    City
-                  </label>
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="city"
+                      className="block text-gray-700 text-sm font-bold"
+                    >
+                      City
+                    </label>
+                    {errors.city && (
+                      <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+                    )}
+                  </div>
+
                   <input
                     id="city"
                     name="city"
@@ -239,12 +277,20 @@ const RegistrationPage = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="region"
-                    className="block text-gray-700 text-sm font-bold"
-                  >
-                    Region
-                  </label>
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="region"
+                      className="block text-gray-700 text-sm font-bold"
+                    >
+                      Region
+                    </label>
+                    {errors.region && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.region}
+                      </p>
+                    )}
+                  </div>
+
                   <input
                     id="region"
                     name="region"
@@ -254,12 +300,20 @@ const RegistrationPage = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="ghana_post_address"
-                    className="block text-gray-700 text-sm font-bold"
-                  >
-                    Ghana Post Address
-                  </label>
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="ghana_post_address"
+                      className="block text-gray-700 text-sm font-bold"
+                    >
+                      Ghana Post Address
+                    </label>
+                    {errors.ghana_post_address && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.ghana_post_address}
+                      </p>
+                    )}
+                  </div>
+
                   <input
                     id="ghana_post_address"
                     name="ghana_post_address"
@@ -269,12 +323,20 @@ const RegistrationPage = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="license_number"
-                    className="block text-gray-700 text-sm font-bold"
-                  >
-                    License Number
-                  </label>
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="license_number"
+                      className="block text-gray-700 text-sm font-bold"
+                    >
+                      License Number
+                    </label>
+                    {errors.license_number && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.license_number}
+                      </p>
+                    )}
+                  </div>
+
                   <input
                     id="license_number"
                     name="license_number"
