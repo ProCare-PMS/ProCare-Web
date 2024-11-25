@@ -4,7 +4,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 
@@ -32,14 +32,14 @@ const formSchema = z.object({
   selling_price: z.string({
     required_error: "Required",
   }),
-  category: z.string({
-    required_error: "Category is required",
-  }),
-  supplier: z.string({
-    required_error: "Supplier is required",
-  }),
+  // category: z.string({
+  //   //required_error: "Category is required",
+  // }),
+  // supplier: z.string({
+  //   //required_error: "Supplier is required",
+  // }),
   brand: z.string({
-    required_error: "Brand Name is required",
+    //required_error: "Brand Name is required",
   }),
 });
 
@@ -64,7 +64,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
   const postProductMutation = useMutation({
     mutationFn: async (value: any) => {
       const res = await customAxios
-        .post(endpoints.inventorycreate, value.formData)
+        .post(endpoints.inventoryProduct, value.formData)
         .then((res) => res);
       return res;
     },
@@ -89,9 +89,10 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
       unit: formData.get("unit"),
       quantity: Number(formData.get("quantity")),
     };
+
     // Validate input data using Zod
     const result = formSchema.safeParse(data);
-    console.log({ data });
+
     if (!result.success) {
       // Create an object to hold error messages
       const newErrors: { [key: string]: string } = {};
@@ -118,8 +119,8 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
       { formData: data },
       {
         onSuccess: () => {
+          setModal();
           toast.success("Product added successfully!");
-          //setModal();
         },
         onError: (error) => {
           console.error(error);
@@ -127,6 +128,15 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
       }
     );
   };
+
+  //getting all products
+  // const { data: getAllproduct } = useQuery({
+  //   queryKey: ["getAllProduct"],
+  //   queryFn: () =>
+  //     customAxios.get(endpoints.inventorycreate).then((res) => res?.data?.data),
+  // });
+
+  // console.log({ getAllproduct });
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -448,12 +458,14 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 w-[140px]"
-          >
-            Submit
-          </button>
+          <div className="flex justify-end items-center">
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 w-[140px]"
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </div>

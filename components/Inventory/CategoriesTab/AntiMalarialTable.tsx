@@ -8,10 +8,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Product } from "@/components/POS/SalesPoint/ProductsSection/Columns";
+//import { Product } from "@/components/POS/SalesPoint/ProductsSection/Columns";
 
 interface AddCategoryTableProps {
   onClose: () => void;
+}
+
+interface Product {
+  productName: string;
+  quantity: number;
+  price: string;
 }
 
 const generateRandomProducts = (): Product[] => {
@@ -22,7 +28,7 @@ const generateRandomProducts = (): Product[] => {
   ];
   return products.map((product) => ({
     ...product,
-    productName: `${product.productName} ${Math.floor(Math.random() * 100)}`,
+    productName: `${product.productName} 5550`,
   }));
 };
 

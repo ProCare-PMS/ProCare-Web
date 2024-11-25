@@ -13,11 +13,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <body className={`${inter.variable}`}>
+    <div className={`${inter.variable}`}>
       <MainNav />
       {/* <DashboardNav /> */}
       <main className=" pt-12 bg-[#F5F5F5] ">{children}</main>{" "}
       {/* bg-[#F5F5F5] */}
-    </body>
+    </div>
   );
 }
