@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import SwalToaster from "@/components/SwalToaster/SwalToaster";
 
 const formSchema = z.object({
   name: z.string({
@@ -32,12 +33,12 @@ const formSchema = z.object({
   selling_price: z.string({
     required_error: "Required",
   }),
-  // category: z.string({
-  //   //required_error: "Category is required",
-  // }),
-  // supplier: z.string({
-  //   //required_error: "Supplier is required",
-  // }),
+  category: z.string({
+    required_error: "Category is required",
+  }),
+  supplier: z.string({
+    required_error: "Supplier is required",
+  }),
   brand: z.string({
     //required_error: "Brand Name is required",
   }),
@@ -120,10 +121,11 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
       {
         onSuccess: () => {
           setModal();
-          toast.success("Product added successfully!");
+          SwalToaster("Product added successfully!", "success");
         },
         onError: (error) => {
           console.error(error);
+          SwalToaster("Product could not be added!", "error");
         },
       }
     );
