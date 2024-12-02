@@ -55,7 +55,7 @@ export function ExpandableDataTable<TData, TValue>({
   });
 
   const currentPage = table.getState().pagination.pageIndex + 1;
-  const totalPages = table.getPageCount();
+  const totalPages = table?.getPageCount();
 
   useEffect(() => {
     setGlobalFilter(searchValue); // Update global filter when searchValue changes
@@ -123,7 +123,7 @@ export function ExpandableDataTable<TData, TValue>({
                 </TableRow>
                 {row.getIsExpanded() && (
                   <TableRow>
-                    <TableCell colSpan={columns.length}>
+                    <TableCell colSpan={columns?.length}>
                       {/* Expanded content */}
                       <div className="p-4 bg-gray-50 rounded-lg">
                         <p>Details for row {row.id}:</p>
@@ -139,7 +139,7 @@ export function ExpandableDataTable<TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="mt-24 h-[400px]">
+              <TableCell colSpan={columns?.length} className="mt-24 h-[400px]">
                 <ProductEmptyState />
               </TableCell>
             </TableRow>
@@ -152,7 +152,7 @@ export function ExpandableDataTable<TData, TValue>({
           <p className="text-[#596574] text-sm font-normal">
             Total number of products:{" "}
             <span className="text-[#344054] text-base font-semibold">
-              {data.length}
+              {data?.length}
             </span>{" "}
           </p>
           <div className="flex items-center justify-end space-x-2 py-4">

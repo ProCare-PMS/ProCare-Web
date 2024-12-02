@@ -41,6 +41,9 @@ customAxios.interceptors.response.use(
       switch (statusCode) {
         case 401:
           // Unauthorized - redirect to login
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("user");
+          localStorage.removeItem("refreshToken");
           toast.error("Unauthorized. Redirecting to login.");
           window.location.href = "/login";
           break;

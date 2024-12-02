@@ -43,12 +43,12 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
 
 export const Columns: ColumnDef<any>[] = [
   {
-    accessorKey: "productName",
+    accessorKey: "product_name",
     header: "Product Name",
     size: 900,
   },
   {
-    accessorKey: "batchId",
+    accessorKey: "batch_id",
     header: "Batch ID",
     size: 100,
   },
@@ -57,18 +57,18 @@ export const Columns: ColumnDef<any>[] = [
     header: "Unit",
   },
   {
-    accessorKey: "brandName",
+    accessorKey: "brand",
     header: "Brand Name",
   },
   {
-    accessorKey: "itemAge",
+    accessorKey: "item_age",
     header: "Item Age",
   },
   {
-    accessorKey: "expiryStatus",
+    accessorKey: "expiry_status",
     header: "Expiry Status",
     cell: ({ row }) => {
-      const expiryStatus = row.getValue("expiryStatus");
+      const expiryStatus = row.getValue("expiry_status");
 
       // Type guard to check if expiryStatus is a string
       if (typeof expiryStatus !== "string") {
@@ -83,6 +83,8 @@ export const Columns: ColumnDef<any>[] = [
         color = "text-yellow-500";
       } else if (expiryStatus.includes("year")) {
         color = "text-green-500";
+      } else if (expiryStatus === "Expired") {
+        color = "text-red-500";
       }
 
       return <div className={clsx(color)}>{expiryStatus}</div>;

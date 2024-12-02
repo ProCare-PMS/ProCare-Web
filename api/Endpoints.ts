@@ -1,4 +1,6 @@
 export const endpoints = {
+  analytics: "/analytics/",
+  inventories: "/inventories/",
   login: "/login/",
   logout: "/logout-all/",
   signup: "/user-signup/",
