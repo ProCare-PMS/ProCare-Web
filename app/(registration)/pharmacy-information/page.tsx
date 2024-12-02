@@ -350,7 +350,7 @@ const RegistrationPage = () => {
               <p className="text-center font-inter md:text-justify">
                 Already have an account? <br />
                 <Link
-                  href="/"
+                  href="/login"
                   className="text-main font-inter font-semibold text-sm"
                 >
                   Login Here

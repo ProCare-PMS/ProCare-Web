@@ -170,7 +170,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 name="name"
                 type="text"
                 placeholder="Enter Product Name"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.name ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -194,7 +194,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 name="strength"
                 type="text"
                 placeholder="Enter Product Strength"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.strength ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -217,7 +217,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 id="unit"
                 name="unit"
                 placeholder="Enter Unit"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.unit ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -244,7 +244,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 type="number"
                 name="quantity"
                 placeholder="Enter Quantity"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.quantity ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -269,7 +269,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 id="expiry_date"
                 type="date"
                 name="expiry_date"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.expiry_date ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -295,7 +295,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 type="number"
                 name="reorder_level"
                 placeholder="Enter Re-Order Level"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.reorder_level ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -324,7 +324,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 type="number"
                 name="cost_price"
                 placeholder="Enter Cost Price"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.cost_price ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -350,7 +350,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 type="number"
                 name="markup_percentage"
                 placeholder="Enter Mark Up Percentage"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.markup_percentage ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -376,7 +376,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 type="number"
                 name="selling_price"
                 placeholder="Enter Selling Price"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.selling_price ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -402,7 +402,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 id="category"
                 name="category"
                 placeholder="Enter Category"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.category ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -426,7 +426,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 name="supplier"
                 type="text"
                 placeholder="Enter Supplier"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.supplier ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -450,7 +450,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 name="brand"
                 type="brand"
                 placeholder="Enter Brand Name"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.brand ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
