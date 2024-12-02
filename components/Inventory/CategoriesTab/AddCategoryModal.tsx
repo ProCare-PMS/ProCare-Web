@@ -1,10 +1,12 @@
 "use client";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import SwalToaster from "@/components/SwalToaster/SwalToaster";
 import { useMutation } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { z } from "zod";
 
 interface AddCategoryModalProps {
@@ -52,11 +54,12 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
       { formData: data },
       {
         onSuccess: () => {
-          toast.success("Category created successfully!");
+          SwalToaster("Category Created Successfully", "success");
           onClose();
         },
         onError: (error) => {
           console.error(error);
+          SwalToaster("Category could not be created", "error");
         },
       }
     );
