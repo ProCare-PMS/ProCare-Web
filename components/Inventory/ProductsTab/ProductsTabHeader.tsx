@@ -103,7 +103,7 @@ const ProductsTabHeader = () => {
             </Button>
             {showMenu && (
               <div
-                className={`bg-white absolute top-12 left-0 z-20 rounded-[8px] shadow-lg transform transition-all duration-300 ease-in-out ${
+                className={`bg-white absolute w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl transform transition-all duration-300 ease-in-out ${
                   showMenu
                     ? "opacity-100 scale-100"
                     : "opacity-0 scale-95 pointer-events-none"

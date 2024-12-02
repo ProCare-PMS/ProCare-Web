@@ -67,7 +67,7 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-[500px]">
+      <div className="bg-white p-6 rounded-[10px] shadow-lg w-[500px]">
         <div className="flex items-center justify-between gap-4 mb-6">
           <h2 className="text-2xl font-bold  font-inter">Add Category</h2>
           <X onClick={onClose} className="cursor-pointer" />
@@ -102,7 +102,7 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
           <div className="flex justify-end mt-4">
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 w-[140px]"
+              className="bg-[#2648EA] hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 w-[140px]"
             >
               Add Category
             </button>
