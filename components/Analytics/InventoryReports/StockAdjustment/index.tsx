@@ -7,9 +7,23 @@ import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
+import { useQuery } from "@tanstack/react-query";
 
 function StockAdjustment() {
   const [searchValues, setSetSearchValues] = useState<string>("");
+
+  const { data: stockAdjustmentData } = useQuery({
+    queryKey: ["StockAdjustment"],
+    queryFn: () =>
+      customAxios
+        .get(endpoints.analytics + "stock-adjustments/recent/")
+        .then((res) => res),
+    select: (foundData) => foundData?.data?.results || [],
+  });
+
+  console.log({ stockAdjustmentData });
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -68,7 +82,11 @@ function StockAdjustment() {
         </div>
       </div>
 
-      <DataTable columns={Columns} data={Data} searchValue={searchValues} />
+      <DataTable
+        columns={Columns}
+        data={stockAdjustmentData || []}
+        searchValue={searchValues}
+      />
     </div>
   );
 }
