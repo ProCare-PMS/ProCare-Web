@@ -18,9 +18,9 @@ export default function SignAuthLayout({
           alt="logo"
         />
       </nav>
-      <div className="flex justify-center items-center">
+      <div className="flex flex-col md:flex-row justify-center items-center">
         {children}
-        <div className="w-1/2 h-screen bg-white flex justify-center items-center flex-col gap-4">
+        <div className="hidden w-1/2 h-screen bg-white md:flex justify-center items-center flex-col gap-4">
           <div className=" w-[557.09px] h-[550.1px] flex justify-center items-center flex-col gap-4">
             <div className="w-[80%] gap-4">
               <h1 className="w-full font-inter text-4xl font-semibold leading-10 text-left tracking-wide">
