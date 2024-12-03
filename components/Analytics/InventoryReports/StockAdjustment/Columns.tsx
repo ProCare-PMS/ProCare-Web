@@ -50,15 +50,15 @@ export const Columns: ColumnDef<any>[] = [
     cell: ({ getValue }) => `adjustment# ${getValue()}`,
   },
   {
-    accessorKey: "date",
+    accessorKey: "created_at",
     header: "Date",
   },
   {
-    accessorKey: "time",
+    accessorKey: "created_at",
     header: "Time",
   },
   {
-    accessorKey: "personnel",
+    accessorKey: "employee",
     header: "Personnel",
   },
   {

@@ -8,7 +8,9 @@ import {
   getFilteredRowModel,
   useReactTable,
   SortingState,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
+
 import {
   Table,
   TableBody,
@@ -43,15 +45,19 @@ function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(), // Added sorted row model
     getFilteredRowModel: getFilteredRowModel(), // Added global filtered row model
     onGlobalFilterChange: setGlobalFilter, // Handle global filter change
+    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
   });
 
-  const currentPage = table.getState().pagination.pageIndex + 1;
-  const totalPages = table.getPageCount();
-
+  const currentPage = table.getState()?.pagination?.pageIndex + 1 || 1; // Fallback to 1
+  const totalPages = table?.getPageCount ? table?.getPageCount() : 0;
   useEffect(() => {
     setGlobalFilter(searchValue); // Update global filter when searchValue changes
   }, [searchValue]);
+
+  useEffect(() => {
+    console.log("Table state:", table.getState());
+  }, [table]);
 
   return (
     <div className="!rounded-[6px]">
@@ -139,7 +145,9 @@ function DataTable<TData, TValue>({
         </button>
         <div className="flex justify-between items-center py-2">
           <p className="text-nowrap text-[#344054] font-inter font-medium text-sm">
-            Results {currentPage} of {totalPages}
+            {totalPages > 0
+              ? `Results ${currentPage} of ${totalPages}`
+              : "No results found"}
           </p>
         </div>
       </div>
