@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS='--inspect' next dev -p 6325",
+    "dev": "cross-env NODE_OPTIONS='--inspect' npm run open-browser && next dev -p 6325",
+    "open-browser": "start http://localhost:6325",
     "build": "next build",
     "start": "next start -p 6325",
     "lint": "next lint"
