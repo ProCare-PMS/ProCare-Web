@@ -1,11 +1,36 @@
 import React from "react";
 import { MoveLeft } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
+import { z } from "zod";
 
 interface AddSupplierProps {
   onClose: () => void;
 }
 
+const SupplierSchema = z.object({
+  name: z.string(),
+  contact: z.string(),
+  email: z.string(),
+});
+
 const AddSupplier = ({ onClose }: AddSupplierProps) => {
+  //Sending to the api.
+  const postSupplier = useMutation({
+    mutationFn: async (value: any) => {
+      const res = await customAxios
+        .post(endpoints.inventories + "suppliers/", value)
+        .then((res) => res);
+      return res;
+    },
+  });
+
+  const handleSubmitRequest = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    //postSupplier.mutate(values);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white shadow-custom w-[60%] py-4 px-8 mb-12 rounded-[8px] mt-8 grid gap-y-5 ">
@@ -18,7 +43,7 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
           SUPPLIER DETAILS
         </h3>
 
-        <form action="">
+        <form onSubmit={handleSubmitRequest}>
           <div className="grid grid-cols-3 gap-4">
             {/* Supplier Name */}
             <div className="grid gap-y-2">
@@ -43,6 +68,8 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
                 Phone Number
               </label>
               <input
+                id="contact"
+                name="contact"
                 type="number"
                 placeholder="Enter phone number"
                 className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
@@ -57,6 +84,8 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
                 Email
               </label>
               <input
+                id="email"
+                name="email"
                 type="email"
                 placeholder="Enter email"
                 className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"

@@ -74,7 +74,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
   const postProductMutation = useMutation({
     mutationFn: async (value: any) => {
       const res = await customAxios
-        .post(endpoints.inventoryProduct, value.formData)
+        .post(endpoints.inventories + "products/", value.formData)
         .then((res) => res);
       return res;
     },
@@ -153,10 +153,10 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
 
   //get all categories
   const { data: categories } = useQuery({
-    queryKey: ["get/categories"],
+    queryKey: ["categories"],
     queryFn: () =>
       customAxios
-        .get(endpoints.inventoryCategory)
+        .get(endpoints.inventories + "categories/")
         .then((res) => res?.data?.results),
   });
 
@@ -169,7 +169,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
   //       .then((res) => res?.data.results),
   // });
 
-  // console.log({ categories }, { suppliersData });
+  console.log({ categories });
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
