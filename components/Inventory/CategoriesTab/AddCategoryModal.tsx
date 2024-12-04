@@ -23,9 +23,10 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const postCategoryMutation = useMutation({
+    mutationKey: ["categories"],
     mutationFn: async (value: any) => {
       const res = await customAxios
-        .post(endpoints.inventoryCategory, value.formData)
+        .post(endpoints.inventories + "categories/", value.formData)
         .then((res) => res);
       return res;
     },

@@ -14,7 +14,7 @@ function UnderPerformingProductTable() {
       customAxios
         .get(endpoints.analytics + "products/worst-performing/")
         .then((res) => res),
-    select: (worstProduct) => worstProduct?.data?.results || [],
+    select: (worstProduct) => worstProduct?.data?.results,
   });
 
   //console.log({ worstPerformingProductData });
@@ -22,7 +22,7 @@ function UnderPerformingProductTable() {
     <div>
       <MiniSubTable
         columns={Column}
-        data={worstPerformingProductData}
+        data={worstPerformingProductData || []}
         title="Underperforming Product"
         link="/page_under_construction"
       />
