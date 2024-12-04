@@ -7,16 +7,6 @@ import { toast } from "react-toastify";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
-import SwalToaster from "@/components/SwalToaster/SwalToaster";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 const formSchema = z.object({
   name: z.string({
@@ -42,12 +32,12 @@ const formSchema = z.object({
   selling_price: z.string({
     required_error: "Required",
   }),
-  category: z.string({
-    required_error: "Category is required",
-  }),
-  supplier: z.string({
-    required_error: "Supplier is required",
-  }),
+  // category: z.string({
+  //   //required_error: "Category is required",
+  // }),
+  // supplier: z.string({
+  //   //required_error: "Supplier is required",
+  // }),
   brand: z.string({
     //required_error: "Brand Name is required",
   }),
@@ -100,8 +90,6 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
       quantity: Number(formData.get("quantity")),
     };
 
-    //console.log({ data });
-
     // Validate input data using Zod
     const result = formSchema.safeParse(data);
 
@@ -132,11 +120,10 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
       {
         onSuccess: () => {
           setModal();
-          SwalToaster("Product added successfully!", "success");
+          toast.success("Product added successfully!");
         },
         onError: (error) => {
           console.error(error);
-          SwalToaster("Product could not be added!", "error");
         },
       }
     );
@@ -149,27 +136,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
   //     customAxios.get(endpoints.inventorycreate).then((res) => res?.data?.data),
   // });
 
-  // console.log({ getAllproduct });
-
-  //get all categories
-  const { data: categories } = useQuery({
-    queryKey: ["get/categories"],
-    queryFn: () =>
-      customAxios
-        .get(endpoints.inventoryCategory)
-        .then((res) => res?.data?.results),
-  });
-
-  //get all suppliers
-  // const { data: suppliersData } = useQuery({
-  //   queryKey: ["get/suppliers"],
-  //   queryFn: () =>
-  //     customAxios
-  //       .get(endpoints.inventorySupplier)
-  //       .then((res) => res?.data.results),
-  // });
-
-  // console.log({ categories }, { suppliersData });
+  // console.log({ getAllproduct }); 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -203,7 +170,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 name="name"
                 type="text"
                 placeholder="Enter Product Name"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.name ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -227,7 +194,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 name="strength"
                 type="text"
                 placeholder="Enter Product Strength"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.strength ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -250,7 +217,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 id="unit"
                 name="unit"
                 placeholder="Enter Unit"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.unit ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -277,7 +244,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 type="number"
                 name="quantity"
                 placeholder="Enter Quantity"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.quantity ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -302,7 +269,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 id="expiry_date"
                 type="date"
                 name="expiry_date"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.expiry_date ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -328,7 +295,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 type="number"
                 name="reorder_level"
                 placeholder="Enter Re-Order Level"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.reorder_level ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -357,7 +324,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 type="number"
                 name="cost_price"
                 placeholder="Enter Cost Price"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.cost_price ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -383,7 +350,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 type="number"
                 name="markup_percentage"
                 placeholder="Enter Mark Up Percentage"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.markup_percentage ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -409,7 +376,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 type="number"
                 name="selling_price"
                 placeholder="Enter Selling Price"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.selling_price ? "border-red-500" : ""
                 }`}
                 autoComplete="off"
@@ -431,18 +398,15 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                   <p className="text-red-500 text-xs mt-1">{errors.category}</p>
                 )}
               </div>
-              <select
+              <input
                 id="category"
                 name="category"
-                className="border w-full h-12 border-[#E6E6E6] outline-none shadow-sm rounded-[6px]"
-              >
-                <option value="">Select Category</option>
-                {categories?.map((category: any) => (
-                  <option key={category?.id} value={category?.id}>
-                    {category?.name}
-                  </option>
-                ))}
-              </select>
+                placeholder="Enter Category"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
+                  errors.category ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
             </div>
 
             <div>
@@ -457,18 +421,16 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                   <p className="text-red-500 text-xs mt-1">{errors.supplier}</p>
                 )}
               </div>
-              <select
+              <input
                 id="supplier"
                 name="supplier"
-                className="border w-full h-12 border-[#E6E6E6] outline-none shadow-sm rounded-[6px]"
-              >
-                <option value="">Select Supplier</option>
-                {[]?.map((supplier: any) => (
-                  <option key={supplier?.id} value={supplier?.id}>
-                    {supplier?.name}
-                  </option>
-                ))}
-              </select>
+                type="text"
+                placeholder="Enter Supplier"
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
+                  errors.supplier ? "border-red-500" : ""
+                }`}
+                autoComplete="off"
+              />
             </div>
 
             <div>
@@ -488,7 +450,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
                 name="brand"
                 type="brand"
                 placeholder="Enter Brand Name"
-                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB] ${
+                className={`appearance-none border rounded w-full h-12 py-2 px-3 text-[#858C95] leading-tight focus:outline-none focus:shadow-outline bg-white ${
                   errors.brand ? "border-red-500" : ""
                 }`}
                 autoComplete="off"

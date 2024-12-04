@@ -12,7 +12,7 @@ import AddPurchase from "./AddPurchase/AddPurchase";
 
 const PurchasesTab = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
-  const [showPurchase, setShowPurchase] = useState(false);
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -21,50 +21,46 @@ const PurchasesTab = () => {
   };
 
   const closeAddPurhcase = () => {
-    setShowPurchase(false);
+    setShowPurchaseModal(false);
   };
 
   return (
-    <div className="">
-      {showPurchase ? (
-        <AddPurchase onClose={closeAddPurhcase} />
-      ) : purchaseTabTable.length === 0 ? (
-        <PurchasesTabEmptyState />
-      ) : (
-        <div className="p-6 bg-white mt-7 shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)]">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-[#202224] font-semibold text-2xl">Purchases</h2>
+    <>
+      <div className="p-6 bg-white mt-7 shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)]">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-[#202224] font-semibold text-2xl">Purchases</h2>
 
-            <div className="flex items-center gap-3">
-              <SearchFieldInput
-                value={searchValues}
-                onChange={handleSearchValueChange}
-                placeholder="Search for purchase"
-              />
+          <div className="flex items-center gap-3">
+            <SearchFieldInput
+              value={searchValues}
+              onChange={handleSearchValueChange}
+              placeholder="Search for purchase"
+            />
 
-              <Button
-                type="button"
-                className="text-white relative flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
-                variant="secondary"
-                onClick={() => setShowPurchase(true)}
-              >
-                <Plus />
-                Add Purchase
-              </Button>
+            <Button
+              type="button"
+              className="text-white relative flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
+              variant="secondary"
+              onClick={() => setShowPurchaseModal(true)}
+            >
+              <Plus />
+              Add Purchase
+            </Button>
 
-              <div className="border p-2  cursor-pointer border-main rounded-[12px]">
-                <SlidersVertical className="text-main" />
-              </div>
+            <div className="border p-2  cursor-pointer border-main rounded-[12px]">
+              <SlidersVertical className="text-main" />
             </div>
           </div>
-          <DataTable
-            columns={purchasesTabColumns}
-            data={purchaseTabTable}
-            searchValue={searchValues}
-          />
         </div>
-      )}
-    </div>
+        <DataTable
+          columns={purchasesTabColumns}
+          data={purchaseTabTable}
+          searchValue={searchValues}
+        />
+      </div>
+
+      {showPurchaseModal && <AddPurchase onClose={closeAddPurhcase} />}
+    </>
   );
 };
 
