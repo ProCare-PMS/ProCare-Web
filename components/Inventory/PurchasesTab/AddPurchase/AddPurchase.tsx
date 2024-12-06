@@ -1,5 +1,7 @@
+"use client"
 import React, { useState } from "react";
 import { MoveLeft } from "lucide-react";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 interface AddPurchaseProps {
   onClose: () => void;
@@ -20,9 +22,9 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white shadow-custom w-[60%] py-4 px-8 mb-12 rounded-[8px] mt-8 grid gap-y-5 ">
-        <div className="flex items-center gap-4 mb-4">
-          <MoveLeft onClick={onClose} className="cursor-pointer" />
+        <div className="flex items-center justify-between gap-4 mb-4">
           <h3 className="font-bold text-2xl font-inter">Add Purchase</h3>
+          <CloseOutlinedIcon onClick={onClose} className="cursor-pointer" />
         </div>
         <hr />
         <div className="grid">
