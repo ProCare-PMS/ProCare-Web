@@ -6,35 +6,41 @@ import Link from "next/link";
 import { useState } from "react";
 import DashboardModal from "@/components/Modals/DashboardModal";
 import clsx from "clsx";
+import InventoryAgingReportsDetails, {
+  AgingReportType,
+} from "./InventoryAgingReportsDetails";
 
 interface ActionsCellProps {
   row: {
-    original: DashboardTransactions;
+    original: AgingReportType;
   };
 }
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const payment = row.original;
   const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] =
-    useState<DashboardTransactions | null>(null);
+
+  const handleOpenModal = () => {
+    setModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setModal(false);
+  };
 
   return (
     <div>
       <span
         className="text-[#2648EA] cursor-pointer font-semibold text-sm underline"
-        onClick={() => {
-          setModal(true);
-          setSelectedItem(payment);
-        }}
+        onClick={handleOpenModal}
       >
         View
       </span>
-      {selectedItem && (
-        <DashboardModal
-          title="Transaction Details"
-          item={selectedItem}
-          setModal={() => setSelectedItem(null)}
+      {modal && (
+        <InventoryAgingReportsDetails
+          title="Aging Reports Details"
+          item={payment}
+          setModal={handleCloseModal}
         />
       )}
     </div>

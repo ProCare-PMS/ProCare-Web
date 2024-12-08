@@ -7,9 +7,24 @@ import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 function BestSellingProductTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
+
+  //fetch all best selling data
+  const { data: bestSellingData } = useQuery({
+    queryKey: ["bestSellingData"],
+    queryFn: async () =>
+      customAxios
+        .get(endpoints.analytics + "products/category-analysis/")
+        .then((res) => res),
+    select: (foundData) => foundData?.data?.results || [],
+  });
+
+  console.log({ bestSellingData });
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -54,7 +69,11 @@ function BestSellingProductTable() {
         </div>
       </div>
 
-      <DataTable columns={Columns} data={Data} searchValue={searchValues} />
+      <DataTable
+        columns={Columns}
+        data={bestSellingData || []}
+        searchValue={searchValues}
+      />
     </div>
   );
 }
