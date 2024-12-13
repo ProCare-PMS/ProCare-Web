@@ -23,7 +23,7 @@ function InventoryAgingReportTable() {
     select: (data) => data.data?.results,
   });
 
-  console.log({ agingReportData });
+  //console.log({ agingReportData });
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>

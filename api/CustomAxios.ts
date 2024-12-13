@@ -44,7 +44,7 @@ customAxios.interceptors.response.use(
           localStorage.removeItem("authToken");
           localStorage.removeItem("user");
           localStorage.removeItem("refreshToken");
-          toast.error("Unauthorized. Redirecting to login.");
+          toast.error("Token Expired. Redirecting to login.");
           window.location.href = "/login";
           break;
         case 403:

@@ -9,8 +9,20 @@ import { dashboardTransactions } from "@/type";
 import DashboardTableHeader from "@/components/Dashboard/DashboardTableHeader";
 import { DashbaordChart } from "@/components/Dashboard/DashboardChart";
 import { DashboardLowStockAlert } from "@/components/Dashboard/DashboardLowStock";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 const DashbaordHomePage = () => {
+  const { data: recentTransactionData } = useQuery({
+    queryKey: ["recentTransaction"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.sales + "sale-items/").then((res) => res),
+    select: (findData) => findData?.data?.results,
+  });
+
+  console.log({ recentTransactionData });
+
   return (
     <div className="container grid gap-y-8 pb-6 px-6 pt-7 bg-[#F5F5F5]">
       <div className="hidden md:block">
@@ -18,15 +30,15 @@ const DashbaordHomePage = () => {
       </div>
       <DashboardStats />
       <div className="flex flex-col md:flex-row items-center gap-6">
-        <DashboardSubTables title="Expiry List" />
-        <DashboardLowStockAlert title="Low Stock Alert" />
+        <DashboardSubTables title="Expiry List" data={[]} />
+        <DashboardLowStockAlert title="Low Stock Alert" data={[]} />
         <DashbaordChart />
       </div>
       <div className="bg-white shadow-custom p-4 mb-12 mt-4 rounded-[8px]">
         <DashboardTableHeader />
         <DataTable
           columns={dashboardTransactionColumns}
-          data={dashboardTransactions}
+          data={recentTransactionData || []}
         />
       </div>
 
