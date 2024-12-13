@@ -103,7 +103,7 @@ function DataTable<TData, TValue>({
         </TableHeader>
 
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {table.getRowModel().rows &&
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -118,14 +118,7 @@ function DataTable<TData, TValue>({
                   </TableCell>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
+            ))}
         </TableBody>
       </Table>
       <div className="flex items-center justify-end space-x-2 py-4">
