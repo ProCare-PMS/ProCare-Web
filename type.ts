@@ -552,7 +552,7 @@ export const purchaseTabTable = [
     date: "12/09/2024",
     amount: "243,589",
     purchases: [
-      {
+      { 
         name: "Paracetamol",
         quantity: 120,
         unitPrice: "1230",
@@ -655,7 +655,7 @@ export const expiryReportTable = [
     brand: "Krunch Labs",
     expiryDate: "12/12/2024",
     expiryStatus: "6+ Months",
-    quantity: "25",
+    quantity: 25,
     totalPrice: "34, 605",
   },
   {
@@ -664,7 +664,7 @@ export const expiryReportTable = [
     brand: "Krunch Labs",
     expiryDate: "12/12/2024",
     expiryStatus: "Expired",
-    quantity: "25",
+    quantity: 25,
     totalPrice: "34, 605",
   },
   {
@@ -673,7 +673,7 @@ export const expiryReportTable = [
     brand: "Krunch Labs",
     expiryDate: "12/12/2024",
     expiryStatus: "3-6 Months",
-    quantity: "25",
+    quantity: 25,
     totalPrice: "34, 605",
   },
   {
@@ -682,7 +682,7 @@ export const expiryReportTable = [
     brand: "Krunch Labs",
     expiryDate: "12/12/2024",
     expiryStatus: "<3 Months",
-    quantity: "25",
+    quantity: 25,
     totalPrice: "34, 605",
   },
 ];

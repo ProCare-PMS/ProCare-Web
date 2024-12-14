@@ -9,5 +9,6 @@ export const endpoints = {
   inventorySupplier: "/inventories/suppliers/",
   inventoryPurchase: "/inventories/purchases/",
   inventoryExpiryReports: "/inventories/expiry-reports/",
+  inventoryBranchSync: "/inventories/stock-transfers/",
   sales: "/sales/",
 };
