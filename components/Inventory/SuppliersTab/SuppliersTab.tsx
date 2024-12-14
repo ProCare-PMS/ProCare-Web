@@ -9,11 +9,23 @@ import { Button } from "@/components/ui/button";
 import { Plus, SlidersVertical } from "lucide-react";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import AddSupplier from "./AddSupplier/AddSupplier";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 const SuppliersTab = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
   const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); //add supplier modeal
+
+  const { data: inventorySupplierData } = useQuery({
+    queryKey: ["inventorySupplier"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.inventorySupplier).then((res) => res),
+    select: (findData) => findData?.data?.results,
+  });
+
+  console.log(inventorySupplierData)
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>

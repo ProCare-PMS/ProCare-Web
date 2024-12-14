@@ -7,8 +7,22 @@ import StockTransferHistoryHeader from "./StockTransferHistoryHeader";
 import { stockTransferHistoryColumns } from "@/components/Tables/stock-transfer-history-columns";
 import StockTransferRequestsHeader from "./StockTransferRequestHeader";
 import { stockTransferRequestColumns } from "@/components/Tables/stock-transfer-request-columns";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 const StockTransferTab = () => {
+
+  const { data: inventoryBranchSyncData } = useQuery({
+    queryKey: ["inventoryBranchSync"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.inventoryBranchSync).then((res) => res),
+    select: (findData) => findData?.data?.results,
+  });
+
+  console.log(inventoryBranchSyncData)
+
+
   return (
     <div className="">
       {/* 

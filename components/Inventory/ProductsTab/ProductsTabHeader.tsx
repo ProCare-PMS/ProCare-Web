@@ -1,7 +1,6 @@
 "use client";
-// inventory with add product individually
-import React, { useEffect, useState } from "react";
-import ProductMiniTable from "./ProductMiniTable";
+
+import React, { useState, ChangeEvent } from "react";
 import ProductStockTable from "./ProductStockTable";
 import clsx from "clsx";
 import { Plus, SlidersVertical } from "lucide-react";
@@ -13,123 +12,108 @@ import { ExpandableDataTable } from "@/components/Tables/expandable-data-table";
 import { productsTabColumns } from "@/components/Tables/products-tab-columns";
 import { productsTabTable } from "@/type";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
-const ProductsTabHeader = () => {
-  const [showTab, setShowTab] = useState(
-    <ExpandableDataTable columns={productsTabColumns} data={productsTabTable} />
-  );
-  const [activeTab, setActiveTab] = useState("Products");
-  const [showMenu, setShowMenu] = useState(false);
-  const [showFilters, setShowFilter] = useState(false);
+const ProductsTabHeader: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<string>("Products");
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+  const [showFilters, setShowFilters] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [searchValues, setSetSearchValues] = useState<string>("");
+  const [searchValues, setSearchValues] = useState<string>("");
 
-  const handleOpenModal = () => {
+  const { data: inventoryProductsData } = useQuery({
+    queryKey: ["inventoryProducts"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.inventoryProduct).then((res) => res),
+    select: (findData) => findData?.data?.results,
+  });
+
+
+  console.log(inventoryProductsData)
+
+  const renderTabContent = (): JSX.Element | null => {
+    switch (activeTab) {
+      case "Products":
+        return (
+          <ExpandableDataTable
+            columns={productsTabColumns}
+            data={inventoryProductsData || []}
+            searchValue={searchValues}
+          />
+        );
+      case "Stocks":
+        return <ProductStockTable />;
+      default:
+        return null;
+    }
+  };
+
+  const toggleMenu = (): void => {
+    setShowMenu((prev) => !prev);
+    setShowFilters(false);
+  };
+
+  const toggleFilters = (): void => {
+    setShowFilters((prev) => !prev);
     setShowMenu(false);
-    setIsModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleTabClick = (tabName: string): void => {
+    setActiveTab(tabName);
   };
 
-  const handleSearchValueChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSetSearchValues(event.target.value);
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setSearchValues(event.target.value);
   };
 
   return (
     <div>
+      {/* Header Section */}
       <div className="flex items-center justify-between">
         {/* Tabs Section */}
         <div className="flex items-center bg-[#F5F5F5] gap-6 p-1 rounded-[8px] mb-8">
-          <button
-            onClick={() => {
-              setShowTab(
-                <ExpandableDataTable
-                  columns={productsTabColumns}
-                  data={productsTabTable}
-                  searchValue={searchValues}
-                />
-              );
-              setActiveTab("Products");
-            }}
-            className={clsx(
-              "px-5 py-1 text-base font-medium",
-              activeTab === "Products"
-                ? "bg-white rounded-[8px] shadow-md text-[#0B2B23]"
-                : "text-[#858C95]"
-            )}
-          >
-            Products
-          </button>
-          <button
-            onClick={() => {
-              setShowTab(<ProductStockTable />);
-              setActiveTab("Stocks");
-            }}
-            className={clsx(
-              "px-5 py-1 text-base font-medium transition",
-              activeTab === "Stocks"
-                ? "bg-white rounded-[8px] shadow-md text-[#0B2B23]"
-                : "text-[#858C95]"
-            )}
-          >
-            Stocks
-          </button>
+          {["Products", "Stocks"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => handleTabClick(tab)}
+              className={clsx(
+                "px-5 py-1 text-base font-medium",
+                activeTab === tab
+                  ? "bg-white rounded-[8px] shadow-md text-[#0B2B23]"
+                  : "text-[#858C95]"
+              )}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
-        {/* Search and Filter Section */}
+        {/* Search and Actions Section */}
         <div className="flex items-center gap-3">
-          <SearchFieldInput
-            value={searchValues}
-            onChange={handleSearchValueChange}
-          />
+          <SearchFieldInput value={searchValues} onChange={handleSearchChange} />
 
           <div className="relative">
             <Button
               type="button"
-              className="text-white relative flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
+              className="text-white flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
               variant="secondary"
-              onClick={() => {
-                console.log("clicked");
-                setShowMenu(!showMenu);
-                setShowFilter(false);
-              }}
+              onClick={toggleMenu}
             >
-              <Plus />
-              Add Product
+              <Plus /> Add Product
             </Button>
+
             {showMenu && (
-              <div
-                className={`bg-white absolute w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl transform transition-all duration-300 ease-in-out ${
-                  showMenu
-                    ? "opacity-100 scale-100"
-                    : "opacity-0 scale-95 pointer-events-none"
-                }`}
-              >
-                <ul className="flex justify-center flex-col items-center divide-y divide-gray-300">
+              <div className="bg-white absolute w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl">
+                <ul className="flex flex-col items-center divide-y divide-gray-300">
                   <li className="px-3 py-2">
-                    {/* MODAL COMPONENTS SHOULD ONLY OPEN WHEN THE LI IS CLICKED */}
-                    {/* <AddProducts title="" setModal={handleCloseModal} /> */}
-                    <button
-                      type="button"
-                      className="text-center"
-                      onClick={handleOpenModal}
-                    >
+                    <button type="button" onClick={() => setIsModalOpen(true)}>
                       Add Individually
                     </button>
                   </li>
-                  <hr />
                   <li className="px-3 py-2">
-                    {/* <ImportProductsModal
-                      title="Import Products"
-                      className="text-sm px-6 py-4 font-inter font-normal text-[#344054]"
-                    /> */}
-                    <button type="button" className="text-center">
-                      Import Products
-                    </button>
+                    <button type="button">Import Products</button>
                   </li>
                 </ul>
               </div>
@@ -137,26 +121,24 @@ const ProductsTabHeader = () => {
           </div>
 
           <div className="relative">
-            <div className="border p-2 cursor-pointer border-[#494A50] rounded-[12px]">
-              <SlidersVertical
-                onClick={() => {
-                  setShowFilter(!showFilters);
-                  setShowMenu(false);
-                }}
-                className="text-[#494A50]"
-              />
+            <div
+              className="border p-2 cursor-pointer border-[#494A50] rounded-[12px]"
+              onClick={toggleFilters}
+            >
+              <SlidersVertical className="text-[#494A50]" />
             </div>
+
             {showFilters && <FilterDropdown />}
           </div>
         </div>
       </div>
 
       {/* Tab Content */}
-      {showTab}
+      {renderTabContent()}
 
-      {/* Add Product Button */}
+      {/* Add Product Modal */}
       {isModalOpen && (
-        <AddProducts title="Add Product" setModal={handleCloseModal} />
+        <AddProducts title="Add Product" setModal={() => setIsModalOpen(false)} />
       )}
     </div>
   );

@@ -9,10 +9,23 @@ import { Button } from "@/components/ui/button";
 import { Plus, SlidersVertical } from "lucide-react";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import AddPurchase from "./AddPurchase/AddPurchase";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 const PurchasesTab = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+
+  const { data: inventoryPurchasesData } = useQuery({
+    queryKey: ["inventoryPurchases"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.inventoryPurchase).then((res) => res),
+    select: (findData) => findData?.data?.results,
+  });
+
+
+  console.log(inventoryPurchasesData)
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -54,7 +67,7 @@ const PurchasesTab = () => {
         </div>
         <DataTable
           columns={purchasesTabColumns}
-          data={purchaseTabTable}
+          data={inventoryPurchasesData || []}
           searchValue={searchValues}
         />
       </div>
