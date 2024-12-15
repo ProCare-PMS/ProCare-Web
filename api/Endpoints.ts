@@ -1,6 +1,7 @@
 export const endpoints = {
   analytics: "/analytics/",
   inventories: "/inventories/",
+  managements: "/managements/",
   login: "/login/",
   logout: "/logout-all/",
   signup: "/user-signup/",
