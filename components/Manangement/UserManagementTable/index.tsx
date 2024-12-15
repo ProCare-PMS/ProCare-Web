@@ -3,14 +3,24 @@ import DataTable from "@/components/Tables/data-table";
 import React, { useState } from "react";
 import Image from "next/image";
 import { Columns } from "./Columns";
-import { Data } from "./Data";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import AddUserModal from "../../Modals/AddUserModal";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 function UserManagementTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
+
+  //get management data
+  const { data: getAllmanagementData } = useQuery({
+    queryKey: ["management"],
+    queryFn: () =>
+      customAxios.get(endpoints.managements + "employees/").then((res) => res),
+    select: (findManagedData) => findManagedData?.data?.results,
+  });
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -60,7 +70,11 @@ function UserManagementTable() {
         </div>
       </div>
 
-      <DataTable columns={Columns} data={Data} searchValue={searchValues} />
+      <DataTable
+        columns={Columns}
+        data={getAllmanagementData || []}
+        searchValue={searchValues}
+      />
 
       {/* Add User Modal */}
       <AddUserModal isOpen={showModal} onClose={handleCloseModal} title="Add" />

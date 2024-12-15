@@ -5,6 +5,7 @@ import Person3OutlinedIcon from "@mui/icons-material/Person3Outlined";
 import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
+import CustomSelect from "../CustomSelect/CustomSelect";
 
 // Modal Component
 interface AddUserModalProps {
@@ -12,6 +13,11 @@ interface AddUserModalProps {
   onClose: () => void;
   title?: string;
 }
+
+const optionDataLabelValue = [
+  { label: "Option 1", value: "option1" },
+  { label: "Option 2", value: "option2" },
+];
 
 interface StepIndicatorProps {
   Icon: React.ElementType;
@@ -33,8 +39,8 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   if (!isOpen) return null; // Don't render if modal is not open
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-5">
-      <div className="relative bg-white w-[90rem] h-[30rem] max-w-6xl p-6 shadow-lg">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-5 rounded-[1rem]">
+      <div className="relative bg-white w-[90rem] h-[30rem] max-w-6xl p-6 shadow-lg  rounded-[1rem]">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">{title} User</h2>
           <button className="text-dark" onClick={onClose}>
@@ -84,6 +90,8 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                   User Name
                 </label>
                 <input
+                  id="username"
+                  name="username"
                   className="input bg-white p-2 border-2 rounded focus:outline-none"
                   type="text"
                   placeholder="Enter user name"
@@ -95,6 +103,8 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                   Email Address
                 </label>
                 <input
+                  id="email"
+                  name="email"
                   className="input bg-white p-2 border-2 rounded focus:outline-none"
                   type="email"
                   placeholder="Enter email address"
@@ -106,6 +116,8 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                   Contact
                 </label>
                 <input
+                  id="contact"
+                  name="contact"
                   className="input bg-white p-2 border-2 rounded focus:outline-none"
                   type="text"
                   placeholder="Enter contact"
@@ -117,6 +129,8 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                   Address
                 </label>
                 <input
+                  id="address"
+                  name="address"
                   className="input bg-white p-2 border-2 rounded focus:outline-none"
                   type="text"
                   placeholder="Enter address"
@@ -129,22 +143,24 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
             <div className="stepTwo flex gap-4">
               <div className="flex flex-col w-2/5">
                 <label className="text-gray-700 font-medium mb-2">Role</label>
-                <select className="input border border-gray-300 p-2 rounded focus:outline-none">
-                  <option>Admin</option>
-                  <option>User</option>
-                  <option>Manager</option>
-                </select>
+                <CustomSelect
+                  idField="role"
+                  nameField="role"
+                  optionData={[]}
+                  isClearable
+                />
               </div>
 
               <div className="flex flex-col w-3/5">
                 <label className="text-gray-700 font-medium mb-2">
                   Permissions
                 </label>
-                <select className="input border border-gray-300 p-2 rounded focus:outline-none">
-                  <option>Read</option>
-                  <option>Write</option>
-                  <option>Edit</option>
-                </select>
+                <CustomSelect
+                  idField="permission"
+                  nameField="permission"
+                  optionData={[]}
+                  isClearable
+                />
               </div>
             </div>
           )}
@@ -258,7 +274,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
         </div>
 
         {/* Wizard Actions */}
-        <div className="flex justify-end mt-6 absolute bottom-0 left-0 w-full bg-white p-4 shadow-lg">
+        <div className="flex justify-end mt-6 absolute bottom-0 left-0 w-full bg-white p-4 shadow-lg rounded-[1rem]">
           <div className="flex gap-3">
             <button
               className={`bg-gray-300 text-black px-4 py-2 rounded-[0.5rem] w-[10rem] ${
