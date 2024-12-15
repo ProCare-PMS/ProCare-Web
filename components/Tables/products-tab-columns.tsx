@@ -37,7 +37,7 @@ const ProductActionCell = ({ row }: ProductsCellProps) => {
 
 export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
   {
-    accessorKey: "productName",
+    accessorKey: "name",
     //header: "Product Name",
     header: ({ column }) => {
       return (
@@ -56,7 +56,7 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
     header: "Unit",
   },
   {
-    accessorKey: "brandName",
+    accessorKey: "brand",
     header: "Brand",
   },
   {
@@ -64,7 +64,7 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
     header: "Quantity",
   },
   {
-    accessorKey: "expiryDate",
+    accessorKey: "expiry_date",
     header: "Expiry Date",
   },
   {
@@ -81,7 +81,7 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: "product_status",
     header: "Status",
   },
   {

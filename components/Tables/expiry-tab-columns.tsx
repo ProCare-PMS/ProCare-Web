@@ -1,8 +1,6 @@
-"use client";
-
 import { ExpiryReportTable } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { BiDotsVertical } from "react-icons/bi";
 import clsx from "clsx";
 
@@ -34,20 +32,24 @@ const ExpiryActionCell = ({ row }: ExpiryCellProps) => {
 
 export const expiryTabColumns: ColumnDef<ExpiryReportTable>[] = [
   {
-    accessorKey: "productName",
+    accessorKey: "name",
     header: "Product Name",
+    accessorFn: (row: any) => row.product?.name || "N/A", // Map `product.name` to `name`
   },
   {
     accessorKey: "unit",
     header: "Unit",
+    accessorFn: (row: any) => row.product?.unit || "N/A",
   },
   {
     accessorKey: "brand",
     header: "Brand",
+    accessorFn: (row: any) => row.product?.brand || "N/A",
   },
   {
     accessorKey: "expiryDate",
     header: "Expiry Date",
+    accessorFn: (row: any) => row.expiry_date,
   },
   {
     accessorKey: "expiryStatus",
@@ -74,10 +76,16 @@ export const expiryTabColumns: ColumnDef<ExpiryReportTable>[] = [
   {
     accessorKey: "quantity",
     header: "Quantity",
+    accessorFn: (row: any) => row.quantity,
   },
   {
     accessorKey: "totalPrice",
     header: "Total Price",
+    accessorFn: (row: any) => {
+      const quantity = row.quantity || 0;
+      const unitPrice = row.product?.selling_price || 0;
+      return (quantity * parseFloat(unitPrice)).toFixed(2);
+    },
   },
   {
     id: "actions",
