@@ -25,6 +25,7 @@ const LoadingWrapper = ({ children }: { children: React.ReactNode }) => {
   // Define the paths that should be accessible without login
   const publicPaths = [
     "/login",
+    "/login/verify",
     "/pharmacy-information",
     "/personal-information",
   ];
