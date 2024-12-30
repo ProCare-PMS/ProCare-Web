@@ -6,44 +6,50 @@ import Link from "next/link";
 import { useState } from "react";
 import DashboardModal from "@/components/Modals/DashboardModal";
 import clsx from "clsx";
+import BestSellingProductDetails, {
+  BestSellingProductType,
+} from "./BestSellingProductDetails";
 
 interface ActionsCellProps {
   row: {
-    original: DashboardTransactions;
+    original: BestSellingProductType;
   };
 }
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const payment = row.original;
   const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] =
-    useState<DashboardTransactions | null>(null);
+
+  const handleOpenModal = () => {
+    setModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setModal(false);
+  };
 
   return (
     <div>
       <span
         className="text-[#2648EA] cursor-pointer font-semibold text-sm underline"
-        onClick={() => {
-          setModal(true);
-          setSelectedItem(payment);
-        }}
+        onClick={handleOpenModal}
       >
         View
       </span>
-      {selectedItem && (
-        <DashboardModal
-          title="Transaction Details"
-          item={selectedItem}
-          setModal={() => setSelectedItem(null)}
+      {modal && (
+        <BestSellingProductDetails
+          title="Best Selling Profits Details"
+          item={payment}
+          setModal={handleCloseModal}
         />
       )}
     </div>
   );
 };
 
-export const Columns: ColumnDef<any>[] = [
+export const Columns: ColumnDef<BestSellingProductType>[] = [
   {
-    accessorKey: "productName",
+    accessorKey: "product_name",
     header: "Product Name",
   },
   {
@@ -55,12 +61,16 @@ export const Columns: ColumnDef<any>[] = [
     header: "Unit",
   },
   {
-    accessorKey: "brandName",
+    accessorKey: "brand",
     header: "Brand Name",
   },
   {
-    accessorKey: "itemAge",
+    accessorKey: "manufacture_date",
     header: "Item Age",
+    // cell: ({ row }) => {
+    //   const itemValue = row?.getValue("manufacture_date");
+    //   return itemValue.toDateString();
+    // },
   },
   {
     accessorKey: "expiryStatus",
@@ -92,6 +102,6 @@ export const Columns: ColumnDef<any>[] = [
   },
   {
     id: "actions",
-    cell: ActionsCell, // Ensure you have the ActionsCell defined elsewhere in your code
+    cell: ActionsCell,
   },
 ];

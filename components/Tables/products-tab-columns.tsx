@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown } from "lucide-react";
 
 interface ProductsCellProps {
   row: {
@@ -37,7 +37,7 @@ const ProductActionCell = ({ row }: ProductsCellProps) => {
 
 export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
   {
-    accessorKey: "productName",
+    accessorKey: "name",
     //header: "Product Name",
     header: ({ column }) => {
       return (
@@ -48,7 +48,7 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
           Product Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
   },
   {
@@ -56,7 +56,7 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
     header: "Unit",
   },
   {
-    accessorKey: "brandName",
+    accessorKey: "brand",
     header: "Brand",
   },
   {
@@ -64,7 +64,7 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
     header: "Quantity",
   },
   {
-    accessorKey: "expiryDate",
+    accessorKey: "expiry_date",
     header: "Expiry Date",
   },
   {
@@ -81,7 +81,7 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: "product_status",
     header: "Status",
   },
   {

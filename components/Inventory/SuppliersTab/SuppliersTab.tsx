@@ -8,9 +8,24 @@ import { CiSearch } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import { Plus, SlidersVertical } from "lucide-react";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
+import AddSupplier from "./AddSupplier/AddSupplier";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 const SuppliersTab = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
+  const [showSupplierModal, setShowSupplierModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); //add supplier modeal
+
+  const { data: inventorySupplierData } = useQuery({
+    queryKey: ["inventorySupplier"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.inventorySupplier).then((res) => res),
+    select: (findData) => findData?.data?.results,
+  });
+
+  console.log(inventorySupplierData)
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -18,41 +33,51 @@ const SuppliersTab = () => {
     setSetSearchValues(event.target.value);
   };
 
+  const closeAddSupplier = () => {
+    setShowSupplierModal(false);
+  };
+
   return (
-    <div className="">
-      <SuppliersTabStats />
-      <div className="p-6 bg-white mt-7 shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)]">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-[#202224] font-semibold text-2xl">Suppliers</h2>
+    <>
+      <div className="">
+        <SuppliersTabStats />
+        <div className="p-6 bg-white mt-7 shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)]">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-[#202224] font-semibold text-2xl">Suppliers</h2>
 
-          <div className="flex items-center gap-3">
-            <SearchFieldInput
-              value={searchValues}
-              onChange={handleSearchValueChange}
-              placeholder="Search for supplier"
-            />
+            <div className="flex items-center gap-3">
+              <SearchFieldInput
+                value={searchValues}
+                onChange={handleSearchValueChange}
+                placeholder="Search for supplier"
+              />
 
-            <Button
-              type="button"
-              className="text-white relative flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
-              variant="secondary"
-            >
-              <Plus />
-              Add Supplier
-            </Button>
+              <Button
+                type="button"
+                className="text-white relative flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
+                variant="secondary"
+                onClick={() => setShowSupplierModal(true)}
+              >
+                <Plus />
+                Add Supplier
+              </Button>
 
-            <div className="border p-2  cursor-pointer border-[#494A50] rounded-[12px]">
-              <SlidersVertical className="text-[#494A50]" />
+              <div className="border p-2  cursor-pointer border-[#494A50] rounded-[12px]">
+                <SlidersVertical className="text-[#494A50]" />
+              </div>
             </div>
           </div>
+          <ExpandableDataTable
+            columns={suppliersTabColumns}
+            data={suppliersTabTable}
+            searchValue={searchValues}
+          />
         </div>
-        <ExpandableDataTable
-          columns={suppliersTabColumns}
-          data={suppliersTabTable}
-          searchValue={searchValues}
-        />
       </div>
-    </div>
+
+      {/* Add Supplier Modal */}
+      {showSupplierModal && <AddSupplier onClose={closeAddSupplier} />}
+    </>
   );
 };
 

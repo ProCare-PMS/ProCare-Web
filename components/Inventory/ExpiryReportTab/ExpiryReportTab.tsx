@@ -8,9 +8,21 @@ import { CiSearch } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import { Plus, SlidersVertical } from "lucide-react";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 const ExpiryReportTab = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
+
+  const { data: inventoryExpiryReportsData } = useQuery({
+    queryKey: ["inventoryExpiryReports"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.inventoryExpiryReports).then((res) => res),
+    select: (findData) => findData?.data?.results,
+  });
+
+  console.log(inventoryExpiryReportsData)
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -41,7 +53,7 @@ const ExpiryReportTab = () => {
         </div>
         <DataTable
           columns={expiryTabColumns}
-          data={expiryReportTable}
+          data={inventoryExpiryReportsData || []}
           searchValue={searchValues}
         />
       </div>

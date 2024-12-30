@@ -7,9 +7,23 @@ import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 function InventoryAgingReportTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
+
+  const { data: agingReportData } = useQuery({
+    queryKey: ["agingReportData"],
+    queryFn: () =>
+      customAxios
+        .get(endpoints.analytics + "inventory-aging/")
+        .then((res) => res),
+    select: (data) => data.data?.results,
+  });
+
+  //console.log({ agingReportData });
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -54,7 +68,11 @@ function InventoryAgingReportTable() {
         </div>
       </div>
 
-      <DataTable columns={Columns} data={Data} searchValue={searchValues} />
+      <DataTable
+        columns={Columns}
+        data={agingReportData || []}
+        searchValue={searchValues}
+      />
     </div>
   );
 }

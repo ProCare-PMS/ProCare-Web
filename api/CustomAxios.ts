@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "sonner";
 
 // Define the base URL for the API
 export const _baseUrl =
@@ -40,24 +41,27 @@ customAxios.interceptors.response.use(
       switch (statusCode) {
         case 401:
           // Unauthorized - redirect to login
-          console.error("Unauthorized. Redirecting to login.");
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("user");
+          localStorage.removeItem("refreshToken");
+          toast.error("Token Expired. Redirecting to login.");
           window.location.href = "/login";
           break;
         case 403:
           // Forbidden - log the error message
-          console.error("Access denied.");
+          toast.error("Access denied.");
           break;
         case 500:
           // Internal server error - log the error message
-          console.error("Server error. Please try again later.");
+          toast.error("Server error. Please try again later.");
           break;
         default:
           // Log other errors
-          console.error("An unexpected error occurred.");
+          toast.error("An unexpected error occurred.");
       }
     } else {
       // If no response was received, log a network error
-      console.error("Network error. Please check your internet connection.");
+      toast.error("Network error. Please check your internet connection.");
     }
     // Reject the error for further handling in individual requests
     return Promise.reject(error);

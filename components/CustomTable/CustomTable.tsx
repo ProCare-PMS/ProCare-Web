@@ -1,17 +1,19 @@
-import { getCoreRowModel, RowModel, Table, useReactTable } from "@tanstack/react-table";
+import {
+  getCoreRowModel,
+  RowModel,
+  Table,
+  useReactTable,
+} from "@tanstack/react-table";
 import { CustomTableProps } from "./types";
 
-function CustomTable<D extends object>({
+function CustomTable<D extends object>({ columns, data }: CustomTableProps<D>) {
+  const table = useReactTable<D>({
     columns,
     data,
-}: CustomTableProps<D>) {
-    const table = useReactTable<D>(
-        { columns, data, getCoreRowModel: getCoreRowModel() }
-      ) ;
+    getCoreRowModel: getCoreRowModel(),
+  });
 
-      return (
-        <></>
-      )
+  return <div></div>;
 }
 
-export default CustomTable
+export default CustomTable;

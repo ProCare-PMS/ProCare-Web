@@ -5,10 +5,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddUserModal from "../../Modals/AddUserModal";
 import ActivateDeactivateUserModal from "@/components/Modals/ActivateDeactivateModal";
+import { daysOfWeek } from "./Data";
 
 export const Columns: ColumnDef<any>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "username",
     header: "User Name",
   },
   {
@@ -24,17 +25,20 @@ export const Columns: ColumnDef<any>[] = [
     header: "Role",
   },
   {
-    accessorKey: "workingDays",
+    accessorKey: "working_hours",
     header: "Working Days",
     cell: ({ getValue }) => {
-      const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"]; // Sunday to Saturday
-      const workingDays = getValue() as number[]; // Should be an array like [1, 2, 3, ...]
+      // Sunday to Saturday
+      const workingHours = getValue() as { day: string }[]; // Should be an array of objects with a "day" key
 
       return (
         <div style={{ display: "flex", gap: "4px" }}>
           {daysOfWeek.map((day, index) => {
-            const dayNumber = index + 1; // Sunday is 1, Saturday is 7
-            const isWorkingDay = workingDays.includes(dayNumber);
+            const isWorkingDay = workingHours?.some((workingHour) => {
+              if (workingHour?.day === day.label) {
+                return day.value;
+              }
+            });
 
             return (
               <div
@@ -51,7 +55,7 @@ export const Columns: ColumnDef<any>[] = [
                   border: isWorkingDay ? "2px solid blue" : "1px solid gray",
                 }}
               >
-                {day}
+                {day.value}
               </div>
             );
           })}
@@ -59,6 +63,7 @@ export const Columns: ColumnDef<any>[] = [
       );
     },
   },
+
   {
     id: "actions",
     header: "Actions",

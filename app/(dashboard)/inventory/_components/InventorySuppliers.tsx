@@ -1,20 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { Plus, SlidersVertical } from "lucide-react";
-import { Button } from '@/components/ui/button';
-import AddProducts from './AddProductsModal';
-import ImportProductsModal from '../_importProductsComponents/ImportProductsModal';
-import FilterDropdown from './FilterDropdown';
+import { Button } from "@/components/ui/button";
+import AddProducts from "./AddProductsModal";
+import ImportProductsModal from "../_importProductsComponents/ImportProductsModal";
+import FilterDropdown from "./FilterDropdown";
 
 const InventorySuppliers = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showFilters, setShowFilter] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
 
-  
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className='py-44'>
+    <div className="py-44">
       <div className="flex items-center justify-between">
-        <h2 className='font-semibold text-2xl font-inter text-[#202224]'>Suppliers</h2>
+        <h2 className="font-semibold text-2xl font-inter text-[#202224]">
+          Suppliers
+        </h2>
         {/* Search and filter */}
         <div className="flex items-center gap-4">
           <div>
@@ -43,11 +52,13 @@ const InventorySuppliers = () => {
               <div className="bg-white absolute top-12 shadow-md hover:shadow-lg left-0 z-20 rounded-[8px]">
                 <ul>
                   <li>
-                    <AddProducts />
+                    {!!isModalOpen && (
+                      <AddProducts title="" setModal={handleCloseModal} />
+                    )}
                   </li>
                   <hr />
                   <li>
-                    <ImportProductsModal />
+                    <ImportProductsModal title="" />
                   </li>
                 </ul>
               </div>
@@ -68,7 +79,7 @@ const InventorySuppliers = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default InventorySuppliers
+export default InventorySuppliers;

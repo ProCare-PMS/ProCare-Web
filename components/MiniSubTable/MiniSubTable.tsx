@@ -41,7 +41,7 @@ export function MiniSubTable({
   });
 
   return (
-    <>
+    <div>
       <div
         className={`bg-white p-6 rounded-xl flex-1 ${
           height ? `h-${height}` : ""
@@ -125,6 +125,6 @@ export function MiniSubTable({
           </TableBody>
         </Table>
       </div>
-    </>
+    </div>
   );
 }

@@ -32,37 +32,37 @@ import { useState } from "react";
 export const description = "A linear area chart";
 
 const chartData = [
-  { day: "1", stock: 450 },
-  { day: "2", stock: 760 },
-  { day: "3", stock: 920 },
-  { day: "4", stock: 530 },
-  { day: "5", stock: 610 },
-  { day: "6", stock: 870 },
-  { day: "7", stock: 740 },
-  { day: "8", stock: 680 },
-  { day: "9", stock: 820 },
-  { day: "10", stock: 330 },
-  { day: "11", stock: 750 },
-  { day: "12", stock: 620 },
-  { day: "13", stock: 900 },
-  { day: "14", stock: 430 },
-  { day: "15", stock: 820 },
-  { day: "16", stock: 780 },
-  { day: "17", stock: 920 },
-  { day: "18", stock: 250 },
-  { day: "19", stock: 770 },
-  { day: "20", stock: 980 },
-  { day: "21", stock: 840 },
-  { day: "22", stock: 660 },
-  { day: "23", stock: 350 },
-  { day: "24", stock: 800 },
-  { day: "25", stock: 910 },
-  { day: "26", stock: 220 },
-  { day: "27", stock: 710 },
-  { day: "28", stock: 940 },
-  { day: "29", stock: 380 },
-  { day: "30", stock: 870 },
-  { day: "31", stock: 560 },
+  { day: "1", Stock: 450 },
+  { day: "2", Stock: 760 },
+  { day: "3", Stock: 920 },
+  { day: "4", Stock: 530 },
+  { day: "5", Stock: 610 },
+  { day: "6", Stock: 870 },
+  { day: "7", Stock: 740 },
+  { day: "8", Stock: 680 },
+  { day: "9", Stock: 820 },
+  { day: "10", Stock: 330 },
+  { day: "11", Stock: 750 },
+  { day: "12", Stock: 620 },
+  { day: "13", Stock: 900 },
+  { day: "14", Stock: 430 },
+  { day: "15", Stock: 820 },
+  { day: "16", Stock: 780 },
+  { day: "17", Stock: 920 },
+  { day: "18", Stock: 250 },
+  { day: "19", Stock: 770 },
+  { day: "20", Stock: 980 },
+  { day: "21", Stock: 840 },
+  { day: "22", Stock: 660 },
+  { day: "23", Stock: 350 },
+  { day: "24", Stock: 800 },
+  { day: "25", Stock: 910 },
+  { day: "26", Stock: 220 },
+  { day: "27", Stock: 710 },
+  { day: "28", Stock: 940 },
+  { day: "29", Stock: 380 },
+  { day: "30", Stock: 870 },
+  { day: "31", Stock: 560 },
 ];
 
 const chartData2 = [
@@ -204,7 +204,7 @@ export function StockLevelChart() {
                 }
               />
               <Area
-                dataKey="stock"
+                dataKey="Stock"
                 type="linear"
                 fill="url(#gradientColor)"
                 fillOpacity={0.4}

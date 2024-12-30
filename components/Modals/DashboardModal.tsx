@@ -48,20 +48,30 @@ const DashboardModal = ({ setModal, item, title }: ModalProps) => {
             </span>
           </div>
           <div className="grid w-full gap-1">
-            <span  className="text-[#858C95] text-sm font-normal">Time</span>
-            <span className="text-[#202224] text-base font-normal">{item.time}</span>
+            <span className="text-[#858C95] text-sm font-normal">Time</span>
+            <span className="text-[#202224] text-base font-normal">
+              {item.time}
+            </span>
           </div>
           <div className="grid gap-2">
-            <span className="text-[#858C95] text-sm font-normal">Items Sold</span>
-            <span className="text-[#202224] text-base font-normal">{item.itemsSold}</span>
+            <span className="text-[#858C95] text-sm font-normal">
+              Items Sold
+            </span>
+            <span className="text-[#202224] text-base font-normal">
+              {item.itemsSold}
+            </span>
           </div>
           <div className="grid gap-1">
-            <span  className="text-[#858C95] text-sm font-normal">Sold By</span>
-            <span className="text-[#202224] text-base font-normal">{item.soldBy}</span>
+            <span className="text-[#858C95] text-sm font-normal">Sold By</span>
+            <span className="text-[#202224] text-base font-normal">
+              {item.soldBy}
+            </span>
           </div>
           <div className="grid gap-1">
             <span>AMOUNT</span>
-            <span className="text-[#202224] text-base font-normal">{item.amount}</span>
+            <span className="text-[#202224] text-base font-normal">
+              {item.amount}
+            </span>
           </div>
           <div className="grid gap-1">
             <span>TYPE</span>
@@ -83,9 +93,11 @@ const DashboardModal = ({ setModal, item, title }: ModalProps) => {
         <hr className="my-6" />
 
         {/* Products */}
-        <div className=" "> {/* overflow-y-auto h-[200px] p-3 */}
+        <div className=" ">
+          {" "}
+          {/* overflow-y-auto h-[200px] p-3 */}
           {item.products.map((product, index) => (
-            <>
+            <div key={product.name}>
               <div
                 className="flex items-center justify-between"
                 key={product.name}
@@ -112,7 +124,7 @@ const DashboardModal = ({ setModal, item, title }: ModalProps) => {
                 </div>
               </div>
               <hr className="my-6" />
-            </>
+            </div>
           ))}
         </div>
       </div>

@@ -20,7 +20,7 @@ interface SuppliersCellProps {
 const ProductActionCell = ({ row }: SuppliersCellProps) => {
   const [showAction, setShowAction] = useState(false);
   return (
-    <>
+    <div>
       {/*
     <div className="relative cursor-pointer transition">
       <BiDotsVertical onClick={() => setShowAction(!showAction)} />
@@ -47,7 +47,7 @@ const ProductActionCell = ({ row }: SuppliersCellProps) => {
           <DropdownMenuItem>Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    </>
+    </div>
   );
 };
 

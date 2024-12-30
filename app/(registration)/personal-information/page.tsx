@@ -15,28 +15,29 @@ import { endpoints } from "@/api/Endpoints";
 import customAxios from "@/api/CustomAxios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
+import { setPersonalInfoResponse } from "@/redux/personalInformationResponse";
 
-type FacilityFormData = z.infer<typeof userRegistrationSchema>;
+//type FacilityFormData = z.infer<typeof userRegistrationSchema>;
 
 const RegistrationPage = () => {
-  const form = useForm<FacilityFormData>({
-    resolver: zodResolver(userRegistrationSchema),
-  });
   const router = useRouter();
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const queryClient = useQueryClient();
+  const dispatch = useDispatch<AppDispatch>();
   const pharmacyId = useSelector((state: RootState) => state.pharmacyId?.id);
 
   // Mutation function
   const postPersonalInformation = useMutation({
     mutationFn: async (value: any) => {
-      console.log("Sending data to API:", value.formData); // Debugging log
+      //console.log("Sending data to API:", value.formData); // Debugging log
       try {
         const res = await customAxios.post(endpoints.signup, value.formData);
-        console.log("API Response:", res); // Log the entire response
+
         return res;
       } catch (error) {
         console.error("API Error:", error); // Log the entire error
@@ -62,6 +63,30 @@ const RegistrationPage = () => {
       pharmacy: pharmacyId,
     };
 
+    const result = userRegistrationSchema.safeParse(data);
+
+    if (!result.success) {
+      // Create an object to hold error messages
+      const newErrors: { [key: string]: string } = {};
+      const formattedErrors = result.error.format();
+
+      for (const [key, value] of Object.entries(formattedErrors)) {
+        if (typeof value === "object" && value !== null && "_errors" in value) {
+          if (Array.isArray(value._errors) && value._errors.length > 0) {
+            newErrors[key] = value._errors.join(", ");
+          }
+        } else if (Array.isArray(value) && value.length > 0) {
+          newErrors[key] = value.join(", ");
+        }
+      }
+
+      setErrors(newErrors); // Set the error state
+      toast.error("Please correct the validation errors.");
+      return;
+    }
+
+    setErrors({});
+
     postPersonalInformation.mutate(
       {
         formData: data,
@@ -71,13 +96,15 @@ const RegistrationPage = () => {
         onSuccess: (data) => {
           console.log("Mutation success, response data:", data); // Log success data
           if (data.status === 201) {
+            const personalResponse = data?.data;
+            dispatch(setPersonalInfoResponse(personalResponse));
             toast.success("Personal Information created");
             toast.info("Please check your email");
             queryClient.invalidateQueries({
               queryKey: ["personalInformation"],
             });
-            toast.info("Your are being redirected to the login page");
-            router.push("/login");
+            toast.info("Your are being redirected to verify your account");
+            router.push("/login/verify");
           } else {
             console.log("Registration failed:", data.data.message);
             toast.error("Personal Information Not Created");
@@ -132,9 +159,17 @@ const RegistrationPage = () => {
           <div className="flex flex-col md:w-[55.5rem]  md:gap-4 md:flex-row bg-white px-[4.62rem] py-[2.62rem] rounded-2xl my-4">
             <div className="flex flex-col gap-4 w-full">
               <div>
-                <label htmlFor="first_name" className="font-bold">
-                  First Name
-                </label>
+                <div className="flex justify-between">
+                  <label htmlFor="first_name" className="font-bold">
+                    First Name
+                  </label>
+                  {errors.first_name && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.first_name}
+                    </p>
+                  )}
+                </div>
+
                 <Input
                   id="first_name"
                   name="first_name"
@@ -146,9 +181,15 @@ const RegistrationPage = () => {
               </div>
 
               <div>
-                <label htmlFor="email" className="font-bold">
-                  email
-                </label>
+                <div className="flex justify-between">
+                  <label htmlFor="email" className="font-bold">
+                    email
+                  </label>
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
+                </div>
+
                 <Input
                   id="email"
                   name="email"
@@ -159,9 +200,17 @@ const RegistrationPage = () => {
               </div>
 
               <div>
-                <label htmlFor="password" className="font-bold">
-                  Password
-                </label>
+                <div className="flex justify-between">
+                  <label htmlFor="password" className="font-bold">
+                    Password
+                  </label>
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
+
                 <div className="relative">
                   <Input
                     id="password"
@@ -181,9 +230,16 @@ const RegistrationPage = () => {
               </div>
 
               <div>
-                <label htmlFor="password2" className="font-bold">
-                  Confirm Password
-                </label>
+                <div className="flex justify-between">
+                  <label htmlFor="password2" className="font-bold">
+                    Confirm Password
+                  </label>
+                  {errors.password2 && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password2}
+                    </p>
+                  )}
+                </div>
 
                 <div className="relative">
                   <Input
@@ -195,10 +251,10 @@ const RegistrationPage = () => {
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute inset-y-0 right-0 px-3 py-2 text-sm"
                   >
-                    {showPassword ? <EyeOff /> : <Eye />}
+                    {showConfirmPassword ? <EyeOff /> : <Eye />}
                   </button>
                 </div>
               </div>
@@ -206,9 +262,17 @@ const RegistrationPage = () => {
 
             <div className="space-y-4 w-full">
               <div>
-                <label htmlFor="last_name" className="font-bold">
-                  Last Name
-                </label>
+                <div className="flex justify-between">
+                  <label htmlFor="last_name" className="font-bold">
+                    Last Name
+                  </label>
+                  {errors.last_name && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.last_name}
+                    </p>
+                  )}
+                </div>
+
                 <Input
                   id="last_name"
                   name="last_name"
@@ -219,9 +283,17 @@ const RegistrationPage = () => {
               </div>
 
               <div>
-                <label htmlFor="phone_number" className="font-bold">
-                  Phone Number
-                </label>
+                <div className="flex justify-between">
+                  <label htmlFor="phone_number" className="font-bold">
+                    Phone Number
+                  </label>
+                  {errors.phone_number && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.phone_number}
+                    </p>
+                  )}
+                </div>
+
                 <Input
                   id="phone_number"
                   name="phone_number"
@@ -232,9 +304,17 @@ const RegistrationPage = () => {
               </div>
 
               <div>
-                <label htmlFor="ghana_card" className="font-bold">
-                  Ghana Card
-                </label>
+                <div className="flex justify-between">
+                  <label htmlFor="ghana_card" className="font-bold">
+                    Ghana Card
+                  </label>
+                  {errors.ghana_card && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.ghana_card}
+                    </p>
+                  )}
+                </div>
+
                 <Input
                   id="ghana_card"
                   name="ghana_card"

@@ -12,34 +12,12 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import clsx from "clsx";
 
-const invoices = [
-  {
-    invoice: "Paracetamol - 500g",
-    piece: "4",
-    lastRestock: "12/09/2024",
-  },
-  {
-    invoice: "Paracetamol-500g",
-    piece: "4",
-    lastRestock: "12/09/2024",
-  },
-  {
-    invoice: "Paracetamol-500g",
-    piece: "4",
-    lastRestock: "12/09/2024",
-  },
-  {
-    invoice: "Paracetamol-500g",
-    piece: "4",
-    lastRestock: "12/09/2024",
-  },
-];
-
 interface TableProps {
   title: string;
+  data: any[];
 }
 
-export function DashboardLowStockAlert({ title }: TableProps) {
+export function DashboardLowStockAlert({ title, data }: TableProps) {
   return (
     <div className="bg-white p-6 rounded-xl w-[450px] h-[428px] flex-1">
       <div className="flex items-center justify-between mb-6">
@@ -70,7 +48,7 @@ export function DashboardLowStockAlert({ title }: TableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
+          {data.map((invoice) => (
             <TableRow key={invoice.invoice}>
               <TableCell className="font-semibold text-sm font-inter text-[#242525]">
                 {invoice.invoice}

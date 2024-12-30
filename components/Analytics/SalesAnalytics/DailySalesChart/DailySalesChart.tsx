@@ -109,7 +109,7 @@ const chartConfig = {
 export function DailySalesChart() {
   const [timeRange, setTimeRange] = useState("90d");
   return (
-    <>
+    <div>
       <Card className="w-full bg-white rounded-2xl">
         <CardHeader className="my-1 flex items-center gap-2 space-y-0 border-b py-2 sm:flex-row">
           <div className="grid flex-1 gap-1 text-center sm:text-left">
@@ -236,6 +236,6 @@ export function DailySalesChart() {
           </div>
         </CardFooter>
       </Card>
-    </>
+    </div>
   );
 }

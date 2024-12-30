@@ -10,7 +10,7 @@ const DashboardNote = () => {
     setShowDiv(false);
   };
   return (
-    <>
+    <div>
       {showDiv && (
         <div className="border border-[#2648EA] mt-8 bg-[#EFF0FE] font-inter rounded-xl p-4 flex flex-col md:flex-row items-center justify-center md:justify-between gap-4">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
@@ -47,7 +47,7 @@ const DashboardNote = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import { Toaster } from "sonner";
 
 export default function SignAuthLayout({
   children,
@@ -9,7 +8,6 @@ export default function SignAuthLayout({
 }) {
   return (
     <div className="h-screen w-full relative">
-      <Toaster richColors position="top-right" duration={8000} />
       <nav className="bg-transparent w-40 absolute -top-5 left-0">
         <Image
           className="w-full h-full"
@@ -20,9 +18,9 @@ export default function SignAuthLayout({
           alt="logo"
         />
       </nav>
-      <div className="flex justify-center items-center">
+      <div className="flex flex-col md:flex-row justify-center items-center">
         {children}
-        <div className="w-1/2 h-screen bg-white flex justify-center items-center flex-col gap-4">
+        <div className="hidden w-1/2 h-screen bg-white md:flex justify-center items-center flex-col gap-4">
           <div className=" w-[557.09px] h-[550.1px] flex justify-center items-center flex-col gap-4">
             <div className="w-[80%] gap-4">
               <h1 className="w-full font-inter text-4xl font-semibold leading-10 text-left tracking-wide">

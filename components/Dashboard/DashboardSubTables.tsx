@@ -14,14 +14,14 @@ import { dashboardSubTables } from "@/type";
 
 const invoices: dashboardSubTables[] = [
   // Add your invoice data here, or leave it empty to test
-]
-
+];
 
 interface TableProps {
   title: string;
+  data: dashboardSubTables[];
 }
 
-export function DashboardSubTables({ title }: TableProps) {
+export function DashboardSubTables({ title, data }: TableProps) {
   return (
     <div className="bg-white p-6 rounded-xl w-[450px] h-[428px] flex-1">
       <div className="flex items-center justify-between mb-6">
@@ -52,33 +52,19 @@ export function DashboardSubTables({ title }: TableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.length === 0 ? (
-            <TableRow>
+          {data.map((invoice) => (
+            <TableRow key={invoice.productName}>
               <TableCell className="font-semibold text-sm font-inter text-[#242525]">
-                -
+                {invoice.productName}
               </TableCell>
               <TableCell className="text-sm font-medium font-nunito_sans text-[#202224]">
-                -
+                {invoice.noRemaining}
               </TableCell>
               <TableCell className="font-semibold text-sm font-nunito_sans text-[#202224]">
-                -
+                {invoice.expriyDate}
               </TableCell>
             </TableRow>
-          ) : (
-            invoices.map((invoice) => (
-              <TableRow key={invoice.productName}>
-                <TableCell className="font-semibold text-sm font-inter text-[#242525]">
-                  {invoice.productName}
-                </TableCell>
-                <TableCell className="text-sm font-medium font-nunito_sans text-[#202224]">
-                  {invoice.noRemaining}
-                </TableCell>
-                <TableCell className="font-semibold text-sm font-nunito_sans text-[#202224]">
-                  {invoice.expriyDate}
-                </TableCell>
-              </TableRow>
-            ))
-          )}
+          ))}
         </TableBody>
       </Table>
     </div>

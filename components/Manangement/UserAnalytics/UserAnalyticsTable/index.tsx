@@ -80,17 +80,11 @@ function UserAnalyticTable() {
             <UserPerfomanceTable searchValues={searchValues} />
           )}
           {toggleShow === 2 && (
-            <>
-              <AttendanceContent searchValues={searchValues} />
-            </>
+            <AttendanceContent searchValues={searchValues} />
           )}
         </div>
       </div>
-      {toggleShow === 2 && (
-        <>
-          <ClockInOutBars />
-        </>
-      )}
+      {toggleShow === 2 && <ClockInOutBars />}
     </div>
   );
 }

@@ -8,7 +8,7 @@ import PaymentMethodListTable from "./PaymentMethodListTable";
 
 function FinancialReporting() {
   return (
-    <>
+    <div>
       <ProfitChart />
       <LossChart />
       <ExpenseRevenueTracking />
@@ -21,7 +21,7 @@ function FinancialReporting() {
           <PaymentMethodListTable />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

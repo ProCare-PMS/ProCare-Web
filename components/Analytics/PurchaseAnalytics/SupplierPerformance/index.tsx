@@ -8,9 +8,24 @@ import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
+import { useQuery } from "@tanstack/react-query";
 
 function SupplierPerformanceTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
+
+  //get data for the table
+  const { data: analyticsPerformanceData } = useQuery({
+    queryKey: ["purchasePerfomance"],
+    queryFn: () =>
+      customAxios
+        .get(endpoints.analytics + "products/performance/")
+        .then((res) => res),
+    select: (foundData) => foundData.data?.results || [],
+  });
+
+  console.log({ analyticsPerformanceData });
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -27,7 +42,9 @@ function SupplierPerformanceTable() {
           </h2>
           <div>
             <span className="text-slate-300">Total Number of Purchase:</span>{" "}
-            <span className="text-sky-500 bold">28,360</span>
+            <span className="text-sky-500 bold">
+              {analyticsPerformanceData?.length}
+            </span>
           </div>
         </div>
 
@@ -75,7 +92,11 @@ function SupplierPerformanceTable() {
         </div>
       </div>
 
-      <DataTable columns={Columns} data={Data} searchValue={searchValues} />
+      <DataTable
+        columns={Columns}
+        data={analyticsPerformanceData || []}
+        searchValue={searchValues}
+      />
     </div>
   );
 }

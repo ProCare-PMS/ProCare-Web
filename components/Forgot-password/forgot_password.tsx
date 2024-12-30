@@ -32,7 +32,7 @@ export default function Forgot_password() {
             </p>
           </div>
           {!resetSent ? (
-            <>
+            <div>
               <form
                 className="m-auto my-4 p-2 flex flex-col justify-center gap-3"
                 onSubmit={handleSubmit}
@@ -62,7 +62,7 @@ export default function Forgot_password() {
                   Send Reset Link
                 </button>
               </form>
-            </>
+            </div>
           ) : (
             <div className="w-[85%] m-auto bg-blue-500 text-white py-6 px-6 rounded-lg text-center flex gap-[2px]">
               <span className="font-inter text-lg leading-6">

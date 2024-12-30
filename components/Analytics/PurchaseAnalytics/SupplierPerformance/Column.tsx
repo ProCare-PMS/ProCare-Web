@@ -2,64 +2,70 @@
 
 import { DashboardTransactions, dashboardTransactions } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 import { useState } from "react";
-import DashboardModal from "@/components/Modals/DashboardModal";
-import clsx from "clsx";
+import SupplierPerfomanceDetails, {
+  AnaliticSupplierPerfromanceType,
+} from "./SupplierPerfomanceDetails";
 
 interface ActionsCellProps {
   row: {
-    original: DashboardTransactions;
+    original: AnaliticSupplierPerfromanceType;
   };
 }
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const payment = row.original;
   const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] =
-    useState<DashboardTransactions | null>(null);
+
+  const handleOpenModal = () => {
+    setModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setModal(false);
+  };
 
   return (
     <div>
       <span
         className="text-[#2648EA] cursor-pointer font-semibold text-sm underline"
-        onClick={() => {
-          setModal(true);
-          setSelectedItem(payment);
-        }}
+        onClick={handleOpenModal}
       >
         View
       </span>
-      {selectedItem && (
-        <DashboardModal
-          title="Transaction Details"
-          item={selectedItem}
-          setModal={() => setSelectedItem(null)}
+      {modal && (
+        <SupplierPerfomanceDetails
+          title="Supplier Performance Details"
+          item={payment}
+          setModal={handleCloseModal}
         />
       )}
     </div>
   );
 };
-
-export const Columns: ColumnDef<any>[] = [
+export const Columns: ColumnDef<AnaliticSupplierPerfromanceType>[] = [
   {
     accessorKey: "name",
     header: "Supplier Name",
+    cell: (item) => item.getValue(),
   },
   {
     accessorKey: "quantity",
     header: "Quantity Sold",
+    cell: (item) => item.getValue(),
   },
   {
-    accessorKey: "frequency",
+    accessorKey: "reorder_level",
     header: "Delivery Frequency",
+    cell: (item) => item.getValue(),
   },
   {
-    accessorKey: "accuracy",
+    accessorKey: "markup_percentage",
     header: "Order Accuracy(%)",
+    cell: (item) => item.getValue(),
   },
   {
-    accessorKey: "amount",
+    accessorKey: "unit_price",
     header: "Amount",
     cell: ({ getValue }) => `₵ ${getValue()}`,
   },
