@@ -2,21 +2,39 @@
 
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import { RootState } from "@/redux/store";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 function Verify() {
-  const [btnMessage, setBtnMessage] = useState<string>("Verify Account");
-  const [bodytext, setBodyText] = useState<string>("");
+  const getPersonalResponse = useSelector(
+    (state: RootState) => state?.personalInfoResponse
+  );
 
   const postVerification = useMutation({
     mutationFn: async (value: any) =>
-      await customAxios.patch(endpoints.verifyEmail, value).then((res) => res),
+      await customAxios.post(endpoints.verifyEmail, value).then((res) => res),
   });
 
   const handleSubmit = () => {
-    postVerification.mutate({ token: "test@example.com" });
+    postVerification.mutate(
+      { token: getPersonalResponse?.access },
+      {
+        onSuccess: (data) => {
+          if (data?.status === 201) {
+            toast.success("Verification Successful");
+          } else {
+            toast.error("Verification Failed");
+          }
+        },
+        onError: () => {
+          toast.error("An error occurred during verification.");
+        },
+      }
+    );
   };
 
   return (
@@ -38,8 +56,17 @@ function Verify() {
             Verify Your Account
           </h1>
           <p className="mt-2 text-gray-600">
-            Click the verify button to activate your account.
+            {postVerification.isSuccess
+              ? "Your account has been verified successfully."
+              : "Click the verify button to activate your account."}
           </p>
+          {postVerification.isSuccess && (
+            <p>
+              Hey {getPersonalResponse?.first_name}, copy your pharmacy id,{" "}
+              {getPersonalResponse?.custom_pharmacy_id} to log in on the login
+              page.
+            </p>
+          )}
         </div>
       </header>
 
@@ -49,10 +76,15 @@ function Verify() {
           <button
             className="w-full py-2 px-4 bg-blue-600 text-white rounded-[0.2rem] shadow-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 md:w-[10rem]"
             onClick={() => {
+              handleSubmit();
               console.log("clicked");
             }}
           >
-            {btnMessage}
+            {postVerification?.isPending
+              ? "Verifying..."
+              : postVerification.isSuccess
+              ? "Verification Successful"
+              : "Verify Account"}
           </button>
         </div>
       </div>

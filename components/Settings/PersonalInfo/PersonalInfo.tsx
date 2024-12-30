@@ -34,8 +34,6 @@ const PersonalInfo = () => {
         .then((res) => res?.data),
   });
 
-  console.log({ getPersonalData });
-
   // React Hook Form with Zod validation
   const {
     register,
