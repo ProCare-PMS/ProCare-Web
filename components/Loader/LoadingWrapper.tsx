@@ -28,6 +28,8 @@ const LoadingWrapper = ({ children }: { children: React.ReactNode }) => {
     "/verify",
     "/pharmacy-information",
     "/personal-information",
+    "/verification-success",
+    "/verification-failed",
   ];
 
   useEffect(() => {
