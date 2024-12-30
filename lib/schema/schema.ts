@@ -100,6 +100,39 @@ const CompanySchema = z.object({
   license_number: z.string(),
 });
 
+const AddProductSchema = z.object({
+  name: z.string({
+    required_error: "Required",
+  }),
+  strength: z.string(),
+  unit: z.string({
+    required_error: "Required",
+  }),
+  quantity: z.number(),
+  expiry_date: z.string({
+    required_error: "Required",
+  }),
+  reorder_level: z.coerce.number({
+    required_error: "Required",
+  }),
+  cost_price: z.string({
+    required_error: "Required",
+  }),
+  markup_percentage: z.string({
+    required_error: "Required",
+  }),
+  selling_price: z.string({
+    required_error: "Required",
+  }),
+  category: z.string({
+    required_error: "Category is required",
+  }),
+  supplier: z.string({
+    required_error: "Supplier is required",
+  }),
+  brand: z.string(),
+});
+
 export {
   userRegistrationSchema,
   AddUserSchema,
@@ -108,4 +141,5 @@ export {
   stepThreeSchema,
   ProfileSchema,
   CompanySchema,
+  AddProductSchema,
 };

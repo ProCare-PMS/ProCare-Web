@@ -23,7 +23,7 @@ const StockTransferTab = () => {
     select: (findData) => findData?.data?.results,
   });
 
-  console.log(inventoryBranchSyncData);
+  //console.log(inventoryBranchSyncData);
 
   return (
     <div className="">
@@ -31,7 +31,7 @@ const StockTransferTab = () => {
         <StockTransferRequestsHeader />
         <DataTable
           columns={stockTransferRequestColumns}
-          data={inventoryBranchSyncData}
+          data={inventoryBranchSyncData || []}
         />
       </div>
     </div>
