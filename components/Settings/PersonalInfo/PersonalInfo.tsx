@@ -15,8 +15,17 @@ type ProfileFormValues = z.infer<typeof ProfileSchema>;
 
 const PersonalInfo = () => {
   const [profileImage, setProfileImage] = useState("/imgPlace.jpeg");
-  const getUser = JSON.parse(localStorage.getItem("user") || "{}");
+  //const getUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const [getUser, setGetUser] = useState<any>({});
   const queryClient = useQueryClient();
+
+  // Set user from localStorage on client side
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      setGetUser(user);
+    }
+  }, []);
 
   const editPersonalInfo = useMutation({
     mutationFn: async (value: any) =>
@@ -32,6 +41,7 @@ const PersonalInfo = () => {
       await customAxios
         .get(`${endpoints.user}${getUser?.id}/`)
         .then((res) => res?.data),
+    enabled: !!getUser?.id,
   });
 
   // React Hook Form with Zod validation
