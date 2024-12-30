@@ -104,7 +104,7 @@ const RegistrationPage = () => {
               queryKey: ["personalInformation"],
             });
             toast.info("Your are being redirected to verify your account");
-            router.push("/login/verify");
+            router.push("/login");
           } else {
             console.log("Registration failed:", data.data.message);
             toast.error("Personal Information Not Created");
