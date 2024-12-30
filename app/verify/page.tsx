@@ -1,42 +1,19 @@
 "use client";
-
-import customAxios from "@/api/CustomAxios";
-import { endpoints } from "@/api/Endpoints";
-import { RootState } from "@/redux/store";
-import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { toast } from "sonner";
+import React, { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 function Verify() {
-  const getPersonalResponse = useSelector(
-    (state: RootState) => state?.personalInfoResponse
-  );
+  const searchParams = useSearchParams();
 
-  const postVerification = useMutation({
-    mutationFn: async (value: any) =>
-      await customAxios.post(endpoints.verifyEmail, value).then((res) => res),
-  });
+  useEffect(() => {
+    const token = searchParams.get("token");
 
-  const handleSubmit = () => {
-    return;
-    postVerification.mutate(
-      { token: getPersonalResponse?.access },
-      {
-        onSuccess: (data) => {
-          if (data?.status === 201) {
-            toast.success("Verification Successful");
-          } else {
-            toast.error("Verification Failed");
-          }
-        },
-        onError: () => {
-          toast.error("An error occurred during verification.");
-        },
-      }
-    );
-  };
+    if (!!token) {
+      // Redirect to backend verify endpoint with the token
+      window.location.href = `https://procare-backend.onrender.com/api/verify-email?token=${token}`;
+    }
+  }, [searchParams]);
 
   return (
     <div className="h-screen bg-gray-50 px-6">
@@ -54,41 +31,10 @@ function Verify() {
         </div>
         <div className="text-center">
           <h1 className="text-4xl font-extrabold text-blue-600">
-            Verification .....
+            Verifying your email account .....
           </h1>
-          {/* <p className="mt-2 text-gray-600">
-            {postVerification.isSuccess
-              ? "Your account has been verified successfully."
-              : "Click the verify button to activate your account."}
-          </p>
-          {postVerification.isSuccess && (
-            <p>
-              Hey {getPersonalResponse?.first_name}, copy your pharmacy id,{" "}
-              {getPersonalResponse?.custom_pharmacy_id} to log in on the login
-              page.
-            </p>
-          )} */}
         </div>
       </header>
-
-      {/* Call-to-action */}
-      <div className="mt-6 text-center">
-        <div className="space-y-3">
-          {/* <button
-            className="w-full py-2 px-4 bg-blue-600 text-white rounded-[0.2rem] shadow-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 md:w-[10rem]"
-            onClick={() => {
-              handleSubmit();
-              console.log("clicked");
-            }}
-          >
-            {postVerification?.isPending
-              ? "Verifying..."
-              : postVerification.isSuccess
-              ? "Verification Successful"
-              : "Verify Account"}
-          </button> */}
-        </div>
-      </div>
     </div>
   );
 }
