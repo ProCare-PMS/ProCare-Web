@@ -9,6 +9,8 @@ type customSelectType = {
   isClearable?: boolean;
   optionData?: any[];
   disabled?: boolean;
+  value?: any;
+  onChange?: (selected: any) => void;
 };
 
 export default function CustomSelect({
@@ -19,6 +21,8 @@ export default function CustomSelect({
   isClearable,
   optionData,
   disabled,
+  value,
+  onChange,
 }: customSelectType) {
   return (
     <Select
@@ -28,7 +32,8 @@ export default function CustomSelect({
       id={idField}
       name={nameField}
       isDisabled={!!disabled}
-      //styles={}
+      value={value}
+      onChange={onChange}
       className={className}
     ></Select>
   );

@@ -40,13 +40,10 @@ const RegistrationPage = () => {
   // Mutation function
   const postPharmacyInformation = useMutation({
     mutationFn: async (value: any) => {
-      console.log("Sending data to API:", value.formData); // Debugging log
+      //console.log("Sending data to API:", value.formData); // Debugging log
       try {
-        const res = await customAxios.post(
-          endpoints.pharmacySignup,
-          value.formData
-        );
-        console.log("API Response:", res); // Log the entire response
+        const res = await customAxios.post(endpoints.pharmacy, value.formData);
+        //console.log("API Response:", res); // Log the entire response
         return res;
       } catch (error) {
         console.error("API Error:", error); // Log the entire error
@@ -87,7 +84,7 @@ const RegistrationPage = () => {
         }
       }
 
-      setErrors(newErrors); // Set the error state
+      setErrors(newErrors);
       toast.error("Please correct the validation errors.");
       return;
     }

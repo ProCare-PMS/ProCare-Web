@@ -1,38 +1,68 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import BorderColorRoundedIcon from "@mui/icons-material/BorderColorRounded";
+import { CompanySchema } from "@/lib/schema/schema";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
+import SwalToaster from "@/components/SwalToaster/SwalToaster";
 
-// Define the Zod schema for validation
-const ProfileSchema = z.object({
-  firstName: z.string().min(1, "First Name is required"),
-  lastName: z.string().min(1, "Last Name is required"),
-  otherNames: z.string().optional(),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(1, "Phone Number is required"),
-  pin: z.string().min(1, "PIN is required"),
-  licenseNumber: z.string().min(1, "License Number is required"),
-});
-
-type ProfileFormValues = z.infer<typeof ProfileSchema>;
+type ProfileFormValues = z.infer<typeof CompanySchema>;
 
 const CompanyInfoSettings = () => {
   const [profileImage, setProfileImage] = useState("/RxPMSlogo.png");
+  const queryClient = useQueryClient();
+
+  const getPharmacy = JSON.parse(
+    localStorage.getItem("user") || "{}"
+  )?.pharmacy;
+
+  const editPharmacy = useMutation({
+    mutationFn: async (value: any) =>
+      await customAxios
+        .patch(`${endpoints.pharmacy}${getPharmacy?.id}/`, value)
+        .then((res) => res),
+  });
+
+  const { data: getPharmacyDetails } = useQuery({
+    queryKey: ["companyInformation"],
+    queryFn: async () =>
+      await customAxios
+        .get(`${endpoints.pharmacy}${getPharmacy?.id}/`)
+        .then((res) => res?.data),
+  });
 
   // React Hook Form with Zod validation
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<ProfileFormValues>({
-    resolver: zodResolver(ProfileSchema),
+    resolver: zodResolver(CompanySchema),
   });
 
   const onSubmit = (data: ProfileFormValues) => {
-    console.log(data);
+    const payload = {
+      ...data,
+      address: getPharmacyDetails?.address,
+      city: getPharmacyDetails?.city,
+      region: getPharmacyDetails?.region,
+    };
+    console.log(data, { payload });
+    editPharmacy.mutate(payload, {
+      onSuccess: () => {
+        SwalToaster("Company Information Updated successfully!", "success");
+        queryClient.invalidateQueries({ queryKey: ["companyInformation"] });
+      },
+      onError: () => {
+        SwalToaster("Error updating company information!", "error");
+      },
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +75,10 @@ const CompanyInfoSettings = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  useEffect(() => {
+    !!getPharmacyDetails && reset(getPharmacyDetails);
+  }, [reset, getPharmacyDetails]);
 
   return (
     <form className="flex flex-col gap-6 " onSubmit={handleSubmit(onSubmit)}>
@@ -84,21 +118,21 @@ const CompanyInfoSettings = () => {
       <div className="grid grid-cols-3 gap-4 w-full max-w-4xl">
         {/* First Name */}
         <div className="flex flex-col">
-          <label htmlFor="firstName" className="mb-1 font-semibold">
+          <label htmlFor="facility_name" className="mb-1 font-semibold">
             Company Name
           </label>
           <input
             type="text"
-            id="firstName"
-            {...register("firstName")}
+            id="facility_name"
+            {...register("facility_name")}
             className={`border border-gray-300 rounded px-2 py-1 ${
-              errors.firstName ? "border-red-500" : ""
+              errors.facility_name ? "border-red-500" : ""
             }`}
             placeholder="Enter company name"
           />
-          {errors.firstName && (
+          {errors.facility_name && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.firstName.message}
+              {errors.facility_name.message}
             </p>
           )}
         </div>
@@ -110,31 +144,32 @@ const CompanyInfoSettings = () => {
           </label>
           <input
             type="text"
-            id="lastName"
-            {...register("lastName")}
+            id="ghana_post_address"
+            {...register("ghana_post_address")}
             className={`border border-gray-300 rounded px-4 py-1 ${
-              errors.lastName ? "border-red-500" : ""
+              errors.ghana_post_address ? "border-red-500" : ""
             }`}
             placeholder="Enter location"
           />
-          {errors.lastName && (
+          {errors.ghana_post_address && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.lastName.message}
+              {errors.ghana_post_address.message}
             </p>
           )}
         </div>
 
         {/* Other Names */}
         <div className="flex flex-col">
-          <label htmlFor="otherNames" className="mb-1 font-semibold">
+          <label htmlFor="license_number" className="mb-1 font-semibold">
             Phamarcy ID
           </label>
           <input
             type="text"
             id="otherNames"
-            {...register("otherNames")}
+            {...register("license_number")}
             className="border border-gray-300 rounded px-4 py-1"
             placeholder="Enter pharmacy ID"
+            disabled
           />
         </div>
 
@@ -146,14 +181,16 @@ const CompanyInfoSettings = () => {
           <input
             type="email"
             id="email"
-            {...register("email")}
+            {...register("facility_email")}
             className={`border border-gray-300 rounded px-4 py-1 ${
-              errors.email ? "border-red-500" : ""
+              errors.facility_email ? "border-red-500" : ""
             }`}
             placeholder="Enter email address"
           />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+          {errors.facility_email && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.facility_email.message}
+            </p>
           )}
         </div>
 
@@ -165,14 +202,16 @@ const CompanyInfoSettings = () => {
           <input
             type="tel"
             id="phone"
-            {...register("phone")}
+            {...register("facility_number")}
             className={`border border-gray-300 rounded px-4 py-1 ${
-              errors.phone ? "border-red-500" : ""
+              errors.facility_number ? "border-red-500" : ""
             }`}
             placeholder="Enter Phone Number"
           />
-          {errors.phone && (
-            <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+          {errors.facility_number && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.facility_number.message}
+            </p>
           )}
         </div>
 

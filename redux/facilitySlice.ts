@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface FacilityState {
   id: string | null;
-  // other facility properties if needed
 }
 
 const initialState: FacilityState = {

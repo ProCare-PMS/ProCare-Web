@@ -15,21 +15,20 @@ import { endpoints } from "@/api/Endpoints";
 import customAxios from "@/api/CustomAxios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
+import { setPersonalInfoResponse } from "@/redux/personalInformationResponse";
 
 //type FacilityFormData = z.infer<typeof userRegistrationSchema>;
 
 const RegistrationPage = () => {
-  // const form = useForm<FacilityFormData>({
-  //   resolver: zodResolver(userRegistrationSchema),
-  // });
   const router = useRouter();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const queryClient = useQueryClient();
+  const dispatch = useDispatch<AppDispatch>();
   const pharmacyId = useSelector((state: RootState) => state.pharmacyId?.id);
 
   // Mutation function
@@ -97,12 +96,14 @@ const RegistrationPage = () => {
         onSuccess: (data) => {
           console.log("Mutation success, response data:", data); // Log success data
           if (data.status === 201) {
+            const personalResponse = data?.data;
+            dispatch(setPersonalInfoResponse(personalResponse));
             toast.success("Personal Information created");
             toast.info("Please check your email");
             queryClient.invalidateQueries({
               queryKey: ["personalInformation"],
             });
-            toast.info("Your are being redirected to the login page");
+            toast.info("Your are being redirected to verify your account");
             router.push("/login");
           } else {
             console.log("Registration failed:", data.data.message);
