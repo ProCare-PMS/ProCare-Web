@@ -146,7 +146,9 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
   // const { data: getAllproduct } = useQuery({
   //   queryKey: ["getAllProduct"],
   //   queryFn: () =>
-  //     customAxios.get(endpoints.inventorycreate).then((res) => res?.data?.data),
+  //     customAxios
+  //       .get(endpoints.inventorySupplier)
+  //       .then((res) => res?.data?.data),
   // });
 
   // console.log({ getAllproduct });

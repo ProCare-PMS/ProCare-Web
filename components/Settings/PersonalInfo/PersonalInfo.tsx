@@ -1,38 +1,61 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import BorderColorRoundedIcon from "@mui/icons-material/BorderColorRounded";
-
-// Define the Zod schema for validation
-const ProfileSchema = z.object({
-  firstName: z.string().min(1, "First Name is required"),
-  lastName: z.string().min(1, "Last Name is required"),
-  otherNames: z.string().optional(),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(1, "Phone Number is required"),
-  pin: z.string().min(1, "PIN is required"),
-  licenseNumber: z.string().min(1, "License Number is required"),
-});
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
+import { ProfileSchema } from "@/lib/schema/schema";
+import SwalToaster from "@/components/SwalToaster/SwalToaster";
 
 type ProfileFormValues = z.infer<typeof ProfileSchema>;
 
 const PersonalInfo = () => {
   const [profileImage, setProfileImage] = useState("/imgPlace.jpeg");
+  const getUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const queryClient = useQueryClient();
+
+  const editPersonalInfo = useMutation({
+    mutationFn: async (value: any) =>
+      await customAxios
+        .patch(`${endpoints.user}${getUser?.id}/`, value)
+        .then((res) => res),
+  });
+
+  //get personal info data
+  const { data: getPersonalData } = useQuery({
+    queryKey: ["personalInformation"],
+    queryFn: async () =>
+      await customAxios
+        .get(`${endpoints.user}${getUser?.id}/`)
+        .then((res) => res?.data),
+  });
 
   // React Hook Form with Zod validation
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
+    reset,
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(ProfileSchema),
   });
 
   const onSubmit = (data: ProfileFormValues) => {
-    console.log(data);
+    //console.log(data);
+    editPersonalInfo.mutate(data, {
+      onSuccess: () => {
+        SwalToaster("Personal Information Updated Successfully!", "success");
+        queryClient.invalidateQueries({ queryKey: ["personalInformation"] });
+      },
+      onError: () => {
+        SwalToaster("Failed to update personal information!", "error");
+      },
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +68,15 @@ const PersonalInfo = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  useEffect(() => {
+    !!getPersonalData
+      ? reset({
+          ...getPersonalData,
+          license_number: getPersonalData?.pharmacy?.license_number,
+        })
+      : reset({});
+  }, [reset, getPersonalData]);
 
   return (
     <form className="flex flex-col gap-6 " onSubmit={handleSubmit(onSubmit)}>
@@ -84,55 +116,55 @@ const PersonalInfo = () => {
       <div className="grid grid-cols-3 gap-4 w-full max-w-4xl">
         {/* First Name */}
         <div className="flex flex-col">
-          <label htmlFor="firstName" className="mb-1 font-semibold">
+          <label htmlFor="first_name" className="mb-1 font-semibold">
             First Name
           </label>
           <input
             type="text"
-            id="firstName"
-            {...register("firstName")}
+            id="first_name"
+            {...register("first_name")}
             className={`border border-gray-300 rounded px-2 py-1 ${
-              errors.firstName ? "border-red-500" : ""
+              errors.first_name ? "border-red-500" : ""
             }`}
             placeholder="Enter first name"
           />
-          {errors.firstName && (
+          {errors.first_name && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.firstName.message}
+              {errors.first_name.message}
             </p>
           )}
         </div>
 
         {/* Last Name */}
         <div className="flex flex-col">
-          <label htmlFor="lastName" className="mb-1 font-semibold">
+          <label htmlFor="last_name" className="mb-1 font-semibold">
             Last Name
           </label>
           <input
             type="text"
-            id="lastName"
-            {...register("lastName")}
+            id="last_name"
+            {...register("last_name")}
             className={`border border-gray-300 rounded px-4 py-1 ${
-              errors.lastName ? "border-red-500" : ""
+              errors.last_name ? "border-red-500" : ""
             }`}
             placeholder="Enter last name"
           />
-          {errors.lastName && (
+          {errors.last_name && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.lastName.message}
+              {errors.last_name.message}
             </p>
           )}
         </div>
 
         {/* Other Names */}
         <div className="flex flex-col">
-          <label htmlFor="otherNames" className="mb-1 font-semibold">
+          <label htmlFor="other_name" className="mb-1 font-semibold">
             Other Name(s)
           </label>
           <input
             type="text"
-            id="otherNames"
-            {...register("otherNames")}
+            id="other_name"
+            {...register("other_name")}
             className="border border-gray-300 rounded px-4 py-1"
             placeholder="Enter other name(s)"
           />
@@ -159,20 +191,22 @@ const PersonalInfo = () => {
 
         {/* Phone */}
         <div className="flex flex-col">
-          <label htmlFor="phone" className="mb-1 font-semibold">
+          <label htmlFor="phone_number" className="mb-1 font-semibold">
             Phone Number
           </label>
           <input
             type="tel"
-            id="phone"
-            {...register("phone")}
+            id="phone_number"
+            {...register("phone_number")}
             className={`border border-gray-300 rounded px-4 py-1 ${
-              errors.phone ? "border-red-500" : ""
+              errors.phone_number ? "border-red-500" : ""
             }`}
             placeholder="Enter Phone Number"
           />
-          {errors.phone && (
-            <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+          {errors.phone_number && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.phone_number.message}
+            </p>
           )}
         </div>
 
@@ -197,24 +231,26 @@ const PersonalInfo = () => {
 
         {/* License Number */}
         <div className="col-span-1 flex flex-col">
-          <label htmlFor="licenseNumber" className="mb-1 font-semibold">
+          <label htmlFor="license_number" className="mb-1 font-semibold">
             License Number
           </label>
           <input
             type="text"
-            id="licenseNumber"
-            {...register("licenseNumber")}
+            id="license_number"
+            {...register("license_number")}
             className={`border border-gray-300 rounded px-4 py-1 ${
-              errors.licenseNumber ? "border-red-500" : ""
+              errors.license_number ? "border-red-500" : ""
             }`}
             placeholder="Enter License Number"
+            disabled
           />
-          {errors.licenseNumber && (
+          {errors.license_number && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.licenseNumber.message}
+              {errors.license_number.message}
             </p>
           )}
         </div>
+
         <div className="col-span-3 flex justify-end w-full">
           {/* Submit Button */}
           <button
