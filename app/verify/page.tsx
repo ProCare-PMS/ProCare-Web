@@ -20,6 +20,7 @@ function Verify() {
   });
 
   const handleSubmit = () => {
+    return;
     postVerification.mutate(
       { token: getPersonalResponse?.access },
       {
@@ -53,9 +54,9 @@ function Verify() {
         </div>
         <div className="text-center">
           <h1 className="text-4xl font-extrabold text-blue-600">
-            Verify Your Account
+            Verification .....
           </h1>
-          <p className="mt-2 text-gray-600">
+          {/* <p className="mt-2 text-gray-600">
             {postVerification.isSuccess
               ? "Your account has been verified successfully."
               : "Click the verify button to activate your account."}
@@ -66,14 +67,14 @@ function Verify() {
               {getPersonalResponse?.custom_pharmacy_id} to log in on the login
               page.
             </p>
-          )}
+          )} */}
         </div>
       </header>
 
       {/* Call-to-action */}
       <div className="mt-6 text-center">
         <div className="space-y-3">
-          <button
+          {/* <button
             className="w-full py-2 px-4 bg-blue-600 text-white rounded-[0.2rem] shadow-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 md:w-[10rem]"
             onClick={() => {
               handleSubmit();
@@ -85,7 +86,7 @@ function Verify() {
               : postVerification.isSuccess
               ? "Verification Successful"
               : "Verify Account"}
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
