@@ -5,6 +5,8 @@ import { toast } from "sonner";
 export const _baseUrl =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:6325";
 
+//updated
+
 // Create a new Axios instance with the base URL
 const customAxios = axios.create({
   baseURL: _baseUrl,
