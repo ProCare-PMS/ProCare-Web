@@ -83,26 +83,34 @@ export const Columns: ColumnDef<any>[] = [
   {
     accessorKey: "type",
     header: "Type",
-    cell: (value: any) => (
-      <p className="rounded-3xl font-inter text-sm font-normal w-full">
-        <span
-          className={clsx(" rounded-3xl font-inter text-sm font-normal", {
-            "text-[#219653] bg-[#21965314]  py-2 rounded-3xl px-3 ":
-              value.getValue() === "Bank",
-            "text-[#FFA70B] bg-[#FFA70B14] px-3  py-2":
-              value.getValue() === "Momo",
-            "text-[#D34053] bg-[#D3405314] py-2 px-3":
-              value.getValue() === `Cash`,
+    cell: (value: any) => {
+      // Transform the type object into a comma-separated string
+      const typeObject = value.getValue();
+      const typeString = Array.isArray(typeObject)
+        ? typeObject.join(", ") // If it's an array, join directly
+        : Object.values(typeObject).join(", "); // If it's an object, get values and join
 
-            "text-[#f5f83f] bg-[#ccaf0b14] px-2 py-2 ":
-              value.getValue() === `Momos`,
-          })}
-        >
-          {value.getValue()}
-        </span>
-      </p>
-    ),
+      return (
+        <p className="rounded-3xl font-inter text-sm font-normal w-full">
+          <span
+            className={clsx("rounded-3xl font-inter text-sm font-normal", {
+              "text-[#219653] bg-[#21965314] py-2 px-3":
+                typeString.includes("Bank"),
+              "text-[#FFA70B] bg-[#FFA70B14] px-3 py-2":
+                typeString.includes("Momo"),
+              "text-[#D34053] bg-[#D3405314] py-2 px-3":
+                typeString.includes("Cash"),
+              "text-[#f5f83f] bg-[#ccaf0b14] px-2 py-2":
+                typeString.includes("Momos"),
+            })}
+          >
+            {typeString}
+          </span>
+        </p>
+      );
+    },
   },
+
   {
     id: "actions",
     cell: ActionsCell,

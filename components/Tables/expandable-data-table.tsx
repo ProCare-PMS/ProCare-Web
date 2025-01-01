@@ -22,7 +22,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import clsx from "clsx";
-import ProductEmptyState from "../Inventory/ProductsTab/ProductEmptyState";
 import { Fragment } from "react";
 
 interface DataTableProps<TData, TValue> {
@@ -140,7 +139,7 @@ export function ExpandableDataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns?.length} className="mt-24 h-[400px]">
-                <ProductEmptyState />
+                No results.
               </TableCell>
             </TableRow>
           )}

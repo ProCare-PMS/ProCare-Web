@@ -55,10 +55,6 @@ function DataTable<TData, TValue>({
     setGlobalFilter(searchValue); // Update global filter when searchValue changes
   }, [searchValue]);
 
-  useEffect(() => {
-    console.log("Table state:", table.getState());
-  }, [table]);
-
   return (
     <div className="!rounded-[6px]">
       <Table>

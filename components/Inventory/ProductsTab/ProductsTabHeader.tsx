@@ -30,8 +30,7 @@ const ProductsTabHeader: React.FC = () => {
     select: (findData) => findData?.data?.results,
   });
 
-
-  console.log(inventoryProductsData)
+  console.log(inventoryProductsData);
 
   const renderTabContent = (): JSX.Element | null => {
     switch (activeTab) {
@@ -92,7 +91,10 @@ const ProductsTabHeader: React.FC = () => {
 
         {/* Search and Actions Section */}
         <div className="flex items-center gap-3">
-          <SearchFieldInput value={searchValues} onChange={handleSearchChange} />
+          <SearchFieldInput
+            value={searchValues}
+            onChange={handleSearchChange}
+          />
 
           <div className="relative">
             <Button
@@ -138,7 +140,10 @@ const ProductsTabHeader: React.FC = () => {
 
       {/* Add Product Modal */}
       {isModalOpen && (
-        <AddProducts title="Add Product" setModal={() => setIsModalOpen(false)} />
+        <AddProducts
+          title="Add Product"
+          setModal={() => setIsModalOpen(false)}
+        />
       )}
     </div>
   );

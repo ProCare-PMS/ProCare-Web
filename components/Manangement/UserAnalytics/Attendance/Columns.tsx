@@ -2,16 +2,17 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
-import clsx from "clsx";
+import AttendanceDetails from "./AttendanceDetails/AttendanceDetails";
+import { AttendanceItems } from "@/lib/Types";
 
 interface ActionsCellProps {
   row: {
-    original: any[];
+    original: AttendanceItems;
   };
 }
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
-  const payment = row.original;
+  const attendanceRow = row.original;
   const [modal, setModal] = useState(false);
 
   const handleOpenModal = () => {
@@ -30,40 +31,40 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
       >
         View
       </span>
-      {/* {modal && (
-        <TransactionDetails
-          title="Transaction Details"
-          item={payment}
+      {modal && (
+        <AttendanceDetails
+          title="Attendance Details"
+          item={attendanceRow}
           setModal={handleCloseModal}
         />
-      )} */}
+      )}
     </div>
   );
 };
 
-export const Columns: ColumnDef<any>[] = [
+export const Columns: ColumnDef<AttendanceItems>[] = [
   {
-    accessorKey: "name",
-    header: "User Name",
+    accessorKey: "employee_name",
+    header: "Name",
   },
   {
-    accessorKey: "days",
-    header: "Days at work",
+    accessorKey: "total_hours",
+    header: "Total Hours",
   },
   {
     accessorKey: "time",
     header: "Time at work",
   },
+  // {
+  //   accessorKey: "percentage",
+  //   header: "Time at work (%)",
+  // },
   {
-    accessorKey: "percentage",
-    header: "Time at work (%)",
-  },
-  {
-    accessorKey: "clockIn",
+    accessorKey: "clock_in",
     header: "Clock-In",
   },
   {
-    accessorKey: "clockOut",
+    accessorKey: "clock_out",
     header: "Clock-Out",
   },
   {

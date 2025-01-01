@@ -30,3 +30,15 @@ export interface WorkingHoursTypes {
   end_time: string;
   isWorking: boolean;
 }
+
+export interface AttendanceItems {
+  id: string;
+  employee: string;
+  date: string;
+  clock_in: string;
+  clock_out: string;
+  total_hours: string;
+  employee_name: string;
+  created_at: string;
+  modified_at: string;
+}
