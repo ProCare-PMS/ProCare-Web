@@ -27,10 +27,7 @@ export default function Login() {
   const loginMutation = useMutation({
     mutationFn: async (value: { formData: any }) => {
       try {
-        const res = await customAxios.post(
-          `${_baseUrl + endpoints.login}`,
-          value.formData
-        );
+        const res = await customAxios.post(endpoints.login, value.formData);
         return res.data;
       } catch (error) {
         console.error("API Error:", error);

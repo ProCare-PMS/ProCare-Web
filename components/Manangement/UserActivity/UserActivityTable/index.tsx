@@ -9,6 +9,9 @@ import { Columns } from "./Columns";
 import { Data } from "./Data";
 import ActivityLog from "../ActivityLog";
 import FilterDropdown from "../Filter/Filter";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
+import { useQuery } from "@tanstack/react-query";
 
 function UserActivityTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
@@ -28,6 +31,23 @@ function UserActivityTable() {
   const closeFilterDropdown = () => {
     setShowFilterDropdown(false);
   };
+
+  //get the sales data
+  const { data: getSalesData } = useQuery({
+    queryKey: ["getSalesData"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.sales).then((res) => res),
+    select: (foundData) =>
+      foundData?.data?.results?.map((data: any) => ({
+        amount: data?.total_base_price,
+        user: [
+          { userName: data?.employee?.username, email: data?.employee?.email },
+        ],
+        date: data?.created_at,
+        time: data?.created_at,
+        type: data?.payment_methods,
+      })),
+  });
 
   return (
     <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px]">
@@ -80,7 +100,11 @@ function UserActivityTable() {
       </div>
       <div>
         {toggleShow === 1 && (
-          <DataTable columns={Columns} data={Data} searchValue={searchValues} />
+          <DataTable
+            columns={Columns}
+            data={getSalesData || []}
+            searchValue={searchValues}
+          />
         )}
         {toggleShow === 2 && <ActivityLog />}
       </div>

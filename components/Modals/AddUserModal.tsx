@@ -85,7 +85,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     },
   });
 
-  console.log({ getAllRoles });
+  //console.log({ getAllRoles });
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -176,7 +176,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   const getUserLicense = JSON.parse(localStorage.getItem("user") || "{}")
     ?.pharmacy?.license_number;
 
-  console.log({ getUserLicense });
+  //console.log({ getUserLicense });
 
   const handleSubmit = async () => {
     const filteredworking_hours = formValues.working_hours

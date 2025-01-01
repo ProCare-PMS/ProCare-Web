@@ -12,7 +12,7 @@ export interface UserPerformanceTableProps {
 function UserPerfomanceTable({ searchValues }: UserPerformanceTableProps) {
   return (
     <div>
-      <DataTable columns={Columns} data={Data} searchValue={searchValues} />
+      <DataTable columns={Columns} data={[]} searchValue={searchValues} />
     </div>
   );
 }

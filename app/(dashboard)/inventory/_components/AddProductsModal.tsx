@@ -8,52 +8,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import SwalToaster from "@/components/SwalToaster/SwalToaster";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { AddProductSchema } from "@/lib/schema/schema";
 
-const formSchema = z.object({
-  name: z.string({
-    required_error: "Required",
-  }),
-  strength: z.string(),
-  unit: z.string({
-    required_error: "Required",
-  }),
-  quantity: z.number(),
-  expiry_date: z.string({
-    required_error: "Required",
-  }),
-  reorder_level: z.coerce.number({
-    required_error: "Required",
-  }),
-  cost_price: z.string({
-    required_error: "Required",
-  }),
-  markup_percentage: z.string({
-    required_error: "Required",
-  }),
-  selling_price: z.string({
-    required_error: "Required",
-  }),
-  category: z.string({
-    required_error: "Category is required",
-  }),
-  supplier: z.string({
-    required_error: "Supplier is required",
-  }),
-  brand: z.string({
-    //required_error: "Brand Name is required",
-  }),
-});
-
-type ProductSchema = z.infer<typeof formSchema>;
+type ProductSchema = z.infer<typeof AddProductSchema>;
 
 interface AddProductProps {
   title: string;
@@ -65,7 +22,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const form = useForm<ProductSchema>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(AddProductSchema),
     defaultValues: {
       name: "",
     },
@@ -103,7 +60,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
     //console.log({ data });
 
     // Validate input data using Zod
-    const result = formSchema.safeParse(data);
+    const result = AddProductSchema.safeParse(data);
 
     if (!result.success) {
       // Create an object to hold error messages

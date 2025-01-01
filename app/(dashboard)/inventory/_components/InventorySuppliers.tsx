@@ -52,7 +52,7 @@ const InventorySuppliers = () => {
               <div className="bg-white absolute top-12 shadow-md hover:shadow-lg left-0 z-20 rounded-[8px]">
                 <ul>
                   <li>
-                    {!!isModalOpen && (
+                    {isModalOpen && (
                       <AddProducts title="" setModal={handleCloseModal} />
                     )}
                   </li>
