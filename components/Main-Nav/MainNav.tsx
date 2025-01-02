@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import DropDown from "@/app/(dashboard)/_components/DropDown";
 import MainNavRoutes from "./MainNavRoutes";
@@ -10,10 +10,24 @@ import { CircleUser } from "lucide-react";
 import { Info } from "lucide-react";
 import Link from "next/link";
 import EndShiftModal from "../Modals/EndShiftModal";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 const MainNav = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [getUser, setGetUser] = useState<any>({});
+
+  //get personal info data
+  const { data: getPersonalData } = useQuery({
+    queryKey: ["personalInformation"],
+    queryFn: async () =>
+      await customAxios
+        .get(`${endpoints.user}${getUser?.id}/`)
+        .then((res) => res?.data),
+    enabled: !!getUser?.id,
+  });
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -22,6 +36,14 @@ const MainNav = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  // Set user from localStorage on client side
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      setGetUser(user);
+    }
+  }, []);
 
   return (
     <header className="fixed top-0 w-full z-20 left-0 bg-white">
@@ -35,7 +57,7 @@ const MainNav = () => {
               height={100}
               className="mt-[-0.8rem]"
               alt="RxPMS"
-            /> 
+            />
           </div>
 
           {/* Navigation Routes */}
@@ -51,9 +73,11 @@ const MainNav = () => {
               alt="Avatar Icon"
             />
             <div className="font-inter">
-              <h2 className="text-sm font-semibold sev">John Doe</h2>
+              <h2 className="text-sm font-semibold sev">
+                {getPersonalData?.first_name} {getPersonalData?.last_name}
+              </h2>
               <span className="text-sm font-medium text-[#858C95]">
-                24/05/2024
+                {new Date().toDateString()}
               </span>
             </div>
             <div className="relative">
