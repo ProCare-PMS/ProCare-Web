@@ -16,10 +16,17 @@ export const login =
         first_name: string;
         last_name: string;
         custom_pharmacy_id: string;
+        refreshToken: string;
       }>("/login", credentials);
 
-      const { token, id, first_name, last_name, custom_pharmacy_id } =
-        response.data;
+      const {
+        token,
+        id,
+        first_name,
+        last_name,
+        custom_pharmacy_id,
+        refreshToken,
+      } = response.data;
 
       // Create the user object
       const user: User = {
@@ -33,8 +40,9 @@ export const login =
       // Save token to localStorage for persistence
       localStorage.setItem("authToken", token);
 
-      dispatch(loginSuccess({ token, user }));
+      dispatch(loginSuccess({ token, refreshToken, user }));
     } catch (error: any) {
+      console.error("Login error:", error);
       let errorMessage = "An error occurred. Please try again.";
 
       if (error.response) {
@@ -59,10 +67,7 @@ export const login =
 
 // Logout action
 export const logoutAction = () => (dispatch: AppDispatch) => {
-  customAxios.post(endpoints.logout).finally(() => {
-    // Clear token from localStorage
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
-    dispatch(logout());
-  });
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("user");
+  dispatch(logout());
 };
