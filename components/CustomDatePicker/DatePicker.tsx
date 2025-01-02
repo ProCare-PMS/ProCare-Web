@@ -19,7 +19,7 @@ interface DatePickerProps {
   name: string;
   control: Control<any>;
   placeholder?: string;
-  type?: "single" | "multiple" | "range"; // Restrict valid values
+  type?: "single" | "multiple" | "range";
 }
 
 export function DatePicker({

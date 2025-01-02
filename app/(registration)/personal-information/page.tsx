@@ -245,7 +245,7 @@ const RegistrationPage = () => {
                   <Input
                     id="password2"
                     name="password2"
-                    type={showPassword ? "text" : "password"}
+                    type={showConfirmPassword ? "text" : "password"}
                     className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
                     placeholder="Confirm Password"
                   />
