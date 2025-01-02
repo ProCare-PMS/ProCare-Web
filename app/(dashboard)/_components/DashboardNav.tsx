@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -12,10 +12,24 @@ import {
   GanttChart,
 } from "lucide-react";
 import DropDown from "./DropDown";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 const DashboardNav = () => {
-  const [activeLink, setActiveLink] = React.useState<string>("Dashboard");
+  const [activeLink, setActiveLink] = useState<string>("Dashboard");
+  const [getUser, setGetUser] = useState<any>({});
   const pathname = usePathname();
+
+  //get personal info data
+  const { data: getPersonalData } = useQuery({
+    queryKey: ["personalInformation"],
+    queryFn: async () =>
+      await customAxios
+        .get(`${endpoints.user}${getUser?.id}/`)
+        .then((res) => res?.data),
+    enabled: !!getUser?.id,
+  });
 
   React.useEffect(() => {
     switch (pathname) {
@@ -50,6 +64,14 @@ const DashboardNav = () => {
     activeLink === linkName
       ? "flex gap-2 border-2 border-[#2648EA] rounded-[5px] px-5 justify-center mx-auto py-1 bg-white items-center text-sm font-semibold text-[#2648EA]"
       : "flex gap-2 items-center text-sm px-3 py-1 font-semibold text-[#858C95]";
+
+  // Set user from localStorage on client side
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      setGetUser(user);
+    }
+  }, []);
 
   return (
     <header className="fixed top-0 w-full z-20 left-0 bg-white">
@@ -138,9 +160,11 @@ const DashboardNav = () => {
               alt="Avatar Icon"
             />
             <div className="font-inter">
-              <h2 className="text-sm font-semibold sev">John Doe</h2>
+              <h2 className="text-sm font-semibold sev">
+                {getPersonalData?.first_name} lllll
+              </h2>
               <span className="text-sm font-medium text-[#858C95]">
-                24/05/2024
+                {new Date().toDateString()}
               </span>
             </div>
             <DropDown />
@@ -152,3 +176,4 @@ const DashboardNav = () => {
 };
 
 export default DashboardNav;
+//DeleteComponent

@@ -7,6 +7,8 @@ import { logoutAction } from "@/redux/authActions";
 import { AppDispatch } from "@/redux/store";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 interface EndShiftModalProps {
   setModal: () => void;
@@ -18,8 +20,13 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
 
   // Define logoutUser to dispatch the logout and handle redirection
   const logoutUser = async () => {
-    dispatch(logoutAction());
-    router.push("/login");
+    const getRefreshToken = localStorage.getItem("refreshToken") || "";
+    await customAxios
+      .post(
+        endpoints.logout,
+        !!getRefreshToken ? { refresh: getRefreshToken } : { refresh: "" }
+      )
+      .then((res) => res);
   };
 
   // Define mutation for the logout action
@@ -27,6 +34,8 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
     mutationKey: ["logout"],
     mutationFn: logoutUser,
     onSuccess: () => {
+      dispatch(logoutAction());
+      router.push("/login");
       toast.success("User logged out successfully");
     },
     onError: (error) => {
