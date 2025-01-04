@@ -101,14 +101,14 @@ const RegistrationPage = () => {
           if (data.status === 201) {
             const pharmacyId = data?.data?.id; // get the pharmacy id from the response data
             dispatch(setFacilityId(pharmacyId));
-            toast.success("Personal Information created");
+            toast.success("Pharmacy Information created");
             queryClient.invalidateQueries({
-              queryKey: ["personalInformation"],
+              queryKey: ["PharmacyInformation"],
             });
             router.push("/personal-information");
           } else if (data.status === 400) {
-            toast.error("Error creating personal information");
-            toast.error("Error creating personal information");
+            toast.error("Error creating pharmacy information");
+            toast.error("Error creating pharmacy information");
           } else {
             console.log("Registration failed:", data?.message);
             toast.error(data?.message);
