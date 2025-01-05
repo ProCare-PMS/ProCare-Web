@@ -69,7 +69,7 @@ const SuppliersTab = () => {
           </div>
           <ExpandableDataTable
             columns={suppliersTabColumns}
-            data={suppliersTabTable}
+            data={suppliersTabTable || []}
             searchValue={searchValues}
           />
         </div>

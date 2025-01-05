@@ -48,23 +48,83 @@ export function DashboardLowStockAlert({ title, data }: TableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-semibold text-sm font-inter text-[#242525]">
-                {invoice.invoice}
-              </TableCell>
-              <TableCell className="text-sm font-medium font-nunito_sans text-[#202224] nunito_sans">
-                <p className="rounded-3xl font-inter text-sm font-normal">
-                  <span className="rounded-3xl font-inter text-sm font-normal text-[#D34053] bg-[#D3405314] px-6 py-2">
-                    {invoice.piece}
-                  </span>
-                </p>
-              </TableCell>
-              <TableCell className="font-semibold text-sm font-nunito_sans text-[#202224]">
-                {invoice.lastRestock}
-              </TableCell>
-            </TableRow>
-          ))}
+          {data.length > 0 ? (
+            data.map((invoice) => (
+              <TableRow key={invoice.invoice}>
+                <TableCell className="font-semibold text-sm font-inter text-[#242525]">
+                  {invoice.invoice}
+                </TableCell>
+                <TableCell className="text-sm font-medium font-nunito_sans text-[#202224] nunito_sans">
+                  <p className="rounded-3xl font-inter text-sm font-normal">
+                    <span className="rounded-3xl font-inter text-sm font-normal text-[#D34053] bg-[#D3405314] px-6 py-2">
+                      {invoice.piece}
+                    </span>
+                  </p>
+                </TableCell>
+                <TableCell className="font-semibold text-sm font-nunito_sans text-[#202224]">
+                  {invoice.lastRestock}
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <>
+              <TableRow>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+                <TableCell className="text-center font-medium text-[#202224]">
+                  -
+                </TableCell>
+              </TableRow>
+            </>
+          )}
         </TableBody>
       </Table>
     </div>

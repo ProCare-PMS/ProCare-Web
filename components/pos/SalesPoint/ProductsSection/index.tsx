@@ -6,21 +6,33 @@ import OrderList from "./OrderList";
 import PaymentOptions from "./PaymentOptions";
 import { CircleUserRound } from "lucide-react";
 import CustomerList from "./CustomerList";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
+
 
 const productData: Product[] = [
-  { productName: "Product A", quantity: 10, price: "100" },
-  { productName: "Product B", quantity: 5, price: "50" },
-  { productName: "Product C", quantity: 20, price: "200" },
-  { productName: "Aspirin", quantity: 20, price: "200" },
-  { productName: "Penicillin", quantity: 20, price: "200" },
-  { productName: "Insulin", quantity: 20, price: "200" },
-  { productName: "Ibuprofen", quantity: 20, price: "200" },
-  { productName: "Tumeric", quantity: 20, price: "200" },
-  { productName: "Ginseng", quantity: 20, price: "200" },
-  { productName: "Product E", quantity: 20, price: "200" },
+  { name: "Product A", quantity: 10, selling_price: "100" },
+  { name: "Product B", quantity: 5, selling_price: "50" },
+  { name: "Product C", quantity: 20, selling_price: "200" },
+  { name: "Aspirin", quantity: 20, selling_price: "200" },
+  { name: "Penicillin", quantity: 20, selling_price: "200" },
+  { name: "Insulin", quantity: 20, selling_price: "200" },
+  { name: "Ibuprofen", quantity: 20, selling_price: "200" },
+  { name: "Tumeric", quantity: 20, selling_price: "200" },
+  { name: "Ginseng", quantity: 20, selling_price: "200" },
+  { name: "Product E", quantity: 20, selling_price: "200" },
 ];
 
 const ProductsSection = () => {
+  //fetching data for the sales table
+  const { data: inventoryProductsData } = useQuery({
+    queryKey: ["inventoryProducts"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.inventoryProduct).then((res) => res),
+    select: (findData) => findData?.data?.results,
+  });
+  
   const [searchValues, setSearchValues] = useState<string>("");
   const [data, setData] = useState(productData);
   const [orderList, setOrderList] = useState<Product[]>([]);
@@ -28,11 +40,22 @@ const ProductsSection = () => {
   const [isOrderListVisible, setIsOrderListVisible] = useState(false);
   const [showCustomers, setShowCustomer] = useState(false);
 
+  
+
+  console.log(inventoryProductsData)
+
+  useEffect(() => {
+    if (inventoryProductsData) {
+      setOrderList(inventoryProductsData);
+    }
+  }, [inventoryProductsData]);
+
+
   // Update quantity handler for both data and orderList
   const updateQuantity = (productName: string, delta: number) => {
     setData((prevData) =>
       prevData.map((product) =>
-        product.productName === productName
+        product.name === productName
           ? { ...product, quantity: product.quantity + delta }
           : product
       )
@@ -40,7 +63,7 @@ const ProductsSection = () => {
 
     setOrderList((prevOrderList) =>
       prevOrderList.map((product) =>
-        product.productName === productName
+        product.name === productName
           ? { ...product, quantity: product.quantity + delta }
           : product
       )
@@ -51,12 +74,12 @@ const ProductsSection = () => {
   const addToOrder = (product: Product) => {
     setOrderList((prevOrderList) => {
       const existingProduct = prevOrderList.find(
-        (item) => item.productName === product.productName
+        (item) => item.name === product.name
       );
       if (existingProduct) {
         // Updating quantity if the product exists
         const updatedOrderList = prevOrderList.map((item) =>
-          item.productName === product.productName
+          item.name === product.name
             ? { ...item, quantity: item.quantity }
             : item
         );
@@ -83,7 +106,7 @@ const ProductsSection = () => {
 
   useEffect(() => {
     const total = orderList.reduce(
-      (sum, product) => sum + product.quantity * parseFloat(product.price),
+      (sum, product) => sum + product.quantity * parseFloat(product.selling_price),
       0
     );
     setTotalPrice(total);
@@ -133,7 +156,7 @@ const ProductsSection = () => {
 
         <DataTable
           columns={posProductsColumns(updateQuantity, addToOrder)}
-          data={data}
+          data={inventoryProductsData || []}
           searchValue={searchValues}
         />
       </div>
