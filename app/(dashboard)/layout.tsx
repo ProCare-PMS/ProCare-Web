@@ -1,6 +1,5 @@
 import MainNav from "@/components/Main-Nav/MainNav";
-import DashboardNav from "./_components/DashboardNav";
-import { Open_Sans, Roboto_Mono, Inter, Nunito_Sans } from "next/font/google";
+import {  Inter  } from "next/font/google";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,7 +14,6 @@ export default function DashboardLayout({
   return (
     <div className={`${inter.variable}`}>
       <MainNav />
-      {/* <DashboardNav /> */}
       <main className=" pt-12 bg-[#F5F5F5] ">{children}</main>{" "}
       {/* bg-[#F5F5F5] */}
     </div>
