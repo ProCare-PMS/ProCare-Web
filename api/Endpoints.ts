@@ -12,6 +12,7 @@ export const endpoints = {
   inventoryExpiryReports: "/inventories/expiry-reports/",
   inventoryBranchSync: "/inventories/stock-transfers/",
   sales: "/sales/",
+  salesItems: "/sales/sale-items/",
   user: "/user/",
   verifyEmail: "/verify-email",
 };

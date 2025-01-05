@@ -159,7 +159,7 @@ export const productsTabTable = [
     brandName: "Brand Name",
     quantity: 13,
     expiryDate: "12/0/2019",
-    unitPrice: 50,
+    unitPrice: "50",
     status: "Available",
     productDetails: [
       {

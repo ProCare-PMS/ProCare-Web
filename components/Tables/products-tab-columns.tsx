@@ -63,9 +63,18 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
     accessorKey: "quantity",
     header: "Quantity",
   },
-  {
-    accessorKey: "expiry_date",
+  {accessorKey: "expiry_date",
     header: "Expiry Date",
+    cell: ({ row }: { row: { getValue: (key: string) => string } }) => {
+      const rawDate: string = row.getValue("expiry_date"); // Fetch the raw date string
+      const formattedDate: string = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(new Date(rawDate)); // Format the date
+  
+      return <div>{formattedDate}</div>;
+    },
   },
   {
     accessorKey: "unitPrice",

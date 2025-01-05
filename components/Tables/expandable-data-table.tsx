@@ -23,17 +23,20 @@ import {
 } from "@/components/ui/table";
 import clsx from "clsx";
 import { Fragment } from "react";
+import ProductEmptyState from "../Inventory/ProductsTab/ProductsEmptyState";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   searchValue?: string;
+  emptyState: string
 }
 
 export function ExpandableDataTable<TData, TValue>({
   columns,
   data,
   searchValue = "",
+  emptyState
 }: DataTableProps<TData, TValue>) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -138,8 +141,8 @@ export function ExpandableDataTable<TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns?.length} className="mt-24 h-[400px]">
-                No results.
+              <TableCell colSpan={columns?.length} className="mt-24 mx-auto py-12">
+               {emptyState === "products" ? <ProductEmptyState /> : "No Results" }
               </TableCell>
             </TableRow>
           )}

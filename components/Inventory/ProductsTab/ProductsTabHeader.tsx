@@ -40,6 +40,7 @@ const ProductsTabHeader: React.FC = () => {
             columns={productsTabColumns}
             data={inventoryProductsData || []}
             searchValue={searchValues}
+            emptyState="products"
           />
         );
       case "Stocks":
@@ -70,9 +71,9 @@ const ProductsTabHeader: React.FC = () => {
   return (
     <div>
       {/* Header Section */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         {/* Tabs Section */}
-        <div className="flex items-center bg-[#F5F5F5] gap-6 p-1 rounded-[8px] mb-8">
+        <div className="flex items-center bg-[#F5F5F5] gap-6 p-1 rounded-[8px] ">
           {["Products", "Stocks"].map((tab) => (
             <button
               key={tab}

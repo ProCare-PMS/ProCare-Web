@@ -59,14 +59,14 @@ const OrderList = ({
           </TableHeader>
           <TableBody>
             {orderList.map((product) => (
-              <TableRow key={product.productName} className="hover:bg-gray-100">
+              <TableRow key={product.name} className="hover:bg-gray-100">
                 <TableCell className="px-4 py-4 border-b">
-                  {product.productName}
+                  {product.name}
                 </TableCell>
                 <TableCell className="px-4 py-4 border-b">
                   <div className="flex items-center space-x-2">
                     <button
-                      onClick={() => updateQuantity(product.productName, -1)}
+                      onClick={() => updateQuantity(product.name, -1)}
                       className="text-red-600 rounded-full border border-red-600 p-1"
                       disabled={product.quantity <= 1}
                     >
@@ -74,7 +74,7 @@ const OrderList = ({
                     </button>
                     <span className="w-4 text-center">{product.quantity}</span>
                     <button
-                      onClick={() => updateQuantity(product.productName, 1)}
+                      onClick={() => updateQuantity(product.name, 1)}
                       className="text-green-600 rounded-full border border-green-600 p-1"
                     >
                       <FaPlus />
@@ -82,7 +82,7 @@ const OrderList = ({
                   </div>
                 </TableCell>
                 <TableCell className="px-4 py-4 border-b">
-                  {product.price}
+                  {product.selling_price}
                 </TableCell>
               </TableRow>
             ))}
