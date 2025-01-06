@@ -89,12 +89,12 @@ const PersonalInfo = () => {
   }, [reset, getPersonalData]);
 
   return (
-    <form className="flex flex-col gap-6 " onSubmit={handleSubmit(onSubmit)}>
+    <form className="bg-white shadow-lg rounded-xl px-8 2xl:px-12 pt-12 pb-20 flex flex-col gap-10 " onSubmit={handleSubmit(onSubmit)}>
       <div className="flex items-start w-full">
-        <div className="flex flex-col items-center gap-2">
-          <label htmlFor="profileimage">Profile Picture</label>
+        <div className="flex flex-col items-center gap-3">
+          <label className="text-start w-full max-2xl:text-sm font-medium" htmlFor="profileimage">Profile Picture</label>
           {/* Profile Picture Section */}
-          <div className="relative w-36 h-36">
+          <div className="relative size-40 ">
             <Image
               id="profileimage"
               width={150}
@@ -105,10 +105,10 @@ const PersonalInfo = () => {
             />
             <label
               htmlFor="profilePic"
-              className="absolute bottom-0 -right-5 cursor-pointer"
+              className="absolute bottom-0 -right-2.5 cursor-pointer"
             >
               <div className="bg-white rounded-full p-2 border border-[#2648EA]">
-                <BorderColorRoundedIcon className="text-[#2648EA]" />
+                <BorderColorRoundedIcon className=" outline-current text-[#2648EA]" />
               </div>
             </label>
             <input
@@ -123,17 +123,17 @@ const PersonalInfo = () => {
       </div>
 
       {/* Form Fields */}
-      <div className="grid grid-cols-3 gap-4 w-full max-w-4xl">
+      <div className="grid grid-cols-3 justify-between gap-8 2xl:gap-x-12 gap-y-7 w-full">
         {/* First Name */}
         <div className="flex flex-col">
-          <label htmlFor="first_name" className="mb-1 font-semibold">
+          <label htmlFor="first_name" className="mb-1 font-medium max-2xl:text-sm">
             First Name
           </label>
           <input
             type="text"
             id="first_name"
             {...register("first_name")}
-            className={`border border-gray-300 rounded px-2 py-1 ${
+            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.first_name ? "border-red-500" : ""
             }`}
             placeholder="Enter first name"
@@ -147,14 +147,14 @@ const PersonalInfo = () => {
 
         {/* Last Name */}
         <div className="flex flex-col">
-          <label htmlFor="last_name" className="mb-1 font-semibold">
+          <label htmlFor="last_name" className="mb-1 font-medium max-2xl:text-sm">
             Last Name
           </label>
           <input
             type="text"
             id="last_name"
             {...register("last_name")}
-            className={`border border-gray-300 rounded px-4 py-1 ${
+            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.last_name ? "border-red-500" : ""
             }`}
             placeholder="Enter last name"
@@ -168,28 +168,28 @@ const PersonalInfo = () => {
 
         {/* Other Names */}
         <div className="flex flex-col">
-          <label htmlFor="other_name" className="mb-1 font-semibold">
+          <label htmlFor="other_name" className="mb-1 font-medium max-2xl:text-sm">
             Other Name(s)
           </label>
           <input
             type="text"
             id="other_name"
             {...register("other_name")}
-            className="border border-gray-300 rounded px-4 py-1"
+            className="bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3"
             placeholder="Enter other name(s)"
           />
         </div>
 
         {/* Email */}
         <div className="flex flex-col">
-          <label htmlFor="email" className="mb-1 font-semibold">
+          <label htmlFor="email" className="mb-1 font-medium max-2xl:text-sm">
             Email Address
           </label>
           <input
             type="email"
             id="email"
             {...register("email")}
-            className={`border border-gray-300 rounded px-4 py-1 ${
+            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.email ? "border-red-500" : ""
             }`}
             placeholder="Enter email address"
@@ -201,14 +201,14 @@ const PersonalInfo = () => {
 
         {/* Phone */}
         <div className="flex flex-col">
-          <label htmlFor="phone_number" className="mb-1 font-semibold">
+          <label htmlFor="phone_number" className="mb-1 font-medium max-2xl:text-sm">
             Phone Number
           </label>
           <input
             type="tel"
             id="phone_number"
             {...register("phone_number")}
-            className={`border border-gray-300 rounded px-4 py-1 ${
+            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.phone_number ? "border-red-500" : ""
             }`}
             placeholder="Enter Phone Number"
@@ -222,17 +222,17 @@ const PersonalInfo = () => {
 
         {/* PIN */}
         <div className="flex flex-col">
-          <label htmlFor="pin" className="mb-1 font-semibold">
+          <label htmlFor="pin" className="mb-1 font-medium max-2xl:text-sm">
             PIN
           </label>
           <input
             type="text"
             id="pin"
             {...register("pin")}
-            className={`border border-gray-300 rounded px-4 py-1 ${
+            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.pin ? "border-red-500" : ""
             }`}
-            placeholder="Enter Pin"
+            placeholder="Enter pin"
           />
           {errors.pin && (
             <p className="text-red-500 text-sm mt-1">{errors.pin.message}</p>
@@ -241,14 +241,14 @@ const PersonalInfo = () => {
 
         {/* License Number */}
         <div className="col-span-1 flex flex-col">
-          <label htmlFor="license_number" className="mb-1 font-semibold">
+          <label htmlFor="license_number" className="mb-1 font-medium max-2xl:text-sm">
             License Number
           </label>
           <input
             type="text"
             id="license_number"
             {...register("license_number")}
-            className={`border border-gray-300 rounded px-4 py-1 ${
+            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.license_number ? "border-red-500" : ""
             }`}
             placeholder="Enter License Number"
@@ -261,11 +261,11 @@ const PersonalInfo = () => {
           )}
         </div>
 
-        <div className="col-span-3 flex justify-end w-full">
+        <div className="col-span-3 mt-12 flex justify-end w-full">
           {/* Submit Button */}
           <button
             type="submit"
-            className="px-6 py-2 bg-[#2648EA] text-white shadow-md hover:bg-blue-600 w-56 rounded-[0.3rem]"
+            className="px-6 py-2 bg-[#2648EA] text-white shadow-md hover:bg-blue-600 w-48 rounded-[0.3rem]"
           >
             Edit
           </button>
