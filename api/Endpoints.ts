@@ -1,4 +1,5 @@
 export const endpoints = {
+  dashboard: "/inventories/dashboard/",
   analytics: "/analytics/",
   inventories: "/inventories/",
   managements: "/managements/",
