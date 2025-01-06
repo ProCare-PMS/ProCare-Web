@@ -18,17 +18,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import { useState } from "react";
 import CustomSelect from "@/components/CustomSelect/CustomSelect";
+import { DatePicker } from "@/components/CustomDatePicker/DatePicker";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { dateSchema } from "@/lib/schema/schema";
 
 export const description = "A linear area chart";
 
@@ -109,6 +105,9 @@ const chartConfig = {
 
 export function StockLevelChart() {
   const [timeRange, setTimeRange] = useState("90d");
+  const { control, setValue } = useForm<FormData>({
+    resolver: zodResolver(dateSchema),
+  });
   return (
     <div className="w-full bg-white rounded-xl">
       <Card className="rounded-xl">
@@ -129,11 +128,12 @@ export function StockLevelChart() {
               className="w-[15rem]"
             />
 
-            <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
-              <span>
-                <CalendarMonthIcon />
-              </span>
-              <span>October</span>
+            <div className="w-[15rem]">
+              <DatePicker
+                name="date"
+                placeholder="Select Date"
+                control={control}
+              />
             </div>
 
             <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">

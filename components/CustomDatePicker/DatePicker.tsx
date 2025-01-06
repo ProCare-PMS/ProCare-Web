@@ -20,6 +20,7 @@ interface DatePickerProps {
   control: Control<any>;
   placeholder?: string;
   type?: "single" | "multiple" | "range";
+  className?: string;
 }
 
 export function DatePicker({
@@ -27,6 +28,7 @@ export function DatePicker({
   control,
   placeholder = "Pick a date",
   type = "single",
+  className,
 }: DatePickerProps) {
   const {
     field: { value, onChange },
@@ -95,6 +97,7 @@ export function DatePicker({
           selected={value ? new Date(value) : undefined}
           onSelect={handleDateSelect}
           initialFocus
+          className={className}
         />
       </PopoverContent>
       {error && <p className="text-red-500 text-sm mt-1">{error.message}</p>}
