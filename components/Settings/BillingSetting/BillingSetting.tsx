@@ -17,7 +17,7 @@ const BillingSetting = () => {
       {/* Grid Container for Select and Package Info */}
       <section className="w-full rounded py-4 px-5 flex items-center gap-6 border bg-[#FFFAF2] border-[#D78100]">
         <Image className="" src={CashIcon} alt="Cash Upgrade" width={24} height={24} />
-        <div className="flex 2xl:text-lg items-center gap-2">
+        <div className="flex items-center gap-2">
           <p className="font-medium">Gain access to more features to increase your productivity of RX PMS.</p>
           <a className="font-semibold underline" href="">Upgrade your subscription</a>
         </div>
@@ -54,10 +54,10 @@ const BillingSetting = () => {
       <section className="w-full border rounded-2xl space-y-3 px-4 py-7">
         <p className="2xl:text-lg font-semibold">Billing Information</p>
         <div className="bg-[#F8F9FC] rounded-xl">
-        <table className="w-full">
+        <table className="w-full table-auto">
           <thead>
             <tr className="text-sm">
-              <th className="text-left p-3">Card Number</th>
+              <th className="text-left p-3 max-w-[200px]">Card Number</th>
               <th className="text-left p-3">Name On Card</th>
               <th className="text-left p-3">Expiry Date</th>
               <th className="text-left p-3">Billing Address</th>
@@ -66,15 +66,15 @@ const BillingSetting = () => {
           </thead>
           <tbody>
             <tr className="bg-white">
-              <td className="py-1.5 px-3 max-2xl:text-sm  mt-3 flex bg-gray-100 rounded items-center gap-2">
+              <td className="ml-2 py-1.5 px-3 max-2xl:text-sm max-w-[250px] 2xl:max-w-[300px]  mt-3 flex bg-gray-100 rounded items-center justify-between gap-5">
                 <span className="text-xs font-medium bg-white px-2 py-1 rounded">VISA</span>
                 <span>**** **** **** 4761</span>
               </td>
               <td className="py-1.5 px-3 max-2xl:text-sm mt-3">Samuel Fifi Adjei</td>
               <td className="py-1.5 px-3 max-2xl:text-sm mt-3">09/26</td>
               <td className="py-1.5 px-3 max-2xl:text-sm mt-3">Accra Central, Ghana</td>
-              <td className="py-1.5 px-3 max-2xl:text-sm mt-3">
-                <button className="flex items-center gap-2 text-[#2648EA]">
+              <td className="py-1.5 px-3 max-2xl:text-sm mt-3 mr-2">
+                <button className="w-full flex items-center justify-end gap-2 text-[#2648EA]">
                   <PencilLine className="w-4 h-4" />
                   <span className="text-sm font-semibold underline underline-offset-4">Edit payment details</span>
                 </button>
