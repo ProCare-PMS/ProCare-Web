@@ -81,11 +81,14 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
       const res = await customAxios
         .get(endpoints.managements + "employee-roles/")
         .then((res) => res?.data?.results);
-      return res;
+      return res?.map((item: any) => ({
+        label: item.role_name,
+        value: item.id,
+      }));
     },
   });
 
-  //console.log({ getAllRoles });
+  console.log({ getAllRoles });
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -320,9 +323,9 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                   <CustomSelect
                     idField="role"
                     nameField="role"
-                    optionData={optionDataLabelValue}
-                    value={optionDataLabelValue.filter((option) =>
-                      formValues.role.includes(option?.value)
+                    optionData={getAllRoles}
+                    value={getAllRoles?.filter((option: any) =>
+                      formValues.role?.includes(option?.value)
                     )}
                     onChange={(selected) =>
                       handleChange("role", selected?.value)

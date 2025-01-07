@@ -133,6 +133,10 @@ const AddProductSchema = z.object({
   brand: z.string(),
 });
 
+const dateSchema = z.object({
+  date: z.string(),
+});
+
 export {
   userRegistrationSchema,
   AddUserSchema,
@@ -142,4 +146,5 @@ export {
   ProfileSchema,
   CompanySchema,
   AddProductSchema,
+  dateSchema,
 };

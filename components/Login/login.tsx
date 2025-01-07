@@ -73,7 +73,6 @@ export default function Login() {
       { formData: data },
       {
         onSuccess: (responseData) => {
-          console.log({ responseData });
           const token = responseData?.access;
           const user = responseData?.user;
           const refreshToken = responseData?.refresh;
