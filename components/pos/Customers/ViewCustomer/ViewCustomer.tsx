@@ -1,9 +1,43 @@
-import React from 'react'
+import React from "react";
+import CustomerDetails from "./CustomerDetails";
+import ViewCustomerTabs from "./ViewCustomerTabs";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
-const ViewCustomer = () => {
+type ViewCustomerProps = {
+  setModal: () => void;
+};
+
+
+
+const ViewCustomer = ({ setModal }: ViewCustomerProps) => {
   return (
-    <div>ViewCustomer</div>
-  )
-}
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-gray-100 rounded-2xl shadow-lg w-[90%] p-6 relative h-full">
+        <div className="flex justify-end">
+          {/* Closing the modal */}
+          <button
+            className="text-gray-500 hover:text-gray-800"
+            onClick={setModal}
+          >
+            <CloseOutlinedIcon />
+          </button>
+        </div>
+        <div className="flex items-center justify-between gap-4 h-[88vh]">
+          {/* Customer Details*/}
+          <div className="w-[30%]  h-full">
+            {/* Used -mt-3 because of the "minHeight: 75vh" in the View CustomerTabs to align the horizontally */}
+            <CustomerDetails />
+          </div>
 
-export default ViewCustomer
+          {/* Details */}
+          <div className="bg-white p-6 w-[70%] h-full overflow-auto">
+            {/* Contains the tabs: Transaction History, HealthInfo and Medical History */}
+            <ViewCustomerTabs />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ViewCustomer;

@@ -3,10 +3,9 @@ import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import Link from "next/link";
-import SalesPoint from "../SalesPoint";
-import Customers from "../Customers";
-import Returns from "../Returns";
+import TransactionHistory from "../TransactionHistory/TransactionHistory";
+import HealthInfo from "../HealthInfo/HealthInfo";
+import MedicalHistory from "../MedicalHistory/MedicalHistory";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -37,7 +36,7 @@ function a11yProps(index: number) {
   };
 }
 
-export default function PosMainPage() {
+export default function ViewCustomerTabs() {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -45,38 +44,35 @@ export default function PosMainPage() {
   };
 
   return (
-    <Box sx={{ width: "100%", marginInline: "auto", marginTop: "-20px" }}>
+    <Box sx={{ width: "100%", marginInline: "auto" }}>
       <Box
-        sx={{ backgroundColor: "#F5F5F5", paddingBlock: "20px", width: "100%", textDecoration: "lowercase", }}
+        sx={{
+          width: "100%",
+          textDecoration: "lowercase",
+        }}
       >
         <Tabs
           value={value}
           onChange={handleChange}
           centered
-          aria-label="basic tabs example" 
-        > 
+          aria-label="basic tabs example"
+        >
           <Tab
             className="font-inter text-sm font-semibold text-[#858C95] "
-            label="Sales Point"
+            label="Transaction History"
             {...a11yProps(0)}
             sx={{ textTransform: "none" }}
           />
-          
+
           <Tab
             className="font-inter text-sm font-semibold text-[#858C95] "
-            label="Customers"
+            label="Health Info"
             {...a11yProps(1)}
             sx={{ textTransform: "none" }}
           />
           <Tab
             className="font-inter text-sm font-semibold text-[#858C95] "
-            label="Returns"
-            {...a11yProps(2)}
-            sx={{ textTransform: "none" }}
-          />
-           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] "
-            label="Held Transactions"
+            label="Medical History"
             {...a11yProps(2)}
             sx={{ textTransform: "none" }}
           />
@@ -85,18 +81,18 @@ export default function PosMainPage() {
       <Box
         sx={{
           width: "100%",
-          minHeight: "100vh",
-          marginInline: "auto",
+          height: "calc(88vh - 120px)",
+          overflow: "auto",
         }}
-      > 
+      >
         <CustomTabPanel value={value} index={0}>
-          <SalesPoint />
+          <TransactionHistory />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <Customers />
+          <HealthInfo />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <Returns />
+          <MedicalHistory />
         </CustomTabPanel>
       </Box>
     </Box>
