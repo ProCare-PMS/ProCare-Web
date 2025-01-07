@@ -19,7 +19,8 @@ interface DatePickerProps {
   name: string;
   control: Control<any>;
   placeholder?: string;
-  type?: "single" | "multiple" | "range"; // Restrict valid values
+  type?: "single" | "multiple" | "range";
+  className?: string;
 }
 
 export function DatePicker({
@@ -27,6 +28,7 @@ export function DatePicker({
   control,
   placeholder = "Pick a date",
   type = "single",
+  className,
 }: DatePickerProps) {
   const {
     field: { value, onChange },
@@ -81,20 +83,21 @@ export function DatePicker({
         <Button
           variant={"outline"}
           className={cn(
-            "w-[280px] justify-between text-left font-normal",
+            "w-full justify-between text-left font-normal rounded-[0.2rem] text-sm border-gray-400",
             !value && "text-muted-foreground"
           )}
         >
           {value ? format(new Date(value), "PPP") : <span>{placeholder}</span>}
-          <CalendarIcon className="flex justify-start h-4 w-4" />
+          <CalendarIcon className="flex justify-start h-4 w-4 ms-3" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0 bg-white">
         <Calendar
-          mode={type}
+          mode="single"
           selected={value ? new Date(value) : undefined}
           onSelect={handleDateSelect}
           initialFocus
+          className={className}
         />
       </PopoverContent>
       {error && <p className="text-red-500 text-sm mt-1">{error.message}</p>}

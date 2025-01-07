@@ -43,7 +43,7 @@ const LoadingWrapper = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div>
-      <Toaster richColors position="top-right" duration={8000} />
+      <Toaster richColors position="top-right" duration={5000} />
       {isLoading && <Loading />}
       {children}
     </div>
