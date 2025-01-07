@@ -50,7 +50,7 @@ export default function InventoryMainTabs() {
   return (
     <Box sx={{ width: "100%", marginInline: "auto", marginTop: "-20px" }}>
       <Box
-        sx={{ backgroundColor: "#F5F5F5", paddingBlock: "20px", width: "100%" }}
+        sx={{ backgroundColor: "#F5F5F5", paddingBlock: "20px", width: "100%",  textDecoration: "lowercase", }}
       >
         <Tabs
           value={value}
@@ -59,34 +59,40 @@ export default function InventoryMainTabs() {
           aria-label="basic tabs example"
         >
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
+            className="font-inter text-sm font-semibold text-[#858C95] "
             label="Products"
             {...a11yProps(0)}
+            sx={{ textTransform: "none" }}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
+            className="font-inter text-sm font-semibold text-[#858C95] "
             label="Categories"
             {...a11yProps(1)}
+            sx={{ textTransform: "none" }}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
+            className="font-inter text-sm font-semibold text-[#858C95] "
             label="Suppliers"
             {...a11yProps(2)}
+            sx={{ textTransform: "none" }}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
+            className="font-inter text-sm font-semibold text-[#858C95] "
             label="Purchases"
             {...a11yProps(3)}
+            sx={{ textTransform: "none" }}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
+            className="font-inter text-sm font-semibold text-[#858C95] "
             label="Expiry Report"
             {...a11yProps(4)}
+            sx={{ textTransform: "none" }}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
+            className="font-inter text-sm font-semibold text-[#858C95] "
             label="BranchSync"
             {...a11yProps(5)}
+            sx={{ textTransform: "none" }}
           />
         </Tabs>
       </Box>

@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { BiDotsVertical } from "react-icons/bi";
 import {
   DropdownMenu,
@@ -9,9 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react"
 import { CustomerPosTable } from "./Data";
+import ViewCustomer from "../ViewCustomer/ViewCustomer";
 
 interface CustomerCellProps {
   row: {
@@ -21,17 +20,32 @@ interface CustomerCellProps {
 
 const CustomerActionCell = ({ row }: CustomerCellProps) => {
   const [showAction, setShowAction] = useState(false);
+  const [modal, setModal] = useState(false);
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <BiDotsVertical />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-white w-[150px] mr-12">
-        <DropdownMenuItem>View Details</DropdownMenuItem>
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Delete</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <BiDotsVertical />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="bg-white w-[150px] rounded-[6px] mr-12">
+          <DropdownMenuItem
+            onClick={() => setModal(true)}
+            className="cursor-pointer font-semibold hover:!text-gray-700 p-2"
+          >
+            View Details
+          </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer p-2 font-semibold hover:!text-gray-700">
+            Total Transactions
+          </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer p-2 font-semibold hover:!text-gray-700">
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {modal && <ViewCustomer setModal={() => setModal(false)} />}
+    </>
   );
 };
 

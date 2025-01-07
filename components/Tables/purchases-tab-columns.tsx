@@ -16,7 +16,7 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
   const [modal, setModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<PurchaseTabTable | null>(
     null
-  );
+  ); 
 
   return (
     <div>
@@ -34,7 +34,7 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
           item={selectedItem}
           setModal={() => setSelectedItem(null)}
         />
-      )}
+      )} 
     </div>
   );
 };

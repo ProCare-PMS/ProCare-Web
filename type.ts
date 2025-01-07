@@ -1,7 +1,7 @@
 export const dashboardTransactions = [
   {
     transactionId: "585427",
-    date: "12/09/2019",
+    date: "12/09/2019", 
     time: "12:53PM",
     itemsSold: 423,
     amount: "34,333",

@@ -24,43 +24,43 @@ function CustomersTable() {
 
   return (
     <div>
-      {showCustomer ? (
-        <div>
-          <AddCustomerModal />
-        </div>
-      ) : (
-        <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px] mt-8  ">
-          <div className="flex justify-between items-center my-3">
-            <div className="flex gap-4 self-end">
-              <div className="bg-[#0A77FF] my-auto cursor-pointer py-2 px-1">
-                <Plus
-                  onClick={() => setShowCustomer(true)}
-                  color="white"
-                  size={25}
-                />
-              </div>
-              <SearchFieldInput
-                value={searchValues}
-                onChange={handleSearchValueChange}
+      <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px] mt-8">
+        <div className="flex justify-end items-center my-3">
+          <div className="flex gap-4 self-end">
+            <div className="bg-[#0A77FF] my-auto cursor-pointer py-2 px-1">
+              <Plus
+                onClick={() => setShowCustomer(true)}
+                color="white"
+                size={25}
               />
-
-              <span className="iconHolder w-10 h-10">
-                <Image
-                  src="/assets/images/filterFrame.svg"
-                  alt="filter icon"
-                  width={100}
-                  height={100}
-                />
-              </span>
             </div>
-          </div>
+            <SearchFieldInput
+              value={searchValues}
+              onChange={handleSearchValueChange}
+            />
 
-          <DataTable
-            columns={customersTabColumns}
-            data={customersData}
-            searchValue={searchValues}
-          />
+            <span className="iconHolder w-10 h-10">
+              <Image
+                src="/assets/images/filterFrame.svg"
+                alt="filter icon"
+                width={100}
+                height={100}
+              />
+            </span>
+          </div>
         </div>
+
+        
+        {/* Check the columns for the dropdown actions for the table */}
+        <DataTable
+          columns={customersTabColumns}
+          data={customersData}
+          searchValue={searchValues}
+        />
+      </div>
+
+      {showCustomer && (
+        <AddCustomerModal closeModal={() => setShowCustomer(false)} />
       )}
     </div>
   );
