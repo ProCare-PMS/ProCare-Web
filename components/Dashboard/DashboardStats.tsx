@@ -1,65 +1,13 @@
 "use client";
 import React from "react";
-import Image from "next/image";
-import Link from "next/link";
+import { DashboardStatsResponse } from "@/Types";
+import DashboardStatsCard from "./DashboardStatsCard";
 
-const data = [
-  {
-    title: "Daily Sales",
-    amount: "₵390", // Replace with actual data
-    itemAmount: "",
-    growth: {
-      mainLabel: "Personal",
-      label: "monthly growth",
-      color: "#0A77FF",
-      background: "#ECF4FC",
-    },
-    icon: "/icons/Line.png",
-    alt: "Line chart for daily sales",
-    links: "inventory/daily-sales",
-  },
-  {
-    title: "Items Sold",
-    itemAmount: "680 Items", // Replace with actual data
-    growth: {
-      mainLabel: "Decline",
-      color: "#C8322B",
-      background: "#FFEFEE",
-    },
-    icon: "/icons/ItemsSold.png",
-    alt: "Line chart for daily sales",
-    links: "inventory/item-sold",
-  },
-  {
-    title: "Profit Made",
-    amount: "₵390",
-    growth: {
-      mainLabel: "Rise",
-      label: "in profit",
-      color: "#2AA63C",
-      background: "#F3FFF6",
-    },
-    icon: "/icons/Graphics.png",
-    alt: "Line chart for daily sales",
-    links: "inventory/profit-made",
-  },
-  {
-    title: "Items in Stock",
-    itemAmount: "200",
-    growth: {
-      mainLabel: "200",
-      label: "monthly restock",
-      color: "#0A77FF",
-      background: "#ECF4FC",
-    },
-    icon: "/icons/Graphics.png",
-    alt: "Line chart for daily sales",
-    links: "inventory/items-in-stock",
-  },
-  // Add objects for 'Profit Made' and 'Items In Stock' with similar structure
-];
+interface DashboardStatsProps {
+  dashboardData: DashboardStatsResponse;
+}
 
-const DashboardStats = () => {
+const DashboardStats = ({ dashboardData }: DashboardStatsProps) => {
   const [showDetails, setShowDetails] = React.useState<number | null>(null);
 
   const handleShowDetails = (index: number) => {
@@ -67,9 +15,83 @@ const DashboardStats = () => {
 
     setShowDetails((prevIndex) => (prevIndex === index ? null : index));
   };
+  console.log(dashboardData);
+
+  const stats = [
+    {
+      title: "Daily Sales",
+      value:
+        dashboardData?.daily_sales === "0.00"
+          ? "₵ -"
+          : `₵${dashboardData?.daily_sales}`,
+      subtitle: "monthly growth",
+      imageSrc:
+        dashboardData?.daily_sales === "0.00"
+          ? "/icons/dailysalesline.png"
+          : "/icons/ItemsSold.png",
+      link: "inventory/daily-sales",
+      badgeText: dashboardData?.daily_items_sold === 0 ? "-" : "Personal",
+      badgeColor: "bg-[#ECF4FC] text-[#0A77FF]",
+    },
+    {
+      title: "Items Sold",
+      value:
+        dashboardData?.daily_items_sold === 0
+          ? "- items"
+          : `${dashboardData?.daily_items_sold} items`,
+      subtitle: "",
+      imageSrc:
+        dashboardData?.daily_items_sold === 0
+          ? "/icons/itemssoldline.png"
+          : "/icons/Line.png",
+      link: "inventory/item-sold",
+      badgeText: dashboardData?.daily_sales === "0.00" ? "-" : "Decline",
+      badgeColor: "bg-[#FFEFEE] text-[#C8322B]",
+    },
+    {
+      title: "Profit Made",
+      value:
+        dashboardData?.daily_profit === "0.00"
+          ? "₵ -"
+          : `₵${dashboardData?.daily_profit}`,
+      subtitle: "in profit",
+      imageSrc:
+        dashboardData?.daily_profit === "0.00"
+          ? "/icons/profitmadeline.png"
+          : "/icons/Graphics.png",
+      link: "inventory/profit-made",
+      badgeText: dashboardData?.daily_profit === "0.00" ? "-" : "Rise",
+      badgeColor: "bg-[#F3FFF6] text-[#2AA63C]",
+    },
+    {
+      title: "Items In Stock",
+      value:
+        dashboardData?.items_in_stock === 0
+          ? "-"
+          : `${dashboardData?.items_in_stock}`,
+      subtitle: "monthly restock",
+      imageSrc:
+        dashboardData?.items_in_stock === 0
+          ? "/icons/dailysalesline.png"
+          : "/icons/ItemsSold.png",
+      link: "inventory/items-in-stock",
+      badgeText: dashboardData?.items_in_stock === 0 ? "-" : "+20",
+      badgeColor: "bg-[#ECF4FC] text-[#0A77FF]",
+    },
+  ];
 
   return (
     <div className="flex flex-col md:flex-row items-center font-inter justify-between gap-3  py-2">
+      {stats.map((stat, index) => (
+        <DashboardStatsCard
+          key={index}
+          {...stat}
+          buttonIndex={index}
+          showDetails={showDetails}
+          onToggleDetails={handleShowDetails}
+        />
+      ))}
+      {/* 
       {data.map((item, index) => (
         <div
           key={index}
@@ -119,6 +141,7 @@ const DashboardStats = () => {
           </div>
         </div>
       ))}
+        */}
     </div>
   );
 };

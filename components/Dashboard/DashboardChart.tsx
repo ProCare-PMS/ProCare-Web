@@ -18,11 +18,18 @@ import {
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { RiCheckboxBlankFill } from "react-icons/ri";
+import { DashboardStatsResponse } from "@/Types";
 
 const chartData = [
   { products: "Vitamins", totalCost: 175, fill: "#0A77FF" },
   { products: "Travel", totalCost: 254, fill: "#2648EA" },
   { products: "Essentials", totalCost: 884, fill: "#D3E7FF" },
+];
+
+const emptyData = [
+  { products: "-", totalCost: 1, fill: "#0A77FF" },
+  { products: "-", totalCost: 1, fill: "#2648EA" },
+  { products: "-", totalCost: 1, fill: "#D3E7FF" },
 ];
 
 const chartConfig = {
@@ -40,10 +47,36 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function DashbaordChart() {
+const emptyConfig = {
+  "-": {
+    label: "-",
+    color: "#0A77FF",
+  },
+  "--": {
+    label: "--",
+    color: "#2648EA",
+  },
+  "---": {
+    label: "---",
+    color: "#D3E7FF",
+  },
+} satisfies ChartConfig;
+
+interface DashbaordChartProps {
+  data: DashboardStatsResponse;
+}
+
+export function DashbaordChart({ data }: DashbaordChartProps) {
+  const chartInfo =
+    data?.top_categories.length === 0 ? emptyConfig : chartConfig;
+
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.totalCost, 0);
   }, []);
+
+  const displayedTotal = data?.top_categories.length === 0 ? 0 : totalVisitors;
+
+  const dataArray = data?.top_categories.length === 0 ? emptyData : chartData;
 
   return (
     <Card className="flex flex-col bg-white h-[428px] w-[300px] rounded-[10px]">
@@ -56,7 +89,7 @@ export function DashbaordChart() {
       <hr className="bg-black " />
       <CardContent className="flex-1 -mt-4 pb-0">
         <ChartContainer
-          config={chartConfig}
+          config={chartInfo}
           className="mx-auto aspect-square max-h-[250px]"
         >
           <PieChart>
@@ -70,7 +103,7 @@ export function DashbaordChart() {
               }
             />
             <Pie
-              data={chartData}
+              data={data?.top_categories.length === 0 ? emptyData : chartData}
               dataKey="totalCost"
               nameKey="products"
               innerRadius={60}
@@ -99,7 +132,7 @@ export function DashbaordChart() {
                           y={(viewBox.cy || 0) + 24}
                           className="bg-black text-3xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {displayedTotal.toLocaleString()}
                         </tspan>
                       </text>
                     );
@@ -111,7 +144,7 @@ export function DashbaordChart() {
         </ChartContainer>
       </CardContent>
       <div className="flex-col gap-2 text-sm -mt-8">
-        {chartData.map((chart, index) => (
+        {dataArray.map((chart, index) => (
           <div key={index}>
             <div className="flex items-center p-2 justify-between" key={index}>
               <div className="flex items-center gap-3">
@@ -121,7 +154,9 @@ export function DashbaordChart() {
                 </span>
               </div>
               <span className="text-black font-medium font-inter text-sm">
-                ₵{chart.totalCost}
+                {data?.top_categories.length === 0
+                  ? "-"
+                  : `₵${chart.totalCost}`}
               </span>
             </div>
             <hr />
