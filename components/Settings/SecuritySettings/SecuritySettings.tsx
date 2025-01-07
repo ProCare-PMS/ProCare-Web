@@ -45,7 +45,7 @@ const SecuritySettings = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="grid grid-cols-1 bg-white shadow-lg rounded-xl px-8 2xl:px-12 pt-12 pb-20 gap-7"
+      className="grid grid-cols-1 bg-white shadow-lg rounded-xl mt-3 px-8 2xl:px-12 pt-12 pb-20 gap-7"
       style={{ gridTemplateRows: "auto auto auto" }}
     >
       {/* Old Password (full row) */}

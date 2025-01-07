@@ -3,7 +3,7 @@ import SettingsTabsContent from "../SettingsTabContent";
 
 function SettingsMainPage() {
   return (
-    <div className="">
+    <div>
       <SettingsTabsContent />
     </div>
   );

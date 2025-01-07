@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import BorderColorRoundedIcon from "@mui/icons-material/BorderColorRounded";
 import { CompanySchema } from "@/lib/schema/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import SwalToaster from "@/components/SwalToaster/SwalToaster";
+import { PencilLine } from "lucide-react";
 
 type ProfileFormValues = z.infer<typeof CompanySchema>;
 
@@ -81,7 +81,7 @@ const CompanyInfoSettings = () => {
   }, [reset, getPharmacyDetails]);
 
   return (
-    <form className="bg-white shadow-lg rounded-xl px-8 2xl:px-12 pt-12 pb-20 flex flex-col gap-10" onSubmit={handleSubmit(onSubmit)}>
+    <form className="bg-white shadow-lg rounded-xl px-8 2xl:px-12 pt-12 pb-20 flex mt-3 flex-col gap-10" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex items-start w-full">
         <div className="flex flex-col items-center gap-3">
           <label className="text-start w-full max-2xl:text-sm font-medium" htmlFor="profileimage">Company Logo</label>
@@ -100,7 +100,7 @@ const CompanyInfoSettings = () => {
               className="absolute bottom-0 -right-2.5 cursor-pointer"
             >
               <div className="bg-white rounded-full p-2 border border-[#2648EA]">
-                <BorderColorRoundedIcon className="text-[#2648EA]" />
+                <PencilLine className="text-[#2648EA]" />
               </div>
             </label>
             <input
