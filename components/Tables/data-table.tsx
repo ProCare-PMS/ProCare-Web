@@ -99,22 +99,34 @@ function DataTable<TData, TValue>({
         </TableHeader>
 
         <TableBody>
-          {table.getRowModel().rows &&
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    className="font-inter text-[#202224] text-sm font-normal"
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+          {table.getRowModel().rows?.length
+            ? table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className="font-inter text-[#202224] text-sm font-normal"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            : [...Array(10)].map((_, rowIndex) => (
+                <TableRow key={`empty-row-${rowIndex}`}>
+                  {columns.map((column, colIndex) => (
+                    <TableCell key={`empty-cell-${rowIndex}-${colIndex}`}>
+                      <span className="text-gray-400 font-bold text-lg">-</span>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
         </TableBody>
       </Table>
       <div className="flex items-center justify-end space-x-2 py-4">
