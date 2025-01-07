@@ -40,9 +40,10 @@ export default function SettingsTabsContent() {
   };
 
   return (
-    <div className="px-8">
-      <Box sx={{ width: "100%", typography: "body1" }}>
+    <div className="">
+      <Box  sx={{ width: "100%", typography: "body1" }}>
         <Box
+          className="bg-white"
           sx={{
             borderColor: "divider",
             textDecoration: "lowercase",
@@ -51,6 +52,8 @@ export default function SettingsTabsContent() {
           <Tabs
             value={value}
             onChange={handleChange}
+            centered
+            className="bg-[#F5F5F5] pb-5"
             aria-label="lab API tabs example"
             sx={{ textTransform: "none" }}
           >
@@ -80,16 +83,16 @@ export default function SettingsTabsContent() {
             />
           </Tabs>
         </Box>
-        <CustomTabPanel value={value} index={0}>
+        <CustomTabPanel className="px-[4.5rem]" value={value} index={0}>
           <PersonalInfo />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
+        <CustomTabPanel className="px-[4.5rem]" value={value} index={1}>
           <CompanyInfoSettings />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
+        <CustomTabPanel className="px-[4.5rem]" value={value} index={2}>
           <SecuritySettings />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
+        <CustomTabPanel className="px-[4.5rem]" value={value} index={3}>
           <BillingSetting />
         </CustomTabPanel>
       </Box>
