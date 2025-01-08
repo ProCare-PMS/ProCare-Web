@@ -6,7 +6,6 @@ import clsx from "clsx";
 import { TransactionHistory } from "./Data";
 import DashboardModal from "@/components/Modals/DashboardModal";
 
-// Define the cell component with correct typing
 const ActionsCell = ({ row }: CellContext<TransactionHistory, unknown>) => {
   const payment = row.original;
   const [selectedItem, setSelectedItem] = useState<TransactionHistory | null>(

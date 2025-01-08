@@ -8,7 +8,7 @@ import { customersData } from "./Data";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import Link from "next/link";
-import { ExternalLink, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import AddCustomerModal from "../AddCustomerModal/AddCustomerModal";
 
 function CustomersTable() {
