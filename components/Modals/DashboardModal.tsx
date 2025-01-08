@@ -54,14 +54,27 @@ const DashboardModal = ({ setModal, item, title }: ModalProps) => {
               {item.time}
             </span>
           </div>
-          <div className="grid gap-2">
-            <span className="text-[#858C95] text-sm font-normal">
-              Items Sold
-            </span>
-            <span className="text-[#202224] text-base font-normal">
-              {item.itemsSold}
-            </span>
-          </div>
+          {item.itemsSold && (
+            <div className="grid gap-2">
+              <span className="text-[#858C95] text-sm font-normal">
+                Items Sold
+              </span>
+              <span className="text-[#202224] text-base font-normal">
+                {item.itemsSold}
+              </span>
+            </div>
+          )}
+          {item.itemsReturned && (
+            <div className="grid gap-2">
+              <span className="text-[#858C95] text-sm font-normal">
+                Items Returned
+              </span>
+              <span className="text-[#202224] text-base font-normal">
+                {item.itemsReturned}
+              </span>
+            </div>
+          )}
+
           <div className="grid gap-1">
             <span className="text-[#858C95] text-sm font-normal">Sold By</span>
             <span className="text-[#202224] text-base font-normal">

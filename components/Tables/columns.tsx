@@ -17,7 +17,8 @@ export type DashbaordModalType = {
   transactionId: string;
   date: string;
   time: string;
-  itemsSold: number;
+  itemsSold?: number;
+  itemsReturned?: number;
   amount: string;
   soldBy: string;
   type: string;
@@ -27,15 +28,14 @@ export type DashbaordModalType = {
 
 interface ActionsCellProps {
   row: {
-    original: DashboardTransactions;
+    original: DashbaordModalType;
   };
 }
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const payment = row.original;
   const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] =
-    useState<DashboardTransactions | null>(null);
+  const [selectedItem, setSelectedItem] = useState<DashbaordModalType | null>(null);
 
   return (
     <div>

@@ -1,9 +1,12 @@
 import React from 'react'
+import ReturnsTable from './ReturnsTable/ReturnsTable'
 
 const Returns = () => {
   return (
-    <div>Returns</div>
+    <div>
+      <ReturnsTable />
+    </div>
   )
 }
 
-export default Returns
+export default Returns 
