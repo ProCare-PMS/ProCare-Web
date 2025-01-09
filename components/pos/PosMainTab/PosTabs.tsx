@@ -47,36 +47,35 @@ export default function PosMainPage() {
   return (
     <Box sx={{ width: "100%", marginInline: "auto", marginTop: "-20px" }}>
       <Box
-        sx={{ backgroundColor: "#F5F5F5", paddingBlock: "20px", width: "100%", textDecoration: "lowercase", }}
+        sx={{
+          backgroundColor: "#F5F5F5",
+          paddingBlock: "20px",
+          width: "100%",
+          textDecoration: "lowercase",
+        }}
       >
         <Tabs
           value={value}
           onChange={handleChange}
           centered
-          aria-label="basic tabs example" 
-        > 
+          aria-label="basic tabs example"
+        >
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] "
+            className="font-inter text-sm font-semibold text-[#858C95]"
             label="Sales Point"
             {...a11yProps(0)}
             sx={{ textTransform: "none" }}
           />
-          
+
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] "
+            className="font-inter text-sm font-semibold text-[#858C95]"
             label="Customers"
             {...a11yProps(1)}
             sx={{ textTransform: "none" }}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] "
+            className="font-inter text-sm font-semibold text-[#858C95]"
             label="Returns"
-            {...a11yProps(2)}
-            sx={{ textTransform: "none" }}
-          />
-           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] "
-            label="Held Transactions"
             {...a11yProps(2)}
             sx={{ textTransform: "none" }}
           />
@@ -88,7 +87,7 @@ export default function PosMainPage() {
           minHeight: "100vh",
           marginInline: "auto",
         }}
-      > 
+      >
         <CustomTabPanel value={value} index={0}>
           <SalesPoint />
         </CustomTabPanel>

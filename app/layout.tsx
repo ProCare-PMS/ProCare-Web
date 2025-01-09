@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ProHelium",
+  title: "ProHealium",
   description: "Pharmacy Information",
 };
 
@@ -22,14 +22,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const clarityId = process.env.NEXT_PUBLIC_MS_CLARITY_ID;
   const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 
   return (
     <html lang="en" translate="no" className={inter.className}>
+      <head>
+        <meta name="apple-mobile-web-app-title" content="ProHealium" />
+      </head>
       <body>
-      <Script
+        <Script
           id="clarity-script"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
