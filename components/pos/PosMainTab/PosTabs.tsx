@@ -56,20 +56,23 @@ export default function PosMainPage() {
           aria-label="basic tabs example"
         >
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
+            className="font-inter text-sm font-semibold text-[#858C95]"
             label="Sales Point"
             {...a11yProps(0)}
+            sx={{ textTransform: "none" }}
           />
-          
+
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
+            className="font-inter text-sm font-semibold text-[#858C95]"
             label="Customers"
             {...a11yProps(1)}
+            sx={{ textTransform: "none" }}
           />
           <Tab
-            className="font-inter text-sm font-semibold text-[#858C95] capitalize"
+            className="font-inter text-sm font-semibold text-[#858C95]"
             label="Returns"
             {...a11yProps(2)}
+            sx={{ textTransform: "none" }}
           />
         </Tabs>
       </Box>

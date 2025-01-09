@@ -75,20 +75,18 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   });
 
   //get all roles
-  const { data: getAllRoles } = useQuery({
-    queryKey: ["getAllRoles"],
-    queryFn: async () => {
-      const res = await customAxios
-        .get(endpoints.managements + "employee-roles/")
-        .then((res) => res?.data?.results);
-      return res?.map((item: any) => ({
-        label: item.role_name,
-        value: item.id,
-      }));
-    },
-  });
-
-  console.log({ getAllRoles });
+  // const { data: getAllRoles } = useQuery({
+  //   queryKey: ["getAllRoles"],
+  //   queryFn: async () => {
+  //     const res = await customAxios
+  //       .get(endpoints.managements + "employee-roles/")
+  //       .then((res) => res?.data?.results);
+  //     return res?.map((item: any) => ({
+  //       label: item.role_name,
+  //       value: item.id,
+  //     }));
+  //   },
+  // });
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -323,10 +321,10 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                   <CustomSelect
                     idField="role"
                     nameField="role"
-                    optionData={getAllRoles}
-                    value={getAllRoles?.filter((option: any) =>
-                      formValues.role?.includes(option?.value)
-                    )}
+                    optionData={[]}
+                    // value={getAllRoles?.filter((option: any) =>
+                    //   formValues.role?.includes(option?.value)
+                    // )}
                     onChange={(selected) =>
                       handleChange("role", selected?.value)
                     }

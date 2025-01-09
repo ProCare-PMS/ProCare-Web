@@ -1,3 +1,6 @@
+import { ColumnDef } from "@tanstack/react-table";
+import { Control } from "react-hook-form";
+
 export interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -29,6 +32,15 @@ export interface WorkingHoursTypes {
   start_time: string;
   end_time: string;
   isWorking: boolean;
+}
+
+export interface MiniTableProps {
+  title: string;
+  columns: ColumnDef<any, any>[]; // Use ColumnDef from @tanstack/react-table
+  data: any[];
+  link?: string;
+  height?: string;
+  control: Control<any>;
 }
 
 export interface AttendanceItems {

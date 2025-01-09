@@ -16,15 +16,8 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-
-// Define the type for table props
-interface TableProps {
-  title: string;
-  columns: ColumnDef<any, any>[]; // Use ColumnDef from @tanstack/react-table
-  data: any[];
-  link?: string;
-  height?: string;
-}
+import { MiniTableProps } from "@/lib/Types";
+import { DatePicker } from "../CustomDatePicker/DatePicker";
 
 export function MiniSubTable({
   title,
@@ -32,7 +25,8 @@ export function MiniSubTable({
   data,
   link,
   height,
-}: TableProps) {
+  control,
+}: MiniTableProps) {
   // Initialize the table with useReactTable hook
   const table = useReactTable({
     data,
@@ -52,12 +46,11 @@ export function MiniSubTable({
             {title}
           </h2>
           <div className="flex gap-3">
-            <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2 py-1">
-              <span>
-                <CalendarMonthIcon />
-              </span>
-              <span>October</span>
-            </div>
+            <DatePicker
+              name="date"
+              placeholder="Select Date"
+              control={control}
+            />
 
             {link && (
               <Link
