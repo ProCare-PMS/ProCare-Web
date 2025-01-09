@@ -7,10 +7,12 @@ import { returnHistoryColumns } from "./Columns";
 import { returnsHistory } from "./Data";
 import { Button } from "@/components/ui/button";
 import ReturnsFilters from "../ReturnFilters/ReturnsFilters";
+import CreateReturn from "../CreateReturn/CreateReturn";
 
 const ReturnsTable = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [showCreateReturn, setShowCreateReturn] = useState<Boolean>(false);
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -20,6 +22,12 @@ const ReturnsTable = () => {
 
   const toggleFilters = (): void => {
     setShowFilters((prev) => !prev);
+    setShowCreateReturn(false);
+  };
+
+  const toggleCreateReturn = (): void => {
+    setShowCreateReturn((prev) => !prev);
+    setShowFilters(false);
   };
 
   return (
@@ -29,12 +37,14 @@ const ReturnsTable = () => {
           <SearchFieldInput
             value={searchValues}
             onChange={handleSearchValueChange}
+            placeholder="Search for transaction ID"
           />
 
           <Button
             type="button"
             className="text-white flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
             variant="secondary"
+            onClick={toggleCreateReturn}
           >
             <Plus /> Create Return
           </Button>
@@ -52,8 +62,16 @@ const ReturnsTable = () => {
         </div>
 
         {/* Databele Here */}
-        <DataTable columns={returnHistoryColumns} data={returnsHistory} />
+        <DataTable
+          columns={returnHistoryColumns}
+          data={returnsHistory}
+          searchValue={searchValues}
+        />
       </div>
+
+      {showCreateReturn && (
+        <CreateReturn setModal={() => setShowCreateReturn(false)} />
+      ) }
     </div>
   );
 };

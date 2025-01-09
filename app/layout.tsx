@@ -5,6 +5,13 @@ import Providers from "./Provider";
 import LoadingWrapper from "@/components/Loader/LoadingWrapper";
 import Script from "next/script";
 
+import {  Inter  } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
 export const metadata: Metadata = {
   title: "ProHealium",
   description: "Pharmacy Information",
@@ -19,7 +26,7 @@ export default function RootLayout({
   const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 
   return (
-    <html lang="en" translate="no">
+    <html lang="en" translate="no" className={inter.className}>
       <head>
         <meta name="apple-mobile-web-app-title" content="ProHealium" />
       </head>
