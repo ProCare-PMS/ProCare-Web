@@ -7,17 +7,35 @@ import { useState } from "react";
 import DashboardModal from "../Modals/DashboardModal";
 import clsx from "clsx";
 
+export type Product = {
+  name: string;
+  quantity: number;
+  price: string;
+};
+
+export type DashbaordModalType = {
+  transactionId: string;
+  date: string;
+  time: string;
+  itemsSold?: number;
+  itemsReturned?: number;
+  amount: string;
+  soldBy: string;
+  type: string;
+  status?: string;
+  products: Product[];
+};
+
 interface ActionsCellProps {
   row: {
-    original: DashboardTransactions;
+    original: DashbaordModalType;
   };
 }
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const payment = row.original;
   const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] =
-    useState<DashboardTransactions | null>(null);
+  const [selectedItem, setSelectedItem] = useState<DashbaordModalType | null>(null);
 
   return (
     <div>
@@ -41,7 +59,7 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
   );
 };
 
-export const dashboardTransactionColumns: ColumnDef<DashboardTransactions>[] = [
+export const dashboardTransactionColumns: ColumnDef<DashbaordModalType>[] = [
   {
     accessorKey: "transactionId",
     header: "Transaction ID",
@@ -60,15 +78,15 @@ export const dashboardTransactionColumns: ColumnDef<DashboardTransactions>[] = [
   },
   {
     accessorKey: "amount",
-    header: () => <div className="text-left">Amount</div> ,
+    header: () => <div className="text-left">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      const amount = parseFloat(row.getValue("amount"));
       const formatted = new Intl.NumberFormat("en-GH", {
         style: "currency",
         currency: "ghs",
-      }).format(amount)
- 
-      return <div className="!text-left ">{formatted}</div>
+      }).format(amount);
+
+      return <div className="!text-left ">{formatted}</div>;
     },
   },
   {

@@ -45,20 +45,21 @@ const SecuritySettings = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="grid grid-cols-1 gap-6 p-6 max-w-4xl"
+      className="grid grid-cols-1 bg-white shadow-lg rounded-xl mt-3 px-8 2xl:px-12 pt-12 pb-20 gap-7"
       style={{ gridTemplateRows: "auto auto auto" }}
     >
       {/* Old Password (full row) */}
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-2 max-w-3xl gap-8">
         <div className="relative col-span-1">
-          <label htmlFor="oldPassword" className="block font-semibold mb-1">
+          <label htmlFor="oldPassword" className="block font-medium mb-1 max-2xl:text-sm">
             Old Password
           </label>
           <input
             type={showOldPassword ? "text" : "password"}
             id="oldPassword"
+            placeholder="Enter old password"
             {...register("oldPassword")}
-            className={`border border-gray-300 rounded px-4 py-1 w-full ${
+            className={`bg-[#EAEBF0] border border-gray-300 placeholder:text-sm placeholder:font-light rounded px-4 pr-[10%] py-3 w-full ${
               errors.oldPassword ? "border-red-500" : ""
             }`}
           />
@@ -68,7 +69,7 @@ const SecuritySettings = () => {
             </p>
           )}
           <span
-            className="absolute right-3 top-10 cursor-pointer"
+            className="absolute right-3 top-11 cursor-pointer"
             onClick={() => setShowOldPassword((prev) => !prev)}
           >
             {showOldPassword ? <FiEyeOff /> : <FiEye />}
@@ -77,17 +78,18 @@ const SecuritySettings = () => {
       </div>
 
       {/* New Password and Confirm Password (one row, two columns) */}
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-2 max-w-3xl gap-8">
         {/* New Password */}
         <div className="relative">
-          <label htmlFor="newPassword" className="block font-semibold mb-1">
+          <label htmlFor="newPassword" className="block font-medium mb-1 max-2xl:text-sm">
             New Password
           </label>
           <input
             type={showNewPassword ? "text" : "password"}
             id="newPassword"
+            placeholder="Enter new password"
             {...register("newPassword")}
-            className={`border border-gray-300 rounded px-4 py-1 w-full ${
+            className={`bg-[#EAEBF0] border border-gray-300 placeholder:text-sm placeholder:font-light rounded px-4 pr-[10%] py-3 w-full ${
               errors.newPassword ? "border-red-500" : ""
             }`}
           />
@@ -98,7 +100,7 @@ const SecuritySettings = () => {
           )}
           {/* Eye icon for toggling password visibility */}
           <span
-            className="absolute right-3 top-10 cursor-pointer"
+            className="absolute right-3 top-11 cursor-pointer"
             onClick={() => setShowNewPassword((prev) => !prev)}
           >
             {showNewPassword ? <FiEyeOff /> : <FiEye />}
@@ -107,14 +109,15 @@ const SecuritySettings = () => {
 
         {/* Confirm Password */}
         <div className="relative">
-          <label htmlFor="confirmPassword" className="block font-semibold mb-1">
+          <label htmlFor="confirmPassword" className="block font-medium mb-1 max-2xl:text-sm">
             Confirm Password
           </label>
           <input
             type={showConfirmPassword ? "text" : "password"}
             id="confirmPassword"
+            placeholder="Confirm new password"
             {...register("confirmPassword")}
-            className={`border border-gray-300 rounded px-4 py-1 w-full ${
+            className={`bg-[#EAEBF0] border border-gray-300 placeholder:text-sm placeholder:font-light rounded px-4 pr-[10%] py-3 w-full ${
               errors.confirmPassword ? "border-red-500" : ""
             }`}
           />
@@ -123,7 +126,7 @@ const SecuritySettings = () => {
           )}
           {/* Eye icon for toggling password visibility */}
           <span
-            className="absolute right-3 top-10 cursor-pointer"
+            className="absolute right-3 top-11 cursor-pointer"
             onClick={() => setShowConfirmPassword((prev) => !prev)}
           >
             {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
@@ -132,7 +135,7 @@ const SecuritySettings = () => {
       </div>
 
       {/* Update Password Button */}
-      <div className="flex justify-end">
+      <div className="mt-6 flex max-w-3xl justify-end">
         <button
           type="submit"
           className="px-6 py-2 bg-[#2648EA] text-white rounded-[0.3rem] shadow-md hover:bg-blue-600"

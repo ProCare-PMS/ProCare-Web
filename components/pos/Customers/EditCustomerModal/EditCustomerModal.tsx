@@ -2,16 +2,16 @@ import React from "react";
 import { MoveLeft } from "lucide-react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
-interface AddCustomerModalProps {
+interface EditCustomerModalProps {
   closeModal: () => void;
 }
 
-const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
+const EditCustomerModal = ({ closeModal }: EditCustomerModalProps) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-lg w-[60%] p-6 relative">
         <div className="flex justify-between items-center border-b mb-2">
-          <h2 className="text-lg font-bold mb-4">Add Customer</h2>
+          <h2 className="text-lg font-bold mb-4">Edit Customer</h2>
           <button
             className="text-gray-500 hover:text-gray-800"
             onClick={closeModal}
@@ -352,4 +352,4 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
   );
 };
 
-export default AddCustomerModal;
+export default EditCustomerModal;

@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { X } from "lucide-react";
 import { DashboardTransactions, dashboardTransactions } from "@/type";
 import clsx from "clsx";
+import { DashbaordModalType } from "../Tables/columns";
 
 type ModalProps = {
   setModal: (value: boolean) => void;
-  item: DashboardTransactions;
+  item: DashbaordModalType;
   title: string;
 };
 
@@ -53,14 +54,27 @@ const DashboardModal = ({ setModal, item, title }: ModalProps) => {
               {item.time}
             </span>
           </div>
-          <div className="grid gap-2">
-            <span className="text-[#858C95] text-sm font-normal">
-              Items Sold
-            </span>
-            <span className="text-[#202224] text-base font-normal">
-              {item.itemsSold}
-            </span>
-          </div>
+          {item.itemsSold && (
+            <div className="grid gap-2">
+              <span className="text-[#858C95] text-sm font-normal">
+                Items Sold
+              </span>
+              <span className="text-[#202224] text-base font-normal">
+                {item.itemsSold}
+              </span>
+            </div>
+          )}
+          {item.itemsReturned && (
+            <div className="grid gap-2">
+              <span className="text-[#858C95] text-sm font-normal">
+                Items Returned
+              </span>
+              <span className="text-[#202224] text-base font-normal">
+                {item.itemsReturned}
+              </span>
+            </div>
+          )}
+
           <div className="grid gap-1">
             <span className="text-[#858C95] text-sm font-normal">Sold By</span>
             <span className="text-[#202224] text-base font-normal">
@@ -88,6 +102,14 @@ const DashboardModal = ({ setModal, item, title }: ModalProps) => {
               {item.type}
             </span>
           </div>
+          {item.status && (
+            <div className="grid gap-1">
+              <span>STATUS</span>
+              <span className="text-[#202224] text-base font-normal">
+                {item.status}
+              </span>
+            </div>
+          )}
         </div>
 
         <hr className="my-6" />

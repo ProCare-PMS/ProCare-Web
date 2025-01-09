@@ -38,7 +38,7 @@ const DashbaordHomePage = () => {
         <DashboardTableHeader />
         <DataTable
           columns={dashboardTransactionColumns}
-          data={dashboardData || []}
+          data={dashboardTransactions}
         />
       </div>
 
