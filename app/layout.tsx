@@ -5,6 +5,13 @@ import Providers from "./Provider";
 import LoadingWrapper from "@/components/Loader/LoadingWrapper";
 import Script from "next/script";
 
+import {  Inter  } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
 export const metadata: Metadata = {
   title: "ProHelium",
   description: "Pharmacy Information",
@@ -20,7 +27,7 @@ export default function RootLayout({
   const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 
   return (
-    <html lang="en" translate="no">
+    <html lang="en" translate="no" className={inter.className}>
       <body>
       <Script
           id="clarity-script"
