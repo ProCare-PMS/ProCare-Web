@@ -6,7 +6,7 @@ import LoadingWrapper from "@/components/Loader/LoadingWrapper";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "ProHelium",
+  title: "ProHealium",
   description: "Pharmacy Information",
 };
 
@@ -20,6 +20,9 @@ export default function RootLayout({
 
   return (
     <html lang="en" translate="no">
+      <head>
+        <meta name="apple-mobile-web-app-title" content="ProHealium" />
+      </head>
       <body>
         <Script
           id="clarity-script"
