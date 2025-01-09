@@ -39,7 +39,7 @@ const BillingSetting = () => {
           <p className="text-slate-400 text-sm font-medium">Next Bill</p>
           <div className="flex justify-between py-2">
             <div className="self-center pt-4">
-              <p className="2xl:text-lg font-semibold">Standard Plan</p>
+              <p className="2xl:text-lg font-semibold">20/10/25</p>
               <p className="text-sm text-blue-600">GHC 5,000 per year</p> 
             </div>
             <button className="px-5 2xl:px-8 py-2 2xl:py-3 h-fit font-medium  text-[#2648EA] border border-[#2648EA] bg-white text-sm rounded ">
