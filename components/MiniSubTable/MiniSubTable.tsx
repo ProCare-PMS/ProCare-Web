@@ -20,12 +20,10 @@ import { MiniTableProps } from "@/lib/Types";
 import { DatePicker } from "../CustomDatePicker/DatePicker";
 
 export function MiniSubTable({
-  title,
   columns,
   data,
-  link,
+
   height,
-  control,
 }: MiniTableProps) {
   // Initialize the table with useReactTable hook
   const table = useReactTable({
@@ -36,22 +34,12 @@ export function MiniSubTable({
 
   return (
     <div>
-      <div
-        className={`bg-white p-6 rounded-xl flex-1 ${
-          height ? `h-${height}` : ""
-        }`}
-      >
-        <div className="flex items-center justify-between mb-6">
+      <div className={` ${height ? `h-${height}` : ""}`}>
+        {/* <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold font-nunito_sans text-[#202224]">
             {title}
           </h2>
           <div className="flex gap-3">
-            <DatePicker
-              name="date"
-              placeholder="Select Date"
-              control={control}
-            />
-
             {link && (
               <Link
                 href={link}
@@ -62,7 +50,7 @@ export function MiniSubTable({
               </Link>
             )}
           </div>
-        </div>
+        </div> */}
 
         <Table className="bg-white rounded-xl w-full table-fixed">
           {" "}

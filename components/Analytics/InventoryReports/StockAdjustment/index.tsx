@@ -10,9 +10,16 @@ import { ExternalLink } from "lucide-react";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { useQuery } from "@tanstack/react-query";
+import { DatePicker } from "@/components/CustomDatePicker/DatePicker";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { dateSchema } from "@/lib/schema/schema";
 
 function StockAdjustment() {
   const [searchValues, setSetSearchValues] = useState<string>("");
+  const { control, setValue } = useForm<FormData>({
+    resolver: zodResolver(dateSchema),
+  });
 
   const { data: stockAdjustmentData } = useQuery({
     queryKey: ["StockAdjustment"],
@@ -39,24 +46,13 @@ function StockAdjustment() {
         </h2>
 
         <div className="flex gap-4">
-          <div className="flex items-center justify-between border border-[#D0D5DD] rounded-[6px] gap-3 py-1 px-1.5">
-            <div>
-              <Image
-                src="/assets/images/calenderz.svg"
-                width={13}
-                height={13}
-                alt="arrow-down"
-              />
-            </div>
-            <span className="text-[#5C5D65] font-medium text-sm">
-              12 October, 2024
-            </span>
+          <div className="w-48">
+            <DatePicker
+              name="date"
+              placeholder="Select Date"
+              control={control}
+            />
           </div>
-
-          {/* <SearchFieldInput
-            value={searchValues}
-            onChange={handleSearchValueChange}
-          /> */}
 
           <span className="iconHolder w-10 h-10">
             <Image
