@@ -18,22 +18,24 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useState } from "react";
+import CustomSelect from "@/components/CustomSelect/CustomSelect";
+import { monthsOfYear } from "@/components/CustomFunction/CustomFunction";
 
 export const description = "Months and Sales";
 
 const chartData = [
-  { month: "January", sales: 16000 },
-  { month: "February", sales: 2000 },
-  { month: "March", sales: 4000 },
-  { month: "April", sales: 1000 },
-  { month: "May", sales: 7000 },
-  { month: "June", sales: 3000 },
-  { month: "July", sales: 13000 },
-  { month: "August", sales: 17000 },
-  { month: "September", sales: 14000 },
-  { month: "October", sales: 9000 },
-  { month: "November", sales: 19000 },
-  { month: "December", sales: 16000 },
+  // { month: "January", sales: 16000 },
+  // { month: "February", sales: 2000 },
+  // { month: "March", sales: 4000 },
+  // { month: "April", sales: 1000 },
+  // { month: "May", sales: 7000 },
+  // { month: "June", sales: 3000 },
+  // { month: "July", sales: 13000 },
+  // { month: "August", sales: 17000 },
+  // { month: "September", sales: 14000 },
+  // { month: "October", sales: 9000 },
+  // { month: "November", sales: 19000 },
+  // { month: "December", sales: 16000 },
 ];
 
 const chartConfig = {
@@ -55,34 +57,17 @@ export function SalesBarChart() {
         <div>
           <CardTitle>Sales</CardTitle>
           <CardDescription>
-            Total Sales:{" "}
-            <span className="text-blue-700 font-bold">₵ 839.27</span>
+            Total Sales: <span className="text-blue-700 font-bold">₵ -</span>
           </CardDescription>
         </div>
 
         <div className="flex gap-2">
           <div className="w-44">
-            <select
-              id="month"
-              name="month"
-              value={selectedMonth}
-              onChange={handleMonthChange}
-              className="mt-1 block w-full border border-gray-500 px-1 py-2 focus:border-gray-500 focus:ring-opacity-50 rounded-xl"
-            >
-              <option value="">Month</option>
-              <option value="1">January</option>
-              <option value="2">February</option>
-              <option value="3">March</option>
-              <option value="4">April</option>
-              <option value="5">May</option>
-              <option value="6">June</option>
-              <option value="7">July</option>
-              <option value="8">August</option>
-              <option value="9">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
-            </select>
+            <CustomSelect
+              idField="month"
+              nameField="month"
+              optionData={monthsOfYear}
+            />
           </div>
           <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2 py-0">
             <span>
@@ -94,7 +79,7 @@ export function SalesBarChart() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={[]}>
             {/* Add horizontal grid lines */}
             <CartesianGrid
               vertical={false}

@@ -109,7 +109,6 @@ export function StockLevelChart() {
     resolver: zodResolver(dateSchema),
   });
 
-  
   return (
     <div className="w-full bg-white rounded-xl">
       <Card className="rounded-xl">
@@ -130,7 +129,7 @@ export function StockLevelChart() {
               className="w-[15rem]"
             />
 
-            <div className="w-[15rem]">
+            <div className="w-48">
               <DatePicker
                 name="date"
                 placeholder="Select Date"

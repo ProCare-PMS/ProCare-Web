@@ -35,12 +35,9 @@ export interface WorkingHoursTypes {
 }
 
 export interface MiniTableProps {
-  title: string;
   columns: ColumnDef<any, any>[]; // Use ColumnDef from @tanstack/react-table
   data: any[];
-  link?: string;
   height?: string;
-  control: Control<any>;
 }
 
 export interface AttendanceItems {
