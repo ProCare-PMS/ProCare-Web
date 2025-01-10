@@ -7,6 +7,7 @@ import Link from "next/link";
 import SalesPoint from "../SalesPoint";
 import Customers from "../Customers";
 import Returns from "../Returns";
+import HeldTransactions from "../HeldTransactions/HeldTransactions";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -79,6 +80,12 @@ export default function PosMainPage() {
             {...a11yProps(2)}
             sx={{ textTransform: "none" }}
           />
+          <Tab
+            className="font-inter text-sm font-semibold text-[#858C95]"
+            label="Held Transactions"
+            {...a11yProps(3)}
+            sx={{ textTransform: "none" }}
+          />
         </Tabs>
       </Box>
       <Box
@@ -96,6 +103,9 @@ export default function PosMainPage() {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
           <Returns />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={3}>
+          <HeldTransactions />
         </CustomTabPanel>
       </Box>
     </Box>
