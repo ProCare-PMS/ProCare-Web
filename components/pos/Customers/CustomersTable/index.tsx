@@ -37,6 +37,7 @@ function CustomersTable() {
             <SearchFieldInput
               value={searchValues}
               onChange={handleSearchValueChange}
+              placeholder="Search for Customer"
             />
 
             <span className="iconHolder w-10 h-10">
