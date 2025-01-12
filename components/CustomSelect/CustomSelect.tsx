@@ -11,6 +11,7 @@ type customSelectType = {
   disabled?: boolean;
   value?: any;
   onChange?: (selected: any) => void;
+  placeholder?: string;
 };
 
 export default function CustomSelect({
@@ -22,6 +23,7 @@ export default function CustomSelect({
   optionData,
   disabled,
   value,
+  placeholder,
   onChange,
 }: customSelectType) {
   return (
@@ -35,6 +37,7 @@ export default function CustomSelect({
       value={value}
       onChange={onChange}
       className={className}
+      placeholder={placeholder}
     ></Select>
   );
 }

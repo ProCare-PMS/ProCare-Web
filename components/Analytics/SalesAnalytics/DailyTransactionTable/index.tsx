@@ -8,9 +8,16 @@ import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { DatePicker } from "@/components/CustomDatePicker/DatePicker";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { dateSchema } from "@/lib/schema/schema";
 
 function DailySalesTransactionTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
+  const { control, setValue } = useForm<FormData>({
+    resolver: zodResolver(dateSchema),
+  });
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -28,18 +35,12 @@ function DailySalesTransactionTable() {
         </div>
 
         <div className="flex gap-4">
-          <div className="flex items-center justify-between border border-[#D0D5DD] rounded-[6px] gap-3 py-1 px-1.5">
-            <div>
-              <Image
-                src="/assets/images/calenderz.svg"
-                width={13}
-                height={13}
-                alt="arrow-down"
-              />
-            </div>
-            <span className="text-[#5C5D65] font-medium text-sm">
-              12 October, 2024
-            </span>
+          <div className="w-48">
+            <DatePicker
+              name="date"
+              placeholder="Select Date"
+              control={control}
+            />
           </div>
 
           {/* <SearchFieldInput

@@ -11,8 +11,15 @@ import { ExternalLink } from "lucide-react";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { dateSchema } from "@/lib/schema/schema";
+import { DatePicker } from "@/components/CustomDatePicker/DatePicker";
 
 function SupplierPerformanceTable() {
+  const { control, setValue } = useForm<FormData>({
+    resolver: zodResolver(dateSchema),
+  });
   const [searchValues, setSetSearchValues] = useState<string>("");
 
   //get data for the table
@@ -49,18 +56,12 @@ function SupplierPerformanceTable() {
         </div>
 
         <div className="flex gap-4">
-          <div className="flex items-center justify-between border border-[#D0D5DD] rounded-[6px] gap-3 py-1 px-1.5">
-            <div>
-              <Image
-                src="/assets/images/calenderz.svg"
-                width={13}
-                height={13}
-                alt="arrow-down"
-              />
-            </div>
-            <span className="text-[#5C5D65] font-medium text-sm">
-              12 October, 2024
-            </span>
+          <div className="w-48">
+            <DatePicker
+              name="date"
+              placeholder="Select Date"
+              control={control}
+            />
           </div>
 
           {/* <SearchFieldInput

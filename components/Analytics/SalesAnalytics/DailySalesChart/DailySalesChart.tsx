@@ -28,6 +28,12 @@ import {
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import { useState } from "react";
+import CustomSelect from "@/components/CustomSelect/CustomSelect";
+import { monthsOfYear } from "@/components/CustomFunction/CustomFunction";
+import { DatePicker } from "@/components/CustomDatePicker/DatePicker";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { dateSchema } from "@/lib/schema/schema";
 
 export const description = "A linear area chart";
 
@@ -108,6 +114,9 @@ const chartConfig = {
 
 export function DailySalesChart() {
   const [timeRange, setTimeRange] = useState("90d");
+  const { control, setValue } = useForm<FormData>({
+    resolver: zodResolver(dateSchema),
+  });
   return (
     <div>
       <Card className="w-full bg-white rounded-2xl">
@@ -121,31 +130,21 @@ export function DailySalesChart() {
           </div>
 
           <div className="flex gap-2">
-            <Select value={timeRange} onValueChange={setTimeRange}>
-              <SelectTrigger
-                className="w-[160px] rounded-[0.5rem] sm:ml-auto"
-                aria-label="Select a value"
-              >
-                <SelectValue placeholder="All Stock" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                <SelectItem value="90d" className="rounded-lg">
-                  Month
-                </SelectItem>
-                <SelectItem value="30d" className="rounded-lg">
-                  Last 30 days
-                </SelectItem>
-                <SelectItem value="7d" className="rounded-lg">
-                  Last 7 days
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="w-44">
+              <CustomSelect
+                idField="month"
+                nameField="month"
+                optionData={monthsOfYear}
+                placeholder="Select Month"
+              />
+            </div>
 
-            <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
-              <span>
-                <CalendarMonthIcon />
-              </span>
-              <span>October</span>
+            <div className="w-48">
+              <DatePicker
+                name="date"
+                placeholder="Select Date"
+                control={control}
+              />
             </div>
 
             <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
