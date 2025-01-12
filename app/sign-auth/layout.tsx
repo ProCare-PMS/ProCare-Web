@@ -31,7 +31,7 @@ export default function SignAuthLayout({
                 , one click at a time.
               </h1>
               <p className="my-4">
-                Streamline your pharmacy with Procare - All-in-one system for
+                Streamline your pharmacy with RxPMS - All-in-one system for
                 sales, inventory, analysis & more!
               </p>
             </div>
@@ -49,10 +49,14 @@ export default function SignAuthLayout({
             </div>
             <div className="w-3/4 flex justify-around items-center text-[#323539]">
               <span>
-                <a href="#">Privacy & Terms</a>
+                <a href="https://prohealium.com/about" target="_blank">
+                  About Us
+                </a>
               </span>
               <span>
-                <a href="#">Contact Us</a>
+                <a href="https://prohealium.com/contact" target="_blank">
+                  Contact Us
+                </a>
               </span>
             </div>
           </div>
