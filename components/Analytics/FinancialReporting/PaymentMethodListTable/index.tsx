@@ -23,7 +23,7 @@ function PaymentMethodListTable() {
           </Link>
         </div>
       </div>
-      <MiniSubTable columns={Columns} data={Data} height="96" />
+      <MiniSubTable columns={Columns} data={[]} />
     </div>
   );
 }

@@ -21,17 +21,17 @@ import { useState } from "react";
 export const description = "Volumes and Frequency";
 
 const chartData = [
-  { volumes: "Bottles", frequency: 16000 },
-  { volumes: "Sachets", frequency: 2000 },
-  { volumes: "Packs", frequency: 4000 },
-  { volumes: "Containers", frequency: 1000 },
-  { volumes: "Ampoules", frequency: 7000 },
-  { volumes: "Paper", frequency: 3000 },
-  { volumes: "Cartons", frequency: 13000 },
-  { volumes: "Syringes", frequency: 17000 },
-  { volumes: "Strip", frequency: 14000 },
-  { volumes: "Lamitubes", frequency: 9000 },
-  { volumes: "Packaging", frequency: 19000 },
+  // { volumes: "Bottles", frequency: 16000 },
+  // { volumes: "Sachets", frequency: 2000 },
+  // { volumes: "Packs", frequency: 4000 },
+  // { volumes: "Containers", frequency: 1000 },
+  // { volumes: "Ampoules", frequency: 7000 },
+  // { volumes: "Paper", frequency: 3000 },
+  // { volumes: "Cartons", frequency: 13000 },
+  // { volumes: "Syringes", frequency: 17000 },
+  // { volumes: "Strip", frequency: 14000 },
+  // { volumes: "Lamitubes", frequency: 9000 },
+  // { volumes: "Packaging", frequency: 19000 },
 ];
 
 const chartConfig = {
@@ -78,7 +78,7 @@ export function OrderVolumeFChart() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={[]}>
             {/* Add horizontal grid lines */}
             <CartesianGrid
               vertical={false}

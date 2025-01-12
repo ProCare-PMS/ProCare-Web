@@ -74,7 +74,8 @@ export function PaymentMethodChart() {
         <ChartContainer config={chartConfig} className="mx-auto w-full">
           <PieChart>
             <Pie
-              data={chartDataWithPercentage}
+              //data={chartDataWithPercentage}
+              data={[]}
               dataKey="visitors"
               nameKey="browser"
               label={({ percentage }) => `${percentage}%`} // Show percentage on each slice

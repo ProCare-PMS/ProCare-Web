@@ -30,6 +30,8 @@ const LoadingWrapper = ({ children }: { children: React.ReactNode }) => {
     "/personal-information",
     "/verification-success",
     "/verification-failed",
+    "/profile",
+    "/user-passcode",
   ];
 
   useEffect(() => {

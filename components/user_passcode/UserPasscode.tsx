@@ -1,12 +1,109 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import OtpInput from "./otp-input";
 import { useRouter } from "next/navigation";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { loginFailure, loginSuccess } from "@/redux/authSlice";
 
 const UserPasscode = () => {
+  const [otp, setOtp] = useState(["", "", "", ""]); // State for OTP input
   const router = useRouter();
+  //get account id from local storage
+  const accountId = localStorage.getItem("accountId");
+  const dispatch = useDispatch();
+
+  // Handle input change
+  const handleChange = (value: string, index: number) => {
+    if (!/^\d*$/.test(value)) return; // Only allow numeric input
+
+    const updatedOtp = [...otp];
+    updatedOtp[index] = value;
+    setOtp(updatedOtp);
+
+    // Automatically focus next input
+    if (value && index < otp.length - 1) {
+      const nextInput = document.getElementById(`otp-${index + 1}`);
+      nextInput?.focus();
+    }
+  };
+
+  // Handle backspace navigation
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      const prevInput = document.getElementById(`otp-${index - 1}`);
+      prevInput?.focus();
+    }
+  };
+
+  const loginMutation = useMutation({
+    mutationFn: async (value: any) => {
+      try {
+        const res = await customAxios.post(endpoints.login, value);
+        return res.data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    },
+  });
+
+  const handleSubmit = async () => {
+    const otpValue = otp.join("");
+
+    loginMutation.mutate(
+      {
+        account_id: accountId,
+        passcode: otpValue.toString(),
+      },
+      {
+        onSuccess: (responseData) => {
+          //console.log({ responseData });
+          const token = responseData?.access;
+          const user = responseData?.user;
+          const refreshToken = responseData?.refresh;
+
+          //const { token, user } = responseData;
+          if (token && user && refreshToken) {
+            localStorage.setItem("authToken", token);
+            localStorage.setItem("refreshToken", refreshToken);
+            localStorage.setItem("user", JSON.stringify(user));
+            toast.success("Login successful! Redirecting to the dashboard.");
+            dispatch(loginSuccess({ token, refreshToken, user }));
+            router.push("/dashboard");
+            localStorage.removeItem("accountId");
+          }
+        },
+        onError: (error: any) => {
+          if (error.response && error.response.data) {
+            const apiErrors = error.response.data;
+            console.log({ apiErrors });
+
+            if (
+              apiErrors.non_field_errors &&
+              apiErrors.non_field_errors.length > 0
+            ) {
+              toast.error(apiErrors.non_field_errors[0]);
+            } else {
+              toast.error("An unexpected error occurred. Please try again.");
+            }
+            dispatch(loginFailure("An unexpected error occurred"));
+          } else {
+            toast.error(
+              error.response.data.message || "An unexpected error occurred."
+            );
+          }
+        },
+      }
+    );
+  };
 
   return (
     <div className="bg-[#F9F9F9] h-screen w-screen flex justify-center items-center">
@@ -30,7 +127,21 @@ const UserPasscode = () => {
               <h2 className="text-[#323539] font-medium text-xl mb-2">
                 Passcode
               </h2>
-              <OtpInput />
+              <div className="flex items-center justify-between overflow-hidden">
+                {otp.map((digit, index) => (
+                  <input
+                    key={index}
+                    id={`otp-${index}`}
+                    className="border-2 w-16 h-12 border-[#D0D5DD] rounded-[8px] text-center text-4xl text-slate-400"
+                    type="text"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleChange(e.target.value, index)}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                    placeholder="-"
+                  />
+                ))}
+              </div>
             </div>
             <Link
               href="/forgot-password"
@@ -39,18 +150,27 @@ const UserPasscode = () => {
               Forgot Passcode?
             </Link>
             <button
-              onClick={() => router.push("/dashboard")}
+              onClick={handleSubmit}
               className="bg-[#2648EA] w-full text-white py-3 rounded-xl"
-              type="submit"
+              type="button"
             >
               Submit
             </button>
           </div>
           <div className="text-center mt-4 text-[#2648EA]">
             <span>Back to </span>{" "}
-            <a href="/profile" className="text-[#2648EA]">
+            {/* <a href="/profile" className="text-[#2648EA]">
               User Profile
-            </a>
+            </a> */}
+            <button
+              type="button"
+              onClick={() => {
+                window.location.href = "/profile";
+                localStorage.removeItem("accountId");
+              }}
+            >
+              User Profile
+            </button>
           </div>
         </div>
       </div>

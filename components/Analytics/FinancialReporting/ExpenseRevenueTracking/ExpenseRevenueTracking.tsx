@@ -21,18 +21,18 @@ import {
 export const description = "A multiple bar chart";
 
 const chartData = [
-  { month: "January", revenue: 856, expense: 392 },
-  { month: "February", revenue: 768, expense: 523 },
-  { month: "March", revenue: 631, expense: 312 },
-  { month: "April", revenue: 547, expense: 793 },
-  { month: "May", revenue: 903, expense: 689 },
-  { month: "June", revenue: 724, expense: 457 },
-  { month: "July", revenue: 845, expense: 613 },
-  { month: "August", revenue: 991, expense: 752 },
-  { month: "September", revenue: 479, expense: 355 },
-  { month: "October", revenue: 602, expense: 291 },
-  { month: "November", revenue: 777, expense: 432 },
-  { month: "December", revenue: 915, expense: 562 },
+  // { month: "January", revenue: 856, expense: 392 },
+  // { month: "February", revenue: 768, expense: 523 },
+  // { month: "March", revenue: 631, expense: 312 },
+  // { month: "April", revenue: 547, expense: 793 },
+  // { month: "May", revenue: 903, expense: 689 },
+  // { month: "June", revenue: 724, expense: 457 },
+  // { month: "July", revenue: 845, expense: 613 },
+  // { month: "August", revenue: 991, expense: 752 },
+  // { month: "September", revenue: 479, expense: 355 },
+  // { month: "October", revenue: 602, expense: 291 },
+  // { month: "November", revenue: 777, expense: 432 },
+  // { month: "December", revenue: 915, expense: 562 },
 ];
 
 const chartConfig = {
@@ -56,7 +56,7 @@ export function ExpenseRevenueTracking() {
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
-            <BarChart accessibilityLayer data={chartData}>
+            <BarChart accessibilityLayer data={[]}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="month"
