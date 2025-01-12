@@ -17,6 +17,8 @@ interface EndShiftModalProps {
 const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const getAccountDetails = localStorage.getItem("accounts");
+  const accounts = getAccountDetails ? JSON.parse(getAccountDetails) : null;
 
   // Define logoutUser to dispatch the logout and handle redirection
   const logoutUser = async () => {
@@ -68,19 +70,19 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                 <span className="block capitalize text-gray-400 font-thin">
                   Sales:
                 </span>
-                <span className="block font-bold">₵ 34,295</span>
+                <span className="block font-bold">₵ -</span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="block capitalize text-gray-400 font-thin">
                   hours spent
                 </span>
-                <span className="block">7hrs 15mins</span>
+                <span className="block">-</span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="block capitalize text-gray-400 font-thin">
                   Name
                 </span>
-                <span className="block">Richard John Doe</span>
+                <span className="block">{accounts[0]?.name}</span>
               </div>
             </div>
           </div>
@@ -90,19 +92,19 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                 <span className="block capitalize text-gray-400 font-thin">
                   cash sales:
                 </span>
-                <span className="block">₵ 1,392</span>
+                <span className="block">₵ -</span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="block capitalize text-gray-400 font-thin">
                   momo sales
                 </span>
-                <span className="block">₵ 1,392</span>
+                <span className="block">₵ -</span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="block capitalize text-gray-400 font-thin">
                   bank sales
                 </span>
-                <span className="block">₵ 1,392</span>
+                <span className="block">₵ -</span>
               </div>
             </div>
           </div>

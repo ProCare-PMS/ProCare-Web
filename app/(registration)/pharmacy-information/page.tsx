@@ -178,6 +178,7 @@ const RegistrationPage = () => {
                   <input
                     id="facility_name"
                     name="facility_name"
+                    placeholder="Facility Name"
                     type="text"
                     className="appearance-none border rounded w-full h-10 p-2 bg-[#F8F9FB]"
                   />
@@ -201,6 +202,7 @@ const RegistrationPage = () => {
                   <input
                     id="facility_number"
                     name="facility_number"
+                    placeholder="Facility Number"
                     type="text"
                     className="appearance-none border rounded w-full h-10 p-2 bg-[#F8F9FB]"
                   />
@@ -224,6 +226,7 @@ const RegistrationPage = () => {
                   <input
                     id="facility_email"
                     name="facility_email"
+                    placeholder="Facility Email"
                     type="email"
                     className="appearance-none border rounded w-full h-10 p-2 bg-[#F8F9FB]"
                   />
@@ -247,6 +250,7 @@ const RegistrationPage = () => {
                   <input
                     id="address"
                     name="address"
+                    placeholder="Address"
                     type="text"
                     className="appearance-none border rounded w-full h-10 p-2 bg-[#F8F9FB]"
                   />
@@ -268,6 +272,7 @@ const RegistrationPage = () => {
                   <input
                     id="city"
                     name="city"
+                    placeholder="City"
                     type="text"
                     className="appearance-none border rounded w-full h-10 p-2 bg-[#F8F9FB]"
                   />
@@ -291,6 +296,7 @@ const RegistrationPage = () => {
                   <input
                     id="region"
                     name="region"
+                    placeholder="Region"
                     type="text"
                     className="appearance-none border rounded w-full h-10 p-2 bg-[#F8F9FB]"
                   />
@@ -314,6 +320,7 @@ const RegistrationPage = () => {
                   <input
                     id="ghana_post_address"
                     name="ghana_post_address"
+                    placeholder="Ghana Post Address"
                     type="text"
                     className="appearance-none border rounded w-full h-10 p-2 bg-[#F8F9FB]"
                   />
@@ -337,6 +344,7 @@ const RegistrationPage = () => {
                   <input
                     id="license_number"
                     name="license_number"
+                    placeholder="License Number"
                     type="text"
                     className="appearance-none border rounded w-full h-10 p-2 bg-[#F8F9FB]"
                   />
