@@ -11,10 +11,6 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { useForm } from "react-hook-form";
-import { DatePicker } from "@/components/CustomDatePicker/DatePicker";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { dateSchema } from "@/lib/schema/schema";
 
 export const description = "A pie chart with a legend";
 
@@ -52,9 +48,6 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function PaymentMethodChart() {
-  const { control, setValue } = useForm<FormData>({
-    resolver: zodResolver(dateSchema),
-  });
   return (
     <Card className="flex flex-col w-full bg-white rounded-2xl h-96">
       <div className="flex justify-between py-4 px-3">
@@ -62,12 +55,11 @@ export function PaymentMethodChart() {
           <CardTitle>Payment Method</CardTitle>
         </div>
         <div className="flex gap-2">
-          <div className="w-48">
-            <DatePicker
-              name="date"
-              placeholder="Select Date"
-              control={control}
-            />
+          <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
+            <span>
+              <CalendarMonthIcon />
+            </span>
+            <span>October</span>
           </div>
 
           <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">

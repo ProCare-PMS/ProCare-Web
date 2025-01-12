@@ -67,7 +67,6 @@ export function SalesBarChart() {
               idField="month"
               nameField="month"
               optionData={monthsOfYear}
-              placeholder="Select Month"
             />
           </div>
           <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2 py-0">
