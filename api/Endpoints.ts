@@ -15,6 +15,7 @@ export const endpoints = {
   sales: "/sales/",
   salesItems: "/sales/sale-items/",
   posCutomers: "/sales/customers",
+  posReturns: "/sales/returns",
   user: "/user/",
   verifyEmail: "/verify-email",
 };
