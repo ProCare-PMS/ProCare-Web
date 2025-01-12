@@ -10,7 +10,6 @@ import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 
-
 const productData: Product[] = [
   { name: "Product A", quantity: 10, selling_price: "100" },
   { name: "Product B", quantity: 5, selling_price: "50" },
@@ -32,7 +31,7 @@ const ProductsSection = () => {
       await customAxios.get(endpoints.inventoryProduct).then((res) => res),
     select: (findData) => findData?.data?.results,
   });
-  
+
   const [searchValues, setSearchValues] = useState<string>("");
   const [data, setData] = useState(productData);
   const [orderList, setOrderList] = useState<Product[]>([]);
@@ -40,62 +39,64 @@ const ProductsSection = () => {
   const [isOrderListVisible, setIsOrderListVisible] = useState(false);
   const [showCustomers, setShowCustomer] = useState(false);
 
-  
-
-  console.log(inventoryProductsData)
-
-  useEffect(() => {
-    if (inventoryProductsData) {
-      setOrderList(inventoryProductsData);
-    }
-  }, [inventoryProductsData]);
-
+  console.log(inventoryProductsData);
 
   // Update quantity handler for both data and orderList
   const updateQuantity = (productName: string, delta: number) => {
+    // Update the main data table
     setData((prevData) =>
       prevData.map((product) =>
         product.name === productName
-          ? { ...product, quantity: product.quantity + delta }
+          ? { ...product, quantity: Math.max(0, product.quantity + delta) }
           : product
       )
     );
 
+    // Update the order list if the product exists there
     setOrderList((prevOrderList) =>
       prevOrderList.map((product) =>
         product.name === productName
-          ? { ...product, quantity: product.quantity + delta }
+          ? { ...product, quantity: Math.max(0, product.quantity + delta) }
           : product
       )
     );
+
+    // If quantity becomes 0, optionally remove the item from the order list
+    if (delta < 0) {
+      setOrderList((prevOrderList) =>
+        prevOrderList.filter((product) =>
+          product.name === productName ? product.quantity + delta > 0 : true
+        )
+      );
+    }
   };
 
   // Add to Order function that also ensures OrderList visibility
   const addToOrder = (product: Product) => {
     setOrderList((prevOrderList) => {
-      const existingProduct = prevOrderList.find(
+      // Check if product already exists in order list
+      const existingProductIndex = prevOrderList.findIndex(
         (item) => item.name === product.name
       );
-      if (existingProduct) {
-        // Updating quantity if the product exists
-        const updatedOrderList = prevOrderList.map((item) =>
-          item.name === product.name
-            ? { ...item, quantity: item.quantity }
-            : item
-        );
-        setOrderList(updatedOrderList);
+
+      if (existingProductIndex !== -1) {
+        // If product exists, update its quantity
+        const updatedList = [...prevOrderList];
+        updatedList[existingProductIndex] = {
+          ...updatedList[existingProductIndex],
+          quantity: product.quantity, // Use the product's current quantity
+        };
+        return updatedList;
       } else {
-        // Adding a new product if it doesn't exist
-        setOrderList([...prevOrderList, { ...product, quantity: product.quantity }]);
+        // If product doesn't exist, add it with its current quantity
+        return [...prevOrderList, { ...product }]; // The spread operator will copy all properties including quantity
       }
-
-      // Make sure OrderList is visible when items are added
-      if (!isOrderListVisible) {
-        setIsOrderListVisible(true);
-      }
-
-      return prevOrderList;
     });
+
+    // Show the order list if it's hidden
+    if (!isOrderListVisible) {
+      setIsOrderListVisible(true);
+    }
   };
 
   const handleSearchValueChange = (
@@ -106,7 +107,8 @@ const ProductsSection = () => {
 
   useEffect(() => {
     const total = orderList.reduce(
-      (sum, product) => sum + product.quantity * parseFloat(product.selling_price),
+      (sum, product) =>
+        sum + product.quantity * parseFloat(product.selling_price),
       0
     );
     setTotalPrice(total);
@@ -125,6 +127,13 @@ const ProductsSection = () => {
   //Close Customer List Modal
   const closeCustomerList = () => {
     setShowCustomer(false);
+  };
+
+  // In ProductsSection.tsx
+  const clearOrderList = () => {
+    setOrderList([]);
+    // Optionally hide the order list when it's cleared
+    setIsOrderListVisible(false);
   };
 
   return (
@@ -170,6 +179,7 @@ const ProductsSection = () => {
           updateQuantity={updateQuantity}
           totalPrice={totalPrice}
           onToggleOrderList={handleToggleOrderList}
+          onClearBasket={clearOrderList}
         />
       )}
     </div>
