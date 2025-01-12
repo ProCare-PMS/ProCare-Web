@@ -28,6 +28,12 @@ import {
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import { useState } from "react";
+import CustomSelect from "@/components/CustomSelect/CustomSelect";
+import { monthsOfYear } from "@/components/CustomFunction/CustomFunction";
+import { DatePicker } from "@/components/CustomDatePicker/DatePicker";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { dateSchema } from "@/lib/schema/schema";
 
 export const description = "A linear area chart";
 
@@ -90,6 +96,9 @@ const chartConfig = {
 export function ProfitChart() {
   const [timeRange, setTimeRange] = useState("90d");
   const [selectedMonth, setSelectedMonth] = useState("");
+  const { control, setValue } = useForm<FormData>({
+    resolver: zodResolver(dateSchema),
+  });
 
   const handleMonthChange = (e: any) => {
     setSelectedMonth(e.target.value);
@@ -107,54 +116,21 @@ export function ProfitChart() {
           </div>
 
           <div className="flex gap-2">
-            {/* <Select value={timeRange} onValueChange={setTimeRange}>
-              <SelectTrigger
-                className="w-[160px] rounded-[0.5rem] sm:ml-auto"
-                aria-label="Select a value"
-              >
-                <SelectValue placeholder="All Stock" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                <SelectItem value="90d" className="rounded-lg">
-                  All Stock
-                </SelectItem>
-                <SelectItem value="30d" className="rounded-lg">
-                  Last 30 days
-                </SelectItem>
-                <SelectItem value="7d" className="rounded-lg">
-                  Last 7 days
-                </SelectItem>
-              </SelectContent>
-            </Select> */}
             <div className="w-44">
-              <select
-                id="month"
-                name="month"
-                value={selectedMonth}
-                onChange={handleMonthChange}
-                className="mt-1 block w-full border border-gray-500 px-1 py-2 focus:border-gray-500 focus:ring-opacity-50 rounded-xl"
-              >
-                <option value="">Month</option>
-                <option value="1">January</option>
-                <option value="2">February</option>
-                <option value="3">March</option>
-                <option value="4">April</option>
-                <option value="5">May</option>
-                <option value="6">June</option>
-                <option value="7">July</option>
-                <option value="8">August</option>
-                <option value="9">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
-              </select>
+              <CustomSelect
+                idField="month"
+                nameField="month"
+                optionData={monthsOfYear}
+                placeholder="Select Month"
+              />
             </div>
 
-            <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
-              <span>
-                <CalendarMonthIcon />
-              </span>
-              <span>October</span>
+            <div className="w-48">
+              <DatePicker
+                name="date"
+                placeholder="Select Date"
+                control={control}
+              />
             </div>
 
             <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">

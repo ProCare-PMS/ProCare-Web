@@ -17,6 +17,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useState } from "react";
+import CustomSelect from "@/components/CustomSelect/CustomSelect";
+import { monthsOfYear } from "@/components/CustomFunction/CustomFunction";
 
 export const description = "Volumes and Frequency";
 
@@ -53,27 +55,12 @@ export function OrderVolumeFChart() {
         <CardTitle>Order Volumes Frequency</CardTitle>
         {/* <CardDescription>January - June 2024</CardDescription> */}
         <div className="w-44">
-          <select
-            id="month"
-            name="month"
-            value={selectedMonth}
-            onChange={handleMonthChange}
-            className="mt-1 block w-full border border-gray-500 px-1 py-2 focus:border-gray-500 focus:ring-opacity-50 rounded-xl"
-          >
-            <option value="">Month</option>
-            <option value="1">January</option>
-            <option value="2">February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">June</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">September</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
-          </select>
+          <CustomSelect
+            idField="month"
+            nameField="month"
+            optionData={monthsOfYear}
+            placeholder="Select Month"
+          />
         </div>
       </CardHeader>
       <CardContent>
