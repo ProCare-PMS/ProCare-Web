@@ -5,7 +5,7 @@ import Providers from "./Provider";
 import LoadingWrapper from "@/components/Loader/LoadingWrapper";
 import Script from "next/script";
 
-import {  Inter  } from "next/font/google";
+import { Inter } from "next/font/google";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ProHealium",
+  title: "RxPMS ",
   description: "Pharmacy Information",
 };
 
@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" translate="no" className={inter.className}>
       <head>
-        <meta name="apple-mobile-web-app-title" content="ProHealium" />
+        <meta name="apple-mobile-web-app-title" content="RxPMS" />
       </head>
       <body>
         <Script

@@ -35,3 +35,16 @@ export interface DashboardStatsResponse {
   total_products: number;
   total_suppliers: number;
 }
+
+interface accountFirstLogin {
+  id: string;
+  name: string;
+  email: string;
+  account_type: string;
+  custom_pharmacy_id: string;
+}
+
+export interface FirstLoginState {
+  step: string;
+  account: accountFirstLogin[];
+}

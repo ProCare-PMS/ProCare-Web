@@ -9,14 +9,7 @@ function Index() {
       router.replace("/dashboard");
     }
   }, [router]);
-  return (
-    <div>
-      <p>
-        ANY TIME YOU FIND YOUR SELF ON THIS PAGE I WANT YOU TO KNOW IS A BUG.
-        🐜🐛😜
-      </p>
-    </div>
-  );
+  return <div></div>;
 }
 
 export default Index;

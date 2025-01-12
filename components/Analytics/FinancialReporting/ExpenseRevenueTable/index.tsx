@@ -71,7 +71,7 @@ function ExpenseRevenueTable() {
         </div>
       </div>
 
-      <DataTable columns={Columns} data={Data} searchValue={searchValues} />
+      <DataTable columns={Columns} data={[]} searchValue={searchValues} />
     </div>
   );
 }

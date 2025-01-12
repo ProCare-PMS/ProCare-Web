@@ -32,18 +32,18 @@ import { useState } from "react";
 export const description = "A linear area chart";
 
 const chartData = [
-  { month: "January", loss: 500 },
-  { month: "February", loss: 800 },
-  { month: "March", loss: 300 },
-  { month: "April", loss: 750 },
-  { month: "May", loss: 600 },
-  { month: "June", loss: 400 },
-  { month: "July", loss: 900 },
-  { month: "August", loss: 350 },
-  { month: "September", loss: 650 },
-  { month: "October", loss: 700 },
-  { month: "November", loss: 950 },
-  { month: "December", loss: 500 },
+  // { month: "January", loss: 500 },
+  // { month: "February", loss: 800 },
+  // { month: "March", loss: 300 },
+  // { month: "April", loss: 750 },
+  // { month: "May", loss: 600 },
+  // { month: "June", loss: 400 },
+  // { month: "July", loss: 900 },
+  // { month: "August", loss: 350 },
+  // { month: "September", loss: 650 },
+  // { month: "October", loss: 700 },
+  // { month: "November", loss: 950 },
+  // { month: "December", loss: 500 },
 ];
 
 const chartConfig = {
@@ -68,8 +68,7 @@ export function LossChart() {
           <div className="grid flex-1 gap-1 text-center sm:text-left">
             <CardTitle>Loss</CardTitle>
             <CardDescription>
-              Total Loss:{" "}
-              <span className="text-blue-700 font-bold">₵ 839.27</span>
+              Total Loss: <span className="text-blue-700 font-bold">₵ -</span>
             </CardDescription>
           </div>
 
@@ -117,7 +116,7 @@ export function LossChart() {
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
             <AreaChart
               accessibilityLayer
-              data={chartData}
+              data={[]}
               margin={{
                 left: 12,
                 right: 12,

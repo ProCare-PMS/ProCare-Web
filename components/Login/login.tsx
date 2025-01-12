@@ -10,6 +10,10 @@ import customAxios, { _baseUrl } from "@/api/CustomAxios";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { User } from "@/Types";
+import {
+  firstLoginFailure,
+  setfirstLoginSuccess,
+} from "@/redux/firstLoginSlice";
 
 // Define Zod schema for validation
 const loginSchema = z.object({
@@ -73,17 +77,13 @@ export default function Login() {
       { formData: data },
       {
         onSuccess: (responseData) => {
-          const token = responseData?.access;
-          const user = responseData?.user;
-          const refreshToken = responseData?.refresh;
-          //const { token, user } = responseData;
-          if (token && user) {
-            localStorage.setItem("authToken", token);
-            localStorage.setItem("refreshToken", refreshToken);
-            localStorage.setItem("user", JSON.stringify(user));
-            toast.success("Login successful! Redirecting to the dashboard.");
-            dispatch(loginSuccess({ token, refreshToken, user }));
-            router.push("/dashboard");
+          const step = responseData?.step;
+          const account = responseData?.accounts;
+          if (step === "select_account" && !!account && account.length > 0) {
+            localStorage.setItem("accounts", JSON.stringify(account));
+            toast.success("Login successful!! Select an account.");
+            dispatch(setfirstLoginSuccess({ step, account }));
+            router.push("/profile");
           }
         },
         onError: (error: any) => {
@@ -97,10 +97,10 @@ export default function Login() {
             } else {
               toast.error("An unexpected error occurred. Please try again.");
             }
-            dispatch(loginFailure("An unexpected error occurred"));
+            dispatch(firstLoginFailure(error.response.data));
           } else {
             toast.error(
-              "A network or unexpected error occurred. Please try again."
+              error.response.data.message || "An unexpected error occurred."
             );
           }
         },

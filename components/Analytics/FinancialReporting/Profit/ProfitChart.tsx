@@ -32,18 +32,18 @@ import { useState } from "react";
 export const description = "A linear area chart";
 
 const chartData = [
-  { month: "January", profit: 500 },
-  { month: "February", profit: 800 },
-  { month: "March", profit: 300 },
-  { month: "April", profit: 750 },
-  { month: "May", profit: 600 },
-  { month: "June", profit: 400 },
-  { month: "July", profit: 900 },
-  { month: "August", profit: 350 },
-  { month: "September", profit: 650 },
-  { month: "October", profit: 700 },
-  { month: "November", profit: 950 },
-  { month: "December", profit: 500 },
+  // { month: "January", profit: 500 },
+  // { month: "February", profit: 800 },
+  // { month: "March", profit: 300 },
+  // { month: "April", profit: 750 },
+  // { month: "May", profit: 600 },
+  // { month: "June", profit: 400 },
+  // { month: "July", profit: 900 },
+  // { month: "August", profit: 350 },
+  // { month: "September", profit: 650 },
+  // { month: "October", profit: 700 },
+  // { month: "November", profit: 950 },
+  // { month: "December", profit: 500 },
 ];
 
 // const chartData2 = [
@@ -102,8 +102,7 @@ export function ProfitChart() {
           <div className="grid flex-1 gap-1 text-center sm:text-left">
             <CardTitle>Profit</CardTitle>
             <CardDescription>
-              Total Profit:{" "}
-              <span className="text-blue-700 font-bold">₵ 839.27</span>
+              Total Profit: <span className="text-blue-700 font-bold">₵ -</span>
             </CardDescription>
           </div>
 
@@ -170,7 +169,7 @@ export function ProfitChart() {
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
             <AreaChart
               accessibilityLayer
-              data={chartData}
+              data={[]}
               margin={{
                 left: 12,
                 right: 12,
