@@ -1,35 +1,56 @@
+import { DashboardStatsResponse } from "@/Types";
 import Image from "next/image";
 import React from "react";
 
-const statsCounts = [
-  {
-    icon: "/assets/images/stock.png",
-    title: "STOCK COUNT",
-    count: "312",
-  },
-  {
-    icon: "/assets/images/categorystats.png",
-    title: "CATEGORIES",
-    count: "40",
-  },
-  {
-    icon: "/assets/images/supplierstats.png",
-    title: "SUPPLIERS",
-    count: "68",
-  },
-  {
-    icon: "/assets/images/stockstats.png",
-    title: "LOW STOCK",
-    count: "27",
-  },
-  {
-    icon: "/assets/images/expirystats.png",
-    title: "EXPIRY",
-    count: "5",
-  },
-];
+interface ProductsTabStatsProps {
+  // Add any additional props if needed
+  dashboardData: DashboardStatsResponse;
+}
 
-const ProductsTabStats = () => {
+const ProductsTabStats = ({ dashboardData }: ProductsTabStatsProps) => {
+  const statsCounts = [
+    {
+      icon: "/assets/images/stock.png",
+      title: "STOCK COUNT",
+      count:
+        dashboardData?.items_in_stock === 0
+          ? "-"
+          : dashboardData?.items_in_stock,
+    },
+    {
+      icon: "/assets/images/categorystats.png",
+      title: "CATEGORIES",
+      count:
+        dashboardData?.top_categories.length === 0
+          ? "-"
+          : dashboardData?.top_categories.length,
+    },
+    {
+      icon: "/assets/images/supplierstats.png",
+      title: "SUPPLIERS",
+      count:
+        dashboardData?.total_suppliers === 0
+          ? "-"
+          : dashboardData?.total_suppliers,
+    },
+    {
+      icon: "/assets/images/stockstats.png",
+      title: "LOW STOCK",
+      count:
+        dashboardData?.low_stock_products === 0
+          ? "-"
+          : dashboardData?.low_stock_products,
+    },
+    {
+      icon: "/assets/images/expirystats.png",
+      title: "EXPIRY",
+      count:
+        dashboardData?.expiring_soon_products === 0
+          ? "-"
+          : dashboardData?.expiring_soon_products,
+    },
+  ];
+
   return (
     <div className="flex items-center lg:gap-4 justify-between">
       {statsCounts.map((statItem: any, index: number) => (
