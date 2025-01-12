@@ -10,8 +10,22 @@ import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import AddCustomerModal from "../AddCustomerModal/AddCustomerModal";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 function CustomersTable() {
+
+  const { data: customersData } = useQuery({
+    queryKey: ["posCustomers"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.posCutomers).then((res) => res),
+    select: (findData) => findData?.data?.results,
+  });
+
+  console.log(customersData)
+
+
   const [searchValues, setSetSearchValues] = useState<string>("");
 
   const [showCustomer, setShowCustomer] = useState(false);
@@ -51,11 +65,11 @@ function CustomersTable() {
           </div>
         </div>
 
-        
+         
         {/* Check the columns for the dropdown actions for the table */}
         <DataTable
           columns={customersTabColumns}
-          data={customersData}
+          data={customersData || []}
           searchValue={searchValues}
         />
       </div>
