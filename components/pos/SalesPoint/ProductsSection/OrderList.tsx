@@ -18,6 +18,7 @@ interface OrderListProps {
   updateQuantity: (productName: string, delta: number) => void;
   totalPrice: number;
   onToggleOrderList: () => void; // Add prop for toggling visibility
+  onClearBasket: () => void;
 }
 
 const OrderList = ({
@@ -25,6 +26,7 @@ const OrderList = ({
   updateQuantity,
   totalPrice,
   onToggleOrderList,
+  onClearBasket,
 }: OrderListProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
@@ -41,11 +43,10 @@ const OrderList = ({
     <div className="grid gap-y-4 w-[50%]">
       <div className="w-full h-fit pl-4 transition-all bg-white shadow-custom p-4 rounded-[8px]">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold mb-4 font-inter text-[#202224]">Order List</h2>
-          <FaMinus
-            onClick={onToggleOrderList}
-            className="cursor-pointer"
-          />{" "}
+          <h2 className="text-2xl font-bold mb-4 font-inter text-[#202224]">
+            Order List
+          </h2>
+          <FaMinus onClick={onToggleOrderList} className="cursor-pointer" />{" "}
           {/* Handle click */}
         </div>
 
@@ -72,7 +73,7 @@ const OrderList = ({
                     >
                       <FaMinus />
                     </button>
-                    <span className="w-4 text-center">{product.quantity}</span>
+                    <span className="w-12 text-center">{product.quantity}</span>
                     <button
                       onClick={() => updateQuantity(product.name, 1)}
                       className="text-green-600 rounded-full border border-green-600 p-1"
@@ -104,7 +105,10 @@ const OrderList = ({
           </span>
         </div>
         <div className="flex items-center justify-end gap-x-6 mt-6">
-          <button className="border border-[#323539] flex-1 rounded-[4px] py-2 px-8 text-[#323539] font-inter font-semibold text-sm">
+          <button
+            onClick={onClearBasket}
+            className="border border-[#323539] flex-1 rounded-[4px] py-2 px-8 text-[#323539] font-inter font-semibold text-sm"
+          >
             Clear Basket
           </button>
           <button

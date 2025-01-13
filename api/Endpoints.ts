@@ -14,7 +14,8 @@ export const endpoints = {
   inventoryBranchSync: "/inventories/stock-transfers/",
   sales: "/sales/",
   salesItems: "/sales/sale-items/",
-  posCutomers: "/sales/customers",
+  posCustomers: "/sales/customers/",
+  posReturns: "/sales/returns",
   user: "/user/",
   verifyEmail: "/verify-email",
 };

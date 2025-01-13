@@ -30,7 +30,7 @@ export const posProductsColumns = (
         >
           <FaMinus />
         </button>
-        <div className="w-4 text-center">{row.original.quantity}</div>
+        <div className="w-12 mx-auto text-center">{row.original.quantity}</div>
         <button
           className="text-green-600  rounded-full border border-green-600 p-1"
           onClick={() => updateQuantity(row.original.name, 1)}
