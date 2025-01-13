@@ -19,7 +19,7 @@ function CustomersTable() {
   const { data: customersData } = useQuery({
     queryKey: ["posCustomers"],
     queryFn: async () =>
-      await customAxios.get(endpoints.posCutomers).then((res) => res),
+      await customAxios.get(endpoints.posCustomers).then((res) => res),
     select: (findData) => findData?.data?.results,
   });
 
@@ -59,7 +59,7 @@ function CustomersTable() {
                 src="/assets/images/filterFrame.svg"
                 alt="filter icon"
                 width={100}
-                height={100}
+                height={100} 
               />
             </span>
           </div>
