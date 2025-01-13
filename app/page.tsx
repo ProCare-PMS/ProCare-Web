@@ -2,13 +2,13 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 function Index() {
-  const router = useRouter();
+  //const router = useRouter();
 
-  useEffect(() => {
-    if (process.env.NODE_ENV === "production") {
-      router.replace("/login");
-    }
-  }, [router]);
+  // useEffect(() => {
+  //   if (process.env.NODE_ENV === "production") {
+  //     router.replace("/login");
+  //   }
+  // }, [router]);
   return <div></div>;
 }
 
