@@ -6,7 +6,7 @@ function Index() {
 
   useEffect(() => {
     if (process.env.NODE_ENV === "production") {
-      router.replace("/dashboard");
+      router.replace("/login");
     }
   }, [router]);
   return <div></div>;
