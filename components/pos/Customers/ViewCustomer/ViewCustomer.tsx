@@ -2,14 +2,16 @@ import React from "react";
 import CustomerDetails from "./CustomerDetails";
 import ViewCustomerTabs from "./ViewCustomerTabs";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { CustomerType } from "../CustomersTable/Columns";
 
 type ViewCustomerProps = {
   setModal: () => void;
+  item: CustomerType  | null
 };
 
 
 
-const ViewCustomer = ({ setModal }: ViewCustomerProps) => {
+const ViewCustomer = ({ setModal, item }: ViewCustomerProps) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-gray-100 rounded-2xl shadow-lg w-[90%] p-6 relative h-full">
@@ -26,7 +28,7 @@ const ViewCustomer = ({ setModal }: ViewCustomerProps) => {
           {/* Customer Details*/}
           <div className="w-[30%]  h-full">
             {/* Used -mt-3 because of the "minHeight: 75vh" in the View CustomerTabs to align the horizontally */}
-            <CustomerDetails />
+            <CustomerDetails details={item} />
           </div>
 
           {/* Details */}

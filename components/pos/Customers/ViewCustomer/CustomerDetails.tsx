@@ -1,6 +1,13 @@
 import React from "react";
+import { CustomerType } from "../CustomersTable/Columns";
 
-const CustomerDetails = () => {
+interface CustomerDetailsProps {
+  details: CustomerType | null
+}
+
+const CustomerDetails = ({ details } : CustomerDetailsProps) => {
+
+
   return (
     <div className="bg-white p-4 grid gap-y-4 place-items-center text-center">
       {/* Name and Image with initials */}
@@ -14,7 +21,7 @@ const CustomerDetails = () => {
 
         {/* Customer Name and ID */}
         <div className="mt-4">
-          <h2 className="mt-4">Manuel Akwasi Smith</h2>
+          <h2 className="mt-4"> {details?.full_name} </h2>
           <p className="text-[#202224]">
             <span className="text-[#858C95]">ID:</span> Customer #58547
           </p>
@@ -24,20 +31,20 @@ const CustomerDetails = () => {
       {/* Phone Number */}
       <div className="text-center">
         <h3 className="text-[#858C95] text-sm font-normal ">Phone Number</h3>
-        <p className="text-[#202224] text-base font-normal">+1 123-456-7890</p>
+        <p className="text-[#202224] text-base font-normal">{details?.phone_number}</p>
       </div>
 
       {/* Email Address */}
       <div>
         <h3 className="text-[#858C95] text-sm font-normal ">Email Addres</h3>
-        <p className="text-[#202224] text-base font-normal">derixk@gmail.com</p>
+        <p className="text-[#202224] text-base font-normal">{details?.email}</p>
       </div>
 
       {/* Address */}
       <div>
         <h3 className="text-[#858C95] text-sm font-normal ">Address</h3>
         <p className="text-[#202224] text-base font-normal">
-          123 Ring Road, Accra
+         {details?.address}
         </p>
       </div>
       
@@ -45,14 +52,14 @@ const CustomerDetails = () => {
       <div>
         <h3 className="text-[#858C95] text-sm font-normal ">Age</h3>
         <p className="text-[#202224] text-base font-normal">
-          100
+        {details?.age}
         </p>
       </div>
 
       {/* Gender */}
       <div>
         <h3 className="text-[#858C95] text-sm font-normal ">Gender</h3>
-        <p className="text-[#202224] text-base font-normal">Male</p>
+        <p className="text-[#202224] text-base font-normal">{details?.gender}</p>
       </div>
 
       {/* Total Purchases */}

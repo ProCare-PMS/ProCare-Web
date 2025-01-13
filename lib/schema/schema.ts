@@ -137,6 +137,63 @@ const dateSchema = z.object({
   date: z.string(),
 });
 
+const AddCustomerSchema = z.object({
+  full_name: z.string({
+    required_error: "Full name is required",
+  }),
+  email: z.string({
+    required_error: "Email is required",
+  }),
+  phone_number: z.string({
+    required_error: "Phone Number is required",
+  }),
+  address: z.string({
+    required_error: "Address is required",
+  }),
+  gender: z.string({
+    required_error: "Gender is required",
+  }),
+  birth_date: z.string({
+    required_error: "Birth Date is required",
+  }),
+  height: z.string({
+    required_error: "Height is required",
+  }),
+  weight: z.string({
+    required_error: "Weight is required",
+  }),
+  blood_type: z.string({
+    required_error: "Blood Type is required",
+  }),
+  blood_pressure: z.string({
+    required_error: "Blood Pressure is required",
+  }),
+  allergies: z.string({
+    required_error: "Allergies is required",
+  }),
+  chronic_conditions: z.string({
+    required_error: "Chronic Conditions is required",
+  }),
+  med_info_product: z.string({
+    required_error: "Medical Information Product is required",
+  }),
+  dosage: z.string({
+    required_error: "Dosage is required",
+  }),
+  frequency: z.string({
+    required_error: "Frequency is required",
+  }),
+  start_date: z.string({
+    required_error: "Start Date is required",
+  }),
+  end_date: z.string({
+    required_error: "End Date is required",
+  }),
+  additional_info: z.string({
+    required_error: "Additional Information name is required",
+  }),
+});
+
 export {
   userRegistrationSchema,
   AddUserSchema,
@@ -147,4 +204,5 @@ export {
   CompanySchema,
   AddProductSchema,
   dateSchema,
+  AddCustomerSchema,
 };
