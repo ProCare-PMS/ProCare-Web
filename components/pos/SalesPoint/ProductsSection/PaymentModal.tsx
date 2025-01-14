@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import {
   Table,
@@ -8,24 +8,45 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Product } from "./Columns";
-import { ArrowLeft, X } from "lucide-react";
+import { ArrowLeft, X, Printer } from "lucide-react";
+import { useReactToPrint } from "react-to-print";
 
+// Product Type
+type Product = {
+  id: number;
+  name: string;
+  quantity: number;
+  selling_price: string;
+  productName: string;
+};
+
+// Generate Random Products with Unique IDs
 const generateRandomProducts = (): Product[] => {
   const products = [
-    { productName: "Paracetamol 250mg", quantity: 2, price: "20.0" },
-    { productName: "Paracetamol 250mg", quantity: 1, price: "50.0" },
-    { productName: "Paracetamol 250mg", quantity: 3, price: "15.0" },
+    { id: 1, name: "Paracetamol 250mg", quantity: 2, selling_price: "20.0" },
+    { id: 2, name: "Ibuprofen 400mg", quantity: 1, selling_price: "50.0" },
+    { id: 3, name: "Aspirin 100mg", quantity: 3, selling_price: "15.0" },
   ];
   return products.map((product) => ({
     ...product,
-    productName: `${product.productName} 10223`,
+    productName: `${product.name} 10223`,
   }));
 };
 
 // Modal Component
 const PaymentModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [products, setProducts] = useState<Product[]>(generateRandomProducts());
+  const componentRef = useRef<HTMLDivElement>(null);
+
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef,
+    documentTitle: "Payment Receipt",
+  });
+
+  const onPrintClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    handlePrint();
+  };
 
   useEffect(() => {
     // Disable scrolling when modal is open
@@ -37,22 +58,20 @@ const PaymentModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     };
   }, []);
 
-  const removeProduct = (productName: string) => {
-    setProducts(
-      products.filter((product) => product.productName !== productName)
-    );
+  const removeProduct = (productId: number) => {
+    setProducts(products.filter((product) => product.id !== productId));
   };
 
   const totalPrice = products.reduce((total, product) => {
-    return total + parseFloat(product.price) * product.quantity;
+    return total + parseFloat(product.selling_price) * product.quantity;
   }, 0);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-[800px]">
+      <div ref={componentRef} className="bg-white p-6 rounded-lg shadow-lg w-[800px]">
         <div className="flex items-center gap-4 mb-6">
           <ArrowLeft onClick={onClose} className="cursor-pointer" />
-          <h2 className="text-2xl font-bold  font-inter">Payment Method</h2>
+          <h2 className="text-2xl font-bold font-inter">Payment Method</h2>
         </div>
         <hr className="mb-5" />
         <div className="flex items-center gap-4">
@@ -75,20 +94,21 @@ const PaymentModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </TableHeader>
           <TableBody>
             {products.map((product) => (
-              <TableRow key={product.productName} className="hover:bg-gray-100">
+              <TableRow key={product.id} className="hover:bg-gray-100">
                 <TableCell className="px-6 py-4 border-b">
-                  {product.productName}
+                  {product.name}
                 </TableCell>
                 <TableCell className="px-6 py-4 border-b">
                   {product.quantity}
                 </TableCell>
                 <TableCell className="px-6 py-4 border-b">
-                  GH₵{product.price}
+                  GH₵{product.selling_price}
                 </TableCell>
                 <TableCell className="px-6 py-4 border-b">
                   <button
                     className="text-red-600"
-                    onClick={() => removeProduct(product.productName)}
+                    onClick={() => removeProduct(product.id)}
+                    aria-label={`Remove ${product.name}`}
                   >
                     <X />
                   </button>
@@ -98,7 +118,7 @@ const PaymentModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </TableBody>
         </Table>
 
-        <div className="flex  justify-end font-inter mt-5">
+        <div className="flex justify-end font-inter mt-5">
           <div className="flex flex-col gap-y-1">
             <p className="text-sm font-normal text-[#858C95]">TOTAL PRICE</p>
             <span className="text-2xl font-bold font-inter">
@@ -108,10 +128,17 @@ const PaymentModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </div>
 
         <div className="flex items-center justify-end gap-6 mt-7">
-          <button className="border border-[#2648EA] text-[#2648EA] font-inter font-semibold text-sm py-2 px-4 rounded-[4px]">
+          <button className="border w-[150px] border-[#2648EA] text-[#2648EA] font-inter font-semibold text-sm py-2 px-4 rounded-[4px]">
             Hold Transaction
           </button>
-          <button className="py-2 px-4 rounded-[4px] bg-[#2648EA] text-white text-sm font-inter font-semibold">
+          <button
+            onClick={onPrintClick}
+            className="border w-[150px] border-[#2648EA] flex items-center justify-center gap-1 text-[#2648EA] font-inter font-semibold text-sm py-2 px-4 rounded-[4px]"
+          >
+            <Printer className="w-4" />
+            Print
+          </button>
+          <button className="py-2 px-4 w-[150px] rounded-[4px] bg-[#2648EA] text-white text-sm font-inter font-semibold">
             Finalize Payment
           </button>
         </div>
