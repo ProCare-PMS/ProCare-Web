@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,11 +11,17 @@ import { useDispatch } from "react-redux";
 import { loginFailure, loginSuccess } from "@/redux/authSlice";
 
 const UserPasscode = () => {
-  const [otp, setOtp] = useState(["", "", "", ""]); // State for OTP input
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [accountId, setAccountId] = useState<string | null>(null);
   const router = useRouter();
   //get account id from local storage
-  const accountId = localStorage.getItem("accountId");
+  //const accountId = localStorage.getItem("accountId");
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const storedAccountId = localStorage.getItem("accountId");
+    setAccountId(storedAccountId);
+  }, []);
 
   // Handle input change
   const handleChange = (value: string, index: number) => {
@@ -115,7 +121,7 @@ const UserPasscode = () => {
           <div className="w-[40%] h-[40%] mx-auto shadow-md rounded-xl">
             <Image
               className="w-full h-full bg-cover py-4 px-6"
-              src="/assets/images/profile.jpg"
+              src="/profile.jpg"
               width={40}
               height={40}
               alt="profileImage"
