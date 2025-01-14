@@ -7,6 +7,7 @@
     "open-browser": "start http://localhost:6325",
     "build": "next build",
     "start": "next start -p 6325",
+    "deploy": "next build",
     "lint": "next lint"
   },
   "dependencies": {
