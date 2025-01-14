@@ -11,8 +11,8 @@ import { useDispatch } from "react-redux";
 import { loginFailure, loginSuccess } from "@/redux/authSlice";
 
 const UserPasscode = () => {
-  const [otp, setOtp] = useState(["", "", "", ""]); // State for OTP input
-  const [accountId, setAccountId] = useState<string | null>(null); // Store accountId in state
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [accountId, setAccountId] = useState<string | null>(null);
   const router = useRouter();
 
   const dispatch = useDispatch();
