@@ -11,13 +11,13 @@ import {
 import { Product } from "./Columns";
 import PaymentModal from "./PaymentModal";
 import PaymentOptions from "./PaymentOptions";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 
 interface OrderListProps {
   orderList: Product[];
   updateQuantity: (productName: string, delta: number) => void;
   totalPrice: number;
-  onToggleOrderList: () => void; // Add prop for toggling visibility
+  onToggleOrderList: () => void;
   onClearBasket: () => void;
 }
 
@@ -39,6 +39,20 @@ const OrderList = ({
     setIsModalOpen(false);
   };
 
+  // New function to handle item removal
+  const handleRemoveItem = (productName: string) => {
+    // Call updateQuantity with a special value (e.g., -product.quantity) to remove the item
+    const product = orderList.find(p => p.name === productName);
+    if (product) {
+      updateQuantity(productName, -product.quantity);
+    }
+  };
+
+  // Calculate total price based on current items
+  const calculatedTotalPrice = orderList.reduce((total, product) => {
+    return total + (parseFloat(product.selling_price) * product.quantity);
+  }, 0);
+
   return (
     <div className="grid gap-y-4 w-[50%]">
       <div className="w-full h-fit pl-4 transition-all bg-white shadow-custom p-4 rounded-[8px]">
@@ -46,8 +60,7 @@ const OrderList = ({
           <h2 className="text-2xl font-bold mb-4 font-inter text-[#202224]">
             Order List
           </h2>
-          <FaMinus onClick={onToggleOrderList} className="cursor-pointer" />{" "}
-          {/* Handle click */}
+          <FaMinus onClick={onToggleOrderList} className="cursor-pointer" />
         </div>
 
         <Table className="w-full table-auto h-full">
@@ -56,6 +69,7 @@ const OrderList = ({
               <TableHead className="px-4 py-2">Product Name</TableHead>
               <TableHead className="px-4 py-2">Quantity</TableHead>
               <TableHead className="px-4 py-2">Price</TableHead>
+              <TableHead className="px-4 py-2 border">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -85,6 +99,15 @@ const OrderList = ({
                 <TableCell className="px-4 py-4 border-b">
                   {product.selling_price}
                 </TableCell>
+                <TableCell className="px-6 py-4 border-b">
+                  <button
+                    className="text-red-600"
+                    onClick={() => handleRemoveItem(product.name)}
+                    aria-label={`Remove ${product.name}`}
+                  >
+                    <X />
+                  </button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -97,11 +120,10 @@ const OrderList = ({
           </div>
         </div>
 
-        {/* Total Price */}
         <div className="mt-6 text-lg font-semibold flex items-center justify-between font-inter">
           <p className="text-[#858C95] font-normal text-sm">Total Price:</p>
           <span className="text-[#202224] font-bold text-xl">
-            GHS: {totalPrice.toFixed(2)}
+            GHS: {calculatedTotalPrice.toFixed(2)}
           </span>
         </div>
         <div className="flex items-center justify-end gap-x-6 mt-6">
