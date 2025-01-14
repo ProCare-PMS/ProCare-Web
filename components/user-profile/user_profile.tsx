@@ -9,7 +9,7 @@ export default function UserProfile() {
   useEffect(() => {
     // Only access localStorage on the client side
     const storedAccounts = localStorage.getItem("accounts");
-    if (storedAccounts) {
+    if (!!storedAccounts) {
       setAccountInfo(JSON.parse(storedAccounts));
     }
   }, []);
@@ -35,7 +35,7 @@ export default function UserProfile() {
                     <div className="w-[50%] h-[50%]">
                       <Image
                         className="w-full h-full"
-                        src="/assets/images/profile.jpg"
+                        src="/profile.jpg"
                         width={50}
                         height={50}
                         alt="profileImage"
