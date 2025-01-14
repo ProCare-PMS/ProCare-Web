@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,9 +11,10 @@ import { useDispatch } from "react-redux";
 import { loginFailure, loginSuccess } from "@/redux/authSlice";
 
 const UserPasscode = () => {
-  const [otp, setOtp] = useState(["", "", "", ""]); // State for OTP input
-  const [accountId, setAccountId] = useState<string | null>(null); // Store accountId in state
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [accountId, setAccountId] = useState<string | null>(null);
   const router = useRouter();
+
   const dispatch = useDispatch();
 
   // Fetch accountId from localStorage only in the browser
@@ -122,7 +123,7 @@ const UserPasscode = () => {
           <div className="w-[40%] h-[40%] mx-auto shadow-md rounded-xl">
             <Image
               className="w-full h-full bg-cover py-4 px-6"
-              src="/assets/images/profile.jpg"
+              src="/profile.jpg"
               width={40}
               height={40}
               alt="profileImage"
