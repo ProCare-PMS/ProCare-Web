@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,10 +12,17 @@ import { loginFailure, loginSuccess } from "@/redux/authSlice";
 
 const UserPasscode = () => {
   const [otp, setOtp] = useState(["", "", "", ""]); // State for OTP input
+  const [accountId, setAccountId] = useState<string | null>(null); // Store accountId in state
   const router = useRouter();
-  //get account id from local storage
-  const accountId = localStorage.getItem("accountId");
   const dispatch = useDispatch();
+
+  // Fetch accountId from localStorage only in the browser
+  useEffect(() => {
+    const storedAccountId = localStorage.getItem("accountId");
+    if (storedAccountId) {
+      setAccountId(storedAccountId);
+    }
+  }, []);
 
   // Handle input change
   const handleChange = (value: string, index: number) => {
@@ -56,6 +63,10 @@ const UserPasscode = () => {
   });
 
   const handleSubmit = async () => {
+    if (!accountId) {
+      toast.error("Account ID is missing.");
+      return;
+    }
     const otpValue = otp.join("");
 
     loginMutation.mutate(
@@ -65,12 +76,10 @@ const UserPasscode = () => {
       },
       {
         onSuccess: (responseData) => {
-          //console.log({ responseData });
           const token = responseData?.access;
           const user = responseData?.user;
           const refreshToken = responseData?.refresh;
 
-          //const { token, user } = responseData;
           if (token && user && refreshToken) {
             localStorage.setItem("authToken", token);
             localStorage.setItem("refreshToken", refreshToken);
@@ -84,8 +93,6 @@ const UserPasscode = () => {
         onError: (error: any) => {
           if (error.response && error.response.data) {
             const apiErrors = error.response.data;
-            console.log({ apiErrors });
-
             if (
               apiErrors.non_field_errors &&
               apiErrors.non_field_errors.length > 0
@@ -158,10 +165,7 @@ const UserPasscode = () => {
             </button>
           </div>
           <div className="text-center mt-4 text-[#2648EA]">
-            <span>Back to </span>{" "}
-            {/* <a href="/profile" className="text-[#2648EA]">
-              User Profile
-            </a> */}
+            <span>Back to </span>
             <button
               type="button"
               onClick={() => {
