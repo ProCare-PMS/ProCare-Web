@@ -4,13 +4,16 @@ import PaymentModal from "./PaymentModal";
 
 const PaymentOptions = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<string>("");
 
-  const handlePaymentOptions = () => {
+  const handlePaymentOptions = (paymentType: string) => {
+    setSelectedPayment(paymentType);
     setIsModalOpen(true);
   };
 
   const onClose = () => {
     setIsModalOpen(false);
+    setSelectedPayment("");
   };
 
   return (
@@ -22,7 +25,7 @@ const PaymentOptions = () => {
         <div className="grid grid-cols-3 gap-4 mt-5">
           <div
             className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3 cursor-pointer"
-            onClick={handlePaymentOptions}
+            onClick={() => handlePaymentOptions('Credit Card')}
           >
             <div className="bg-[#EFF0FE] rounded-full p-3">
               <Image
@@ -39,7 +42,7 @@ const PaymentOptions = () => {
 
           <div
             className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3 cursor-pointer"
-            onClick={handlePaymentOptions}
+            onClick={() => handlePaymentOptions('Mobile Money')}
           >
             <div className="bg-[#EFF0FE] rounded-full p-3">
               <Image
@@ -53,7 +56,8 @@ const PaymentOptions = () => {
               Mobile Money
             </span>
           </div>
-          <div className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3">
+          <div className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3"
+          >
             <div className="bg-[#EFF0FE] rounded-full p-3">
               <Image
                 src="/icons/cash.png"
@@ -99,7 +103,7 @@ const PaymentOptions = () => {
         </div>
       </div>
 
-      {isModalOpen && <PaymentModal onClose={onClose} />}
+      {isModalOpen && <PaymentModal onClose={onClose} title={selectedPayment} />}
     </div>
   );
 };
