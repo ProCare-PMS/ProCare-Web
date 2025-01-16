@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { loginFailure, loginSuccess } from "@/redux/authSlice";
 
+
 const UserPasscode = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [accountId, setAccountId] = useState<string | null>(null);
@@ -170,7 +171,7 @@ const UserPasscode = () => {
             <button
               type="button"
               onClick={() => {
-                window.location.href = "/profile";
+                router.push("/profile");
                 localStorage.removeItem("accountId");
               }}
             >

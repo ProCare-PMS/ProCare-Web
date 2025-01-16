@@ -2,14 +2,15 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function UserProfile() {
   const [accountInfo, setAccountInfo] = useState<any[]>([]);
-
+  const router = useRouter();
   useEffect(() => {
     // Only access localStorage on the client side
     const storedAccounts = localStorage.getItem("accounts");
-    if (storedAccounts) {
+    if (!!storedAccounts) {
       setAccountInfo(JSON.parse(storedAccounts));
     }
   }, []);
@@ -28,14 +29,14 @@ export default function UserProfile() {
                   type="button"
                   onClick={() => {
                     localStorage.setItem("accountId", detail.id);
-                    window.location.href = "/user-passcode";
+                    router.push("/user-passcode");
                   }}
                 >
                   <div className="w-52 h-52 bg-white flex justify-center items-center rounded-xl">
                     <div className="w-[50%] h-[50%]">
                       <Image
                         className="w-full h-full"
-                        src="/assets/images/profile.jpg"
+                        src="/profile.jpg"
                         width={50}
                         height={50}
                         alt="profileImage"
