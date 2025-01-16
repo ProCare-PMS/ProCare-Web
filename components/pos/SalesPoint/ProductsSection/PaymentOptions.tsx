@@ -56,8 +56,7 @@ const PaymentOptions = () => {
               Mobile Money
             </span>
           </div>
-          <div className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3"
-          >
+          <div className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3">
             <div className="bg-[#EFF0FE] rounded-full p-3">
               <Image
                 src="/icons/cash.png"
