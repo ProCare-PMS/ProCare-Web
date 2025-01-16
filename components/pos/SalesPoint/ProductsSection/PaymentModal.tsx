@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaPlus, FaMinus } from "react-icons/fa";
+import { ArrowLeft, X, Printer } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -8,79 +8,86 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowLeft, X, Printer } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
+import { Product } from "./OrderList";
+import { Customer } from "./CustomerList";
 
-// Product Type
-type Product = {
-  id: number;
-  name: string;
-  quantity: number;
-  selling_price: string;
-  productName: string;
-};
+interface PaymentModalProps {
+  onClose: () => void;
+  title: string;
+}
 
-// Generate Random Products with Unique IDs
-const generateRandomProducts = (): Product[] => {
-  const products = [
-    { id: 1, name: "Paracetamol 250mg", quantity: 2, selling_price: "20.0" },
-    { id: 2, name: "Ibuprofen 400mg", quantity: 1, selling_price: "50.0" },
-    { id: 3, name: "Aspirin 100mg", quantity: 3, selling_price: "15.0" },
-  ];
-  return products.map((product) => ({
-    ...product,
-    productName: `${product.name} 10223`,
-  }));
-};
-
-// Modal Component
-const PaymentModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const [products, setProducts] = useState<Product[]>(generateRandomProducts());
+const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
+  const [orderItems, setOrderItems] = useState<Product[]>([]);
+  const [customer, setCustomer] = useState<Customer | null>(null);
   const componentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Load order items and customer from localStorage
+    const savedOrderList = localStorage.getItem("orderList");
+    const savedCustomer = localStorage.getItem("selectedCustomer");
+
+    if (savedOrderList) {
+      setOrderItems(JSON.parse(savedOrderList));
+    }
+    if (savedCustomer) {
+      setCustomer(JSON.parse(savedCustomer));
+    }
+
+    // Disable scrolling when modal is open
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   const handlePrint = useReactToPrint({
     contentRef: componentRef,
     documentTitle: "Payment Receipt",
   });
 
-  const onPrintClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    handlePrint();
+  const removeProduct = (productName: string) => {
+    setOrderItems((items) => items.filter((item) => item.name !== productName));
+    // Update localStorage
+    const updatedItems = orderItems.filter((item) => item.name !== productName);
+    localStorage.setItem("orderList", JSON.stringify(updatedItems));
   };
 
-  useEffect(() => {
-    // Disable scrolling when modal is open
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      // Re-enable scrolling when modal is closed
-      document.body.style.overflow = "auto";
-    };
-  }, []);
-
-  const removeProduct = (productId: number) => {
-    setProducts(products.filter((product) => product.id !== productId));
-  };
-
-  const totalPrice = products.reduce((total, product) => {
+  const totalPrice = orderItems.reduce((total, product) => {
     return total + parseFloat(product.selling_price) * product.quantity;
   }, 0);
 
+  const handleFinalize = () => {
+    // Clear localStorage after successful payment
+    localStorage.removeItem("orderList");
+    localStorage.removeItem("selectedCustomer");
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div ref={componentRef} className="bg-white p-6 rounded-lg shadow-lg w-[800px]">
+      <div
+        ref={componentRef}
+        className="bg-white p-6 rounded-lg shadow-lg w-[800px]"
+      >
         <div className="flex items-center gap-4 mb-6">
           <ArrowLeft onClick={onClose} className="cursor-pointer" />
           <h2 className="text-2xl font-bold font-inter">Payment Method</h2>
         </div>
+
+       
+
         <hr className="mb-5" />
+
         <div className="flex items-center gap-4">
           <div className="bg-[#2648EA] text-white rounded-[12px] py-2 px-4">
-            Credit card
+            <h2>{title}</h2>
           </div>
-          <div className="bg-[#2648EA] text-white rounded-[12px] py-2 px-4">
-            Hatake Kakashi
-          </div>
+          {customer && (
+            <div className="bg-[#2648EA] text-white rounded-[12px] py-2 px-4">
+              {customer.full_name}
+            </div>
+          )}
         </div>
 
         <Table className="w-full table-auto mt-3">
@@ -93,8 +100,8 @@ const PaymentModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product) => (
-              <TableRow key={product.id} className="hover:bg-gray-100">
+            {orderItems.map((product) => (
+              <TableRow key={product.name} className="hover:bg-gray-100">
                 <TableCell className="px-6 py-4 border-b">
                   {product.name}
                 </TableCell>
@@ -107,7 +114,7 @@ const PaymentModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 <TableCell className="px-6 py-4 border-b">
                   <button
                     className="text-red-600"
-                    onClick={() => removeProduct(product.id)}
+                    onClick={() => removeProduct(product.name)}
                     aria-label={`Remove ${product.name}`}
                   >
                     <X />
@@ -122,7 +129,7 @@ const PaymentModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <div className="flex flex-col gap-y-1">
             <p className="text-sm font-normal text-[#858C95]">TOTAL PRICE</p>
             <span className="text-2xl font-bold font-inter">
-              GH₵ {totalPrice}
+              GH₵ {totalPrice.toFixed(2)}
             </span>
           </div>
         </div>
@@ -132,7 +139,7 @@ const PaymentModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             Hold Transaction
           </button>
           <button
-            onClick={onPrintClick}
+            onClick={() => handlePrint()}
             className="border w-[150px] border-[#2648EA] flex items-center justify-center gap-1 text-[#2648EA] font-inter font-semibold text-sm py-2 px-4 rounded-[4px]"
           >
             <Printer className="w-4" />
