@@ -37,7 +37,8 @@ const ProductEmptyState = () => {
           {/* 
         <ImportProductsModal
           title="Import Products"
-          className="text-blue-700 underline"
+          className="text-blue-700 underline h-0"
+          
         />*/}{" "}
           <button
             className="text-blue-700 underline mx-2"
@@ -56,9 +57,7 @@ const ProductEmptyState = () => {
         />
       )}
       {isShowImport && (
-        <ImportProductsModal
-          setModal={() => setIsShowImport(false)}
-        />
+        <ImportProductsModal setModal={() => setIsShowImport(false)} />
       )}
     </>
   );
