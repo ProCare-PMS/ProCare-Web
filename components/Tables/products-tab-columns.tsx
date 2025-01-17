@@ -63,7 +63,8 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
     accessorKey: "quantity",
     header: "Quantity",
   },
-  {accessorKey: "expiry_date",
+  {
+    accessorKey: "expiry_date",
     header: "Expiry Date",
     cell: ({ row }: { row: { getValue: (key: string) => string } }) => {
       const rawDate: string = row.getValue("expiry_date"); // Fetch the raw date string
@@ -72,21 +73,23 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
         month: "long",
         day: "numeric",
       }).format(new Date(rawDate)); // Format the date
-  
+
       return <div>{formattedDate}</div>;
     },
   },
   {
-    accessorKey: "unitPrice",
-    header: "Unit Price",
+    accessorKey: "sellingPrice",
+    header: "Selling Price",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("unitPrice"));
-      const formatted = new Intl.NumberFormat("en-GH", {
-        style: "currency",
-        currency: "ghs",
-      }).format(amount);
+      const amount = row.getValue("sellingPrice");
+      // const formatted = new Intl.NumberFormat("en-GH", {
+      //   style: "currency",
+      //   currency: "ghs",
+      // }).format(amount);
 
-      return <div className="!text-left ">{formatted}</div>;
+      console.log({ amount });
+
+      return <div className="!text-left ">{}</div>;
     },
   },
   {
