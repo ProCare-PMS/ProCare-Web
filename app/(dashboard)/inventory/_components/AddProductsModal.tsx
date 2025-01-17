@@ -128,7 +128,7 @@ const AddProducts = ({ title, setModal }: AddProductProps) => {
   //       .then((res) => res?.data.results),
   // });
 
-  console.log({ categories });
+  //console.log({ categories });
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

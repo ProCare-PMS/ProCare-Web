@@ -1,15 +1,14 @@
 "use client";
-
-import Login from "@/components/Login/login";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 function Index() {
-  return (
-    <div>
-      <Login />
-    </div>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/login");
+  }, [router]);
+  return null;
 }
 
 export default Index;

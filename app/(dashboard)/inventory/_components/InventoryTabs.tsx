@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import InventoryProducts from "./InventoryProducts";
 import InventoryCategories from "./InventoryCategories";
 import InventorySuppliers from "./InventorySuppliers";
-import Purchases from "./Purchases";
+
 import ExpiryReport from "./ExpiryReport";
 import StockTransfer from "./StockTransfer";
 import { TabPanelProps } from "@/lib/Types";
@@ -99,7 +99,7 @@ export default function BasicTabs() {
         <InventorySuppliers />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
-        <Purchases />
+        {/* <Purchases /> */}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={4}>
         <ExpiryReport />
