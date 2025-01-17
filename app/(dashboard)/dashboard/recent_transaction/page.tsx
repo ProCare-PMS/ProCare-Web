@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import DashboardTableHeader from "@/components/Dashboard/DashboardTableHeader";
 import { dashboardTransactionColumns } from "@/components/Tables/columns";
@@ -7,8 +9,18 @@ import BackButton from "@/components/BackButtton/BackButton";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 function RecentTransactionsPage() {
+  const { data: dashboardData } = useQuery({
+    queryKey: ["dashboardData"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.dashboard).then((res) => res),
+    select: (findData) => findData?.data,
+  });
+
   return (
     <div className="mt-[3rem] px-8">
       <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px]">
@@ -48,7 +60,7 @@ function RecentTransactionsPage() {
         </div>
         <DataTable
           columns={dashboardTransactionColumns}
-          data={dashboardTransactions}
+          data={dashboardData || []}
         />
       </div>
     </div>

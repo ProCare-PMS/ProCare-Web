@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import {
   Table,
@@ -8,10 +8,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Product } from "./Columns";
+import { Plus, X } from "lucide-react";
 import PaymentModal from "./PaymentModal";
 import PaymentOptions from "./PaymentOptions";
-import { Plus, X } from "lucide-react";
+
+export type Product = {
+  name: string;
+  quantity: number;
+  selling_price: string;
+};
 
 interface OrderListProps {
   orderList: Product[];
@@ -30,6 +35,20 @@ const OrderList = ({
 }: OrderListProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const [quantityInputs, setQuantityInputs] = useState<{ [key: string]: string }>({});
+
+  // Update quantity inputs whenever orderList changes
+  useEffect(() => {
+    const updatedInputs = orderList.reduce((acc, product) => {
+      acc[product.name] = product.quantity.toString();
+      return acc;
+    }, {} as { [key: string]: string });
+    setQuantityInputs(updatedInputs);
+  }, [orderList]);
+
+  useEffect(() => {
+    localStorage.setItem('orderList', JSON.stringify(orderList));
+  }, [orderList]);
 
   const handlePaymentOptions = () => {
     setShowPaymentOptions(true);
@@ -37,18 +56,62 @@ const OrderList = ({
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setShowPaymentOptions(false);
   };
 
-  // New function to handle item removal
   const handleRemoveItem = (productName: string) => {
-    // Call updateQuantity with a special value (e.g., -product.quantity) to remove the item
     const product = orderList.find(p => p.name === productName);
     if (product) {
       updateQuantity(productName, -product.quantity);
+      const newQuantityInputs = { ...quantityInputs };
+      delete newQuantityInputs[productName];
+      setQuantityInputs(newQuantityInputs);
     }
   };
 
-  // Calculate total price based on current items
+  const handleQuantityChange = (productName: string, value: string) => {
+    // Only allow numbers
+    const sanitizedValue = value.replace(/[^\d]/g, '');
+    
+    // If empty, set to "1"
+    const finalValue = sanitizedValue === '' ? '1' : sanitizedValue;
+    
+    // Update the input state
+    setQuantityInputs(prev => ({
+      ...prev,
+      [productName]: finalValue
+    }));
+
+    // Find current product
+    const product = orderList.find(p => p.name === productName);
+    if (product) {
+      const newQuantity = parseInt(finalValue);
+      const delta = newQuantity - product.quantity;
+      if (!isNaN(newQuantity) && newQuantity >= 1) {
+        updateQuantity(productName, delta);
+      }
+    }
+  };
+
+  const handleIncreaseDecrease = (productName: string, delta: number) => {
+    const product = orderList.find(p => p.name === productName);
+    if (product && (product.quantity + delta >= 1)) {
+      updateQuantity(productName, delta);
+      // Update the input state immediately
+      const newQuantity = (product.quantity + delta).toString();
+      setQuantityInputs(prev => ({
+        ...prev,
+        [productName]: newQuantity
+      }));
+    }
+  };
+
+  const handleClearBasket = () => {
+    localStorage.removeItem('orderList');
+    onClearBasket();
+    setQuantityInputs({});
+  };
+
   const calculatedTotalPrice = orderList.reduce((total, product) => {
     return total + (parseFloat(product.selling_price) * product.quantity);
   }, 0);
@@ -69,7 +132,7 @@ const OrderList = ({
               <TableHead className="px-4 py-2">Product Name</TableHead>
               <TableHead className="px-4 py-2">Quantity</TableHead>
               <TableHead className="px-4 py-2">Price</TableHead>
-              <TableHead className="px-4 py-2 border">Action</TableHead>
+              <TableHead className="px-4 py-2">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -81,15 +144,21 @@ const OrderList = ({
                 <TableCell className="px-4 py-4 border-b">
                   <div className="flex items-center space-x-2">
                     <button
-                      onClick={() => updateQuantity(product.name, -1)}
+                      onClick={() => handleIncreaseDecrease(product.name, -1)}
                       className="text-red-600 rounded-full border border-red-600 p-1"
                       disabled={product.quantity <= 1}
                     >
                       <FaMinus />
                     </button>
-                    <span className="w-12 text-center">{product.quantity}</span>
+                    <input
+                      type="text"
+                      value={quantityInputs[product.name] || product.quantity}
+                      onChange={(e) => handleQuantityChange(product.name, e.target.value)}
+                      className="w-16 text-center border rounded-md p-1"
+                      min="1"
+                    />
                     <button
-                      onClick={() => updateQuantity(product.name, 1)}
+                      onClick={() => handleIncreaseDecrease(product.name, 1)}
                       className="text-green-600 rounded-full border border-green-600 p-1"
                     >
                       <FaPlus />
@@ -99,7 +168,7 @@ const OrderList = ({
                 <TableCell className="px-4 py-4 border-b">
                   {product.selling_price}
                 </TableCell>
-                <TableCell className="px-6 py-4 border-b">
+                <TableCell className="px-4 py-4 border-b">
                   <button
                     className="text-red-600"
                     onClick={() => handleRemoveItem(product.name)}
@@ -126,9 +195,10 @@ const OrderList = ({
             GHS: {calculatedTotalPrice.toFixed(2)}
           </span>
         </div>
+
         <div className="flex items-center justify-end gap-x-6 mt-6">
           <button
-            onClick={onClearBasket}
+            onClick={handleClearBasket}
             className="border border-[#323539] flex-1 rounded-[4px] py-2 px-8 text-[#323539] font-inter font-semibold text-sm"
           >
             Clear Basket

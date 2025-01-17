@@ -22,6 +22,7 @@ const ProductsTabHeader: React.FC = () => {
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [searchValues, setSearchValues] = useState<string>("");
+  const [showImport, setShowImport] = useState<boolean>(false);
 
   const { data: inventoryProductsData } = useQuery({
     queryKey: ["inventoryProducts"],
@@ -68,6 +69,16 @@ const ProductsTabHeader: React.FC = () => {
     setSearchValues(event.target.value);
   };
 
+  const showAddProductsModal = () => {
+    setIsModalOpen(true);
+    setShowImport(false);
+  };
+
+  const showImportModal = () => {
+    setShowImport(true);
+    setIsModalOpen(false);
+  };
+
   return (
     <div>
       {/* Header Section */}
@@ -111,12 +122,14 @@ const ProductsTabHeader: React.FC = () => {
               <div className="bg-white absolute w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl">
                 <ul className="flex flex-col items-center divide-y divide-gray-300">
                   <li className="px-3 py-2">
-                    <button type="button" onClick={() => setIsModalOpen(true)}>
+                    <button type="button" onClick={showAddProductsModal}>
                       Add Individually
                     </button>
                   </li>
                   <li className="px-3 py-2">
-                    <button type="button">Import Products</button>
+                    <button type="button" onClick={showImportModal}>
+                      Import Products
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -145,6 +158,11 @@ const ProductsTabHeader: React.FC = () => {
           title="Add Product"
           setModal={() => setIsModalOpen(false)}
         />
+      )}
+
+      {/* Import Products */}
+      {showImport && (
+        <ImportProductsModal setModal={() => setShowImport(false)} />
       )}
     </div>
   );
