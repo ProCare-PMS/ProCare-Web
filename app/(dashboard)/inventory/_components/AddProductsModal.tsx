@@ -6,10 +6,6 @@ import { endpoints } from "@/api/Endpoints";
 import { toast } from "react-toastify";
 import SwalToaster from "@/components/SwalToaster/SwalToaster";
 
-interface Category {
-  id: string | number;
-  name: string;
-}
 
 interface FormData {
   name: string;
