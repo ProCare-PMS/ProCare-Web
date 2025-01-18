@@ -1,9 +1,6 @@
 import React from "react";
 import ProductsTabStats from "./ProductsTabStats";
 import ProductsTabHeader from "./ProductsTabHeader";
-import { ExpandableDataTable } from "@/components/Tables/expandable-data-table";
-import { productsTabColumns } from "@/components/Tables/products-tab-columns";
-import { productsTabTable } from "@/type";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { useQuery } from "@tanstack/react-query";
