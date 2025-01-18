@@ -94,11 +94,11 @@ export function DashbaordChart({ data }: DashbaordChartProps) {
         >
           <PieChart>
             <ChartTooltip
-              cursor={false}
+              cursor={true}
               content={
                 <ChartTooltipContent
                   hideLabel
-                  className="bg-white cursor-pointer"
+                  className="!bg-black !text-white cursor-pointer"
                 />
               }
             />
@@ -118,7 +118,7 @@ export function DashbaordChart({ data }: DashbaordChartProps) {
                         y={viewBox.cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
-                        className="text-2xl"
+                        className="!text-2xl bg-green-500"
                       >
                         <tspan
                           x={viewBox.cx}
