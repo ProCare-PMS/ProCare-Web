@@ -4,25 +4,69 @@ import { ExternalLink } from "lucide-react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { dashboardSubTables } from "@/type";
 
-const invoices: dashboardSubTables[] = [
-  // Add your invoice data here, or leave it empty to test
-];
-
 interface TableProps {
   title: string;
   data: dashboardSubTables[];
+  isLoading?: boolean;
 }
 
-export function DashboardSubTables({ title, data }: TableProps) {
+export function DashboardSubTables({ title, data, isLoading }: TableProps) {
+  if (isLoading) {
+    return (
+      <div className="bg-white p-6 rounded-xl w-[450px] h-[428px] flex-1">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-medium font-nunito_sans text-[#202224]">
+            {title}
+          </h2>
+          <Link
+            href="/inventory?tab=4"
+            className="text-[#2648EA] font-inter flex items-center gap-1 font-semibold text-sm"
+          >
+            Open
+            <ExternalLink className="text-[#2648EA]" />
+          </Link>
+        </div>
+        <Table className="bg-white rounded-xl">
+          <TableHeader className="p-4 border-none">
+            <TableRow className="bg-[#F1F4F9] p-1 w-full rounded-lg">
+              <TableHead className="w-[180px] font-nunito_sans text-[#202224] font-bold">
+                Product Name
+              </TableHead>
+              <TableHead className="text-[#202224] font-nunito_sans font-bold">
+                No. Remaining
+              </TableHead>
+              <TableHead className="w-[150px] text-[#202224] font-nunito_sans font-bold">
+                Expiry Date
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {[...Array(5)].map((_, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <div className="h-4 bg-gray-200 rounded w-32 animate-pulse"></div>
+                </TableCell>
+                <TableCell>
+                  <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
+                </TableCell>
+                <TableCell>
+                  <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white p-6 rounded-xl w-[450px] h-[428px] flex-1">
       <div className="flex items-center justify-between mb-6">
@@ -69,61 +113,19 @@ export function DashboardSubTables({ title, data }: TableProps) {
             ))
           ) : (
             <>
-              <TableRow>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-                <TableCell className="text-center font-medium text-[#202224]">
-                  -
-                </TableCell>
-              </TableRow>
+              {[...Array(5)].map((_, index) => (
+                <TableRow key={index}>
+                  <TableCell className="text-center font-medium text-[#202224]">
+                    -
+                  </TableCell>
+                  <TableCell className="text-center font-medium text-[#202224]">
+                    -
+                  </TableCell>
+                  <TableCell className="text-center font-medium text-[#202224]">
+                    -
+                  </TableCell>
+                </TableRow>
+              ))}
             </>
           )}
         </TableBody>

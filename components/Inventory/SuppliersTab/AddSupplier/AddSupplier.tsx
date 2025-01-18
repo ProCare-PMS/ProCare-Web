@@ -13,21 +13,20 @@ interface AddSupplierProps {
 }
 
 const SupplierSchema = z.object({
-  name: z.string({
-    required_error: "Required",
-  }),
-  contact: z.string({
-    required_error: "Required",
-  }),
-  email: z.string({
-    required_error: "Required",
-  }),
+  name: z.string().min(1, "Supplier name is required"),
+  contact: z.string().min(1, "Phone number is required"),
+  email: z.string().email("Invalid email address").min(1, "Email is required"),
 });
 
 const AddSupplier = ({ onClose }: AddSupplierProps) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [formData, setFormData] = useState({
+    name: "",
+    contact: "",
+    email: "",
+    quantity: ""
+  });
 
-  //Sending to the api.
   const postSupplier = useMutation({
     mutationFn: async (value: any) => {
       const res = await customAxios
@@ -37,26 +36,37 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
     },
   });
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ""
+      }));
+    }
+  };
+
   const handleSubmitRequest = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    //postSupplier.mutate(values);
-
-    const formData = new FormData(event.currentTarget);
-
-    const data = {
-      name: formData.get("name") as string,
-      contact: formData.get("contact") as string,
-      email: formData.get("email") as string,
-    };
-    const result = SupplierSchema.safeParse(data);
-
-    if (result?.data?.name === "") {
-      setErrors({ name: "Required" });
+    
+    const result = SupplierSchema.safeParse(formData);
+    
+    if (!result.success) {
+      const formattedErrors: { [key: string]: string } = {};
+      result.error.issues.forEach((issue) => {
+        formattedErrors[issue.path[0].toString()] = issue.message;
+      });
+      setErrors(formattedErrors);
       return;
     }
 
     postSupplier.mutate(
-      { formData: data },
+      { formData },
       {
         onSuccess: () => {
           SwalToaster("Supplier Created Successfully", "success");
@@ -72,7 +82,7 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white shadow-custom w-[60%] py-4 px-8 mb-12 rounded-[8px] mt-8 grid gap-y-5 ">
+      <div className="bg-white shadow-custom w-[60%] py-4 px-8 mb-12 rounded-[8px] mt-8 grid gap-y-5">
         <div className="flex items-center justify-between gap-4 mb-4">
           <h3 className="font-bold text-2xl font-inter">Add Supplier</h3>
           <CloseOutlinedIcon onClick={onClose} className="cursor-pointer" />
@@ -97,9 +107,16 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
                 type="text"
                 id="name"
                 name="name"
+                value={formData.name}
+                onChange={handleChange}
                 placeholder="Enter Product Name"
-                className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                className={`rounded-[4px] py-3 px-2 border ${
+                  errors.name ? 'border-red-500' : 'border-[#E5E5E7]'
+                } text-[#858C95] text-sm font-normal`}
               />
+              {errors.name && (
+                <span className="text-red-500 text-xs mt-1">{errors.name}</span>
+              )}
             </div>
             {/* Phone Number */}
             <div className="grid gap-y-2">
@@ -113,9 +130,16 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
                 id="contact"
                 name="contact"
                 type="text"
+                value={formData.contact}
+                onChange={handleChange}
                 placeholder="Enter phone number"
-                className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                className={`rounded-[4px] py-3 px-2 border ${
+                  errors.contact ? 'border-red-500' : 'border-[#E5E5E7]'
+                } text-[#858C95] text-sm font-normal`}
               />
+              {errors.contact && (
+                <span className="text-red-500 text-xs mt-1">{errors.contact}</span>
+              )}
             </div>
             {/* Email */}
             <div className="grid gap-y-2">
@@ -129,21 +153,31 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
                 id="email"
                 name="email"
                 type="email"
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="Enter email"
-                className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                className={`rounded-[4px] py-3 px-2 border ${
+                  errors.email ? 'border-red-500' : 'border-[#E5E5E7]'
+                } text-[#858C95] text-sm font-normal`}
               />
+              {errors.email && (
+                <span className="text-red-500 text-xs mt-1">{errors.email}</span>
+              )}
             </div>
           </div>
           {/* Quantity Form */}
           <div className="grid gap-y-2 mt-6">
             <label
-              htmlFor=""
+              htmlFor="quantity"
               className="text-[#323539] font-inter font-medium text-sm"
             >
               Quantity
             </label>
             <input
               type="number"
+              name="quantity"
+              value={formData.quantity}
+              onChange={handleChange}
               placeholder="Enter quantity"
               className="rounded-[4px] w-[33%] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
             />

@@ -78,20 +78,25 @@ export const productsTabColumns: ColumnDef<ProductsTabTable>[] = [
     },
   },
   {
-    accessorKey: "sellingPrice",
-    header: "Selling Price",
+    accessorKey: "selling_price",
+    header: "Unit Price",
     cell: ({ row }) => {
-      const amount = row.getValue("sellingPrice");
-      // const formatted = new Intl.NumberFormat("en-GH", {
-      //   style: "currency",
-      //   currency: "ghs",
-      // }).format(amount);
+      const value = row.getValue("selling_price");
+      // Convert string to number and handle invalid/empty values
+      const amount = typeof value === "string" ? parseFloat(value) : 0;
+      
+      if (isNaN(amount)) {
+        return <div className="!text-left">GHS 0.00</div>;
+      }
+      
+      const formatted = new Intl.NumberFormat("en-GH", {
+        style: "currency",
+        currency: "GHS",
+      }).format(amount);
 
-      console.log({ amount });
-
-      return <div className="!text-left ">{}</div>;
+      return <div className="!text-left">{formatted}</div>;
     },
-  },
+},
   {
     accessorKey: "product_status",
     header: "Status",
