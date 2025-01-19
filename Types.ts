@@ -48,3 +48,8 @@ export interface FirstLoginState {
   step: string;
   account: accountFirstLogin[];
 }
+
+export interface ImportPageProps {
+  showImport: boolean;
+  handleClose: () => void;
+}

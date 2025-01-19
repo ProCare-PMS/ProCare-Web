@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useRef, useEffect } from "react";
 import ProductStockTable from "./ProductStockTable";
 import clsx from "clsx";
 import { Plus, SlidersVertical } from "lucide-react";
@@ -23,6 +23,7 @@ const ProductsTabHeader: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [searchValues, setSearchValues] = useState<string>("");
   const [showImport, setShowImport] = useState<boolean>(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const { data: inventoryProductsData } = useQuery({
     queryKey: ["inventoryProducts"],
@@ -30,8 +31,6 @@ const ProductsTabHeader: React.FC = () => {
       await customAxios.get(endpoints.inventoryProduct).then((res) => res),
     select: (findData) => findData?.data?.results,
   });
-
-  console.log(inventoryProductsData);
 
   const renderTabContent = (): JSX.Element | null => {
     switch (activeTab) {
@@ -72,12 +71,28 @@ const ProductsTabHeader: React.FC = () => {
   const showAddProductsModal = () => {
     setIsModalOpen(true);
     setShowImport(false);
+    setShowMenu(false);
   };
 
   const showImportModal = () => {
     setShowImport(true);
     setIsModalOpen(false);
+    setShowMenu(false);
   };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setShowMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div>
@@ -108,7 +123,7 @@ const ProductsTabHeader: React.FC = () => {
             onChange={handleSearchChange}
           />
 
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             <Button
               type="button"
               className="text-white flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
@@ -162,7 +177,10 @@ const ProductsTabHeader: React.FC = () => {
 
       {/* Import Products */}
       {showImport && (
-        <ImportProductsModal setModal={() => setShowImport(false)} />
+        <ImportProductsModal
+          setModal={() => setShowImport(false)}
+          title="Product"
+        />
       )}
     </div>
   );

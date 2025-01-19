@@ -74,13 +74,13 @@ export function DashboardLowStockAlert({ title, data, isLoading }: TableProps) {
           {title}
         </h2>
 
-        <Link
+        {/* <Link
           href="/page_under_construction"
           className="text-[#2648EA] font-inter flex items-center gap-1 font-semibold text-sm"
         >
           Open
           <ExternalLink className="text-[#2648EA]" />
-        </Link>
+        </Link> */}
       </div>
       <Table className="bg-white rounded-xl">
         <TableHeader className="p-4 border-none">
