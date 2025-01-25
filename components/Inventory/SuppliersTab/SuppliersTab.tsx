@@ -3,8 +3,6 @@ import SuppliersTabStats from "./SuppliersTabStats";
 import { ExpandableDataTable } from "@/components/Tables/expandable-data-table";
 import { suppliersTabColumns } from "@/components/Tables/suppliers-tab-columns";
 import { suppliersTabTable } from "@/type";
-import SupplierTabHeader from "./SupplierTabHeader";
-import { CiSearch } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import { Plus, SlidersVertical } from "lucide-react";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
@@ -18,7 +16,7 @@ const SuppliersTab = () => {
   const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); //add supplier modeal
 
-  const { data: inventorySupplierData } = useQuery({
+  const { data: inventorySupplierData, isLoading } = useQuery({
     queryKey: ["inventorySupplier"],
     queryFn: async () =>
       await customAxios.get(endpoints.inventorySupplier).then((res) => res),
@@ -40,7 +38,7 @@ const SuppliersTab = () => {
   return (
     <>
       <div className="">
-        <SuppliersTabStats />
+        <SuppliersTabStats stats={inventorySupplierData} isLoading={isLoading} />
         <div className="p-6 bg-white mt-7 shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)]">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-[#202224] font-semibold text-2xl">Suppliers</h2>
@@ -69,8 +67,9 @@ const SuppliersTab = () => {
           </div>
           <ExpandableDataTable
             columns={suppliersTabColumns}
-            data={suppliersTabTable || []}
+            data={inventorySupplierData || []}
             searchValue={searchValues}
+            isLoading={isLoading}
           />
         </div>
       </div>

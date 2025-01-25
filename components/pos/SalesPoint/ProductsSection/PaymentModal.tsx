@@ -109,7 +109,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
                   {product.quantity}
                 </TableCell>
                 <TableCell className="px-6 py-4 border-b">
-                  GH₵{product.selling_price}
+                  GH₵{(parseFloat(product.selling_price) * product.quantity).toFixed(2)}
                 </TableCell>
                 <TableCell className="px-6 py-4 border-b">
                   <button

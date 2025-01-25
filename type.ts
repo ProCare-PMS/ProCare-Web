@@ -779,7 +779,7 @@ export type StockTransferRequestsTable =
 
 
 export type dashboardSubTables = {
-  productName: string;
-  noRemaining: number;
-  expriyDate: string;
+  name: string;
+  quantity: number;
+  expiry_date: string;
 }

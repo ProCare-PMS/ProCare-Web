@@ -1,5 +1,5 @@
 import React from "react";
-import { CiSearch } from "react-icons/ci";
+import { Search } from 'lucide-react';
 
 const StockTransferHistoryHeader = () => {
   return (
@@ -9,7 +9,7 @@ const StockTransferHistoryHeader = () => {
       </h2>
 
       <div className="flex flex-row border-2 w-[300px] border-[#EAEBF0] rounded-xl items-center  gap-2 bg-transparent p-1">
-        <CiSearch size={16} />
+        <Search size={16} />
         <input
           type="search"
           name="search"

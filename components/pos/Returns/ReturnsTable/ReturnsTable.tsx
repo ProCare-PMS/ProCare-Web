@@ -13,7 +13,7 @@ import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 
 const ReturnsTable = () => {
-  const { data: returnsData } = useQuery({
+  const { data: returnsData, isLoading } = useQuery({
     queryKey: ["posReturns"],
     queryFn: async () =>
       await customAxios.get(endpoints.posReturns).then((res) => res),
@@ -86,6 +86,7 @@ const ReturnsTable = () => {
           columns={returnHistoryColumns}
           data={returnsHistory}
           searchValue={searchValues}
+          isLoading={isLoading}
         />
       </div>
 

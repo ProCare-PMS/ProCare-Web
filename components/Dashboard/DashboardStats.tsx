@@ -60,7 +60,7 @@ const DashboardStats = ({ dashboardData, isLoading }: DashboardStatsProps) => {
         {[1, 2, 3, 4].map((index) => (
           <div
             key={index}
-            className="flex flex-col shadow-custom rounded-xl px-5 py-4 bg-white w-[18rem] relative animate-pulse"
+            className="flex flex-col shadow-custom rounded-xl px-5 py-4 bg-white w-full md:w-[18rem] relative animate-pulse"
           >
             <div className="flex items-center mb-4 justify-between">
               <div className="h-6 bg-gray-200 rounded w-24"></div>

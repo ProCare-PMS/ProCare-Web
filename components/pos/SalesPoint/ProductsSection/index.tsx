@@ -3,13 +3,14 @@ import DataTable from "@/components/Tables/data-table";
 import { posProductsColumns, Product } from "./Columns";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import OrderList from "./OrderList";
-import PaymentOptions from "./PaymentOptions";
 import { CircleUserRound } from "lucide-react";
 import CustomerList from "./CustomerList";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 
+
+{/* 
 const productData: Product[] = [
   { name: "Product A", quantity: 10, selling_price: "100" },
   { name: "Product B", quantity: 5, selling_price: "50" },
@@ -22,10 +23,11 @@ const productData: Product[] = [
   { name: "Ginseng", quantity: 20, selling_price: "200" },
   { name: "Product E", quantity: 20, selling_price: "200" },
 ];
+*/}
 
 const ProductsSection = () => {
   //fetching data for the sales table
-  const { data: inventoryProductsData } = useQuery({
+  const { data: inventoryProductsData, isLoading } = useQuery({
     queryKey: ["inventoryProducts"],
     queryFn: async () =>
       await customAxios.get(endpoints.inventoryProduct).then((res) => res),
@@ -33,13 +35,19 @@ const ProductsSection = () => {
   });
 
   const [searchValues, setSearchValues] = useState<string>("");
-  const [data, setData] = useState(productData);
+  const [data, setData] = useState<Product[]>(inventoryProductsData || []);
   const [orderList, setOrderList] = useState<Product[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [isOrderListVisible, setIsOrderListVisible] = useState(false);
   const [showCustomers, setShowCustomer] = useState(false);
 
   console.log(inventoryProductsData);
+
+  useEffect(() => {
+    if (inventoryProductsData) {
+      setData(inventoryProductsData);
+    }
+  }, [inventoryProductsData]);
 
   // Update quantity handler for both data and orderList
   const updateQuantity = (productName: string, delta: number) => {
@@ -78,21 +86,21 @@ const ProductsSection = () => {
       const existingProductIndex = prevOrderList.findIndex(
         (item) => item.name === product.name
       );
-
+  
       if (existingProductIndex !== -1) {
         // If product exists, update its quantity
         const updatedList = [...prevOrderList];
         updatedList[existingProductIndex] = {
           ...updatedList[existingProductIndex],
-          quantity: product.quantity, // Use the product's current quantity
+          quantity: updatedList[existingProductIndex].quantity + 1, // Increase quantity by 1
         };
         return updatedList;
       } else {
-        // If product doesn't exist, add it with its current quantity
-        return [...prevOrderList, { ...product }]; // The spread operator will copy all properties including quantity
+        // If product doesn't exist, add it with quantity 1
+        return [...prevOrderList, { ...product, quantity: 1 }];
       }
     });
-
+  
     // Show the order list if it's hidden
     if (!isOrderListVisible) {
       setIsOrderListVisible(true);
@@ -167,6 +175,7 @@ const ProductsSection = () => {
           columns={posProductsColumns(updateQuantity, addToOrder)}
           data={inventoryProductsData || []}
           searchValue={searchValues}
+          isLoading={isLoading}
         />
       </div>
 

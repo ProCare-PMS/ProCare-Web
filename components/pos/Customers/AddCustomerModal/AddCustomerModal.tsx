@@ -4,7 +4,6 @@ import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AddCustomerSchema } from "@/lib/schema/schema";
-import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
@@ -18,20 +17,11 @@ interface AddCustomerModalProps {
 const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const form = useForm<CustomerSchema>({
-    resolver: zodResolver(AddCustomerSchema),
-    defaultValues: {
-      full_name: "",
-    },
-  });
-
-  const addCustomerMutation = useMutation({
-    mutationFn: async (value: any) => {
-      const res = await customAxios
-        .post(endpoints.posCustomers, value.formData)
-        .then((res) => res);
-      return res;
-    },
+  const { data: inventoryProductsData } = useQuery({
+    queryKey: ["inventoryProducts"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.inventoryProduct).then((res) => res),
+    select: (findData) => findData?.data?.results,
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -58,11 +48,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
       additional_info: formData.get("additional_info"),
     };
 
-    // Validate input data using Zod
     const result = AddCustomerSchema.safeParse(data);
 
     if (!result.success) {
-      // Create an object to hold error messages
       const newErrors: { [key: string]: string } = {};
       const formattedErrors = result.error.format();
 
@@ -76,57 +64,53 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
         }
       }
 
-      setErrors(newErrors); // Set the error state
+      setErrors(newErrors);
       toast.error("Please correct the validation errors.");
       return;
     }
 
-    setErrors({});
+    const addCustomerMutation = useMutation({
+      mutationFn: async () => {
+        const res = await customAxios.post(endpoints.posCustomers, data);
+        return res;
+      },
+      onSuccess: () => {
+        closeModal();
+        SwalToaster("Customer added successfully!", "success");
+      },
+      onError: (error) => {
+        console.error(error);
+        SwalToaster("Customer could not be added!", "error");
+      },
+    });
 
-    addCustomerMutation.mutate(
-      { formData: data },
-      {
-        onSuccess: () => {
-          closeModal();
-          SwalToaster("Customer added successfully!", "success");
-        },
-        onError: (error) => {
-          console.error(error);
-          SwalToaster("Customer could not be added!", "error");
-        },
-      }
-    );
+    addCustomerMutation.mutate();
   };
-
-  //Get All Products
-  const { data: inventoryProductsData } = useQuery({
-    queryKey: ["inventoryProducts"],
-    queryFn: async () =>
-      await customAxios.get(endpoints.inventoryProduct).then((res) => res),
-    select: (findData) => findData?.data?.results,
-  });
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-lg w-[60%] p-6 relative">
-        <div className="flex justify-between items-center border-b mb-2">
-          <h2 className="text-lg font-bold mb-4">Add Customer</h2>
+      <div className="bg-white rounded-2xl shadow-2xl w-4/5 max-w-4xl h-[90vh] overflow-hidden">
+        <div className="bg-[#F4F7FA] px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+          <h2 className="text-xl font-bold text-[#202224]">Add Customer</h2>
           <button
-            className="text-gray-500 hover:text-gray-800"
+            className="text-gray-500 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors"
             onClick={closeModal}
           >
             <CloseOutlinedIcon />
           </button>
         </div>
-        <form onSubmit={handleSubmit}>
-          <div className="overflow-y-auto h-[450px] p-3 grid gap-y-6">
+
+        <form
+          onSubmit={handleSubmit}
+          className="h-[calc(90vh-100px)] overflow-y-auto"
+        >
+          <div className="p-6 space-y-6">
             {/* Basic Information */}
             <div>
-              <h2 className="text-[#202224] font-bold text-base font-inter">
+              <h2 className="text-[#202224] font-bold text-base font-inter mb-4">
                 Basic Information
               </h2>
               <div className="grid grid-cols-3 gap-5">
-                {/* Full Name */}
                 <div className="grid gap-y-2 mt-3">
                   <label
                     htmlFor="full_name"
@@ -138,11 +122,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     type="text"
                     name="full_name"
                     placeholder="Enter full name"
-                    id="full_name"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* Email */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="email"
@@ -154,11 +136,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     type="email"
                     name="email"
                     placeholder="Enter email"
-                    id="email"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* Phone Number */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="phone_number"
@@ -170,11 +150,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     type="text"
                     name="phone_number"
                     placeholder="Enter phone number"
-                    id="phone_number"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* Gender */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="gender"
@@ -183,7 +161,6 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     Gender
                   </label>
                   <select
-                    id="gender"
                     name="gender"
                     className="border w-full h-12 border-[#E6E6E6] outline-none shadow-sm rounded-[6px]"
                   >
@@ -192,7 +169,6 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     <option value="F">Female</option>
                   </select>
                 </div>
-                {/* Date of Birth */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="birth_date"
@@ -203,12 +179,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   <input
                     type="date"
                     name="birth_date"
-                    placeholder="Enter date of birth"
-                    id="birth_date"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* Address */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="address"
@@ -220,21 +193,18 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     type="text"
                     name="address"
                     placeholder="Enter address"
-                    id="address"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
               </div>
             </div>
-            {/* End Basic Information */}
 
-            {/* Health Information Form */}
+            {/* Health Information */}
             <div>
-              <h2 className="text-[#202224] font-bold text-base font-inter">
+              <h2 className="text-[#202224] font-bold text-base font-inter mb-4">
                 Health Information
               </h2>
               <div className="grid grid-cols-3 gap-5">
-                {/* Height */}
                 <div className="grid gap-y-2 mt-3">
                   <label
                     htmlFor="height"
@@ -246,11 +216,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     type="number"
                     name="height"
                     placeholder="Enter height"
-                    id="height"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* Weight */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="weight"
@@ -262,11 +230,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     type="number"
                     name="weight"
                     placeholder="Enter weight"
-                    id="weight"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* Blood Type */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="blood_type"
@@ -275,7 +241,6 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     Blood Type
                   </label>
                   <select
-                    id="blood_type"
                     name="blood_type"
                     className="border w-full h-12 border-[#E6E6E6] outline-none shadow-sm rounded-[6px]"
                   >
@@ -290,7 +255,6 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     <option value="AB-">AB-</option>
                   </select>
                 </div>
-                {/* Blood Pressure */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="blood_pressure"
@@ -302,11 +266,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     type="text"
                     name="blood_pressure"
                     placeholder="Enter blood pressure"
-                    id="blood_pressure"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* Allergies */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="allergies"
@@ -318,11 +280,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     type="text"
                     name="allergies"
                     placeholder="Enter allergies"
-                    id="allergies"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* Chronic Conditions */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="chronic_conditions"
@@ -334,27 +294,23 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     type="text"
                     name="chronic_conditions"
                     placeholder="Enter chronic conditions"
-                    id="chronic_conditions"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
               </div>
             </div>
-            {/* End Health Information Form */}
 
-            {/* Medical Information Form */}
+            {/* Medical Information */}
             <div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-4">
                 <h2 className="text-[#202224] font-bold text-base font-inter">
                   Medical Information
                 </h2>
-
-                <span className="text-[#2648EA] font-semibold text-sm">
+                <span className="text-[#2648EA] font-semibold text-sm cursor-pointer hover:underline">
                   Add Medication
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-5">
-                {/* Full Name */}
                 <div className="grid gap-y-2 mt-3">
                   <label
                     htmlFor="med_info_product"
@@ -363,7 +319,6 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     Product
                   </label>
                   <select
-                    id="med_info_product"
                     name="med_info_product"
                     className="border w-full h-12 text-sm border-[#E6E6E6] outline-none shadow-sm rounded-[6px]"
                   >
@@ -375,7 +330,6 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     ))}
                   </select>
                 </div>
-                {/* Dosage */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="dosage"
@@ -387,11 +341,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     type="text"
                     name="dosage"
                     placeholder="Enter dosage"
-                    id="dosage"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* Frequency */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="frequency"
@@ -403,11 +355,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     type="text"
                     name="frequency"
                     placeholder="Enter frequency"
-                    id="frequency"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* Start Date */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="start_date"
@@ -418,11 +368,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   <input
                     type="date"
                     name="start_date"
-                    id="start_date"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* End Date */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="end_date"
@@ -433,11 +381,9 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   <input
                     type="date"
                     name="end_date"
-                    id="end_date"
                     className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                   />
                 </div>
-                {/* Chronic Conditions */}
                 <div className="grid gap-y-2">
                   <label
                     htmlFor="additional_info"
@@ -458,10 +404,12 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
           </div>
           {/* End Medical Information Form */}
 
-          <div className="flex justify-end items-center">
+          <div className="flex justify-end mt-6">
             <button
               type="submit"
-              className="bg-[#2648EA] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 w-[140px]"
+              className="bg-[#2648EA] hover:bg-[#1E3AD8] cursor-pointer rounded-[4px] 
+              text-white font-semibold py-3 px-6 transition-colors focus:outline-none 
+              focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Add Customer
             </button>
