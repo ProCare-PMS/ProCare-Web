@@ -52,10 +52,14 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     const updatedItems = orderItems.filter((item) => item.name !== productName);
     localStorage.setItem("orderList", JSON.stringify(updatedItems));
   };
-
+ 
   const totalPrice = orderItems.reduce((total, product) => {
     return total + parseFloat(product.selling_price) * product.quantity;
   }, 0);
+
+  const handleSubmit = () => {
+    
+  }
 
   const handleFinalize = () => {
     // Clear localStorage after successful payment

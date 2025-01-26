@@ -32,9 +32,12 @@ const OrderList = ({
   onClearBasket,
 }: OrderListProps) => {
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [quantityInputs, setQuantityInputs] = useState<{
     [key: string]: string;
   }>({});
+
+
 
   // Update quantity inputs whenever orderList changes
   useEffect(() => {
@@ -180,12 +183,21 @@ const OrderList = ({
         </Table>
 
         <div className="mt-6 flex item-center justify-between">
-          <p className="text-[#858C95] font-normal text-sm">Discount:</p>
-          <div className="flex">
-            <input />
-          </div>
-          <div className="bg-[#0A77FF] rounded-[4px] p-2">
-            <Plus className="text-white cursor-pointer" />
+          <p className="text-[#858C95] font-normal text-sm">DISCOUNT:</p>
+          <div
+            className={`flex gap-2 border-2 p-2 rounded-[4px] ${
+              isFocused ? "border-[#2648EA]" : "border-gray-300"
+            }`}
+          >
+            ₵
+            <input
+              type="number"
+              name=""
+              id=""
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              className="outline-none"
+            />
           </div>
         </div>
 

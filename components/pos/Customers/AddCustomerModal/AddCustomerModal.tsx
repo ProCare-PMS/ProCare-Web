@@ -14,8 +14,110 @@ interface AddCustomerModalProps {
   closeModal: () => void;
 }
 
+interface FormData {
+  full_name: string;
+  email: string;
+  phone_number: string;
+  address: string;
+  gender: string;
+  birth_date: string;
+  height: string;
+  weight: string;
+  blood_type: string;
+  blood_pressure: string;
+  allergies: string;
+  chronic_conditions: string;
+  med_info_product: string;
+  dosage: string;
+  frequency: string;
+  start_date: string;
+  end_date: string;
+  additional_info: string;
+}
+
+interface Errors {
+  [key: string]: string;
+}
+
+const initialFormData: FormData = {
+  full_name: "",
+  email: "",
+  phone_number: "",
+  address: "",
+  gender: "",
+  birth_date: "",
+  height: "",
+  weight: "",
+  blood_type: "",
+  blood_pressure: "",
+  allergies: "",
+  chronic_conditions: "",
+  med_info_product: "",
+  dosage: "",
+  frequency: "",
+  start_date: "",
+  end_date: "",
+  additional_info: "",
+};
+
 const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState<Errors>({});
+  const [formData, setFormData] = useState<FormData>(initialFormData);
+
+  const validateForm = (): Errors => {
+    const newErrors: Errors = {};
+
+    //Required Field Validaton
+    if (!formData.full_name) newErrors.full_name = "Full Name is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.phone_number)
+      newErrors.phone_number = "Phone Number is required";
+    if (!formData.address) newErrors.address = "Address is required";
+    if (!formData.gender) newErrors.gender = "Gender is required";
+    if (!formData.birth_date) newErrors.birth_date = "Birth Date is required";
+    if (!formData.height) newErrors.height = "Height is required";
+    if (!formData.weight) newErrors.weight = "Weight is required";
+    if (!formData.blood_type) newErrors.blood_type = "Blood Type is required";
+    if (!formData.blood_pressure)
+      newErrors.blood_pressure = "Blood Pressure is required";
+    if (!formData.allergies) newErrors.allergies = "Allergies is required";
+    if (!formData.chronic_conditions)
+      newErrors.chronic_conditions = "Chronic Conditions is required";
+    if (!formData.med_info_product)
+      newErrors.med_info_product = "Medication Info Product is required";
+    if (!formData.dosage) newErrors.dosage = "Dosage is required";
+    if (!formData.frequency) newErrors.frequency = "Frequency is required";
+    if (!formData.start_date) newErrors.start_date = "Start Date is required";
+    if (!formData.end_date) newErrors.end_date = "End Date is required";
+    if (!formData.additional_info)
+      newErrors.additional_info = "Additional Information is required";
+
+    return newErrors;
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  const addCustomerMutation = useMutation({
+    mutationFn: async (data: Record<string, any>) => {
+      const res = await customAxios.post(endpoints.posCustomers, data);
+      return res;
+    },
+  });
 
   const { data: inventoryProductsData } = useQuery({
     queryKey: ["inventoryProducts"],
@@ -27,6 +129,15 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+
+    // Validate form
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      toast.error("Please fill in all required fields correctly.");
+      return;
+    }
+
     const data = {
       full_name: formData.get("full_name"),
       email: formData.get("email"),
@@ -48,43 +159,16 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
       additional_info: formData.get("additional_info"),
     };
 
-    const result = AddCustomerSchema.safeParse(data);
-
-    if (!result.success) {
-      const newErrors: { [key: string]: string } = {};
-      const formattedErrors = result.error.format();
-
-      for (const [key, value] of Object.entries(formattedErrors)) {
-        if (typeof value === "object" && value !== null && "_errors" in value) {
-          if (Array.isArray(value._errors) && value._errors.length > 0) {
-            newErrors[key] = value._errors.join(", ");
-          }
-        } else if (Array.isArray(value) && value.length > 0) {
-          newErrors[key] = value.join(", ");
-        }
-      }
-
-      setErrors(newErrors);
-      toast.error("Please correct the validation errors.");
-      return;
-    }
-
-    const addCustomerMutation = useMutation({
-      mutationFn: async () => {
-        const res = await customAxios.post(endpoints.posCustomers, data);
-        return res;
-      },
+    addCustomerMutation.mutate(data, {
       onSuccess: () => {
         closeModal();
-        SwalToaster("Customer added successfully!", "success");
+        SwalToaster("Customer added successfully.", "success");
       },
       onError: (error) => {
         console.error(error);
         SwalToaster("Customer could not be added!", "error");
       },
     });
-
-    addCustomerMutation.mutate();
   };
 
   return (
@@ -111,7 +195,7 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                 Basic Information
               </h2>
               <div className="grid grid-cols-3 gap-5">
-                <div className="grid gap-y-2 mt-3">
+                <div className="grid gap-y-2 py-4">
                   <label
                     htmlFor="full_name"
                     className="text-[#323539] font-inter font-medium text-sm"
@@ -120,12 +204,20 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="text"
+                    onChange={handleInputChange}
                     name="full_name"
                     placeholder="Enter full name"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.full_name ? "border-red-500" : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.full_name && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.full_name}
+                    </p>
+                  )}
                 </div>
-                <div className="grid gap-y-2">
+                <div className="grid gap-y-2 py-4">
                   <label
                     htmlFor="email"
                     className="text-[#323539] font-inter font-medium text-sm"
@@ -134,12 +226,20 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="email"
+                    onChange={handleInputChange}
                     name="email"
                     placeholder="Enter email"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.email ? "border-red-500" : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.email && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
-                <div className="grid gap-y-2">
+                <div className="grid gap-y-2 py-4">
                   <label
                     htmlFor="phone_number"
                     className="text-[#323539] font-inter font-medium text-sm"
@@ -148,10 +248,20 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="text"
+                    onChange={handleInputChange}
                     name="phone_number"
                     placeholder="Enter phone number"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.phone_number
+                        ? "border-red-500"
+                        : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.phone_number && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.phone_number}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -162,12 +272,20 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <select
                     name="gender"
-                    className="border w-full h-12 border-[#E6E6E6] outline-none shadow-sm rounded-[6px]"
+                    onChange={handleInputChange}
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.gender ? "border-red-500" : "border-gray-300"
+                    }`}
                   >
                     <option value="">Select Gender</option>
                     <option value="M">Male</option>
                     <option value="F">Female</option>
                   </select>
+                  {errors.gender && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.gender}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -178,9 +296,17 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="date"
+                    onChange={handleInputChange}
                     name="birth_date"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.birth_date ? "border-red-500" : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.birth_date && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.birth_date}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -191,10 +317,18 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="text"
+                    onChange={handleInputChange}
                     name="address"
                     placeholder="Enter address"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.address ? "border-red-500" : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.address && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.address}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -205,7 +339,7 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                 Health Information
               </h2>
               <div className="grid grid-cols-3 gap-5">
-                <div className="grid gap-y-2 mt-3">
+                <div className="grid gap-y-2">
                   <label
                     htmlFor="height"
                     className="text-[#323539] font-inter font-medium text-sm"
@@ -214,10 +348,18 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="number"
+                    onChange={handleInputChange}
                     name="height"
                     placeholder="Enter height"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.height ? "border-red-500" : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.height && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.height}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -228,10 +370,18 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="number"
+                    onChange={handleInputChange}
                     name="weight"
                     placeholder="Enter weight"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.weight ? "border-red-500" : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.weight && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.weight}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -242,7 +392,10 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <select
                     name="blood_type"
-                    className="border w-full h-12 border-[#E6E6E6] outline-none shadow-sm rounded-[6px]"
+                    onChange={handleInputChange}
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.blood_type ? "border-red-500" : "border-gray-300"
+                    }`}
                   >
                     <option value="">Select Blood Type</option>
                     <option value="O+">O+</option>
@@ -254,6 +407,11 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     <option value="AB+">AB+</option>
                     <option value="AB-">AB-</option>
                   </select>
+                  {errors.blood_type && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.blood_type}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -264,10 +422,20 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="text"
+                    onChange={handleInputChange}
                     name="blood_pressure"
                     placeholder="Enter blood pressure"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border rounded bg-gray-50 focus:outline-none ${
+                      errors.blood_pressure
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
                   />
+                  {errors.blood_pressure && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.blood_pressure}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -278,10 +446,18 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="text"
+                    onChange={handleInputChange}
                     name="allergies"
                     placeholder="Enter allergies"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.allergies ? "border-red-500" : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.allergies && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.allergies}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -292,10 +468,20 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="text"
+                    onChange={handleInputChange}
                     name="chronic_conditions"
                     placeholder="Enter chronic conditions"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.chronic_conditions
+                        ? "border-red-500"
+                        : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.chronic_conditions && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.chronic_conditions}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -311,7 +497,7 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-5">
-                <div className="grid gap-y-2 mt-3">
+                <div className="grid gap-y-2">
                   <label
                     htmlFor="med_info_product"
                     className="text-[#323539] font-inter font-medium text-sm"
@@ -320,15 +506,25 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <select
                     name="med_info_product"
-                    className="border w-full h-12 text-sm border-[#E6E6E6] outline-none shadow-sm rounded-[6px]"
+                    onChange={handleInputChange}
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.med_info_product
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
                   >
-                    <option value="">Select Category</option>
+                    <option value="">Select Product</option>
                     {inventoryProductsData?.map((product: any) => (
                       <option key={product?.id} value={product?.id}>
                         {product?.name}
                       </option>
                     ))}
                   </select>
+                  {errors.med_info_product && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.med_info_product}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -339,10 +535,18 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="text"
+                    onChange={handleInputChange}
                     name="dosage"
                     placeholder="Enter dosage"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.dosage ? "border-red-500" : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.dosage && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.dosage}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -352,11 +556,19 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                     Frequency
                   </label>
                   <input
-                    type="text"
+                    type="number"
+                    onChange={handleInputChange}
                     name="frequency"
                     placeholder="Enter frequency"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.frequency ? "border-red-500" : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.frequency && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.frequency}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -367,9 +579,17 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="date"
+                    onChange={handleInputChange}
                     name="start_date"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.start_date ? "border-red-500" : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.start_date && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.start_date}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -380,9 +600,17 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="date"
+                    onChange={handleInputChange}
                     name="end_date"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.end_date ? "border-red-500" : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.end_date && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.end_date}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-y-2">
                   <label
@@ -393,23 +621,33 @@ const AddCustomerModal = ({ closeModal }: AddCustomerModalProps) => {
                   </label>
                   <input
                     type="text"
+                    onChange={handleInputChange}
                     name="additional_info"
                     placeholder="Enter additional information"
                     id="additional_info"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                    className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                      errors.additional_info
+                        ? "border-red-500"
+                        : "border-[#E5E5E7]"
+                    }`}
                   />
+                  {errors.additional_info && (
+                    <p className="text-red-500 font-bold text-xs mt-1">
+                      {errors.additional_info}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
           </div>
           {/* End Medical Information Form */}
 
-          <div className="flex justify-end mt-6">
+          <div className="flex justify-end mt-4">
             <button
               type="submit"
               className="bg-[#2648EA] hover:bg-[#1E3AD8] cursor-pointer rounded-[4px] 
               text-white font-semibold py-3 px-6 transition-colors focus:outline-none 
-              focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mr-8"
             >
               Add Customer
             </button>
