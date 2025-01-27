@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { FaPlus, FaMinus } from "react-icons/fa";
 import { MoveRight, ArrowRight } from "lucide-react";
 
 export type Product = {

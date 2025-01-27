@@ -11,6 +11,7 @@ import { Plus, X, Minus } from "lucide-react";
 import PaymentOptions from "./PaymentOptions";
 
 export type Product = {
+  id?: string;
   name: string;
   quantity: number;
   selling_price: string;
@@ -36,7 +37,10 @@ const OrderList = ({
   const [quantityInputs, setQuantityInputs] = useState<{
     [key: string]: string;
   }>({});
-
+  const [discount, setDiscount] = useState(() => {
+    const savedDiscount = localStorage.getItem("discount");
+    return savedDiscount ? parseFloat(savedDiscount) : 0
+  })
 
 
   // Update quantity inputs whenever orderList changes
@@ -48,9 +52,23 @@ const OrderList = ({
     setQuantityInputs(updatedInputs);
   }, [orderList]);
 
+  //Anytime the order list changes, the useEffect runs because of the dependency array
   useEffect(() => {
     localStorage.setItem("orderList", JSON.stringify(orderList));
   }, [orderList]);
+
+  useEffect(() => {
+    localStorage.setItem("discount", JSON.stringify(discount))
+  }, [discount])
+
+
+  //handling the discount change
+  const handleDiscountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //checking if the discount value has been set in the form
+    const value =  event.target.value ? parseFloat(event.target.value) : 0; 
+    setDiscount(value) 
+
+  }
 
   const handleQuantityChange = (productName: string, value: string) => {
     // Sanitize input to only allow numbers
@@ -105,11 +123,15 @@ const OrderList = ({
   const handleClearBasket = () => {
     onClearBasket();
     setQuantityInputs({});
+    setDiscount(0);
+    localStorage.removeItem('discount');
   };
 
   const calculatedTotalPrice = orderList.reduce((total, product) => {
     return total + parseFloat(product.selling_price) * product.quantity;
   }, 0);
+
+  const finalPrice = calculatedTotalPrice - discount;
 
   return (
     <div className="grid gap-y-4 w-[50%]">
@@ -192,8 +214,11 @@ const OrderList = ({
             ₵
             <input
               type="number"
-              name=""
-              id=""
+              name="discount"
+              id="discount"
+              value={discount || ""}
+              min={0}
+              onChange={handleDiscountChange}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               className="outline-none"
@@ -204,7 +229,7 @@ const OrderList = ({
         <div className="mt-6 text-lg font-semibold flex items-center justify-between font-inter">
           <p className="text-[#858C95] font-normal text-sm">Total Price:</p>
           <span className="text-[#202224] font-bold text-xl">
-            GHS: {calculatedTotalPrice.toFixed(2)}
+            GHS: {finalPrice.toFixed(2)}
           </span>
         </div>
 
