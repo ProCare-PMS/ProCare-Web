@@ -18,12 +18,12 @@ export type DayAbbreviation =
   | "SAT";
 
 export interface AddUserTypes {
-  username: string;
+  full_name: string;
   email: string;
   address: string;
   contact: string;
   role: string;
-  permission: string[];
+  //permission: string[];
   working_hours: WorkingHoursTypes[];
 }
 

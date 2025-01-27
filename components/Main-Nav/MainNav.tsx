@@ -90,7 +90,7 @@ const MainNav = () => {
                   <ul className="flex flex-col justify-center">
                     <li>
                       <Link
-                        href="profile"
+                        href="/settings"
                         className="py-3 px-6 text-[#344054] font-normal flex items-center gap-2 text-sm"
                       >
                         <CircleUser />
