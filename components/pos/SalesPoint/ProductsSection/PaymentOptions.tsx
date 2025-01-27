@@ -56,8 +56,8 @@ const PaymentOptions = () => {
               Mobile Money
             </span>
           </div>
-          <div className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3">
-            <div className="bg-[#EFF0FE] rounded-full p-3">
+          <div className="grid place-items-center border border-[#2648EA] rounded-[8px] py-2 px-3 cursor-pointer">
+            <div className="bg-[#EFF0FE] rounded-full p-3" onClick={() => handlePaymentOptions('Cash')}>
               <Image
                 src="/icons/cash.png"
                 alt="Cash Icon"
@@ -86,8 +86,8 @@ const PaymentOptions = () => {
               Insurance
             </span>
           </div>
-          <div className="grid place-items-center w-full border border-[#2648EA] rounded-[8px] py-2 px-3">
-            <div className="bg-[#EFF0FE] rounded-full p-3">
+          <div className="grid place-items-center w-full border border-[#2648EA] rounded-[8px] py-2 px-3 cursor-pointer">
+            <div className="bg-[#EFF0FE] rounded-full p-3"  onClick={() => handlePaymentOptions('Multipay')}>
               <Image
                 src="/icons/multipay.png"
                 alt="Credit Card Icon"
