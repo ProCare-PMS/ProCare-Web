@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  deploy-main-service:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,9 +19,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-
-      # - name: Generate .env file
-      #   run: echo "DB_HOST=SOMESECRET" > ./config/.env && echo "DB_NAME=SOMEPUBKEY" >> ./config/.env && echo "DB_PASSWORD=SOMEURL" >> ./config/.env && echo "DB_PORT=SOMEURL" >> ./config/.env && echo "DEBUG_MODE=SOMEURL" >> ./config/.env
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -37,11 +34,17 @@ jobs:
           push: true
           tags: curmens/procare_frontend:latest
           platforms: linux/amd64,linux/arm64
+          cache-from: type=registry,ref=curmens/procare_frontend:cache
+          cache-to: type=registry,ref=curmens/procare_frontend:cache,mode=max
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Run scripts
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run deployment scripts
         uses: appleboy/ssh-action@master
         timeout-minutes: 600
         with:
@@ -50,5 +53,4 @@ jobs:
           key: ${{ secrets.STAGING_KEY }}
           script: |
             cd web/nginx-proxy
-            docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up --build -d
