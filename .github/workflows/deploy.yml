@@ -49,6 +49,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.STAGING_KEY }}
           script: |
-            cd web
-            docker compose pull
-            docker compose up --build -d
+            cd web/nginx-proxy
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up --build -d
