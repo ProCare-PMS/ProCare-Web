@@ -13,7 +13,7 @@ function PaymentMethodListTable() {
         <h2 className="text-2xl font-bold font-nunito_sans text-[#202224]">
           Payment Method List
         </h2>
-        <div className="flex gap-3">
+        {/* <div className="flex gap-3">
           <Link
             href="/page_under_construction"
             className="text-[#2648EA] font-inter flex items-center gap-1 font-semibold text-sm"
@@ -21,7 +21,7 @@ function PaymentMethodListTable() {
             Full view
             <ExternalLink className="text-[#2648EA]" />
           </Link>
-        </div>
+        </div> */}
       </div>
       <MiniSubTable columns={Columns} data={[]} />
     </div>

@@ -3,14 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 
 const DashboardNote = () => {
-  const [showDiv, setShowDiv] = useState(true);
   const [getUser, setGetUser] = useState<any>({});
-  const queryClient = useQueryClient();
 
   //get personal info data
   const { data: getPersonalData } = useQuery({
@@ -23,7 +21,23 @@ const DashboardNote = () => {
   });
 
   const handleSaveBtn = () => {
-    setShowDiv(false);
+    // Retrieve the current user object from localStorage
+    const userData = localStorage.getItem("user");
+
+    if (userData) {
+      // Parse the JSON string into an object
+      const userObject = JSON.parse(userData);
+
+      // Add or update the `saveNumber` property
+      userObject.saveNumber = true;
+
+      // Save the updated object back to localStorage
+      localStorage.setItem("user", JSON.stringify(userObject));
+
+      console.log("User updated:", userObject);
+    } else {
+      console.error("No user data found in localStorage.");
+    }
   };
 
   // Set user from localStorage on client side
@@ -36,7 +50,7 @@ const DashboardNote = () => {
 
   return (
     <div>
-      {showDiv && (
+      {!getUser?.saveNumber && (
         <div className="border border-[#2648EA] mt-8 bg-[#EFF0FE] font-inter rounded-xl p-4 flex flex-col md:flex-row items-center justify-center md:justify-between gap-4">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             {/* <Home color="blue" /> */}

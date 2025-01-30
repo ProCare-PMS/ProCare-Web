@@ -50,7 +50,7 @@ const workingHoursSchema = z.object({
 });
 
 const AddUserSchema = z.object({
-  username: z.string(),
+  full_name: z.string(),
   email: z.string().email("Invalid email format"),
   contact: z.string(),
   address: z.string(),
@@ -61,7 +61,7 @@ const AddUserSchema = z.object({
 });
 
 const stepOneSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  full_name: z.string().min(1, "Username is required"),
   email: z.string().email("Invalid email"),
   contact: z.string().min(1, "Contact is required"),
   address: z.string().min(1, "Address is required"),
@@ -69,7 +69,7 @@ const stepOneSchema = z.object({
 
 const stepTwoSchema = z.object({
   role: z.string(),
-  permission: z.array(z.string()),
+  //permission: z.array(z.string()),
 });
 
 const stepThreeSchema = z.object({

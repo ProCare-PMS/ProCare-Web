@@ -31,9 +31,10 @@ interface AddUserModalProps {
   title?: string;
 }
 
-const optionDataLabelValue: { label: string; value: string }[] = [
-  { label: "Officer 1", value: "option1" },
-  { label: "Officer 2", value: "option2" },
+const rolesValLabels: { label: string; value: string }[] = [
+  { label: "Manager", value: "manager" },
+  { label: "Pharmacist", value: "pharmacist" },
+  { label: "Technician", value: "technician" },
 ];
 
 const permissionsoptions: { label: string; value: string }[] = [
@@ -55,38 +56,24 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
 }) => {
   const [step, setStep] = useState<number>(1);
   const [formValues, setFormValues] = useState<AddUserTypes>({
-    username: "",
+    full_name: "",
     email: "",
     contact: "",
     address: "",
     role: "",
     working_hours: defaultWorkingHours,
-    permission: [],
+    //permission: [],
   });
 
   //mutation
   const postManagementEmployees = useMutation({
     mutationFn: async (value: any) => {
       const res = await customAxios
-        .post(endpoints.managements + "employees/", value.formData)
+        .post(endpoints.managements + "employees/create/", value.formData)
         .then((res) => res);
       return res;
     },
   });
-
-  //get all roles
-  // const { data: getAllRoles } = useQuery({
-  //   queryKey: ["getAllRoles"],
-  //   queryFn: async () => {
-  //     const res = await customAxios
-  //       .get(endpoints.managements + "employee-roles/")
-  //       .then((res) => res?.data?.results);
-  //     return res?.map((item: any) => ({
-  //       label: item.role_name,
-  //       value: item.id,
-  //     }));
-  //   },
-  // });
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -141,38 +128,6 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     }));
   };
 
-  //handlesubmit
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   const values = {
-  //     username: formValues.username,
-  //     email: formValues.email,
-  //     role: formValues.role,
-  //     permissions: formValues.permission,
-  //     working_hours: formValues.working_hours,
-  //     contact: formValues.contact,
-  //     address: formValues.address,
-  //   };
-
-  //   const filteredworking_hours = formValues.working_hours
-  //     .filter((item) => item.isWorking)
-  //     .map(({ day, start_time, end_time }) => ({ day, start_time, end_time }));
-
-  //   const payload = { ...formValues, working_hours: filteredworking_hours };
-
-  //   console.log({ values }, { payload });
-
-  //   const result = AddUserSchema.safeParse(values);
-
-  //   if (!result.success) {
-  //     console.error(result.error);
-  //     return;
-  //   }
-
-  //   postManagementEmployees.mutate({ formData: payload });
-  // };
-
   //get user lincense
   const getUserLicense = JSON.parse(localStorage.getItem("user") || "{}")
     ?.pharmacy?.license_number;
@@ -188,10 +143,13 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
       ...formValues,
       license_number: getUserLicense,
       working_hours: filteredworking_hours,
+      is_manager: formValues.role === "manager" ? true : false,
+      is_pharmacist: formValues.role === "pharmacist" ? true : false,
+      is_mca: formValues.role === "technician" ? true : false,
       password: "emptypassword",
     };
 
-    //console.log({ payload });
+    console.log({ payload });
 
     const result = AddUserSchema.safeParse(formValues);
 
@@ -257,12 +215,12 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     User Name
                   </label>
                   <input
-                    id="username"
-                    name="username"
+                    id="full_name"
+                    name="full_name"
                     className="input bg-white p-2 border-2 rounded focus:outline-none"
                     type="text"
                     placeholder="Enter user name"
-                    value={formValues.username}
+                    value={formValues.full_name}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -321,10 +279,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                   <CustomSelect
                     idField="role"
                     nameField="role"
-                    optionData={[]}
-                    // value={getAllRoles?.filter((option: any) =>
-                    //   formValues.role?.includes(option?.value)
-                    // )}
+                    optionData={rolesValLabels}
                     onChange={(selected) =>
                       handleChange("role", selected?.value)
                     }
@@ -332,7 +287,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                   />
                 </div>
 
-                <div className="flex flex-col w-3/5">
+                {/* <div className="flex flex-col w-3/5">
                   <label className="text-gray-700 font-medium mb-2">
                     Permissions
                   </label>
@@ -352,7 +307,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     isClearable
                     isMulti
                   />
-                </div>
+                </div> */}
               </div>
             )}
 

@@ -69,12 +69,12 @@ export function SalesBarChart() {
               optionData={monthsOfYear}
             />
           </div>
-          <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2 py-0">
+          {/* <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2 py-0">
             <span>
               <CloudUploadOutlinedIcon />
             </span>
             <span>Export</span>
-          </div>
+          </div> */}
         </div>
       </CardHeader>
       <CardContent>

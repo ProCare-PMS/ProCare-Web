@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useRef, useEffect } from "react";
 import ProductStockTable from "./ProductStockTable";
 import clsx from "clsx";
 import { Plus, SlidersVertical } from "lucide-react";
@@ -33,6 +33,7 @@ const ProductsTabHeader: React.FC = () => {
   const [searchValues, setSearchValues] = useState<string>("");
   const [showImport, setShowImport] = useState<boolean>(false);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const { data: inventoryProductsData, isLoading } = useQuery({
     queryKey: ["inventoryProducts"],
@@ -90,6 +91,32 @@ const ProductsTabHeader: React.FC = () => {
     setSearchValues(event.target.value);
   };
 
+  const showAddProductsModal = () => {
+    setIsModalOpen(true);
+    setShowImport(false);
+    setShowMenu(false);
+  };
+
+  const showImportModal = () => {
+    setShowImport(true);
+    setIsModalOpen(false);
+    setShowMenu(false);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setShowMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -117,7 +144,7 @@ const ProductsTabHeader: React.FC = () => {
             placeholder="Search for product"
           />
 
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             <Button
               type="button"
               className="text-white flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
@@ -168,7 +195,10 @@ const ProductsTabHeader: React.FC = () => {
       )}
 
       {showImport && (
-        <ImportProductsModal setModal={() => setShowImport(false)} />
+        <ImportProductsModal
+          setModal={() => setShowImport(false)}
+          title="Product"
+        />
       )}
     </div>
   );

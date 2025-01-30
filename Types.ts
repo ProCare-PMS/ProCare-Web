@@ -49,6 +49,16 @@ export interface FirstLoginState {
   account: accountFirstLogin[];
 }
 
+export interface ImportPageProps {
+  showImport: boolean;
+  handleClose: () => void;
+}
+
+export interface ImportPageProps {
+  showImport: boolean;
+  handleClose: () => void;
+}
+
 export interface SuppliersResponse {
   id: string;
   name: string;
