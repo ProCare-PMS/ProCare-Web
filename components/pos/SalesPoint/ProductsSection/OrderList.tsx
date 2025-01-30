@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { FaPlus, FaMinus } from "react-icons/fa";
 import {
   Table,
   TableBody,
@@ -8,11 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, X } from "lucide-react";
-import PaymentModal from "./PaymentModal";
+import { Plus, X, Minus } from "lucide-react";
 import PaymentOptions from "./PaymentOptions";
 
 export type Product = {
+  id?: string;
   name: string;
   quantity: number;
   selling_price: string;
@@ -33,9 +32,16 @@ const OrderList = ({
   onToggleOrderList,
   onClearBasket,
 }: OrderListProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
-  const [quantityInputs, setQuantityInputs] = useState<{ [key: string]: string }>({});
+  const [isFocused, setIsFocused] = useState(false);
+  const [quantityInputs, setQuantityInputs] = useState<{
+    [key: string]: string;
+  }>({});
+  const [discount, setDiscount] = useState(() => {
+    const savedDiscount = localStorage.getItem("discount");
+    return savedDiscount ? parseFloat(savedDiscount) : 0
+  })
+
 
   // Update quantity inputs whenever orderList changes
   useEffect(() => {
@@ -46,75 +52,86 @@ const OrderList = ({
     setQuantityInputs(updatedInputs);
   }, [orderList]);
 
+  //Anytime the order list changes, the useEffect runs because of the dependency array
   useEffect(() => {
-    localStorage.setItem('orderList', JSON.stringify(orderList));
+    localStorage.setItem("orderList", JSON.stringify(orderList));
   }, [orderList]);
 
-  const handlePaymentOptions = () => {
-    setShowPaymentOptions(true);
-  };
+  useEffect(() => {
+    localStorage.setItem("discount", JSON.stringify(discount))
+  }, [discount])
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setShowPaymentOptions(false);
-  };
 
-  const handleRemoveItem = (productName: string) => {
-    const product = orderList.find(p => p.name === productName);
-    if (product) {
-      updateQuantity(productName, -product.quantity);
-      const newQuantityInputs = { ...quantityInputs };
-      delete newQuantityInputs[productName];
-      setQuantityInputs(newQuantityInputs);
-    }
-  };
+  //handling the discount change
+  const handleDiscountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //checking if the discount value has been set in the form
+    const value =  event.target.value ? parseFloat(event.target.value) : 0; 
+    setDiscount(value) 
+
+  }
 
   const handleQuantityChange = (productName: string, value: string) => {
-    // Only allow numbers
-    const sanitizedValue = value.replace(/[^\d]/g, '');
-    
-    // If empty, set to "1"
-    const finalValue = sanitizedValue === '' ? '1' : sanitizedValue;
-    
-    // Update the input state
-    setQuantityInputs(prev => ({
+    // Sanitize input to only allow numbers
+    const sanitizedValue = value.replace(/[^\d]/g, "");
+
+    // Always update the input state
+    setQuantityInputs((prev) => ({
       ...prev,
-      [productName]: finalValue
+      [productName]: sanitizedValue,
     }));
 
     // Find current product
-    const product = orderList.find(p => p.name === productName);
+    const product = orderList.find((p) => p.name === productName);
     if (product) {
-      const newQuantity = parseInt(finalValue);
-      const delta = newQuantity - product.quantity;
-      if (!isNaN(newQuantity) && newQuantity >= 1) {
-        updateQuantity(productName, delta);
+      // Only update quantity if a valid number is entered
+      if (sanitizedValue !== "") {
+        const newQuantity = parseInt(sanitizedValue);
+
+        if (!isNaN(newQuantity) && newQuantity >= 1) {
+          const delta = newQuantity - product.quantity;
+          updateQuantity(productName, delta);
+        }
       }
     }
   };
 
   const handleIncreaseDecrease = (productName: string, delta: number) => {
-    const product = orderList.find(p => p.name === productName);
-    if (product && (product.quantity + delta >= 1)) {
+    const product = orderList.find((p) => p.name === productName);
+    if (product) {
       updateQuantity(productName, delta);
-      // Update the input state immediately
+
+      // Update the input state
       const newQuantity = (product.quantity + delta).toString();
-      setQuantityInputs(prev => ({
+      setQuantityInputs((prev) => ({
         ...prev,
-        [productName]: newQuantity
+        [productName]: newQuantity,
       }));
     }
   };
 
+  const handleRemoveItem = (productName: string) => {
+    const product = orderList.find((p) => p.name === productName);
+    if (product) {
+      updateQuantity(productName, -product.quantity);
+    }
+  };
+
+  const handlePaymentOptions = () => {
+    setShowPaymentOptions(true);
+  };
+
   const handleClearBasket = () => {
-    localStorage.removeItem('orderList');
     onClearBasket();
     setQuantityInputs({});
+    setDiscount(0);
+    localStorage.removeItem('discount');
   };
 
   const calculatedTotalPrice = orderList.reduce((total, product) => {
-    return total + (parseFloat(product.selling_price) * product.quantity);
+    return total + parseFloat(product.selling_price) * product.quantity;
   }, 0);
+
+  const finalPrice = calculatedTotalPrice - discount;
 
   return (
     <div className="grid gap-y-4 w-[50%]">
@@ -123,7 +140,9 @@ const OrderList = ({
           <h2 className="text-2xl font-bold mb-4 font-inter text-[#202224]">
             Order List
           </h2>
-          <FaMinus onClick={onToggleOrderList} className="cursor-pointer" />
+          <div className="border-[2px] border-[#2648EA] rounded-full p-1 cursor-pointer">
+            <Minus onClick={onToggleOrderList} className="cursor-pointer" />
+          </div>
         </div>
 
         <Table className="w-full table-auto h-full">
@@ -146,27 +165,30 @@ const OrderList = ({
                     <button
                       onClick={() => handleIncreaseDecrease(product.name, -1)}
                       className="text-red-600 rounded-full border border-red-600 p-1"
-                      disabled={product.quantity <= 1}
                     >
-                      <FaMinus />
+                      <Minus />
                     </button>
                     <input
                       type="text"
                       value={quantityInputs[product.name] || product.quantity}
-                      onChange={(e) => handleQuantityChange(product.name, e.target.value)}
+                      onChange={(e) =>
+                        handleQuantityChange(product.name, e.target.value)
+                      }
                       className="w-16 text-center border rounded-md p-1"
-                      min="1"
                     />
                     <button
                       onClick={() => handleIncreaseDecrease(product.name, 1)}
                       className="text-green-600 rounded-full border border-green-600 p-1"
                     >
-                      <FaPlus />
+                      <Plus />
                     </button>
                   </div>
                 </TableCell>
                 <TableCell className="px-4 py-4 border-b">
-                  {product.selling_price}
+                  GH₵
+                  {(
+                    parseFloat(product.selling_price) * product.quantity
+                  ).toFixed(2)}
                 </TableCell>
                 <TableCell className="px-4 py-4 border-b">
                   <button
@@ -183,16 +205,31 @@ const OrderList = ({
         </Table>
 
         <div className="mt-6 flex item-center justify-between">
-          <p className="text-[#858C95] font-normal text-sm">Discount:</p>
-          <div className="bg-[#0A77FF] rounded-[4px] p-2">
-            <Plus className="text-white cursor-pointer" />
+          <p className="text-[#858C95] font-normal text-sm">DISCOUNT:</p>
+          <div
+            className={`flex gap-2 border-2 p-2 rounded-[4px] ${
+              isFocused ? "border-[#2648EA]" : "border-gray-300"
+            }`}
+          >
+            ₵
+            <input
+              type="number"
+              name="discount"
+              id="discount"
+              value={discount || ""}
+              min={0}
+              onChange={handleDiscountChange}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              className="outline-none"
+            />
           </div>
         </div>
 
         <div className="mt-6 text-lg font-semibold flex items-center justify-between font-inter">
           <p className="text-[#858C95] font-normal text-sm">Total Price:</p>
           <span className="text-[#202224] font-bold text-xl">
-            GHS: {calculatedTotalPrice.toFixed(2)}
+            GHS: {finalPrice.toFixed(2)}
           </span>
         </div>
 

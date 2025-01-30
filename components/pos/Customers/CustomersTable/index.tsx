@@ -16,7 +16,7 @@ import { endpoints } from "@/api/Endpoints";
 
 function CustomersTable() {
 
-  const { data: customersData } = useQuery({
+  const { data: customersData, isLoading } = useQuery({
     queryKey: ["posCustomers"],
     queryFn: async () =>
       await customAxios.get(endpoints.posCustomers).then((res) => res),
@@ -66,14 +66,16 @@ function CustomersTable() {
         </div>
 
          
-        {/* Check the columns for the dropdown actions for the table */}
+        {/* Check the columns for the dropdown actions for the table: View, Transaction Details and Delete */}
         <DataTable
           columns={customersTabColumns}
           data={customersData || []}
           searchValue={searchValues}
+          isLoading={isLoading}
         />
       </div>
 
+  
       {showCustomer && (
         <AddCustomerModal closeModal={() => setShowCustomer(false)} />
       )}

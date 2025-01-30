@@ -1,7 +1,11 @@
 import Image from "next/image";
 import React from "react";
 
-const CategoriesTabStats = () => {
+interface Props {
+  categoryLength: number
+}
+
+const CategoriesTabStats = ({ categoryLength } : Props) => {
   return (
     <div className="flex items-center gap-9">
       <div className="border w-[250px] flex gap-5 items-center border-[#D0D5DD] py-3 px-5 rounded-[8px]">
@@ -15,7 +19,7 @@ const CategoriesTabStats = () => {
           <span className="font-inter text-[#848199] font-medium text-xs text-left">
             No Of Categories
           </span>
-          <span className="font-bold font-inter text-lg">68</span>
+          <span className="font-bold font-inter text-lg">{categoryLength === 0 ? 0 : categoryLength}</span>
         </div>
       </div>
 

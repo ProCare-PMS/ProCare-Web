@@ -18,6 +18,18 @@ interface TableProps {
 }
 
 export function DashboardSubTables({ title, data, isLoading }: TableProps) {
+
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+    };
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  }
+
+
   if (isLoading) {
     return (
       <div className="bg-white p-6 rounded-xl w-[450px] h-[428px] flex-1">
@@ -97,17 +109,17 @@ export function DashboardSubTables({ title, data, isLoading }: TableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.length > 0 ? (
+          {data?.length > 0 ? (
             data.map((invoice) => (
-              <TableRow key={invoice.productName}>
+              <TableRow key={invoice.name}>
                 <TableCell className="font-semibold text-sm font-inter text-[#242525]">
-                  {invoice.productName}
+                  {invoice.name}
                 </TableCell>
                 <TableCell className="text-sm font-medium font-nunito_sans text-[#202224]">
-                  {invoice.noRemaining}
+                  {invoice.quantity}
                 </TableCell>
                 <TableCell className="font-semibold text-sm font-nunito_sans text-[#202224]">
-                  {invoice.expriyDate}
+                {formatDate(invoice.expiry_date)}
                 </TableCell>
               </TableRow>
             ))

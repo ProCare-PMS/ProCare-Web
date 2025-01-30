@@ -1,10 +1,6 @@
 import DataTable from "@/components/Tables/data-table";
 import { purchasesTabColumns } from "@/components/Tables/purchases-tab-columns";
-import { purchaseTabTable } from "@/type";
 import React, { useState } from "react";
-import PurchasesTabHeader from "./PurchasesTabHeader";
-import PurchasesTabEmptyState from "./PurchasesTabEmptyState";
-import { CiSearch } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import { Plus, SlidersVertical } from "lucide-react";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
@@ -17,7 +13,7 @@ const PurchasesTab = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 
-  const { data: inventoryPurchasesData } = useQuery({
+  const { data: inventoryPurchasesData, isLoading } = useQuery({
     queryKey: ["inventoryPurchases"],
     queryFn: async () =>
       await customAxios.get(endpoints.inventoryPurchase).then((res) => res),
@@ -60,15 +56,14 @@ const PurchasesTab = () => {
               Add Purchase
             </Button>
 
-            <div className="border p-2  cursor-pointer border-main rounded-[12px]">
-              <SlidersVertical className="text-main" />
-            </div>
+           
           </div>
         </div>
         <DataTable
           columns={purchasesTabColumns}
           data={inventoryPurchasesData || []}
           searchValue={searchValues}
+          isLoading={isLoading}
         />
       </div>
 
