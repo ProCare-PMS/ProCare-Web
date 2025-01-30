@@ -75,6 +75,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
 
   const finalPrice = totalPrice - discount;
 
+  const itemPrice = finalPrice > 0 ? finalPrice : 0;
+
   const finalizePaymentMutation = useMutation({
     mutationFn: async (data: Record<string, any>) => {
       const res = await customAxios.post(endpoints.salesItems, data);
@@ -247,7 +249,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
             <div className="inline-block">
               <p className="text-sm text-gray-500">TOTAL PRICE</p>
               <span className="text-2xl font-bold text-gray-900">
-                GH₵ {finalPrice.toFixed(2)}
+                GH₵ {itemPrice.toFixed(2)}
               </span>
             </div>
           </div>
