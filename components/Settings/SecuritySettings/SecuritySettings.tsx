@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FiEye, FiEyeOff } from "react-icons/fi";
+import { Eye, EyeOff } from 'lucide-react';
 
 // Define Zod schema for validation
 const PasswordSchema = z.object({
@@ -72,7 +72,7 @@ const SecuritySettings = () => {
             className="absolute right-3 top-11 cursor-pointer"
             onClick={() => setShowOldPassword((prev) => !prev)}
           >
-            {showOldPassword ? <FiEyeOff /> : <FiEye />}
+            {showOldPassword ? <EyeOff /> : <Eye />}
           </span>
         </div>
       </div>
@@ -103,7 +103,7 @@ const SecuritySettings = () => {
             className="absolute right-3 top-11 cursor-pointer"
             onClick={() => setShowNewPassword((prev) => !prev)}
           >
-            {showNewPassword ? <FiEyeOff /> : <FiEye />}
+            {showNewPassword ? <EyeOff /> : <Eye />}
           </span>
         </div>
 
@@ -129,7 +129,7 @@ const SecuritySettings = () => {
             className="absolute right-3 top-11 cursor-pointer"
             onClick={() => setShowConfirmPassword((prev) => !prev)}
           >
-            {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+            {showConfirmPassword ? <EyeOff /> : <Eye />}
           </span>
         </div>
       </div>

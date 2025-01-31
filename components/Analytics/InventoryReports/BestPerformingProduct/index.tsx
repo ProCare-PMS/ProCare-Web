@@ -42,13 +42,13 @@ function BestPerformingProductTable() {
               control={control}
             />
           </div>
-          <Link
+          {/* <Link
             href="/page_under_construction"
             className="text-[#2648EA] font-inter flex items-center gap-1 font-semibold text-sm"
           >
             Full view
             <ExternalLink className="text-[#2648EA]" />
-          </Link>
+          </Link> */}
         </div>
       </div>
       <MiniSubTable columns={Column} data={bestPerformingProductData || []} />

@@ -55,19 +55,19 @@ function ExpenseRevenueTable() {
               height={100}
             />
           </span> */}
-          <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
+          {/* <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
             <span>
               <CloudUploadOutlinedIcon />
             </span>
             <span>Export</span>
-          </div>
-          <Link
+          </div> */}
+          {/* <Link
             href={"/page_under_construction"}
             className="text-[#2648EA] font-inter flex items-center gap-1 font-semibold text-sm"
           >
             Open
             <ExternalLink className="text-[#2648EA]" />
-          </Link>
+          </Link> */}
         </div>
       </div>
 

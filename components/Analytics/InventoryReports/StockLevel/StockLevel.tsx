@@ -137,12 +137,12 @@ export function StockLevelChart() {
               />
             </div>
 
-            <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
+            {/* <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
               <span>
                 <CloudUploadOutlinedIcon />
               </span>
               <span>Export</span>
-            </div>
+            </div> */}
           </div>
         </CardHeader>
         {chartData.length !== 0 ? (

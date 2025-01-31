@@ -76,7 +76,7 @@ function SupplierPerformanceTable() {
               height={100}
             />
           </span> */}
-          <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
+          {/* <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
             <span>
               <CloudUploadOutlinedIcon />
             </span>
@@ -88,7 +88,7 @@ function SupplierPerformanceTable() {
           >
             Open
             <ExternalLink className="text-[#2648EA]" />
-          </Link>
+          </Link> */}
         </div>
       </div>
 

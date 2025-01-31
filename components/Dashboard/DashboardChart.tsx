@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Label, Pie, PieChart } from "recharts";
-import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { Ellipsis, Square } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/chart";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
-import { RiCheckboxBlankFill } from "react-icons/ri";
 import { DashboardStatsResponse } from "@/Types";
 
 const chartData = [
@@ -84,7 +83,7 @@ export function DashbaordChart({ data }: DashbaordChartProps) {
         <CardTitle className="text-base text-[#323539] font-inter">
           Best Selling Products
         </CardTitle>
-        <BiDotsHorizontalRounded />
+        <Ellipsis />
       </div>
       <hr className="bg-black " />
       <CardContent className="flex-1 -mt-4 pb-0">
@@ -148,7 +147,7 @@ export function DashbaordChart({ data }: DashbaordChartProps) {
           <div key={index}>
             <div className="flex items-center p-2 justify-between" key={index}>
               <div className="flex items-center gap-3">
-                <RiCheckboxBlankFill style={{ color: `${chart.fill}` }} />
+                <Square style={{ color: `${chart.fill}` }} />
                 <span className="text-black font-medium font-inter text-sm">
                   {chart.products}
                 </span>

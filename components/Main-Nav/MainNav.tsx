@@ -1,10 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import DropDown from "@/app/(dashboard)/_components/DropDown";
 import MainNavRoutes from "./MainNavRoutes";
-import { FaChevronDown } from "react-icons/fa";
-import AvatarDropDown from "../DropDown/AvatarDropdown";
+import { ChevronDown } from 'lucide-react';
 import { LogOut } from "lucide-react";
 import { CircleUser } from "lucide-react";
 import { Info } from "lucide-react";
@@ -81,7 +79,7 @@ const MainNav = () => {
               </span>
             </div>
             <div className="relative">
-              <FaChevronDown
+              <ChevronDown
                 className="cursor-pointer"
                 onClick={() => setShowMenu(!showMenu)}
               />
@@ -90,7 +88,7 @@ const MainNav = () => {
                   <ul className="flex flex-col justify-center">
                     <li>
                       <Link
-                        href="profile"
+                        href="/settings"
                         className="py-3 px-6 text-[#344054] font-normal flex items-center gap-2 text-sm"
                       >
                         <CircleUser />

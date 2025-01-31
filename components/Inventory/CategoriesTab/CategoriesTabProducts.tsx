@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HiDotsVertical } from "react-icons/hi";
+import { EllipsisVertical } from 'lucide-react';
 import { LayoutGrid } from "lucide-react";
 import { Products } from "@/lib/definition";
 import ViewProductsSide from "../../../app/(dashboard)/inventory/_categoryProducts/ViewProductsSide";
@@ -91,7 +91,7 @@ const CategoriesTabProducts = () => {
                 <LayoutGrid className="text-[#2648EA]" />
               </div>
               <div>
-                <HiDotsVertical className="text-[#475467]" />
+                <EllipsisVertical  className="text-[#475467]" />
               </div>
             </div>
 

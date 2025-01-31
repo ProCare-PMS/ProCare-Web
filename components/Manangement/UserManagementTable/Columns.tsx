@@ -9,7 +9,7 @@ import { daysOfWeek } from "./Data";
 
 export const Columns: ColumnDef<any>[] = [
   {
-    accessorKey: "username",
+    accessorKey: "full_name",
     header: "User Name",
   },
   {

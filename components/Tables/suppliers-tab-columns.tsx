@@ -3,7 +3,7 @@
 import { SuppliersTabTable } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
 import { useState, useEffect, useRef } from "react";
-import { BiDotsVertical } from "react-icons/bi";
+import { Ellipsis } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,7 +39,7 @@ const ProductActionCell = ({ row }: SuppliersCellProps) => {
     */}
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <BiDotsVertical />
+          <Ellipsis />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-white w-[150px] mr-12">
           <DropdownMenuItem>View Details</DropdownMenuItem>
@@ -53,11 +53,11 @@ const ProductActionCell = ({ row }: SuppliersCellProps) => {
 
 export const suppliersTabColumns: ColumnDef<SuppliersTabTable>[] = [
   {
-    accessorKey: "supplierName",
+    accessorKey: "name",
     header: "Supplier Name",
   },
   {
-    accessorKey: "phoneNumber",
+    accessorKey: "contact",
     header: "Phone Number",
   },
   {
@@ -65,18 +65,18 @@ export const suppliersTabColumns: ColumnDef<SuppliersTabTable>[] = [
     header: "Email",
   },
   {
-    accessorKey: "quantity",
+    accessorKey: "total_purchase_quantity",
     header: "Quantity",
   },
   {
-    accessorKey: "lastPurchase",
+    accessorKey: "last_purchase_date",
     header: "Last Purchase",
   },
   {
-    accessorKey: "totalPurchase",
+    accessorKey: "total_purchase_amount",
     header: "Total Purchase",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("totalPurchase"));
+      const amount = parseFloat(row.getValue("total_purchase_amount"));
       const formatted = new Intl.NumberFormat("en-GH", {
         style: "currency",
         currency: "ghs",
