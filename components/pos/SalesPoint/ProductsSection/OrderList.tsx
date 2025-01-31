@@ -224,7 +224,7 @@ const OrderList = ({
         </div>
 
         <div className="mt-6 text-lg font-semibold flex items-center justify-between font-inter">
-          <p className="text-[#858C95] font-normal text-sm">Total Price:</p>
+          <p className="text-[#858C95] font-normal text-sm">TOTAL PRICE:</p>
           <span className="text-[#202224] font-bold text-xl">
             GHS: {finalPrice.toFixed(2)}
           </span>

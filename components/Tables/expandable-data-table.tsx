@@ -128,15 +128,7 @@ export function ExpandableDataTable<TData, TValue>({
                  {row.getVisibleCells().map((cell) => (
                    <TableCell key={cell.id}>
                      <span
-                       className={clsx(
-                         "rounded-3xl font-inter text-sm font-normal",
-                         {
-                           "text-[#219653] bg-[#21965314] py-2 rounded-3xl px-3":
-                             cell.getValue() === "Available",
-                           "text-[#D34053] bg-[#D3405314] px-3 py-2":
-                             cell.getValue() === "Unavailable",
-                         }
-                       )}
+                       
                      >
                        {flexRender(
                          cell.column.columnDef.cell,
