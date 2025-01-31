@@ -54,4 +54,5 @@ jobs:
           key: ${{ secrets.STAGING_KEY }}
           script: |
             cd web/nginx-proxy
+            docker compose pull
             docker compose -f docker-compose.prod.yml up --build -d
