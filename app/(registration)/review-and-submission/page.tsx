@@ -137,7 +137,6 @@ const ReviewAndSubmission = () => {
             <Button
               type="submit"
               className="text-white rounded-[5px] font-inter w-[140px]"
-              variant="secondary"
             >
               Submit
             </Button>
