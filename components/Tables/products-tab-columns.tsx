@@ -2,9 +2,10 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { useState, useEffect, useRef } from "react";
-import { Ellipsis } from 'lucide-react';
+import { Ellipsis } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
+import clsx from "clsx";
 
 interface ProductsType {
   name: string;
@@ -33,9 +34,7 @@ const ProductActionCell = ({ row }: ProductsCellProps) => {
   const item = row.original;
   const [showAction, setShowAction] = useState(false);
   const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<ProductsType | null>(
-    null
-  );
+  const [selectedItem, setSelectedItem] = useState<ProductsType | null>(null);
 
   return (
     <div>
@@ -44,9 +43,7 @@ const ProductActionCell = ({ row }: ProductsCellProps) => {
         {showAction && (
           <div className="absolute !bg-white min-w-[180px] z-50 shadow-md transition top-12 hover:shadow-lg right-0 z-80 rounded-[4px]">
             <div className="grid transition">
-              <button className="py-2 px-3 text-[#344054]">
-                View Details
-              </button>
+              <button className="py-2 px-3 text-[#344054]">View Details</button>
               <hr />
               <button className="py-2 px-3 text-[#344054]">Delete</button>
             </div>
@@ -127,6 +124,23 @@ export const productsTabColumns: ColumnDef<ProductsType>[] = [
   {
     accessorKey: "product_status",
     header: "Status",
+    cell: ({ row }) => {
+      const quantity = row.getValue("quantity") as number;
+      const status = quantity > 0 ? "Available" : "Unavailable";
+  
+      return (
+        <p className="rounded-3xl font-inter text-sm font-normal">
+          <span
+            className={clsx("rounded-3xl px-3 py-2", {
+              "text-[#219653] bg-[#21965314] !w-[40px] py-2 rounded-3xl px-3": status === "Available",
+              "text-[#D34053] bg-[#D3405314] !w-[40px] py-2 rounded-3xl px-3": status === "Unavailable",
+            })}
+          >
+            {status}
+          </span>
+        </p>
+      );
+    },
   },
   {
     id: "actions",

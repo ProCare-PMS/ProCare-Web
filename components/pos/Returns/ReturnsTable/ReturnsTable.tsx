@@ -84,7 +84,7 @@ const ReturnsTable = () => {
         {/* Databele Here */}
         <DataTable
           columns={returnHistoryColumns}
-          data={returnsHistory}
+          data={returnsData || []}
           searchValue={searchValues}
           isLoading={isLoading}
         />

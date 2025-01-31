@@ -42,7 +42,7 @@ const ProductsTabHeader: React.FC = () => {
     select: (findData) => findData?.data?.results,
   });
 
-  console.log(inventoryProductsData)
+  console.log(inventoryProductsData);
 
   const handleFilterChange = (filters: FilterState) => {
     const newFilters = Object.entries(filters)
@@ -120,7 +120,8 @@ const ProductsTabHeader: React.FC = () => {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center bg-[#F5F5F5] gap-6 p-1 rounded-[8px]">
+        {/* 
+        <div className="flex items-center bg-[#F5F5F5] gap-6 p-1 rounded-[8px]"> 
           {["Products", "Stocks"].map((tab) => (
             <button
               key={tab}
@@ -136,6 +137,8 @@ const ProductsTabHeader: React.FC = () => {
             </button>
           ))}
         </div>
+        */}
+        <h2 className="text-[#202224] font-semibold text-2xl">Products</h2>
 
         <div className="flex items-center gap-3">
           <SearchFieldInput
@@ -180,12 +183,25 @@ const ProductsTabHeader: React.FC = () => {
               <SlidersVertical className="text-[#494A50]" />
             </div>
 
-            {showFilters && <FilterDropdown onFilterChange={handleFilterChange} />}
+            {showFilters && (
+              <FilterDropdown onFilterChange={handleFilterChange} />
+            )}
           </div>
         </div>
       </div>
 
+      <ExpandableDataTable
+        columns={productsTabColumns}
+        data={inventoryProductsData || []}
+        searchValue={searchValues}
+        emptyState="products"
+        isLoading={isLoading}
+        columnFilters={columnFilters}
+        onColumnFiltersChange={setColumnFilters}
+      />
+      {/*
       {renderTabContent()}
+      */}
 
       {isModalOpen && (
         <AddProducts
