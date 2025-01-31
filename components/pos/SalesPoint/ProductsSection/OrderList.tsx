@@ -39,9 +39,8 @@ const OrderList = ({
   }>({});
   const [discount, setDiscount] = useState(() => {
     const savedDiscount = localStorage.getItem("discount");
-    return savedDiscount ? parseFloat(savedDiscount) : 0
-  })
-
+    return savedDiscount ? parseFloat(savedDiscount) : 0;
+  });
 
   // Update quantity inputs whenever orderList changes
   useEffect(() => {
@@ -58,39 +57,39 @@ const OrderList = ({
   }, [orderList]);
 
   useEffect(() => {
-    localStorage.setItem("discount", JSON.stringify(discount))
-  }, [discount])
-
+    localStorage.setItem("discount", JSON.stringify(discount));
+  }, [discount]);
 
   //handling the discount change
   const handleDiscountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //checking if the discount value has been set in the form
-    const value =  event.target.value ? parseFloat(event.target.value) : 0; 
-    setDiscount(value) 
-
-  }
+    const value = event.target.value ? parseFloat(event.target.value) : 0;
+    setDiscount(value);
+  };
 
   const handleQuantityChange = (productName: string, value: string) => {
-    // Sanitize input to only allow numbers
-    const sanitizedValue = value.replace(/[^\d]/g, "");
+    // Allow empty value to let the user clear input
+    if (value === "") {
+      setQuantityInputs((prev) => ({
+        ...prev,
+        [productName]: "",
+      }));
+      return;
+    }
 
-    // Always update the input state
+    // Sanitize input to allow only numbers
+    const sanitizedValue = value.replace(/[^\d]/g, "");
     setQuantityInputs((prev) => ({
       ...prev,
       [productName]: sanitizedValue,
     }));
 
-    // Find current product
-    const product = orderList.find((p) => p.name === productName);
-    if (product) {
-      // Only update quantity if a valid number is entered
-      if (sanitizedValue !== "") {
-        const newQuantity = parseInt(sanitizedValue);
-
-        if (!isNaN(newQuantity) && newQuantity >= 1) {
-          const delta = newQuantity - product.quantity;
-          updateQuantity(productName, delta);
-        }
+    const newQuantity = parseInt(sanitizedValue, 10);
+    if (!isNaN(newQuantity) && newQuantity >= 1) {
+      const product = orderList.find((p) => p.name === productName);
+      if (product) {
+        const delta = newQuantity - product.quantity;
+        updateQuantity(productName, delta);
       }
     }
   };
@@ -110,10 +109,7 @@ const OrderList = ({
   };
 
   const handleRemoveItem = (productName: string) => {
-    const product = orderList.find((p) => p.name === productName);
-    if (product) {
-      updateQuantity(productName, -product.quantity);
-    }
+    updateQuantity(productName, -Infinity); // Effectively removes the item
   };
 
   const handlePaymentOptions = () => {
@@ -124,7 +120,7 @@ const OrderList = ({
     onClearBasket();
     setQuantityInputs({});
     setDiscount(0);
-    localStorage.removeItem('discount');
+    localStorage.removeItem("discount");
   };
 
   const calculatedTotalPrice = orderList.reduce((total, product) => {
@@ -170,7 +166,8 @@ const OrderList = ({
                     </button>
                     <input
                       type="text"
-                      value={quantityInputs[product.name] || product.quantity}
+                      min={0}
+                      value={quantityInputs[product.name] ?? product.quantity}
                       onChange={(e) =>
                         handleQuantityChange(product.name, e.target.value)
                       }

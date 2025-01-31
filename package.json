@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start -p 6325",
     "deploy": "next build",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
     "@chakra-ui/icon": "^3.2.0",
@@ -64,6 +65,7 @@
     "zod": "^3.23.5"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.1.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

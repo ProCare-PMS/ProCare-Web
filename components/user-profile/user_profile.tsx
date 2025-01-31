@@ -1,29 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function UserProfile() {
   const [accountInfo, setAccountInfo] = useState<any[]>([]);
   const router = useRouter();
+
   useEffect(() => {
-    // Only access localStorage on the client side
-    const storedAccounts = localStorage.getItem("accounts");
-    if (!!storedAccounts) {
-      setAccountInfo(JSON.parse(storedAccounts));
+    if (typeof window !== "undefined") {
+      const storedAccounts = localStorage.getItem("accounts");
+      if (storedAccounts) {
+        setAccountInfo(JSON.parse(storedAccounts));
+      }
     }
   }, []);
-  //"/user-passcode"
+
   return (
-    <div className="bg-[#F9F9F9] h-screen w-screen flex justify-center items-center">
-      <div className="w-1/2 h-3/5 flex flex-col items-center justify-between gap-4">
-        <h2 className="text-[#2648EA] font-semibold text-3xl">
-          Who’s on Shift?
-        </h2>
-        <div className="flex flex-wrap justify-center items-center gap-2">
-          {accountInfo?.length > 0 ? (
-            accountInfo.map((detail: any, index: number) => (
+    <div className="bg-[#F9F9F9] min-h-screen flex justify-center items-center">
+      <div className="w-full max-w-lg p-6 flex flex-col items-center justify-between gap-4">
+        <h2 className="text-[#2648EA] font-semibold text-3xl">Who’s on Shift?</h2>
+
+        <div className="flex flex-wrap justify-center items-center gap-4">
+          {accountInfo.length > 0 ? (
+            accountInfo.map((detail, index) => (
               <div key={index} className="text-center">
                 <button
                   type="button"
@@ -32,21 +32,18 @@ export default function UserProfile() {
                     router.push("/user-passcode");
                   }}
                 >
-                  <div className="w-52 h-52 bg-white flex justify-center items-center rounded-xl">
-                    <div className="w-[50%] h-[50%]">
-                      <Image
-                        className="w-full h-full"
-                        src="/profile.jpg"
-                        width={50}
-                        height={50}
-                        alt="profileImage"
-                      />
-                    </div>
+                  <div className="w-52 h-52 bg-white flex justify-center items-center rounded-xl shadow-md transition hover:scale-105">
+                    <Image
+                      src="/profile.jpg"
+                      width={120}
+                      height={120}
+                      priority
+                      alt="Profile Image"
+                      className="rounded-full"
+                    />
                   </div>
                 </button>
-                <div>
-                  <span className="font-bold mt-2">{detail.name}</span>
-                </div>
+                <div className="mt-2 font-bold">{detail.name}</div>
               </div>
             ))
           ) : (
@@ -55,10 +52,8 @@ export default function UserProfile() {
         </div>
 
         <div>
-          <span>Back to</span>{" "}
-          <a href="/login" className="text-[#2648EA]">
-            Login
-          </a>
+          <span>Back to </span>
+          <a href="/login" className="text-[#2648EA] underline">Login</a>
         </div>
       </div>
     </div>

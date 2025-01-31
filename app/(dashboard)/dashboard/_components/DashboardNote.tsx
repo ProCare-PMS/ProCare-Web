@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";

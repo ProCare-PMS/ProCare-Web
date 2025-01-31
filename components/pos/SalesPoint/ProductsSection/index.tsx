@@ -40,58 +40,59 @@ const ProductsSection = () => {
     }
   }, []);
 
-  const toggleOrderList = () => {
+  const toggleOrderList = (e?: React.MouseEvent) => {
+    // Only prevent toggle if the click is not on an input or button
+    if (e) {
+      const target = e.target as HTMLElement;
+      const isInputOrButton = target.closest('input, button');
+      if (isInputOrButton) {
+        return;
+      }
+    }
+    
     if (cartItemCount > 0) {
       setIsOrderListVisible(!isOrderListVisible);
     }
   };
 
   const updateQuantity = (productName: string, delta: number) => {
-    setData((prevData) =>
-      prevData.map((product) =>
-        product.name === productName
-          ? { ...product, quantity: Math.max(0, product.quantity + delta) }
-          : product
-      )
-    );
-
     setOrderList((prevOrderList) => {
       const updatedList = prevOrderList.map((product) =>
         product.name === productName
           ? { ...product, quantity: Math.max(0, product.quantity + delta) }
           : product
-      ).filter(product => product.quantity > 0);
+      );
+  
+      localStorage.setItem("orderList", JSON.stringify(updatedList));
       
-      localStorage.setItem('orderList', JSON.stringify(updatedList));
-      setCartItemCount(updatedList.reduce((total, item) => total + item.quantity, 0));
+      // Update cart count based on items with quantity > 0
+      setCartItemCount(updatedList.filter(p => p.quantity > 0).length);
+      
       return updatedList;
     });
   };
-
+  
+  
   const addToOrder = (product: Product) => {
     setOrderList((prevOrderList) => {
-      const existingProductIndex = prevOrderList.findIndex(
-        (item) => item.name === product.name
-      );
-
+      const existingProduct = prevOrderList.find(item => item.name === product.name);
+  
       let updatedList;
-      if (existingProductIndex !== -1) {
-        updatedList = [...prevOrderList];
-        updatedList[existingProductIndex] = {
-          ...updatedList[existingProductIndex],
-          quantity:  1,
-        };
-      } else {
+      if (!existingProduct) {
         updatedList = [...prevOrderList, { ...product, quantity: 1 }];
+      } else {
+        // Do not update the quantity if the item is already in the order list
+        updatedList = prevOrderList;
       }
-
-      localStorage.setItem('orderList', JSON.stringify(updatedList));
-      setCartItemCount(updatedList.reduce((total, item) => total + item.quantity, 0));
+  
+      localStorage.setItem("orderList", JSON.stringify(updatedList));
+      setCartItemCount(updatedList.length); // Cart count should be based on unique items, not total quantity
       return updatedList;
     });
-
+  
     setIsOrderListVisible(true);
   };
+  
 
   const handleSearchValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValues(event.target.value);
