@@ -17,10 +17,9 @@ const CategoriesTab = () => {
   console.log(categories);
 
   const categoryLength = categories?.length
-  console.log(categoryLength)
 
   return (
-    <div className="">
+    <div>
       <CategoriesTabStats categoryLength={categoryLength} />
       <AddCategory />
       <CategoriesTabProducts />

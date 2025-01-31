@@ -91,12 +91,12 @@ export const productsTabColumns: ColumnDef<ProductsType>[] = [
     accessorKey: "expiry_date",
     header: "Expiry Date",
     cell: ({ row }: { row: { getValue: (key: string) => string } }) => {
-      const rawDate: string = row.getValue("expiry_date"); // Fetch the raw date string
-      const formattedDate: string = new Intl.DateTimeFormat("en-US", {
+      const rawDate: string = row.getValue("expiry_date");
+      const formattedDate: string = new Intl.DateTimeFormat("en-GB", {
         year: "numeric",
-        month: "long",
-        day: "numeric",
-      }).format(new Date(rawDate)); // Format the date
+        month: "2-digit",
+        day: "2-digit"
+      }).format(new Date(rawDate));
 
       return <div>{formattedDate}</div>;
     },

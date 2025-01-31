@@ -16,7 +16,7 @@ const AddCategory = () => {
 
   return (
     <div>
-      <div className="flex items-start justify-end">
+      <div className="flex items-start justify-end mt-6">
         <Button
           type="button"
           className="text-white relative flex items-center gap-2 rounded-[12px] font-inter w-[200px]"
