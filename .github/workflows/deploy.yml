@@ -6,6 +6,7 @@ on:
       - deploy
       - ci
       - master
+      - main
 
 jobs:
   build-and-push:
