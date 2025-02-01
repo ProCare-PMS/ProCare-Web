@@ -162,7 +162,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
                     </TableHead>
                     <TableHead className="font-semibold">Quantity</TableHead>
                     <TableHead className="font-semibold">Price</TableHead>
+                    {/* 
                     <TableHead className="font-semibold w-20">Action</TableHead>
+                    */}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -178,6 +180,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
                           parseFloat(product.selling_price) * product.quantity
                         ).toFixed(2)}
                       </TableCell>
+                      {/* 
                       <TableCell>
                         <button
                           onClick={() => removeProduct(product.name)}
@@ -187,6 +190,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
                           <X className="w-4 h-4" />
                         </button>
                       </TableCell>
+                      */}
                     </TableRow>
                   ))}
                 </TableBody>
