@@ -380,6 +380,7 @@ export type ProductsTabTable = (typeof productsTabTable)[number];
 
 export const suppliersTabTable = [
   {
+    id: "eee",
     supplierName: "The Med Pharma",
     phoneNumber: "+1 343 487 8509",
     email: "medpharma@gmail.com",
@@ -387,78 +388,7 @@ export const suppliersTabTable = [
     lastPurchase: "12/09/2024",
     totalPurchase: "90,000",
   },
-  {
-    supplierName: "The Med Pharma",
-    phoneNumber: "+1 343 487 8509",
-    email: "medpharma@gmail.com",
-    quantity: 15,
-    lastPurchase: "12/09/2024",
-    totalPurchase: "90,000",
-  },
-  {
-    supplierName: "The Med Pharma",
-    phoneNumber: "+1 343 487 8509",
-    email: "medpharma@gmail.com",
-    quantity: 15,
-    lastPurchase: "12/09/2024",
-    totalPurchase: "90,000",
-  },
-  {
-    supplierName: "The Med Pharma",
-    phoneNumber: "+1 343 487 8509",
-    email: "medpharma@gmail.com",
-    quantity: 15,
-    lastPurchase: "12/09/2024",
-    totalPurchase: "90,000",
-  },
-  {
-    supplierName: "The Med Pharma",
-    phoneNumber: "+1 343 487 8509",
-    email: "medpharma@gmail.com",
-    quantity: 15,
-    lastPurchase: "12/09/2024",
-    totalPurchase: "90,000",
-  },
-  {
-    supplierName: "The Med Pharma",
-    phoneNumber: "+1 343 487 8509",
-    email: "medpharma@gmail.com",
-    quantity: 15,
-    lastPurchase: "12/09/2024",
-    totalPurchase: "90,000",
-  },
-  {
-    supplierName: "The Med Pharma",
-    phoneNumber: "+1 343 487 8509",
-    email: "medpharma@gmail.com",
-    quantity: 15,
-    lastPurchase: "12/09/2024",
-    totalPurchase: "90,000",
-  },
-  {
-    supplierName: "The Med Pharma",
-    phoneNumber: "+1 343 487 8509",
-    email: "medpharma@gmail.com",
-    quantity: 15,
-    lastPurchase: "12/09/2024",
-    totalPurchase: "90,000",
-  },
-  {
-    supplierName: "The Med Pharma",
-    phoneNumber: "+1 343 487 8509",
-    email: "medpharma@gmail.com",
-    quantity: 15,
-    lastPurchase: "12/09/2024",
-    totalPurchase: "90,000",
-  },
-  {
-    supplierName: "The Med Pharma",
-    phoneNumber: "+1 343 487 8509",
-    email: "medpharma@gmail.com",
-    quantity: 15,
-    lastPurchase: "12/09/2024",
-    totalPurchase: "90,000",
-  },
+  
 ];
 
 export type SuppliersTabTable = (typeof suppliersTabTable)[number];

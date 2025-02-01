@@ -10,6 +10,7 @@ import AddSupplier from "./AddSupplier/AddSupplier";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import DataTable from "@/components/Tables/data-table";
 
 const SuppliersTab = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
@@ -27,7 +28,7 @@ const SuppliersTab = () => {
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  ) => { 
     setSetSearchValues(event.target.value);
   };
 
@@ -65,7 +66,7 @@ const SuppliersTab = () => {
               </div>
             </div>
           </div>
-          <ExpandableDataTable
+          <DataTable
             columns={suppliersTabColumns}
             data={inventorySupplierData || []}
             searchValue={searchValues}

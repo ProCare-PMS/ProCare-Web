@@ -109,7 +109,14 @@ const OrderList = ({
   };
 
   const handleRemoveItem = (productName: string) => {
-    updateQuantity(productName, -Infinity); // Effectively removes the item
+    updateQuantity(productName, -Infinity); // This will now properly remove the item
+    
+    // Clean up the quantity inputs state
+    setQuantityInputs((prev) => {
+      const newInputs = { ...prev };
+      delete newInputs[productName];
+      return newInputs;
+    });
   };
 
   const handlePaymentOptions = () => {
@@ -117,7 +124,7 @@ const OrderList = ({
   };
 
   const handleClearBasket = () => {
-    onClearBasket();
+    onClearBasket();  
     setQuantityInputs({});
     setDiscount(0);
     localStorage.removeItem("discount");

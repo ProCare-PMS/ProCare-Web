@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { EllipsisVertical } from 'lucide-react';
+import { EllipsisVertical } from "lucide-react";
 import { LayoutGrid } from "lucide-react";
 import { Products } from "@/lib/definition";
-import ViewProductsSide from "../../../app/(dashboard)/inventory/_categoryProducts/ViewProductsSide";
-import CategoriesTabSideBar from "./CategoriesTabSideBar";
-import AddCategoryTable from "./AntiMalarialTable";
 import AntiMalarialTable from "./AntiMalarialTable";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
+import { useQuery } from "@tanstack/react-query";
 
 const products: Products[] = [
   {
@@ -54,33 +54,28 @@ const products: Products[] = [
     id: 8,
     productTitle: "Cosmetics",
   },
-  {
-    id: 9,
-    productTitle: "Cosmetics",
-  },
-  {
-    id: 10,
-    productTitle: "Cosmetics",
-  },
 ];
 
 const CategoriesTabProducts = () => {
-
+  const { data: categories, isLoading } = useQuery({
+    queryKey: ["dashboardData"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.inventoryCategories + `pain/products/`).then((res) => res),
+    select: (findData) => findData?.data?.results,
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-
   const openCategoryTable = () => {
-    setIsModalOpen(true)
+    setIsModalOpen(true);
   };
 
   const onClose = () => {
     setIsModalOpen(false);
-  }
-
+  };
 
   return (
     <div className="mt-8">
-      <div className="grid grid-cols-5 gap-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 mx-auto place-items-center lg:grid-cols-5 gap-8">
         {products.map((product) => (
           <div
             className="border border-[#D0D5DD] w-[230px] rounded-[8px] py-8 px-6"
@@ -91,7 +86,7 @@ const CategoriesTabProducts = () => {
                 <LayoutGrid className="text-[#2648EA]" />
               </div>
               <div>
-                <EllipsisVertical  className="text-[#475467]" />
+                <EllipsisVertical className="text-[#475467]" />
               </div>
             </div>
 
@@ -99,7 +94,10 @@ const CategoriesTabProducts = () => {
               <h1 className="text-[#344054] mb-2 font-inter font-semibold text-xl">
                 Anti-malarials
               </h1>
-              <span className="text-left text-[#2648EA] font-medium font-inter text-base cursor-pointer underline" onClick={openCategoryTable}>
+              <span
+                className="text-left text-[#2648EA] font-medium font-inter text-base cursor-pointer underline"
+                onClick={openCategoryTable}
+              >
                 View 23 products
               </span>
             </div>
@@ -107,7 +105,7 @@ const CategoriesTabProducts = () => {
         ))}
       </div>
 
-      {isModalOpen && <AntiMalarialTable  onClose={onClose} /> }
+      {isModalOpen && <AntiMalarialTable onClose={onClose} />}
     </div>
   );
 };
