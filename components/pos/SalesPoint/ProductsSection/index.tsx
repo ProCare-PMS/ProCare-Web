@@ -57,16 +57,24 @@ const ProductsSection = () => {
 
   const updateQuantity = (productName: string, delta: number) => {
     setOrderList((prevOrderList) => {
-      const updatedList = prevOrderList.map((product) =>
-        product.name === productName
-          ? { ...product, quantity: Math.max(0, product.quantity + delta) }
-          : product
-      );
+      let updatedList;
+      
+      if (delta === -Infinity) {
+        // Remove the item completely
+        updatedList = prevOrderList.filter(product => product.name !== productName);
+      } else {
+        // Update quantity
+        updatedList = prevOrderList.map((product) =>
+          product.name === productName
+            ? { ...product, quantity: Math.max(0, product.quantity + delta) }
+            : product
+        ).filter(product => product.quantity > 0); // Remove items with quantity 0
+      }
   
       localStorage.setItem("orderList", JSON.stringify(updatedList));
       
-      // Update cart count based on items with quantity > 0
-      setCartItemCount(updatedList.filter(p => p.quantity > 0).length);
+      // Update cart count based on number of items
+      setCartItemCount(updatedList.length);
       
       return updatedList;
     });
