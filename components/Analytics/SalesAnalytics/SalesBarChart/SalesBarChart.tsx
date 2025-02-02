@@ -84,15 +84,15 @@ export function SalesBarChart() {
             <CartesianGrid
               vertical={false}
               horizontal={true}
-              strokeDasharray="3 3"
+              strokeDasharray="33"
             />
 
             {/* XAxis for volume labels */}
             <XAxis
               dataKey="month"
-              tickLine={false}
+              tickLine={true}
               tickMargin={10}
-              axisLine={false}
+              axisLine={true}
             />
 
             {/* YAxis with custom range and formatted ticks */}
@@ -100,8 +100,8 @@ export function SalesBarChart() {
               domain={[0, 20000]} // Y-axis from 0 to 20,000
               tickCount={5} // 5 ticks for values
               interval={0} // Show all ticks
-              tickLine={false}
-              axisLine={false}
+              tickLine={true}
+              axisLine={true}
               ticks={[0, 5000, 10000, 15000, 20000]} // Custom ticks every 5000
               tickFormatter={(value) => value.toLocaleString()} // Format with commas
             />
