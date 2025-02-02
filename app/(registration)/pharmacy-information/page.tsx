@@ -333,7 +333,7 @@ const RegistrationPage = () => {
                     </label>
                     {errors.license_number && (
                       <p className="text-red-500 text-xs mt-1">
-                        {errors.license_number}
+                        {errors.license_number}` `
                       </p>
                     )}
                   </div>
@@ -341,7 +341,7 @@ const RegistrationPage = () => {
                   <input
                     id="license_number"
                     name="license_number"
-                    placeholder="License Number"
+                    placeholder="PC/XX/XX/0000X"
                     type="text"
                     className="appearance-none border rounded w-full h-10 p-2 bg-[#F8F9FB]"
                   />
