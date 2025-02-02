@@ -201,8 +201,8 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`w-full h-12 px-3 py-2 border rounded bg-gray-50 focus:outline-none ${
-                  errors.name ? "border-red-500" : "border-gray-300"
+                className={`w-full h-12 px-3 py-2 border text-[#858C95] rounded-[4px]  font-normal focus:outline-none ${
+                  errors.name ? "border-red-500" : "border-[#E5E5E7]"
                 }`}
                 placeholder="Enter Product Name"
               />

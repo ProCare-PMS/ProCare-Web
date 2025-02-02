@@ -1,8 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { FaPlus, FaMinus } from "react-icons/fa";
-import { MoveRight, ArrowRight } from 'lucide-react';
+import { MoveRight, ArrowRight } from "lucide-react";
 
 export type Product = {
   name: string;
@@ -23,26 +22,14 @@ export const posProductsColumns = (
     accessorKey: "quantity",
     header: "Quantity",
     cell: ({ row }: { row: { original: Product } }) => (
-      <div className="flex items-center space-x-2">
-        <button
-          className="text-red-600 rounded-full border border-red-600 p-1"
-          onClick={() => updateQuantity(row.original.name, -1)}
-        >
-          <FaMinus />
-        </button>
-        <div className="w-12 mx-auto text-center">{row.original.quantity}</div>
-        <button
-          className="text-green-600  rounded-full border border-green-600 p-1"
-          onClick={() => updateQuantity(row.original.name, 1)}
-        >
-          <FaPlus />
-        </button>
+      <div className="">
+        <div className="">{row.original.quantity}</div>
       </div>
     ),
   },
   {
     accessorKey: "selling_price",
-    header: "Price",
+    header: "Unit Price",
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("selling_price"));
       const formatted = new Intl.NumberFormat("en-GH", {

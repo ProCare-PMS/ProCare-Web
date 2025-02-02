@@ -7,6 +7,17 @@ interface CustomerDetailsProps {
 
 const CustomerDetails = ({ details } : CustomerDetailsProps) => {
 
+  if(!details) {
+    return null
+  }
+
+  const getCredentials = (name: string) => {
+    const words = name.split(" ");
+    return words
+      .map((word) => word.charAt(0).toUpperCase()) // Get the first letter of each word and capitalize it
+      .join(""); // Combine the letters into a single string
+  };
+
 
   return (
     <div className="bg-white p-4 grid gap-y-4 place-items-center text-center">
@@ -15,7 +26,7 @@ const CustomerDetails = ({ details } : CustomerDetailsProps) => {
         {/* Customer Imge Avatar */}
         <div className="bg-[#2648EA] absolute w-[50px] h-[50px] grid place-items-center text-center rounded-[50%] left-[40%] -inset-4">
           <span className="text-[#FFFFFF] text-xl text-center  font-bold">
-            MS
+            {getCredentials(details?.full_name)}
           </span>
         </div>
 

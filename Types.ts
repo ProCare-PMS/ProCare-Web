@@ -53,3 +53,40 @@ export interface ImportPageProps {
   showImport: boolean;
   handleClose: () => void;
 }
+
+export interface ImportPageProps {
+  showImport: boolean;
+  handleClose: () => void;
+}
+
+export interface SuppliersResponse {
+  id: string;
+  name: string;
+  contact: string;
+  email: string;
+  slug: string;
+  last_purchase_date: Date;
+  total_purchase_amount: string;
+  total_purchase_quantity: number;
+  delivery_frequency: number;
+  order_accuracy: number;
+  //created_at: "2025-01-04T22:45:32.995463Z";
+  //modified_at: "2025-01-04T22:45:32.995488Z";
+}
+
+
+interface ProductsType {
+  productName: string;
+  unit: string;
+  brand_name: string;
+  quantity: number;
+  expiry_date: string;
+  unit_price: string;
+  status: string;
+  productDetails?: {
+    batchNo: string;
+    productQuantity: number;
+    productExpiry: string;
+    productPrice: number;
+  };
+}

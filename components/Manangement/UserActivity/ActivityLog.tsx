@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Activity {
   type: string;
@@ -46,7 +46,7 @@ function ActivityLog() {
           >
             <div className="flex items-center justify-between w-[30%]">
               <span className="block bg-slate-200 p-2 rounded-full me-2 w-8">
-                {expanded === index ? <FaChevronUp /> : <FaChevronDown />}
+                {expanded === index ? <ChevronUp /> : <ChevronDown />}
               </span>
               <span className="block font-bold">{activity.type}</span>
               <span className="block bg-[#21965314] text-[#219653] px-2 py-1 rounded-xl">

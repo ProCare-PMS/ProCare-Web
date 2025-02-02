@@ -3,13 +3,17 @@
 import { SuppliersTabTable } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
 import { useState, useEffect, useRef } from "react";
-import { BiDotsVertical } from "react-icons/bi";
+import customAxios from "@/api/CustomAxios";
+import { Ellipsis } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { endpoints } from "@/api/Endpoints";
+import SwalToaster from "@/components/SwalToaster/SwalToaster";
 
 interface SuppliersCellProps {
   row: {
@@ -19,32 +23,40 @@ interface SuppliersCellProps {
 
 const ProductActionCell = ({ row }: SuppliersCellProps) => {
   const [showAction, setShowAction] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    // Destructure mutate from the result
+    mutationFn: async (id: string) => {
+      const res = await customAxios.delete(
+        `${endpoints.inventorySupplier}${id}/` // Adjust the endpoint path as needed
+      );
+      return res;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["suppliers"] });
+      SwalToaster("Supplier Deleted!", "success");
+    },
+    onError: (error) => {
+      console.error("Error deleting supplier:", error);
+      SwalToaster("Supplier not deleted", "error");
+    },
+  });
+
   return (
     <div>
-      {/*
-    <div className="relative cursor-pointer transition">
-      <BiDotsVertical onClick={() => setShowAction(!showAction)} />
-      {showAction && (
-        <div className="absolute bg-white w-[180px] shadow-md transition top-12 hover:shadow-lg right-0 z-20 rounded-[4px]">
-          <div className="grid transition">
-            <span className="py-2 px-3 text-[#344054]">View Details</span>
-            <hr />
-            <span className="py-2 px-3 text-[#344054]">Edit</span>
-            <hr />
-            <span className="py-2 px-3 text-[#344054]">Delete</span> 
-          </div>
-        </div>
-      )}
-    </div>
-    */}
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <BiDotsVertical />
+          <Ellipsis />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-white w-[150px] mr-12">
           <DropdownMenuItem>View Details</DropdownMenuItem>
           <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Delete</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => mutate(row.original.id)} // Use the destructured mutate function
+          >
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -53,11 +65,11 @@ const ProductActionCell = ({ row }: SuppliersCellProps) => {
 
 export const suppliersTabColumns: ColumnDef<SuppliersTabTable>[] = [
   {
-    accessorKey: "supplierName",
+    accessorKey: "name",
     header: "Supplier Name",
   },
   {
-    accessorKey: "phoneNumber",
+    accessorKey: "contact",
     header: "Phone Number",
   },
   {
@@ -65,18 +77,18 @@ export const suppliersTabColumns: ColumnDef<SuppliersTabTable>[] = [
     header: "Email",
   },
   {
-    accessorKey: "quantity",
+    accessorKey: "total_purchase_quantity",
     header: "Quantity",
   },
   {
-    accessorKey: "lastPurchase",
+    accessorKey: "last_purchase_date",
     header: "Last Purchase",
   },
   {
-    accessorKey: "totalPurchase",
+    accessorKey: "total_purchase_amount",
     header: "Total Purchase",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("totalPurchase"));
+      const amount = parseFloat(row.getValue("total_purchase_amount"));
       const formatted = new Intl.NumberFormat("en-GH", {
         style: "currency",
         currency: "ghs",

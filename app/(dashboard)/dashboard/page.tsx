@@ -21,7 +21,7 @@ const DashbaordHomePage = () => {
     select: (findData) => findData?.data,
   });
 
-  console.log(dashboardData)
+  console.log(dashboardData);
 
   return (
     <div className="container grid gap-y-8 pb-6 px-6 pt-7 bg-[#F5F5F5]">
@@ -30,8 +30,16 @@ const DashbaordHomePage = () => {
       </div>
       <DashboardStats dashboardData={dashboardData} isLoading={isLoading} />
       <div className="flex flex-col md:flex-row items-center gap-6">
-        <DashboardSubTables title="Expiry List" data={[]} isLoading={isLoading} />
-        <DashboardLowStockAlert title="Low Stock Alert" data={[]} isLoading={isLoading} />
+        <DashboardSubTables
+          title="Expiry List"
+          data={dashboardData?.expiry_soon_products_list}
+          isLoading={isLoading}
+        />
+        <DashboardLowStockAlert
+          title="Low Stock Alert"
+          data={[]}
+          isLoading={isLoading}
+        />
         <DashbaordChart data={dashboardData} />
       </div>
       <div className="bg-white shadow-custom p-4 mb-12 mt-4 rounded-[8px]">
@@ -39,6 +47,7 @@ const DashbaordHomePage = () => {
         <DataTable
           columns={dashboardTransactionColumns}
           data={dashboardData || []}
+          isLoading={isLoading}
         />
       </div>
 

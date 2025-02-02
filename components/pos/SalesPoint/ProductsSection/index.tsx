@@ -3,29 +3,14 @@ import DataTable from "@/components/Tables/data-table";
 import { posProductsColumns, Product } from "./Columns";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import OrderList from "./OrderList";
-import PaymentOptions from "./PaymentOptions";
-import { CircleUserRound } from "lucide-react";
+import { CircleUserRound, ShoppingCart } from "lucide-react";
 import CustomerList from "./CustomerList";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 
-const productData: Product[] = [
-  { name: "Product A", quantity: 10, selling_price: "100" },
-  { name: "Product B", quantity: 5, selling_price: "50" },
-  { name: "Product C", quantity: 20, selling_price: "200" },
-  { name: "Aspirin", quantity: 20, selling_price: "200" },
-  { name: "Penicillin", quantity: 20, selling_price: "200" },
-  { name: "Insulin", quantity: 20, selling_price: "200" },
-  { name: "Ibuprofen", quantity: 20, selling_price: "200" },
-  { name: "Tumeric", quantity: 20, selling_price: "200" },
-  { name: "Ginseng", quantity: 20, selling_price: "200" },
-  { name: "Product E", quantity: 20, selling_price: "200" },
-];
-
 const ProductsSection = () => {
-  //fetching data for the sales table
-  const { data: inventoryProductsData } = useQuery({
+  const { data: inventoryProductsData, isLoading } = useQuery({
     queryKey: ["inventoryProducts"],
     queryFn: async () =>
       await customAxios.get(endpoints.inventoryProduct).then((res) => res),
@@ -33,115 +18,115 @@ const ProductsSection = () => {
   });
 
   const [searchValues, setSearchValues] = useState<string>("");
-  const [data, setData] = useState(productData);
+  const [data, setData] = useState<Product[]>(inventoryProductsData || []);
   const [orderList, setOrderList] = useState<Product[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [isOrderListVisible, setIsOrderListVisible] = useState(false);
   const [showCustomers, setShowCustomer] = useState(false);
+  const [cartItemCount, setCartItemCount] = useState(0);
 
-  console.log(inventoryProductsData);
+  useEffect(() => {
+    if (inventoryProductsData) {
+      setData(inventoryProductsData);
+    }
+  }, [inventoryProductsData]);
 
-  // Update quantity handler for both data and orderList
-  const updateQuantity = (productName: string, delta: number) => {
-    // Update the main data table
-    setData((prevData) =>
-      prevData.map((product) =>
-        product.name === productName
-          ? { ...product, quantity: Math.max(0, product.quantity + delta) }
-          : product
-      )
-    );
+  useEffect(() => {
+    const savedOrderList = localStorage.getItem('orderList');
+    if (savedOrderList) {
+      const parsedOrderList = JSON.parse(savedOrderList);
+      setCartItemCount(parsedOrderList.reduce((total: number, item: Product) => total + item.quantity, 0));
+      setOrderList(parsedOrderList);
+    }
+  }, []);
 
-    // Update the order list if the product exists there
-    setOrderList((prevOrderList) =>
-      prevOrderList.map((product) =>
-        product.name === productName
-          ? { ...product, quantity: Math.max(0, product.quantity + delta) }
-          : product
-      )
-    );
-
-    // If quantity becomes 0, optionally remove the item from the order list
-    if (delta < 0) {
-      setOrderList((prevOrderList) =>
-        prevOrderList.filter((product) =>
-          product.name === productName ? product.quantity + delta > 0 : true
-        )
-      );
+  const toggleOrderList = (e?: React.MouseEvent) => {
+    // Only prevent toggle if the click is not on an input or button
+    if (e) {
+      const target = e.target as HTMLElement;
+      const isInputOrButton = target.closest('input, button');
+      if (isInputOrButton) {
+        return;
+      }
+    }
+    
+    if (cartItemCount > 0) {
+      setIsOrderListVisible(!isOrderListVisible);
     }
   };
 
-  // Add to Order function that also ensures OrderList visibility
+  const updateQuantity = (productName: string, delta: number) => {
+    setOrderList((prevOrderList) => {
+      let updatedList;
+      
+      if (delta === -Infinity) {
+        // Remove the item completely
+        updatedList = prevOrderList.filter(product => product.name !== productName);
+      } else {
+        // Update quantity
+        updatedList = prevOrderList.map((product) =>
+          product.name === productName
+            ? { ...product, quantity: Math.max(0, product.quantity + delta) }
+            : product
+        ).filter(product => product.quantity > 0); // Remove items with quantity 0
+      }
+  
+      localStorage.setItem("orderList", JSON.stringify(updatedList));
+      
+      // Update cart count based on number of items
+      setCartItemCount(updatedList.length);
+      
+      return updatedList;
+    });
+  };
+  
+  
   const addToOrder = (product: Product) => {
     setOrderList((prevOrderList) => {
-      // Check if product already exists in order list
-      const existingProductIndex = prevOrderList.findIndex(
-        (item) => item.name === product.name
-      );
-
-      if (existingProductIndex !== -1) {
-        // If product exists, update its quantity
-        const updatedList = [...prevOrderList];
-        updatedList[existingProductIndex] = {
-          ...updatedList[existingProductIndex],
-          quantity: product.quantity, // Use the product's current quantity
-        };
-        return updatedList;
+      const existingProduct = prevOrderList.find(item => item.name === product.name);
+  
+      let updatedList;
+      if (!existingProduct) {
+        updatedList = [...prevOrderList, { ...product, quantity: 1 }];
       } else {
-        // If product doesn't exist, add it with its current quantity
-        return [...prevOrderList, { ...product }]; // The spread operator will copy all properties including quantity
+        // Do not update the quantity if the item is already in the order list
+        updatedList = prevOrderList;
       }
+  
+      localStorage.setItem("orderList", JSON.stringify(updatedList));
+      setCartItemCount(updatedList.length); // Cart count should be based on unique items, not total quantity
+      return updatedList;
     });
-
-    // Show the order list if it's hidden
-    if (!isOrderListVisible) {
-      setIsOrderListVisible(true);
-    }
+  
+    setIsOrderListVisible(true);
   };
+  
 
-  const handleSearchValueChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSearchValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValues(event.target.value);
   };
 
   useEffect(() => {
     const total = orderList.reduce(
-      (sum, product) =>
-        sum + product.quantity * parseFloat(product.selling_price),
+      (sum, product) => sum + product.quantity * parseFloat(product.selling_price),
       0
     );
     setTotalPrice(total);
   }, [orderList]);
 
-  // Handle toggle visibility of OrderList
-  const handleToggleOrderList = () => {
-    setIsOrderListVisible((prevState) => !prevState);
-  };
-
-  //Open Customer List Modal
-  const openCustomersList = () => {
-    setShowCustomer(true);
-  };
-
-  //Close Customer List Modal
-  const closeCustomerList = () => {
-    setShowCustomer(false);
-  };
-
-  // In ProductsSection.tsx
   const clearOrderList = () => {
     setOrderList([]);
-    // Optionally hide the order list when it's cleared
     setIsOrderListVisible(false);
+    setCartItemCount(0);
+    localStorage.removeItem('orderList');
   };
 
   return (
-    <div className=" flex gap-x-6  mt-8">
+    <div className="flex gap-x-6 mt-8">
       <div
         className={`${
           isOrderListVisible && orderList.length > 0 ? "w-[60%]" : "w-full"
-        } pr-4 transition-all bg-white shadow-custom p-4 mb-12 rounded-[8px]`}
+        } pr-4 transition-all bg-white shadow-custom p-4 mb-12 rounded-[8px] relative`}
       >
         <div className="flex justify-between items-center my-3">
           <h2 className="text-2xl font-bold font-inter text-[#202224]">
@@ -151,7 +136,7 @@ const ProductsSection = () => {
           <div className="flex gap-4">
             <div className="bg-[#0A77FF] rounded-[4px] p-2">
               <CircleUserRound
-                onClick={openCustomersList}
+                onClick={() => setShowCustomer(true)}
                 className="text-white cursor-pointer"
                 color="white"
               />
@@ -159,6 +144,7 @@ const ProductsSection = () => {
             <SearchFieldInput
               value={searchValues}
               onChange={handleSearchValueChange}
+              placeholder="Search for product"
             />
           </div>
         </div>
@@ -167,18 +153,34 @@ const ProductsSection = () => {
           columns={posProductsColumns(updateQuantity, addToOrder)}
           data={inventoryProductsData || []}
           searchValue={searchValues}
+          isLoading={isLoading}
         />
+        
+        {cartItemCount > 0 && (
+          <div 
+            className="absolute top-32 right-8 cursor-pointer hover:scale-105 transition-transform"
+            onClick={toggleOrderList}
+          >
+            <div className="relative">
+              <div className="bg-[#2648EA] rounded-full p-2">
+                <ShoppingCart className="text-white" />
+              </div>
+              <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {cartItemCount}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Modal for Customer List */}
-      {showCustomers && <CustomerList onClose={closeCustomerList} />}
+      {showCustomers && <CustomerList onClose={() => setShowCustomer(false)} />}
 
       {isOrderListVisible && orderList.length > 0 && (
         <OrderList
           orderList={orderList}
           updateQuantity={updateQuantity}
           totalPrice={totalPrice}
-          onToggleOrderList={handleToggleOrderList}
+          onToggleOrderList={toggleOrderList}
           onClearBasket={clearOrderList}
         />
       )}

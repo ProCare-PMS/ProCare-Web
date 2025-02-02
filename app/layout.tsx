@@ -62,7 +62,9 @@ export default function RootLayout({
         />
         <Providers>
           <QueryProvider>
-            <LoadingWrapper>{children}</LoadingWrapper>
+            <LoadingWrapper>
+            {children}
+            </LoadingWrapper>
           </QueryProvider>
         </Providers>
       </body>

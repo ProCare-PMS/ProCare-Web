@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
-import { BiDotsVertical } from "react-icons/bi";
+import { Ellipsis } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,7 +52,7 @@ const CustomerActionCell = ({ row }: CustomerCellProps) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <BiDotsVertical />
+          <Ellipsis />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-white w-[150px] rounded-[6px] mr-12">
           <DropdownMenuItem
@@ -73,6 +73,7 @@ const CustomerActionCell = ({ row }: CustomerCellProps) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
+       {/* Shows the modal for the customers: Transacation History, Health Info and Medical History */}
       {modal && (
         <ViewCustomer item={selectedItem} setModal={() => setModal(false)} />
       )}

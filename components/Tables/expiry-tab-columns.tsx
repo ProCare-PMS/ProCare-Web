@@ -1,7 +1,7 @@
 import { ExpiryReportTable } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
-import { BiDotsVertical } from "react-icons/bi";
+import { Ellipsis } from 'lucide-react';
 import clsx from "clsx";
 
 interface ExpiryCellProps {
@@ -14,9 +14,9 @@ const ExpiryActionCell = ({ row }: ExpiryCellProps) => {
   const [showAction, setShowAction] = useState(false);
   return (
     <div className="relative cursor-pointer">
-      <BiDotsVertical onClick={() => setShowAction(!showAction)} />
+      <Ellipsis onClick={() => setShowAction(!showAction)} />
       {showAction && (
-        <div className="absolute bg-blue-500 min-w-[180px] z-50 shadow-md transition top-12 hover:shadow-lg right-0 z-80 rounded-[4px]">
+        <div className="absolute !bg-white min-w-[180px] z-50 shadow-md transition top-12 hover:shadow-lg right-0 z-80 rounded-[4px]">
           <div className="grid transition">
             <span className="py-2 px-3 text-[#344054]">View Details</span>
             <hr />
