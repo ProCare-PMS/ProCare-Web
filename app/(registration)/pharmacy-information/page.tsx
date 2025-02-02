@@ -333,7 +333,7 @@ const RegistrationPage = () => {
                     </label>
                     {errors.license_number && (
                       <p className="text-red-500 text-xs mt-1">
-                        {errors.license_number}` `
+                        {errors.license_number}
                       </p>
                     )}
                   </div>
