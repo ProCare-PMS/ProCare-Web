@@ -1,13 +1,24 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Ellipsis } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import clsx from "clsx";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { endpoints } from "@/api/Endpoints";
+import SwalToaster from "@/components/SwalToaster/SwalToaster";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import customAxios from "@/api/CustomAxios";
 
-interface ProductsType {
+export interface ProductsType {
+  id: string;
   name: string;
   unit: string;
   brand: string;
@@ -16,13 +27,10 @@ interface ProductsType {
   unitPrice: string;
   product_status: string;
   category: string;
-  reorder_evel: number;
-  productDetails?: {
-    batchNo: string;
-    productQuantity: number;
-    productExpiry: string;
-    productPrice: number;
-  };
+  reorder_level: number;
+  selling_price: string;
+  created_at: string;
+  
 }
 interface ProductsCellProps {
   row: {
@@ -31,25 +39,44 @@ interface ProductsCellProps {
 }
 
 const ProductActionCell = ({ row }: ProductsCellProps) => {
-  const item = row.original;
   const [showAction, setShowAction] = useState(false);
   const [modal, setModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<ProductsType | null>(null);
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await customAxios.delete(
+        `${endpoints.inventoryProduct}${id}/` 
+      );
+      return res;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["suppliers"] });
+      SwalToaster("Products Deleted!", "success");
+    },
+    onError: (error) => {
+      console.error("Error deleting supplier:", error);
+      SwalToaster("Products not deleted", "error");
+    },
+  });
 
   return (
     <div>
-      <div className="relative cursor-pointer">
-        <Ellipsis onClick={() => setShowAction(!showAction)} />
-        {showAction && (
-          <div className="absolute !bg-white min-w-[180px] z-50 shadow-md transition top-12 hover:shadow-lg right-0 z-80 rounded-[4px]">
-            <div className="grid transition">
-              <button className="py-2 px-3 text-[#344054]">View Details</button>
-              <hr />
-              <button className="py-2 px-3 text-[#344054]">Delete</button>
-            </div>
-          </div>
-        )}
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Ellipsis />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="bg-white w-[150px] mr-12">
+          <DropdownMenuItem>View Details</DropdownMenuItem>
+          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => mutate(row.original.id)} 
+          >
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {selectedItem && (
         <div>
           <p>Hello World</p>
@@ -95,7 +122,7 @@ export const productsTabColumns: ColumnDef<ProductsType>[] = [
       const formattedDate: string = new Intl.DateTimeFormat("en-GB", {
         year: "numeric",
         month: "2-digit",
-        day: "2-digit"
+        day: "2-digit",
       }).format(new Date(rawDate));
 
       return <div>{formattedDate}</div>;
@@ -127,13 +154,15 @@ export const productsTabColumns: ColumnDef<ProductsType>[] = [
     cell: ({ row }) => {
       const quantity = row.getValue("quantity") as number;
       const status = quantity > 0 ? "Available" : "Unavailable";
-  
+
       return (
         <p className="rounded-3xl font-inter text-sm font-normal">
           <span
             className={clsx("rounded-3xl px-3 py-2", {
-              "text-[#219653] bg-[#21965314] !w-[40px] py-2 rounded-3xl px-3": status === "Available",
-              "text-[#D34053] bg-[#D3405314] !w-[40px] py-2 rounded-3xl px-3": status === "Unavailable",
+              "text-[#219653] bg-[#21965314] !w-[40px] py-2 rounded-3xl px-3":
+                status === "Available",
+              "text-[#D34053] bg-[#D3405314] !w-[40px] py-2 rounded-3xl px-3":
+                status === "Unavailable",
             })}
           >
             {status}

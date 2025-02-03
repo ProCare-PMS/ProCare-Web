@@ -3,10 +3,18 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { MoveRight, ArrowRight } from "lucide-react";
 
-export type Product = {
+export type Product = { id: string;
   name: string;
+  unit: string;
+  brand: string;
   quantity: number;
+  expiry_date: string;
+  unitPrice: string;
+  product_status: string;
+  category: string;
+  reorder_level: number;
   selling_price: string;
+  created_at: string;
 };
 
 // Pass the `updateQuantity` function as a prop so it can be used in the column definition

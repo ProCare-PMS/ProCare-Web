@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { toast } from "react-toastify";
 import SwalToaster from "@/components/SwalToaster/SwalToaster";
-
 
 interface FormData {
   name: string;
@@ -49,6 +48,12 @@ const initialFormData: FormData = {
 const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
   const [errors, setErrors] = useState<Errors>({});
   const [formData, setFormData] = useState<FormData>(initialFormData);
+  const queryClient = useQueryClient();
+
+  const isValidDecimal = (value: string): boolean => {
+    const decimalRegex = /^-?\d+(\.\d+)?$/;
+    return decimalRegex.test(value);
+  };
 
   const validateForm = (): Errors => {
     const newErrors: Errors = {};
@@ -78,16 +83,16 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
     if (formData.reorder_level && isNaN(Number(formData.reorder_level))) {
       newErrors.reorder_level = "Reorder level must be a number";
     }
-    if (formData.cost_price && isNaN(Number(formData.cost_price))) {
+    if (formData.cost_price && !isValidDecimal(formData.cost_price)) {
       newErrors.cost_price = "Cost price must be a number";
     }
     if (
       formData.markup_percentage &&
-      isNaN(Number(formData.markup_percentage))
+      !isValidDecimal(formData.markup_percentage)
     ) {
       newErrors.markup_percentage = "Markup percentage must be a number";
     }
-    if (formData.selling_price && isNaN(Number(formData.selling_price))) {
+    if (formData.selling_price && !isValidDecimal(formData.selling_price)) {
       newErrors.selling_price = "Selling price must be a number";
     }
 
@@ -160,13 +165,16 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
         : null,
       quantity: formData.quantity,
       reorder_level: formData.reorder_level,
-      cost_price: formData.cost_price,
-      markup_percentage: formData.markup_percentage,
-      selling_price: formData.selling_price,
+      cost_price: String(parseFloat(formData.cost_price).toFixed(2)),
+      markup_percentage: String(
+        parseFloat(formData.markup_percentage).toFixed(2)
+      ),
+      selling_price: String(parseFloat(formData.selling_price).toFixed(2)),
     };
 
     postProductMutation.mutate(submitData, {
       onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] });
         setModal();
         SwalToaster("Product added successfully!", "success");
       },
@@ -329,14 +337,13 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
               </label>
               <input
                 name="cost_price"
-                type="number"
                 min={0}
                 value={formData.cost_price}
                 onChange={handleInputChange}
                 className={`w-full h-12 px-3 py-2 border rounded bg-gray-50 focus:outline-none ${
                   errors.cost_price ? "border-red-500" : "border-gray-300"
                 }`}
-                placeholder="Enter Cost Price"
+                placeholder="Enter Cost Price (e.g., 10.50)"
               />
               {errors.cost_price && (
                 <p className="text-red-500 font-bold text-sm mt-1">
@@ -351,7 +358,6 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
               </label>
               <input
                 name="markup_percentage"
-                type="number"
                 min={0}
                 value={formData.markup_percentage}
                 onChange={handleInputChange}
@@ -360,7 +366,7 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
                     ? "border-red-500"
                     : "border-gray-300"
                 }`}
-                placeholder="Enter Mark Up Percentage"
+                placeholder="Enter Mark Up Percentage (e.g., 15.25)"
               />
               {errors.markup_percentage && (
                 <p className="text-red-500 font-bold text-sm mt-1">
@@ -375,14 +381,13 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
               </label>
               <input
                 name="selling_price"
-                type="number"
                 min={0}
                 value={formData.selling_price}
                 onChange={handleInputChange}
                 className={`w-full h-12 px-3 py-2 border rounded bg-gray-50 focus:outline-none ${
                   errors.selling_price ? "border-red-500" : "border-gray-300"
                 }`}
-                placeholder="Enter Selling Price"
+                placeholder="Enter Selling Price (e.g., 15.25)"
               />
               {errors.selling_price && (
                 <p className="text-red-500 font-bold text-sm mt-1">

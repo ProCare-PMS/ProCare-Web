@@ -4,7 +4,7 @@ import { SuppliersTabTable } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
 import { useState, useEffect, useRef } from "react";
 import customAxios from "@/api/CustomAxios";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis } from "lucide-react"; 
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +29,7 @@ const ProductActionCell = ({ row }: SuppliersCellProps) => {
     // Destructure mutate from the result
     mutationFn: async (id: string) => {
       const res = await customAxios.delete(
-        `${endpoints.inventorySupplier}${id}/` // Adjust the endpoint path as needed
+        `${endpoints.inventorySupplier}${id}/` 
       );
       return res;
     },
@@ -53,7 +53,7 @@ const ProductActionCell = ({ row }: SuppliersCellProps) => {
           <DropdownMenuItem>View Details</DropdownMenuItem>
           <DropdownMenuItem>Edit</DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => mutate(row.original.id)} // Use the destructured mutate function
+            onClick={() => mutate(row.original.id)} 
           >
             Delete
           </DropdownMenuItem>
