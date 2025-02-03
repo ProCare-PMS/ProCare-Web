@@ -61,14 +61,14 @@ const AddUserSchema = z.object({
 });
 
 const stepOneSchema = z.object({
-  full_name: z.string().min(1, "Username is required"),
-  email: z.string().email("Invalid email"),
-  contact: z.string().min(1, "Contact is required"),
-  address: z.string().min(1, "Address is required"),
+  full_name: z.string().min(3, "Username is required"),
+  email: z.string().min(1, 'Email is required').email("Invalid email"),
+  contact: z.string().min(10, "Invalid Contact Number").regex(/^[0-9]+$/, "Only numbers allowed").max(10, 'Invalid Contact Number'),
+  address: z.string().min(1, "Address is required").regex(/^[A-Za-z0-9\s]+$/, "Only letters, numbers and spaces allowed"),
 });
 
 const stepTwoSchema = z.object({
-  role: z.string(),
+  role: z.string().min(1, "Role is required"),
   //permission: z.array(z.string()),
 });
 
@@ -79,7 +79,7 @@ const stepThreeSchema = z.object({
       start_time: z.string().optional(),
       end_time: z.string().optional(),
     })
-  ),
+  ).min(1, "Working hours are required"),
 });
 
 const ProfileSchema = z.object({
