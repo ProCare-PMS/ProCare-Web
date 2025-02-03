@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { ColumnFiltersState } from "@tanstack/react-table";
+import DataTable from "@/components/Tables/data-table";
 
 interface FilterState {
   unit: string;
@@ -190,14 +191,14 @@ const ProductsTabHeader: React.FC = () => {
         </div>
       </div>
 
-      <ExpandableDataTable
+      <DataTable
         columns={productsTabColumns}
         data={inventoryProductsData || []}
         searchValue={searchValues}
-        emptyState="products"
+        //emptyState="products"
         isLoading={isLoading}
-        columnFilters={columnFilters}
-        onColumnFiltersChange={setColumnFilters}
+        //columnFilters={columnFilters}
+        //onColumnFiltersChange={setColumnFilters}
       />
       {/*
       {renderTabContent()}

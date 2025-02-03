@@ -15,7 +15,6 @@ import DataTable from "@/components/Tables/data-table";
 const SuppliersTab = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
   const [showSupplierModal, setShowSupplierModal] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); //add supplier modeal
 
   const { data: inventorySupplierData, isLoading } = useQuery({
     queryKey: ["inventorySupplier"],
