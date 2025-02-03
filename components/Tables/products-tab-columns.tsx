@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import customAxios from "@/api/CustomAxios";
 
-interface ProductsType {
+export interface ProductsType {
   id: string;
   name: string;
   unit: string;
@@ -27,13 +27,10 @@ interface ProductsType {
   unitPrice: string;
   product_status: string;
   category: string;
-  reorder_evel: number;
-  productDetails?: {
-    batchNo: string;
-    productQuantity: number;
-    productExpiry: string;
-    productPrice: number;
-  };
+  reorder_level: number;
+  selling_price: string;
+  created_at: string;
+  
 }
 interface ProductsCellProps {
   row: {
