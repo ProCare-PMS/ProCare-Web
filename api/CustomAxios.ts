@@ -37,6 +37,7 @@ customAxios.interceptors.request.use(
 customAxios.interceptors.response.use(
   (response) => response,
   (error) => {
+    const errorData = error.response?.data;
     // Handle specific error cases based on status code
     if (error.response) {
       const statusCode = error.response.status;
@@ -58,8 +59,17 @@ customAxios.interceptors.response.use(
           toast.error("Server error. Please try again later.");
           break;
         default:
-          // Log other errors
-          toast.error("An unexpected error occurred.");
+          if (typeof errorData === "string") {
+            toast.error(errorData);
+          } else if (typeof errorData === "object") {
+            // Extract first error message from the object
+            const firstErrorKey = Object.keys(errorData)[0];
+            const firstErrorMessage = errorData[firstErrorKey];
+
+            toast.error(firstErrorMessage || "An error occurred");
+          } else {
+            toast.error("An unexpected error occurred");
+          }
       }
     } else {
       // If no response was received, log a network error

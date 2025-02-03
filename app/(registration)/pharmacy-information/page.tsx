@@ -40,7 +40,6 @@ const RegistrationPage = () => {
   // Mutation function
   const postPharmacyInformation = useMutation({
     mutationFn: async (value: any) => {
-      //console.log("Sending data to API:", value.formData); // Debugging log
       try {
         const res = await customAxios.post(endpoints.pharmacy, value.formData);
         //console.log("API Response:", res); // Log the entire response
@@ -98,24 +97,22 @@ const RegistrationPage = () => {
       },
       {
         onSuccess: (data: any) => {
+          //console.log("message:", data);
           if (data.status === 201) {
-            const pharmacyId = data?.data?.id; // get the pharmacy id from the response data
+            const pharmacyId = data?.data?.id;
             dispatch(setFacilityId(pharmacyId));
             toast.success("Pharmacy Information created");
             queryClient.invalidateQueries({
               queryKey: ["PharmacyInformation"],
             });
             router.push("/personal-information");
-          } else if (data.status === 400) {
-            toast.error("Error creating pharmacy information");
-            toast.error("Error creating pharmacy information");
           } else {
             console.log("Registration failed:", data?.message);
-            toast.error(data?.message);
+            //toast.error(data?.message);
           }
         },
         onError: (error: any) => {
-          toast.error(error?.message);
+          console.error("Error:", error);
         },
       }
     );
@@ -344,7 +341,7 @@ const RegistrationPage = () => {
                   <input
                     id="license_number"
                     name="license_number"
-                    placeholder="License Number"
+                    placeholder="PC/XX/XX/0000X"
                     type="text"
                     className="appearance-none border rounded w-full h-10 p-2 bg-[#F8F9FB]"
                   />

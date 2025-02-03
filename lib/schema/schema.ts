@@ -3,43 +3,24 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Value } from "@radix-ui/react-select";
 
-const userRegistrationSchema = z.object({
-  first_name: z
-    .string({
-      required_error: "First Name is required",
-    })
-    .default(""),
-  email: z
-    .string({
-      required_error: "Email Address is required",
-    })
-    .default(""),
-  last_name: z
-    .string({
-      required_error: "Last Name is required",
-    })
-    .default(""),
-  phone_number: z
-    .string({
-      required_error: "Number is required",
-    })
-    .default(""),
-  password: z
-    .string({
-      required_error: "Password is required",
-    })
-    .default(""),
-  password2: z
-    .string({
-      required_error: "Password should match",
-    })
-    .default(""),
-  ghana_card: z
-    .string({
-      required_error: "Region is required",
-    })
-    .default(""),
-});
+const userRegistrationSchema = z
+  .object({
+    first_name: z.string().min(4, { message: "First Name is required" }),
+    last_name: z.string().min(4, { message: "First Name is required" }),
+    email: z.string().email({ message: "Invalid email address" }),
+    phone_number: z.string().min(4, { message: "Phone Number is required" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
+    password2: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
+    ghana_card: z.string().min(4, { message: "Ghana Card is required" }),
+  })
+  .refine((data) => data.password === data.password2, {
+    message: "Passwords must match",
+    path: ["password2"], // Attach error to password2 field
+  });
 
 const workingHoursSchema = z.object({
   day: z
