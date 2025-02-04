@@ -64,7 +64,6 @@ function CustomersTable() {
         </div>
 
         {/* Check the columns for the dropdown actions for the table: View, Transaction Details and Delete */}
-
         <DataTable
           columns={customersTabColumns}
           data={

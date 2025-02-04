@@ -1,10 +1,7 @@
 "use client"
 
 import React from "react";
-import DashboardTableHeader from "@/components/Dashboard/DashboardTableHeader";
 import { dashboardTransactionColumns } from "@/components/Tables/columns";
-import DataTable from "@/components/Tables/data-table";
-import { dashboardTransactions } from "@/type";
 import BackButton from "@/components/BackButtton/BackButton";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
@@ -12,9 +9,10 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import DashboardTable from "@/components/Tables/DashbaordTable";
 
 function RecentTransactionsPage() {
-  const { data: dashboardData } = useQuery({
+  const { data: dashboardData, isLoading } = useQuery({
     queryKey: ["dashboardData"],
     queryFn: async () =>
       await customAxios.get(endpoints.dashboard).then((res) => res),
@@ -58,9 +56,11 @@ function RecentTransactionsPage() {
             </Link>
           </div>
         </div>
-        <DataTable
+        
+        <DashboardTable
           columns={dashboardTransactionColumns}
           data={dashboardData || []}
+          isLoading={isLoading}
         />
       </div>
     </div>
