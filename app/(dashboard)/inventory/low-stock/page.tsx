@@ -72,7 +72,7 @@ function Page() {
 
         {/* table content */}
         <div className="mt-5">
-          <DashboardTable data={lowStockData} columns={Column} />
+          <DashboardTable data={lowStockData || []} columns={Column} />
         </div>
          
         {/* table content end */}
