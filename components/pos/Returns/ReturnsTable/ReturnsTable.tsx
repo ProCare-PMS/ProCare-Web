@@ -17,7 +17,7 @@ const ReturnsTable = () => {
     queryKey: ["posReturns"],
     queryFn: async () =>
       await customAxios.get(endpoints.posReturns).then((res) => res),
-    select: (findData) => findData?.data?.results,
+    select: (findData) => findData?.data,
   });
 
   console.log(returnsData)
@@ -84,7 +84,7 @@ const ReturnsTable = () => {
         {/* Databele Here */}
         <DataTable
           columns={returnHistoryColumns}
-          data={returnsData || []}
+          data={returnsData  || { results: [], count: 0, links: { next: null, previous: null }, total_pages: 0 }}
           searchValue={searchValues}
           isLoading={isLoading}
         />
