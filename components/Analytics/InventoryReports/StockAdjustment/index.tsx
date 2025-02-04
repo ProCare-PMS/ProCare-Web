@@ -78,11 +78,13 @@ function StockAdjustment() {
         </div>
       </div>
 
+      {/* 
       <DataTable
         columns={Columns}
         data={stockAdjustmentData || []}
         searchValue={searchValues}
       />
+      */}
     </div>
   );
 }

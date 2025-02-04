@@ -1,14 +1,34 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import DataTable from "@/components/Tables/data-table";
 import { Data } from "./Data";
 import { Column } from "./Column";
 import BackButton from "@/components/BackButtton/BackButton";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
+import DashboardTable from "@/components/Tables/DashbaordTable";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { dateSchema } from "@/lib/schema/schema";
+import { z } from "zod";
+import { DatePicker } from "@/components/CustomDatePicker/DatePicker";
+
+type FormData = z.infer<typeof dateSchema>;
 
 function DailySales() {
   const [searchValues, setSetSearchValues] = useState<string>("");
+
+  const { handleSubmit, control, setValue } = useForm<FormData>({
+    resolver: zodResolver(dateSchema),
+  });
+
+  useEffect(() => {
+    const today = new Date().toISOString();
+    setValue("date", today);
+  }, [setValue]);
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -45,15 +65,21 @@ function DailySales() {
                 alt="arrow-down"
               />
             </div>
-            <span className="text-[#5C5D65] font-medium text-sm">
-              12 October, 2024
-            </span>
+            <DatePicker
+              name="date"
+              placeholder="Select Date"
+              control={control}
+            />
           </div>
         </div>
 
         {/* table content */}
         <div className="mt-5">
-          <DataTable data={Data} columns={Column} searchValue={searchValues} />
+          <DashboardTable
+            data={Data}
+            columns={Column}
+            searchValue={searchValues}
+          />
         </div>
         {/* table content end */}
       </div>

@@ -19,8 +19,10 @@ function UserManagementTable() {
     queryKey: ["management"],
     queryFn: () =>
       customAxios.get(endpoints.managements + "employees/").then((res) => res),
-    select: (findManagedData) => findManagedData?.data?.results,
+    select: (findManagedData) => findManagedData?.data,
   });
+
+  console.log(getAllmanagementData)
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -70,11 +72,13 @@ function UserManagementTable() {
         </div>
       </div>
 
+    
       <DataTable
         columns={Columns}
-        data={getAllmanagementData || []}
+        data={getAllmanagementData || { results: [], count: 0, links: { next: null, previous: null }, total_pages: 0 }}
         searchValue={searchValues}
       />
+      
 
       {/* Add User Modal */}
       <AddUserModal isOpen={showModal} onClose={handleCloseModal} title="Add" />

@@ -71,7 +71,9 @@ function DailySalesTransactionTable() {
         </div>
       </div>
 
+      {/* 
       <DataTable columns={Columns} data={[]} searchValue={searchValues} />
+      */}
     </div>
   );
 }

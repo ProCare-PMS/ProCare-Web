@@ -2,6 +2,7 @@ import DataTable from "@/components/Tables/data-table";
 import { Columns } from "./Column";
 import { Data } from "./Data";
 import React from "react";
+import DashboardTable from "@/components/Tables/DashbaordTable";
 
 // Define the props interface
 export interface UserPerformanceTableProps {
@@ -12,7 +13,7 @@ export interface UserPerformanceTableProps {
 function UserPerfomanceTable({ searchValues }: UserPerformanceTableProps) {
   return (
     <div>
-      <DataTable columns={Columns} data={[]} searchValue={searchValues} />
+      <DashboardTable columns={Columns} data={[]} searchValue={searchValues} />
     </div>
   );
 }
