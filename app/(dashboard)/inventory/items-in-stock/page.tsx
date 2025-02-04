@@ -6,10 +6,11 @@ import { Data } from "./Data";
 import { Column } from "./Column";
 import BackButton from "@/components/BackButtton/BackButton";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
+import DashboardTable from "@/components/Tables/DashbaordTable";
 
 function DailySales() {
   const [searchValues, setSetSearchValues] = useState<string>("");
-  const handleSearchValueChange = (
+  const handleSearchValueChange = ( 
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setSetSearchValues(event.target.value);
@@ -45,7 +46,7 @@ function DailySales() {
 
         {/* table content */}
         <div className="mt-5">
-          <DataTable data={Data} columns={Column} searchValue={searchValues} />
+          <DashboardTable data={Data} columns={Column} searchValue={searchValues} />
         </div>
         {/* table content end */}
       </div>

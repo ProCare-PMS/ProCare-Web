@@ -1,12 +1,32 @@
+"use client"
 import BackButton from "@/components/BackButtton/BackButton";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import DataTable from "@/components/Tables/data-table";
 import { Data } from "./Data";
 import { Column } from "./Column";
 import { ProfitMadeGraph } from "./ProfitMadeGraph";
+import DashboardTable from "@/components/Tables/DashbaordTable";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { dateSchema } from "@/lib/schema/schema";
+import { z } from "zod";
+import { DatePicker } from "@/components/CustomDatePicker/DatePicker";
+
+type FormData = z.infer<typeof dateSchema>;
 
 function ProfitMade() {
+
+  const { handleSubmit, control, setValue } = useForm<FormData>({
+      resolver: zodResolver(dateSchema),
+    });
+
+   useEffect(() => {
+      const today = new Date().toISOString();
+      setValue("date", today);
+    }, [setValue]);
+
+
   return (
     <div className="mt-[3rem]">
       <div className="container-fluid px-5 py-3">
@@ -29,7 +49,7 @@ function ProfitMade() {
                     alt="arrow-down"
                   />
                 </div>
-                <span>12 Octorber, 2024</span>
+                 <DatePicker name="date" placeholder="Select Date" control={control} />
               </div>
             </div>
           </div>
@@ -49,10 +69,10 @@ function ProfitMade() {
                   alt="arrow-down"
                 />
               </div>
-              <span>12 Octorber, 2024</span>
+              <DatePicker name="date" placeholder="Select Date" control={control} />
             </div>
           </div>
-          <DataTable data={Data} columns={Column} />
+          <DashboardTable data={Data} columns={Column} />
         </div>
       </div>
     </div>

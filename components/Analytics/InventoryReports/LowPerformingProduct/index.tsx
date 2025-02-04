@@ -49,7 +49,10 @@ function UnderPerformingProductTable() {
           </Link> */}
         </div>
       </div>
+
+      {/* 
       <MiniSubTable columns={Column} data={worstPerformingProductData || []} />
+      */}
     </div>
   );
 }

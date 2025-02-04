@@ -13,14 +13,21 @@ function AttendanceTable({ searchValues }: UserPerformanceTableProps) {
       await customAxios
         .get(endpoints.managements + "attendance/")
         .then((res) => res),
-    select: (findData) => findData?.data?.results,
+    select: (findData) => findData?.data,
   });
 
   return (
     <div>
       <DataTable
         columns={Columns}
-        data={getAttendanceData || []}
+        data={
+          getAttendanceData || {
+            results: [],
+            count: 0,
+            links: { next: null, previous: null },
+            total_pages: 0,
+          }
+        }
         searchValue={searchValues}
       />
     </div>

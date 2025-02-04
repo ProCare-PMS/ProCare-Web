@@ -13,6 +13,7 @@ export const endpoints = {
   inventoryExpiryReports: "/inventories/expiry-reports/",
   inventoryBranchSync: "/inventories/stock-transfers/",
   inventoryCategories: "/inventories/categories/",
+  inventoryLowStock: "/inventories/products/low_stock/",
   sales: "/sales/",
   salesItems: "/sales/sale-items/",
   posCustomers: "/sales/customers/",

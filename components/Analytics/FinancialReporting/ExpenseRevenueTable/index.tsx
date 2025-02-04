@@ -8,6 +8,7 @@ import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import DashboardTable from "@/components/Tables/DashbaordTable";
 
 function ExpenseRevenueTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
@@ -71,7 +72,7 @@ function ExpenseRevenueTable() {
         </div>
       </div>
 
-      <DataTable columns={Columns} data={[]} searchValue={searchValues} />
+      <DashboardTable columns={Columns} data={[]} searchValue={searchValues} />
     </div>
   );
 }
