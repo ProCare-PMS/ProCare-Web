@@ -1,10 +1,7 @@
 "use client"
 
 import React from "react";
-import DashboardTableHeader from "@/components/Dashboard/DashboardTableHeader";
 import { dashboardTransactionColumns } from "@/components/Tables/columns";
-import DataTable from "@/components/Tables/data-table";
-import { dashboardTransactions } from "@/type";
 import BackButton from "@/components/BackButtton/BackButton";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
