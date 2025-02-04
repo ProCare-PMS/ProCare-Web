@@ -12,9 +12,10 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import DashboardTable from "@/components/Tables/DashbaordTable";
 
 function RecentTransactionsPage() {
-  const { data: dashboardData } = useQuery({
+  const { data: dashboardData, isLoading } = useQuery({
     queryKey: ["dashboardData"],
     queryFn: async () =>
       await customAxios.get(endpoints.dashboard).then((res) => res),
@@ -58,9 +59,11 @@ function RecentTransactionsPage() {
             </Link>
           </div>
         </div>
-        <DataTable
+        
+        <DashboardTable
           columns={dashboardTransactionColumns}
           data={dashboardData || []}
+          isLoading={isLoading}
         />
       </div>
     </div>
