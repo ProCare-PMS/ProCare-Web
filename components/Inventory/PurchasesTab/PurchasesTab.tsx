@@ -17,11 +17,10 @@ const PurchasesTab = () => {
     queryKey: ["inventoryPurchases"],
     queryFn: async () =>
       await customAxios.get(endpoints.inventoryPurchase).then((res) => res),
-    select: (findData) => findData?.data?.results,
+    select: (findData) => findData?.data,
   });
 
-
-  console.log(inventoryPurchasesData)
+  console.log(inventoryPurchasesData);
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -55,13 +54,18 @@ const PurchasesTab = () => {
               <Plus />
               Add Purchase
             </Button>
-
-           
           </div>
         </div>
         <DataTable
           columns={purchasesTabColumns}
-          data={inventoryPurchasesData || []}
+          data={
+            inventoryPurchasesData || {
+              results: [],
+              count: 0,
+              links: { next: null, previous: null },
+              total_pages: 0,
+            }
+          }
           searchValue={searchValues}
           isLoading={isLoading}
         />

@@ -121,7 +121,7 @@ export const productsTabColumns: ColumnDef<ProductsType>[] = [
       const rawDate: string = row.getValue("expiry_date");
       const formattedDate: string = new Intl.DateTimeFormat("en-GB", {
         year: "numeric",
-        month: "2-digit",
+        month: "2-digit", 
         day: "2-digit",
       }).format(new Date(rawDate));
 

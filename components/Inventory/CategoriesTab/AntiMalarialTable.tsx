@@ -8,10 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ProductsType } from "@/components/Tables/products-tab-columns";
 //import { Product } from "@/components/POS/SalesPoint/ProductsSection/Columns";
 
 interface AddCategoryTableProps {
   onClose: () => void;
+  products: ProductsType[]
 }
 
 interface Product {
@@ -32,8 +34,8 @@ const generateRandomProducts = (): Product[] => {
   }));
 };
 
-const AntiMalarialTable = ({ onClose }: AddCategoryTableProps) => {
-  const [products, setProducts] = useState<Product[]>(generateRandomProducts());
+const AntiMalarialTable = ({ onClose, products }: AddCategoryTableProps) => {
+  const [productsItem, setProducts] = useState<Product[]>();
 
   useEffect(() => {
     // Disable scrolling when modal is open
@@ -66,15 +68,15 @@ const AntiMalarialTable = ({ onClose }: AddCategoryTableProps) => {
           </TableHeader>
           <TableBody>
             {products.map((product) => (
-              <TableRow key={product.productName} className="hover:bg-gray-100">
+              <TableRow key={product.name} className="hover:bg-gray-100">
                 <TableCell className="px-6 py-4 border-b">
-                  {product.productName}
+                  {product.name}
                 </TableCell>
                 <TableCell className="px-6 py-4 border-b">
                   {product.quantity}
                 </TableCell>
                 <TableCell className="px-6 py-4 border-b">
-                  GH₵{product.price}
+                  GH₵{product.selling_price}
                 </TableCell>
                 <TableCell className="px-6 py-4 border-b">
                   <button className="text-blue-600">
