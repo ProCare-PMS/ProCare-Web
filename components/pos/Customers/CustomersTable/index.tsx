@@ -15,16 +15,14 @@ import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 
 function CustomersTable() {
-
   const { data: customersData, isLoading } = useQuery({
     queryKey: ["posCustomers"],
     queryFn: async () =>
       await customAxios.get(endpoints.posCustomers).then((res) => res),
-    select: (findData) => findData?.data?.results,
+    select: (findData) => findData?.data,
   });
 
-  console.log(customersData)
-
+  console.log(customersData);
 
   const [searchValues, setSetSearchValues] = useState<string>("");
 
@@ -59,23 +57,29 @@ function CustomersTable() {
                 src="/assets/images/filterFrame.svg"
                 alt="filter icon"
                 width={100}
-                height={100} 
+                height={100}
               />
             </span>
           </div>
         </div>
 
-         
         {/* Check the columns for the dropdown actions for the table: View, Transaction Details and Delete */}
+
         <DataTable
           columns={customersTabColumns}
-          data={customersData || []}
+          data={
+            customersData || {
+              results: [],
+              count: 0,
+              links: { next: null, previous: null },
+              total_pages: 0,
+            }
+          }
           searchValue={searchValues}
           isLoading={isLoading}
         />
       </div>
 
-  
       {showCustomer && (
         <AddCustomerModal closeModal={() => setShowCustomer(false)} />
       )}

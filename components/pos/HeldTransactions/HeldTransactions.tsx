@@ -2,17 +2,14 @@
 
 import DataTable from "@/components/Tables/data-table";
 import React, { useState } from "react";
-import Image from "next/image";
 import { heldTransactionsColumns } from "./Columns";
 import { heldTransactions } from "./Data";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
-import { Button } from "@/components/ui/button";
 import { SlidersVertical } from "lucide-react";
 
 const HeldTransactions = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
 
-  const [showCustomer, setShowCustomer] = useState(false);
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -40,11 +37,13 @@ const HeldTransactions = () => {
         </div>
       </div>
 
+      {/* 
       <DataTable
         columns={heldTransactionsColumns}
-        data={heldTransactions}
+        data={heldTransactions  || { results: [], count: 0, links: { next: null, previous: null }, total_pages: 0 }}
         searchValue={searchValues}
       />
+      */}
     </div>
   );
 };
