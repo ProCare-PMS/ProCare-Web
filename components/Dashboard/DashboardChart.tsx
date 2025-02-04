@@ -73,9 +73,9 @@ export function DashbaordChart({ data }: DashbaordChartProps) {
     return chartData.reduce((acc, curr) => acc + curr.totalCost, 0);
   }, []);
 
-  const displayedTotal = data?.top_categories.length === 0 ? 0 : totalVisitors;
+  const displayedTotal = data?.top_categories?.length === 0 ? 0 : totalVisitors;
 
-  const dataArray = data?.top_categories.length === 0 ? emptyData : chartData;
+  const dataArray = data?.top_categories?.length === 0 ? emptyData : chartData;
 
   return (
     <Card className="flex flex-col bg-white h-[428px] w-[300px] rounded-[10px]">

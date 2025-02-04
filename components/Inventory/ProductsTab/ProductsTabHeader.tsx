@@ -50,7 +50,7 @@ const ProductsTabHeader: React.FC = () => {
         links: response.data.links,
       };
     },
-  });
+  }); 
 
   const handleFilterChange = (filters: FilterState) => {
     const newFilters = Object.entries(filters)

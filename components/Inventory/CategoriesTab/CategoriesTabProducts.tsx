@@ -6,6 +6,7 @@ import AntiMalarialTable from "./AntiMalarialTable";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { useQuery } from "@tanstack/react-query";
+import { ProductsType } from "@/components/Tables/products-tab-columns";
 
 const products: Products[] = [
   {
@@ -56,16 +57,31 @@ const products: Products[] = [
   },
 ];
 
+interface Category {
+  created_at: string;
+  id: string;
+  modified_at: string;
+  name: string;
+  pharmacy: string;
+  product_count: number;
+  products: ProductsType[];
+  slug: string;
+}
+
 const CategoriesTabProducts = () => {
   const { data: categories, isLoading } = useQuery({
-    queryKey: ["dashboardData"],
+    queryKey: ["inventoryCategories"],
     queryFn: async () =>
-      await customAxios.get(endpoints.inventoryCategories + `pain/products/`).then((res) => res),
+      await customAxios.get(endpoints.inventoryCategories).then((res) => res),
     select: (findData) => findData?.data?.results,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+   const [selectedCategoryProducts, setSelectedCategoryProducts] = useState<ProductsType[]>([]);
 
-  const openCategoryTable = () => {
+  console.log(categories);
+
+  const openCategoryTable = (products: ProductsType[]) => {
+    setSelectedCategoryProducts(products);
     setIsModalOpen(true);
   };
 
@@ -76,10 +92,10 @@ const CategoriesTabProducts = () => {
   return (
     <div className="mt-8">
       <div className="grid grid-cols-2 md:grid-cols-3 mx-auto place-items-center lg:grid-cols-5 gap-8">
-        {products.map((product) => (
+        {categories?.map((category: Category) => (
           <div
             className="border border-[#D0D5DD] w-[230px] rounded-[8px] py-8 px-6"
-            key={product.id}
+            key={category.id}
           >
             <div className="flex justify-between mb-6">
               <div className="rounded-full bg-[#E8EBFF] p-2">
@@ -92,20 +108,20 @@ const CategoriesTabProducts = () => {
 
             <div className="">
               <h1 className="text-[#344054] mb-2 font-inter font-semibold text-xl">
-                Anti-malarials
+                {category.name}
               </h1>
               <span
                 className="text-left text-[#2648EA] font-medium font-inter text-base cursor-pointer underline"
-                onClick={openCategoryTable}
+                onClick={() => openCategoryTable(category.products)}
               >
-                View 23 products
+                View {category.products.length} products
               </span>
             </div>
           </div>
         ))}
       </div>
 
-      {isModalOpen && <AntiMalarialTable onClose={onClose} />}
+      {isModalOpen && <AntiMalarialTable  products={selectedCategoryProducts}  onClose={onClose} />}
     </div>
   );
 };

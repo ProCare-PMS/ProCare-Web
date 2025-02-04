@@ -2,7 +2,7 @@ import ExpiryReportStats from "./ExpiryReportStats";
 import DataTable from "@/components/Tables/data-table";
 import { expiryTabColumns } from "@/components/Tables/expiry-tab-columns";
 import React, { useState } from "react";
-import {  SlidersVertical } from "lucide-react";
+import { SlidersVertical } from "lucide-react";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
@@ -14,11 +14,13 @@ const ExpiryReportTab = () => {
   const { data: inventoryExpiryReportsData, isLoading } = useQuery({
     queryKey: ["inventoryExpiryReports"],
     queryFn: async () =>
-      await customAxios.get(endpoints.inventoryExpiryReports).then((res) => res),
-    select: (findData) => findData?.data?.results,
+      await customAxios
+        .get(endpoints.inventoryExpiryReports)
+        .then((res) => res),
+    select: (findData) => findData?.data,
   });
 
-  console.log(inventoryExpiryReportsData)
+  console.log(inventoryExpiryReportsData);
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -47,9 +49,17 @@ const ExpiryReportTab = () => {
             </div>
           </div>
         </div>
+
         <DataTable
           columns={expiryTabColumns}
-          data={inventoryExpiryReportsData || []}
+          data={
+            inventoryExpiryReportsData || {
+              results: [],
+              count: 0,
+              links: { next: null, previous: null },
+              total_pages: 0,
+            }
+          }
           searchValue={searchValues}
           isLoading={isLoading}
         />

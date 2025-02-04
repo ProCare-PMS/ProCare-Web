@@ -1,10 +1,9 @@
 "use client";
 
-import { SuppliersTabTable } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import customAxios from "@/api/CustomAxios";
-import { Ellipsis } from "lucide-react"; 
+import { Ellipsis } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,22 +13,27 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { endpoints } from "@/api/Endpoints";
 import SwalToaster from "@/components/SwalToaster/SwalToaster";
+import { CellContext } from "@tanstack/react-table";
 
-interface SuppliersCellProps {
-  row: {
-    original: SuppliersTabTable;
-  };
+// Updated interface to match the actual data structure
+export interface SuppliersType {
+  id: string;
+  name: string;
+  contact: string;
+  email: string;
+  total_purchase_quantity: number;
+  last_purchase_date: string;
+  total_purchase_amount: string;
 }
 
-const ProductActionCell = ({ row }: SuppliersCellProps) => {
-  const [showAction, setShowAction] = useState(false);
+// Updated action cell component to match CellContext type
+const ProductActionCell = ({ cell }: CellContext<SuppliersType, unknown>) => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    // Destructure mutate from the result
     mutationFn: async (id: string) => {
       const res = await customAxios.delete(
-        `${endpoints.inventorySupplier}${id}/` 
+        `${endpoints.inventorySupplier}${id}/`
       );
       return res;
     },
@@ -52,9 +56,7 @@ const ProductActionCell = ({ row }: SuppliersCellProps) => {
         <DropdownMenuContent className="bg-white w-[150px] mr-12">
           <DropdownMenuItem>View Details</DropdownMenuItem>
           <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => mutate(row.original.id)} 
-          >
+          <DropdownMenuItem onClick={() => mutate(cell.row.original.id)}>
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -63,7 +65,7 @@ const ProductActionCell = ({ row }: SuppliersCellProps) => {
   );
 };
 
-export const suppliersTabColumns: ColumnDef<SuppliersTabTable>[] = [
+export const suppliersTabColumns: ColumnDef<SuppliersType>[] = [
   {
     accessorKey: "name",
     header: "Supplier Name",
@@ -83,6 +85,16 @@ export const suppliersTabColumns: ColumnDef<SuppliersTabTable>[] = [
   {
     accessorKey: "last_purchase_date",
     header: "Last Purchase",
+    cell: ({ row }: { row: { getValue: (key: string) => string } }) => {
+      const rawDate: string = row.getValue("last_purchase_date");
+      const formattedDate: string = new Intl.DateTimeFormat("en-GB", {
+        year: "numeric",
+        month: "2-digit", 
+        day: "2-digit",
+      }).format(new Date(rawDate));
+
+      return <div>{formattedDate}</div>;
+    },
   },
   {
     accessorKey: "total_purchase_amount",

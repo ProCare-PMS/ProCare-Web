@@ -18,10 +18,12 @@ const StockTransferTab = () => {
     <div className="">
       <div className="bg-white mt shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)] p-6 rounded-[8px]">
         <StockTransferRequestsHeader />
+        {/* 
         <DataTable
           columns={stockTransferRequestColumns}
           data={inventoryBranchSyncData || []}
         />
+        */}
       </div>
     </div>
   );
