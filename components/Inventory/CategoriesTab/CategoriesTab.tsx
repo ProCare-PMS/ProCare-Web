@@ -14,7 +14,6 @@ const CategoriesTab = () => {
     select: (findData) => findData?.data?.results,
   });
 
-  console.log(categories);
 
   const categoryLength = categories?.length
 

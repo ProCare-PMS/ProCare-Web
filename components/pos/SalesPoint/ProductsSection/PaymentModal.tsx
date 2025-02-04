@@ -13,7 +13,8 @@ import { Product } from "./OrderList";
 import { Customer } from "./CustomerList";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import SwalToaster from "@/components/SwalToaster/SwalToaster";
 import { Plus } from "lucide-react";
 
 interface PaymentModalProps {
@@ -27,6 +28,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
   const [user, setUser] = useState<any | null>(null);
   const componentRef = useRef<HTMLDivElement>(null);
   const [discount, setDiscount] = useState<any | null>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     // Load order items and customer from localStorage
@@ -79,16 +81,18 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
 
   const finalizePaymentMutation = useMutation({
     mutationFn: async (data: Record<string, any>) => {
-      const res = await customAxios.post(endpoints.salesItems, data);
+      const res = await customAxios.post(endpoints.sales, data);
       return res;
     },
   });
 
   const handleFinalize = () => {
     const salesItemsData = {
-      discount_type: "",
+      discount_type: "percentage",
       discount_value: discount,
-      payment_methods: title,
+      payment_methods: {
+        title,
+      },
       saleitem_set: orderItems.map((item) => ({
         id: item.id,
         product: item.name,
@@ -98,21 +102,46 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
       total_base_price: totalPrice,
       total_price_with_discount: finalPrice,
       employee: {
-        id: user.id,
         full_name: `${user.first_name} ${user.last_name}`,
         email: user.email,
         contact: user.phone_number,
         address: user.pharmacy.address,
         license_number: user.pharmacy.license_number,
-        working_hours: "",
-        is_manager: user.is_manager,
+        is_manager: true,
+        is_pharmacist: true,
+        is_mca: true,
       },
+      status: "pending",
     };
 
-    // Clear localStorage after successful payment
-    //localStorage.removeItem("orderList");
-    //localStorage.removeItem("selectedCustomer");
-    //onClose();
+    finalizePaymentMutation.mutate(salesItemsData, {
+      onSuccess: () => {
+        // Clear localStorage first to prevent any race conditions
+        localStorage.removeItem("orderList");
+        localStorage.removeItem("selectedCustomer");
+
+        // Invalidate queries to refresh data
+        queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] });
+
+        // Close the modal
+        onClose();
+
+        // Show success message
+        SwalToaster(
+          "Sale completed successfully!",
+          "success",
+          `Total amount: ${finalPrice}`
+        );
+      },
+      onError: (error) => {
+        console.error("Payment finalization error:", error);
+
+        // More specific error message based on the error type
+        const errorMessage = "Unable to process the sale. Please try again.";
+
+        SwalToaster("Sale Failed", "error", errorMessage);
+      },
+    });
   };
 
   return (
@@ -270,7 +299,10 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
             <Printer className="w-4 h-4" />
             Print
           </button>
-          <button className="px-6 py-2.5 bg-[#2648EA] text-white font-semibold rounded-lg hover:bg-[#2648EA] transition-colors">
+          <button
+            onClick={() => handleFinalize()}
+            className="px-6 py-2.5 bg-[#2648EA] text-white font-semibold rounded-lg hover:bg-[#2648EA] transition-colors"
+          >
             Finalize Payment
           </button>
         </div>

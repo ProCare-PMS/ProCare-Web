@@ -11,6 +11,7 @@ import { ExternalLink } from "lucide-react";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { useQuery } from "@tanstack/react-query";
+import DashboardTable from "@/components/Tables/DashbaordTable";
 
 function SupplierPerformanceTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
@@ -92,11 +93,13 @@ function SupplierPerformanceTable() {
         </div>
       </div>
 
-      <DataTable
+       
+      <DashboardTable
         columns={Columns}
         data={analyticsPerformanceData || []}
         searchValue={searchValues}
       />
+      
     </div>
   );
 }

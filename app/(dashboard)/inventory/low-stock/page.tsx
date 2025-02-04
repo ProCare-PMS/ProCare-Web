@@ -6,9 +6,24 @@ import { Data } from "./Data";
 import { Column } from "./Column";
 import { useRouter } from "next/navigation";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
+import DashboardTable from "@/components/Tables/DashbaordTable";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
 
 function Page() {
   const [searchValues, setSetSearchValues] = useState<string>("");
+
+  const { data: lowStockData, isLoading } = useQuery({
+    queryKey: ["lowStock"],
+    queryFn: async () =>
+      await customAxios.get(endpoints.inventoryLowStock).then((res) => res),
+    select: (findData) => findData?.data,
+  });
+ 
+  console.log(lowStockData)
+
+
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -57,8 +72,9 @@ function Page() {
 
         {/* table content */}
         <div className="mt-5">
-          <DataTable data={Data} columns={Column} />
+          <DashboardTable data={lowStockData || []} columns={Column} />
         </div>
+         
         {/* table content end */}
       </div>
     </div>

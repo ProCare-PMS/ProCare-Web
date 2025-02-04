@@ -24,7 +24,7 @@ function BestPerformingProductTable() {
       customAxios
         .get(endpoints.analytics + "products/best-performing/")
         .then((res) => res),
-    select: (bestProduct) => bestProduct?.data?.results,
+    select: (bestProduct) => bestProduct?.data,
   });
 
   //console.log({ bestPerformingProductData });
@@ -51,6 +51,7 @@ function BestPerformingProductTable() {
           </Link> */}
         </div>
       </div>
+
       <MiniSubTable columns={Column} data={bestPerformingProductData || []} />
     </div>
   );

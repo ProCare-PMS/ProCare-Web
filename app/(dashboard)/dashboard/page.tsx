@@ -3,15 +3,14 @@ import React from "react";
 import DashboardNote from "./_components/DashboardNote";
 import DashboardStats from "@/components/Dashboard/DashboardStats";
 import { DashboardSubTables } from "@/components/Dashboard/DashboardSubTables";
-import DataTable from "@/components/Tables/data-table";
 import { dashboardTransactionColumns } from "@/components/Tables/columns";
-import { dashboardTransactions } from "@/type";
 import DashboardTableHeader from "@/components/Dashboard/DashboardTableHeader";
 import { DashbaordChart } from "@/components/Dashboard/DashboardChart";
 import { DashboardLowStockAlert } from "@/components/Dashboard/DashboardLowStock";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import DashboardTable from "@/components/Tables/DashbaordTable";
 
 const DashbaordHomePage = () => {
   const { data: dashboardData, isLoading } = useQuery({
@@ -44,7 +43,8 @@ const DashbaordHomePage = () => {
       </div>
       <div className="bg-white shadow-custom p-4 mb-12 mt-4 rounded-[8px]">
         <DashboardTableHeader />
-        <DataTable
+
+        <DashboardTable
           columns={dashboardTransactionColumns}
           data={dashboardData || []}
           isLoading={isLoading}

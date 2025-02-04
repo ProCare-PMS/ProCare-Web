@@ -8,6 +8,7 @@ import {
   getFilteredRowModel,
   useReactTable,
   SortingState,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -19,42 +20,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface BackendPaginationData {
-  count: number;
-  links: {
-    next: string | null;
-    previous: string | null;
-  };
-  results: any[];
-  total_pages: number;
-}
-
-interface DataTableProps<TData, TValue> {
+interface DashboardTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: BackendPaginationData;
+  data: TData[];
   searchValue?: string;
   isLoading?: boolean;
-  onPageChange?: (page: number) => void;
 }
 
-function DataTable<TData, TValue>({ 
+function DashboardTable<TData, TValue>({
   columns,
   data,
   searchValue = "",
   isLoading = false,
-  onPageChange,
-}: DataTableProps<TData, TValue>) {
+}: DashboardTableProps<TData, TValue>) {
   const [globalFilter, setGlobalFilter] = useState("");
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // Reset current page when data changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [data]);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const table = useReactTable({
-    data: data.results,
+    data,
     columns,
     state: {
       globalFilter,
@@ -64,28 +47,16 @@ function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onGlobalFilterChange: setGlobalFilter,
+    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
   });
+
+  const currentPage = table.getState()?.pagination?.pageIndex + 1 || 1;
+  const totalPages = table?.getPageCount ? table?.getPageCount() : 0;
 
   useEffect(() => {
     setGlobalFilter(searchValue);
   }, [searchValue]);
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      const newPage = currentPage - 1;
-      setCurrentPage(newPage);
-      onPageChange?.(newPage);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < data.total_pages) {
-      const newPage = currentPage + 1;
-      setCurrentPage(newPage);
-      onPageChange?.(newPage);
-    }
-  };
 
   // Loading skeleton for table rows
   const LoadingSkeleton = () => (
@@ -177,23 +148,23 @@ function DataTable<TData, TValue>({
       {!isLoading && (
         <div className="flex items-center justify-end space-x-2 py-4">
           <button
-            className="border border-[#D0D5DD] font-inter py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
+            className="border border-[#D0D5DD] font-inter py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
           >
             Previous
           </button>
           <button
-            className="border border-[#D0D5DD] font-inter py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={handleNextPage}
-            disabled={currentPage === data.total_pages}
+            className="border border-[#D0D5DD] font-inter py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
           >
             Next
           </button>
           <div className="flex justify-between items-center py-2">
             <p className="text-nowrap text-[#344054] font-inter font-medium text-sm">
-              {data.total_pages > 0
-                ? `Page ${currentPage} of ${data.total_pages}`
+              {totalPages > 0
+                ? `Results ${currentPage} of ${totalPages}`
                 : "No results found"}
             </p>
           </div>
@@ -203,5 +174,4 @@ function DataTable<TData, TValue>({
   );
 }
 
-export default DataTable;
-
+export default DashboardTable; 

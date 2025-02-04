@@ -14,16 +14,14 @@ import { endpoints } from "@/api/Endpoints";
 function InventoryAgingReportTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
 
-  const { data: agingReportData } = useQuery({
+  const { data: agingReportData, isLoading } = useQuery({
     queryKey: ["agingReportData"],
     queryFn: () =>
       customAxios
         .get(endpoints.analytics + "inventory-aging/")
         .then((res) => res),
-    select: (data) => data.data?.results,
+    select: (data) => data.data,
   });
-
-  //console.log({ agingReportData });
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -70,7 +68,15 @@ function InventoryAgingReportTable() {
 
       <DataTable
         columns={Columns}
-        data={agingReportData || []}
+        data={
+          agingReportData || {
+            results: [],
+            count: 0,
+            links: { next: null, previous: null },
+            total_pages: 0,
+          }
+        }
+        isLoading={isLoading}
         searchValue={searchValues}
       />
     </div>

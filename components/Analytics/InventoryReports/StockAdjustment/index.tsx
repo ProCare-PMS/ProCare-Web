@@ -14,6 +14,7 @@ import { DatePicker } from "@/components/CustomDatePicker/DatePicker";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { dateSchema } from "@/lib/schema/schema";
+import DashboardTable from "@/components/Tables/DashbaordTable";
 
 function StockAdjustment() {
   const [searchValues, setSetSearchValues] = useState<string>("");
@@ -27,10 +28,10 @@ function StockAdjustment() {
       customAxios
         .get(endpoints.analytics + "stock-adjustments/recent/")
         .then((res) => res),
-    select: (foundData) => foundData?.data?.results || [],
+    select: (foundData) => foundData?.data || [],
   });
 
-  console.log({ stockAdjustmentData });
+  console.log(stockAdjustmentData);
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -78,7 +79,7 @@ function StockAdjustment() {
         </div>
       </div>
 
-      <DataTable
+      <DashboardTable
         columns={Columns}
         data={stockAdjustmentData || []}
         searchValue={searchValues}

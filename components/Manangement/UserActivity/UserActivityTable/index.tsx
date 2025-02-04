@@ -12,6 +12,7 @@ import FilterDropdown from "../Filter/Filter";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { useQuery } from "@tanstack/react-query";
+import DashboardTable from "@/components/Tables/DashbaordTable";
 
 function UserActivityTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
@@ -100,7 +101,7 @@ function UserActivityTable() {
       </div>
       <div>
         {toggleShow === 1 && (
-          <DataTable
+          <DashboardTable
             columns={Columns}
             data={getSalesData || []}
             searchValue={searchValues}

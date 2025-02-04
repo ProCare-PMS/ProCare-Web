@@ -6,6 +6,7 @@ import { Data } from "./Data";
 import { Column } from "./Column";
 import BackButton from "@/components/BackButtton/BackButton";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
+import DashboardTable from "@/components/Tables/DashbaordTable";
 
 function ItemSold() {
   const [searchValues, setSetSearchValues] = useState<string>("");
@@ -47,7 +48,7 @@ function ItemSold() {
 
         {/* table content */}
         <div className="mt-5">
-          <DataTable data={Data} columns={Column} searchValue={searchValues} />
+          <DashboardTable data={Data || []} columns={Column} searchValue={searchValues} />
         </div>
         {/* table content end */}
       </div>

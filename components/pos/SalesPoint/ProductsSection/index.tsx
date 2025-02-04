@@ -8,17 +8,41 @@ import CustomerList from "./CustomerList";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import { ProductsType } from "@/components/Tables/products-tab-columns";
+
+// Define an interface for the query response
+interface InventoryResponse {
+  results: ProductsType[];
+  total_pages: number;
+  count: number;
+  links: {
+    next: string | null;
+    previous: string | null;
+  };
+}
 
 const ProductsSection = () => {
-  const { data: inventoryProductsData, isLoading } = useQuery({
-    queryKey: ["inventoryProducts"],
-    queryFn: async () =>
-      await customAxios.get(endpoints.inventoryProduct).then((res) => res),
-    select: (findData) => findData?.data?.results,
+  const [page, setPage] = useState(1);
+
+  const { data: inventoryProductsData, isLoading } = useQuery<InventoryResponse>({
+    queryKey: ["inventoryProducts", page],
+    queryFn: async () => {
+      const response = await customAxios.get(`${endpoints.inventoryProduct}?page=${page}`);
+      
+      return {
+        results: response.data.results.sort(
+          (a: ProductsType, b: ProductsType) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        ),
+        total_pages: response.data.total_pages,
+        count: response.data.count,
+        links: response.data.links,
+      };
+    },
   });
 
   const [searchValues, setSearchValues] = useState<string>("");
-  const [data, setData] = useState<Product[]>(inventoryProductsData || []);
+  const [data, setData] = useState<ProductsType[]>(inventoryProductsData?.results || []);
   const [orderList, setOrderList] = useState<Product[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [isOrderListVisible, setIsOrderListVisible] = useState(false);
@@ -27,21 +51,27 @@ const ProductsSection = () => {
 
   useEffect(() => {
     if (inventoryProductsData) {
-      setData(inventoryProductsData);
+      setData(inventoryProductsData.results);
     }
   }, [inventoryProductsData]);
 
   useEffect(() => {
     const savedOrderList = localStorage.getItem('orderList');
     if (savedOrderList) {
-      const parsedOrderList = JSON.parse(savedOrderList);
-      setCartItemCount(parsedOrderList.reduce((total: number, item: Product) => total + item.quantity, 0));
-      setOrderList(parsedOrderList);
+      try {
+        const parsedOrderList = JSON.parse(savedOrderList);
+        const validOrderList = parsedOrderList.filter((item: Product) => item && item.quantity !== undefined);
+  
+        setCartItemCount(validOrderList.reduce((total: number, item: Product) => total + item.quantity, 0));
+        setOrderList(validOrderList);
+      } catch (error) {
+        console.error("Error parsing order list from localStorage:", error);
+        localStorage.removeItem('orderList');
+      }
     }
   }, []);
 
   const toggleOrderList = (e?: React.MouseEvent) => {
-    // Only prevent toggle if the click is not on an input or button
     if (e) {
       const target = e.target as HTMLElement;
       const isInputOrButton = target.closest('input, button');
@@ -55,52 +85,51 @@ const ProductsSection = () => {
     }
   };
 
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
   const updateQuantity = (productName: string, delta: number) => {
     setOrderList((prevOrderList) => {
       let updatedList;
       
       if (delta === -Infinity) {
-        // Remove the item completely
         updatedList = prevOrderList.filter(product => product.name !== productName);
       } else {
-        // Update quantity
         updatedList = prevOrderList.map((product) =>
           product.name === productName
             ? { ...product, quantity: Math.max(0, product.quantity + delta) }
             : product
-        ).filter(product => product.quantity > 0); // Remove items with quantity 0
+        ).filter(product => product.quantity > 0);
       }
   
       localStorage.setItem("orderList", JSON.stringify(updatedList));
-      
-      // Update cart count based on number of items
       setCartItemCount(updatedList.length);
       
       return updatedList;
     });
   };
   
-  
-  const addToOrder = (product: Product) => {
+  const addToOrder = (product: ProductsType) => {
     setOrderList((prevOrderList) => {
       const existingProduct = prevOrderList.find(item => item.name === product.name);
   
       let updatedList;
       if (!existingProduct) {
-        updatedList = [...prevOrderList, { ...product, quantity: 1 }];
+        // Convert ProductsType to Product by adding quantity
+        const newProduct: Product = { ...product, quantity: 1 };
+        updatedList = [...prevOrderList, newProduct];
       } else {
-        // Do not update the quantity if the item is already in the order list
         updatedList = prevOrderList;
       }
   
       localStorage.setItem("orderList", JSON.stringify(updatedList));
-      setCartItemCount(updatedList.length); // Cart count should be based on unique items, not total quantity
+      setCartItemCount(updatedList.length);
       return updatedList;
     });
   
     setIsOrderListVisible(true);
   };
-  
 
   const handleSearchValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValues(event.target.value);
@@ -151,9 +180,10 @@ const ProductsSection = () => {
 
         <DataTable
           columns={posProductsColumns(updateQuantity, addToOrder)}
-          data={inventoryProductsData || []}
+          data={inventoryProductsData || { results: [], count: 0, links: { next: null, previous: null }, total_pages: 0 }}
           searchValue={searchValues}
           isLoading={isLoading}
+          onPageChange={handlePageChange}
         />
         
         {cartItemCount > 0 && (

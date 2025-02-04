@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import SuppliersTabStats from "./SuppliersTabStats";
 import { ExpandableDataTable } from "@/components/Tables/expandable-data-table";
-import { suppliersTabColumns } from "@/components/Tables/suppliers-tab-columns";
+import {
+  suppliersTabColumns,
+  SuppliersType,
+} from "@/components/Tables/suppliers-tab-columns";
 import { suppliersTabTable } from "@/type";
 import { Button } from "@/components/ui/button";
 import { Plus, SlidersVertical } from "lucide-react";
@@ -15,20 +18,40 @@ import DataTable from "@/components/Tables/data-table";
 const SuppliersTab = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
   const [showSupplierModal, setShowSupplierModal] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); //add supplier modeal
+  const [page, setPage] = useState(1);
+
+  //const { data: inventorySupplierData, isLoading } = useQuery({
+  //  queryKey: ["inventorySupplier"],
+  //  queryFn: async () =>
+  //    await customAxios.get(endpoints.inventorySupplier).then((res) => res),
+  // select: (findData) => findData,
+  //});
 
   const { data: inventorySupplierData, isLoading } = useQuery({
-    queryKey: ["inventorySupplier"],
-    queryFn: async () =>
-      await customAxios.get(endpoints.inventorySupplier).then((res) => res),
-    select: (findData) => findData?.data?.results,
+    queryKey: ["inventorySupplier", page],
+    queryFn: async () => {
+      const response = await customAxios.get(
+        `${endpoints.inventorySupplier}?page=${page}`
+      );
+
+      return {
+        results: response.data.results.sort(
+          (a: SuppliersType, b: SuppliersType) =>
+            new Date(b.total_purchase_quantity).getTime() -
+            new Date(a.total_purchase_quantity).getTime()
+        ),
+        total_pages: response.data.total_pages,
+        count: response.data.count,
+        links: response.data.links,
+      };
+    },
   });
 
-  console.log(inventorySupplierData)
+  console.log(inventorySupplierData);
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
-  ) => { 
+  ) => {
     setSetSearchValues(event.target.value);
   };
 
@@ -39,7 +62,11 @@ const SuppliersTab = () => {
   return (
     <>
       <div className="">
-        <SuppliersTabStats stats={inventorySupplierData} isLoading={isLoading} />
+        <SuppliersTabStats
+          stats={inventorySupplierData?.results}
+          isLoading={isLoading}
+        />
+
         <div className="p-6 bg-white mt-7 shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)]">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-[#202224] font-semibold text-2xl">Suppliers</h2>
@@ -66,9 +93,17 @@ const SuppliersTab = () => {
               </div>
             </div>
           </div>
+
           <DataTable
             columns={suppliersTabColumns}
-            data={inventorySupplierData || []}
+            data={
+              inventorySupplierData || {
+                results: [],
+                count: 0,
+                links: { next: null, previous: null },
+                total_pages: 0,
+              }
+            }
             searchValue={searchValues}
             isLoading={isLoading}
           />

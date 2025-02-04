@@ -10,6 +10,7 @@ import { ExternalLink } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import DashboardTable from "@/components/Tables/DashbaordTable";
 
 function BestSellingProductTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
@@ -21,10 +22,10 @@ function BestSellingProductTable() {
       customAxios
         .get(endpoints.analytics + "products/category-analysis/")
         .then((res) => res),
-    select: (foundData) => foundData?.data?.results || [],
+    select: (foundData) => foundData?.data || [],
   });
 
-  console.log({ bestSellingData });
+  //console.log({ bestSellingData });
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -69,11 +70,13 @@ function BestSellingProductTable() {
         </div>
       </div>
 
-      <DataTable
+      
+      <DashboardTable
         columns={Columns}
         data={bestSellingData || []}
         searchValue={searchValues}
       />
+      
     </div>
   );
 }
