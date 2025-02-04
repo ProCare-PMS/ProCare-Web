@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import MainNavRoutes from "./MainNavRoutes";
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown } from "lucide-react";
 import { LogOut } from "lucide-react";
 import { CircleUser } from "lucide-react";
 import { Info } from "lucide-react";
@@ -88,6 +88,7 @@ const MainNav = () => {
                   <ul className="flex flex-col justify-center">
                     <li>
                       <Link
+                        prefetch={true}
                         href="/settings"
                         className="py-3 px-6 text-[#344054] font-normal flex items-center gap-2 text-sm"
                       >
@@ -98,6 +99,7 @@ const MainNav = () => {
                     <hr />
                     <li>
                       <Link
+                        prefetch={true}
                         href="/help"
                         className="py-3 px-6 text-[#344054] font-normal flex items-center gap-2 text-sm"
                       >

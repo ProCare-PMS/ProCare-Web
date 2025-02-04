@@ -43,20 +43,19 @@ const navRoutes = [
   },
 ];
 
-
 const MainNavRoutes = () => {
-    return (
-      <div className="flex items-center font-inter gap-5">
-        {navRoutes.map((route) => (
-          <MainNavItem
-            key={route.label}
-            icon={route.icon}
-            label={route.label}
-            href={route.href}
-          />
-        ))}
-      </div>
-    );
-  };
-  
-  export default MainNavRoutes;
+  return (
+    <div className="flex items-center font-inter gap-5">
+      {navRoutes.map((route) => (
+        <MainNavItem
+          key={route.label}
+          icon={route.icon}
+          label={route.label}
+          href={route.href}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default MainNavRoutes;
