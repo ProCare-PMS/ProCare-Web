@@ -67,7 +67,7 @@ interface DashbaordChartProps {
 
 export function DashbaordChart({ data }: DashbaordChartProps) {
   const chartInfo =
-    data?.top_categories.length === 0 ? emptyConfig : chartConfig;
+    data?.top_categories?.length === 0 ? emptyConfig : chartConfig;
 
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.totalCost, 0);
@@ -102,7 +102,7 @@ export function DashbaordChart({ data }: DashbaordChartProps) {
               }
             />
             <Pie
-              data={data?.top_categories.length === 0 ? emptyData : chartData}
+              data={data?.top_categories?.length === 0 ? emptyData : chartData}
               dataKey="totalCost"
               nameKey="products"
               innerRadius={60}
