@@ -9,18 +9,17 @@ import { Toaster } from "sonner";
 
 const LoadingWrapper = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const isFetching = useIsFetching();
   const isMutating = useIsMutating();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (isFetching > 0 || isMutating > 0) {
+    if (isMutating > 0) {
       setIsLoading(true);
     } else {
       setIsLoading(false);
     }
-  }, [isFetching, isMutating]);
+  }, [isMutating]);
 
   // Define the paths that should be accessible without login
   const publicPaths = [
