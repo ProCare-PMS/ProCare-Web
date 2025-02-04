@@ -76,7 +76,7 @@ function DailySales() {
         {/* table content */}
         <div className="mt-5">
           <DashboardTable
-            data={Data}
+            data={Data || []}
             columns={Column}
             searchValue={searchValues}
           />

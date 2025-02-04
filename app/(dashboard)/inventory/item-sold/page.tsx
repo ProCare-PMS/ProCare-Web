@@ -48,7 +48,7 @@ function ItemSold() {
 
         {/* table content */}
         <div className="mt-5">
-          <DashboardTable data={Data} columns={Column} searchValue={searchValues} />
+          <DashboardTable data={Data || []} columns={Column} searchValue={searchValues} />
         </div>
         {/* table content end */}
       </div>
