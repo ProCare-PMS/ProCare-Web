@@ -99,8 +99,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
         quantity: item.quantity,
         total_item_price: parseFloat(item.selling_price),
       })),
-      total_base_price: totalPrice,
-      total_price_with_discount: finalPrice,
+      //total_base_price: totalPrice,
+      //total_price_with_discount: finalPrice,
       employee: {
         full_name: `${user.first_name} ${user.last_name}`,
         email: user.email,
@@ -121,7 +121,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
         localStorage.removeItem("selectedCustomer");
 
         // Invalidate queries to refresh data
-        queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] });
+        queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] }); //recent transactions table key
 
         // Close the modal
         onClose();
