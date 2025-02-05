@@ -121,7 +121,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
         localStorage.removeItem("selectedCustomer");
 
         // Invalidate queries to refresh data
-        queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] });
+        queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] }); //recent transactions table key
 
         // Close the modal
         onClose();

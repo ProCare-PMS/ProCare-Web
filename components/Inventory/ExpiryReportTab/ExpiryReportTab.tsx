@@ -7,6 +7,17 @@ import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import { ProductsType } from "@/components/Tables/products-tab-columns";
+
+interface ExpiredProduct {
+  created_at: string;
+  id: string;
+  modified_at: string;
+  pharmacy: string;
+  expired_date: string;
+  product: ProductsType;
+  quantity: number;
+}
 
 const ExpiryReportTab = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
@@ -21,16 +32,17 @@ const ExpiryReportTab = () => {
   });
 
   console.log(inventoryExpiryReportsData);
+  const product = inventoryExpiryReportsData?.results
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setSetSearchValues(event.target.value);
   };
-
+ 
   return (
     <div className="">
-      <ExpiryReportStats isLoading={isLoading} />
+      <ExpiryReportStats expiredProduct={product} isLoading={isLoading} />
       <div className="p-6 bg-white mt-7 shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)]">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-[#202224] font-semibold text-2xl font-inter">
