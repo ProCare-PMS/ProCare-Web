@@ -39,7 +39,7 @@ const DashbaordHomePage = () => {
           data={[]}
           isLoading={isLoading}
         />
-        <DashbaordChart data={dashboardData} />
+        <DashbaordChart data={dashboardData?.top_categories} />
       </div>
       <div className="bg-white shadow-custom p-4 mb-12 mt-4 rounded-[8px]">
         <DashboardTableHeader />
