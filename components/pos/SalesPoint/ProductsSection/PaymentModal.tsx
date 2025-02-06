@@ -101,7 +101,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
       })),
       //total_base_price: totalPrice,
       //total_price_with_discount: finalPrice,
-      employee: {
+      employee: { 
         full_name: `${user.first_name} ${user.last_name}`,
         email: user.email,
         contact: user.phone_number,

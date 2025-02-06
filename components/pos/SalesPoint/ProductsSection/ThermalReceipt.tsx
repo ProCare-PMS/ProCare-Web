@@ -19,6 +19,7 @@ interface User {
   pharmacy?: {
     address?: string;
     license_number?: string;
+    facility_name: string
   };
 }
 
@@ -49,7 +50,7 @@ const ThermalReceipt: React.FC = () => {
   return (
     <div className="bg-white p-4 font-mono text-xs w-72 mx-auto border border-gray-300 shadow-lg">
       <div className="text-center mb-2">
-        <h1 className="font-bold text-sm">RxPMS POS</h1>
+        <h1 className="font-bold text-sm">{ user && user?.pharmacy?.facility_name}</h1>
         <p className="text-[10px]">Payment Receipt</p>
       </div>
 
