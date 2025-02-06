@@ -1,63 +1,12 @@
 import React, { useState } from "react";
-import { EllipsisVertical } from "lucide-react";
-import { LayoutGrid } from "lucide-react";
-import { Products } from "@/lib/definition";
+import { EllipsisVertical, LayoutGrid } from "lucide-react";
 import AntiMalarialTable from "./AntiMalarialTable";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { useQuery } from "@tanstack/react-query";
 import { ProductsType } from "@/components/Tables/products-tab-columns";
 
-const products: Products[] = [
-  {
-    id: 1,
-    productTitle: "Anti-malarials",
-    products: [
-      {
-        id: 1,
-        name: "Paracetamol - 500g",
-        price: 1000,
-        quantity: 1,
-      },
-      {
-        id: 2,
-        name: "Paracetamol - 500g",
-        price: 1000,
-        quantity: 1,
-      },
-    ],
-  },
-  {
-    id: 2,
-    productTitle: "Antihypertensives",
-  },
-  {
-    id: 3,
-    productTitle: "Cosmetics",
-  },
-  {
-    id: 4,
-    productTitle: "Cosmetics",
-  },
-  {
-    id: 5,
-    productTitle: "Cosmetics",
-  },
-  {
-    id: 6,
-    productTitle: "Cosmetics",
-  },
-  {
-    id: 7,
-    productTitle: "Cosmetics",
-  },
-  {
-    id: 8,
-    productTitle: "Cosmetics",
-  },
-];
-
-interface Category {
+export interface CategoryProduct {
   created_at: string;
   id: string;
   modified_at: string;
@@ -68,6 +17,20 @@ interface Category {
   slug: string;
 }
 
+const CategoryCardSkeleton = () => (
+  <div className="border border-[#D0D5DD] w-[230px] rounded-[8px] py-8 px-6 animate-pulse">
+    <div className="flex justify-between mb-6">
+      <div className="rounded-full bg-gray-200 p-2 w-10 h-10"></div>
+      <div className="w-6 h-6 bg-gray-200 rounded"></div>
+    </div>
+
+    <div>
+      <div className="h-7 bg-gray-200 rounded w-3/4 mb-2"></div>
+      <div className="h-5 bg-gray-200 rounded w-1/2"></div>
+    </div>
+  </div>
+);
+
 const CategoriesTabProducts = () => {
   const { data: categories, isLoading } = useQuery({
     queryKey: ["inventoryCategories"],
@@ -75,10 +38,9 @@ const CategoriesTabProducts = () => {
       await customAxios.get(endpoints.inventoryCategories).then((res) => res),
     select: (findData) => findData?.data?.results,
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
-   const [selectedCategoryProducts, setSelectedCategoryProducts] = useState<ProductsType[]>([]);
 
-  console.log(categories);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategoryProducts, setSelectedCategoryProducts] = useState<ProductsType[]>([]);
 
   const openCategoryTable = (products: ProductsType[]) => {
     setSelectedCategoryProducts(products);
@@ -89,10 +51,22 @@ const CategoriesTabProducts = () => {
     setIsModalOpen(false);
   };
 
+  if (isLoading) {
+    return (
+      <div className="mt-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 mx-auto place-items-center lg:grid-cols-5 gap-8">
+          {[...Array(10)].map((_, index) => (
+            <CategoryCardSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mt-8">
       <div className="grid grid-cols-2 md:grid-cols-3 mx-auto place-items-center lg:grid-cols-5 gap-8">
-        {categories?.map((category: Category) => (
+        {categories?.map((category: CategoryProduct) => (
           <div
             className="border border-[#D0D5DD] w-[230px] rounded-[8px] py-8 px-6"
             key={category.id}
@@ -106,7 +80,7 @@ const CategoriesTabProducts = () => {
               </div>
             </div>
 
-            <div className="">
+            <div>
               <h1 className="text-[#344054] mb-2 font-inter font-semibold text-xl">
                 {category.name}
               </h1>
@@ -121,7 +95,12 @@ const CategoriesTabProducts = () => {
         ))}
       </div>
 
-      {isModalOpen && <AntiMalarialTable  products={selectedCategoryProducts}  onClose={onClose} />}
+      {isModalOpen && (
+        <AntiMalarialTable 
+          products={selectedCategoryProducts}
+          onClose={onClose}
+        />
+      )}
     </div>
   );
 };

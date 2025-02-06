@@ -19,7 +19,7 @@ const CategoriesTab = () => {
 
   return (
     <div>
-      <CategoriesTabStats categoryLength={categoryLength} />
+      <CategoriesTabStats categoryLength={categoryLength} isLoading={isLoading} category={categories} />
       <AddCategory />
       <CategoriesTabProducts />
     </div>
