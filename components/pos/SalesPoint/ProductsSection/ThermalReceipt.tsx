@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Printer } from 'lucide-react';
-
+ //B2C
 interface Product {
   id: number;
   name: string;
