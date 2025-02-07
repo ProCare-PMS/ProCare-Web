@@ -33,7 +33,7 @@ const DashboardNote = () => {
       // Save the updated object back to localStorage
       localStorage.setItem("user", JSON.stringify(userObject));
 
-      console.log("User updated:", userObject);
+      //console.log("User updated:", userObject);
     } else {
       console.error("No user data found in localStorage.");
     }
@@ -49,7 +49,7 @@ const DashboardNote = () => {
 
   return (
     <div>
-      {!getUser?.saveNumber && (
+      {getUser?.saveNumber && getUser?.saveNumber === false && (
         <div className="border border-[#2648EA] mt-8 bg-[#EFF0FE] font-inter rounded-xl p-4 flex flex-col md:flex-row items-center justify-center md:justify-between gap-4">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             {/* <Home color="blue" /> */}

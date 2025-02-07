@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { loginFailure, loginSuccess } from "@/redux/authSlice";
 
-
 const UserPasscode = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [accountId, setAccountId] = useState<string | null>(null);
@@ -99,13 +98,13 @@ const UserPasscode = () => {
               apiErrors.non_field_errors &&
               apiErrors.non_field_errors.length > 0
             ) {
-              toast.error(apiErrors.non_field_errors[0]);
+              console.error(apiErrors.non_field_errors[0]);
             } else {
-              toast.error("An unexpected error occurred. Please try again.");
+              console.error("Invalid Passcode");
             }
-            dispatch(loginFailure("An unexpected error occurred"));
+            dispatch(loginFailure("Invalid Passcode"));
           } else {
-            toast.error(
+            console.error(
               error.response.data.message || "An unexpected error occurred."
             );
           }

@@ -93,13 +93,13 @@ export default function Login() {
               apiErrors.non_field_errors &&
               apiErrors.non_field_errors.length > 0
             ) {
-              toast.error(apiErrors.non_field_errors[0]);
+              console.error(apiErrors.non_field_errors[0]);
             } else {
-              toast.error("An unexpected error occurred. Please try again.");
+              console.error("An unexpected error occurred. Please try again.");
             }
             dispatch(firstLoginFailure(error.response.data));
           } else {
-            toast.error(
+            console.error(
               error.response.data.message || "An unexpected error occurred."
             );
           }
