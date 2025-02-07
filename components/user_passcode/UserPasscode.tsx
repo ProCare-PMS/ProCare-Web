@@ -117,7 +117,7 @@ const UserPasscode = () => {
     <div className="bg-[#F9F9F9] h-screen w-screen flex justify-center items-center">
       <div className="flex flex-col items-center justify-between gap-4">
         <h2 className="text-[#2648EA] font-semibold text-3xl">
-          Who’s on Shift
+         Enter Passcode
         </h2>
         <div className="bg-white w-96 h-[450px] px-6 py-8 flex flex-col justify-center shadow-lg rounded-xl">
           <div className="w-[40%] h-[40%] mx-auto shadow-md rounded-xl">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
@@ -55,26 +55,37 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
     return decimalRegex.test(value);
   };
 
+  //tryig to get the markup percentage
+  useEffect(() => {
+    if (formData.cost_price && formData.markup_percentage) {
+      const costPrice = parseFloat(formData.cost_price);
+      const markupPercentage = parseFloat(formData.markup_percentage) / 100;
+      
+      // Calculate selling price: Cost Price + (Cost Price × Markup Percentage)
+      const sellingPrice = costPrice + (costPrice * markupPercentage);
+      
+      setFormData(prev => ({
+        ...prev,
+        selling_price: sellingPrice.toFixed(2)
+      }));
+    }
+  }, [formData.cost_price, formData.markup_percentage]);
+
   const validateForm = (): Errors => {
     const newErrors: Errors = {};
 
-    // Required field validation
+    // Form validation
     if (!formData.name.trim()) newErrors.name = "Product name is required";
     if (!formData.strength.trim()) newErrors.strength = "Strength is required";
     if (!formData.unit.trim()) newErrors.unit = "Unit is required";
     if (!formData.quantity) newErrors.quantity = "Quantity is required";
     if (!formData.expiry_date)
       newErrors.expiry_date = "Expiry date is required";
-    if (!formData.reorder_level)
-      newErrors.reorder_level = "Reorder level is required";
     if (!formData.cost_price) newErrors.cost_price = "Cost price is required";
-    if (!formData.markup_percentage)
-      newErrors.markup_percentage = "Markup percentage is required";
     if (!formData.selling_price)
       newErrors.selling_price = "Selling price is required";
-    if (!formData.category) newErrors.category = "Category is required";
-    if (!formData.supplier) newErrors.supplier = "Supplier is required";
-    if (!formData.brand.trim()) newErrors.brand = "Brand is required";
+
+    
 
     // Number validation
     if (formData.quantity && isNaN(Number(formData.quantity))) {
@@ -163,13 +174,16 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
       expiry_date: formData.expiry_date
         ? new Date(formData.expiry_date).toISOString()
         : null,
-      quantity: formData.quantity,
-      reorder_level: formData.reorder_level,
+      quantity: Number(formData.quantity),
+      reorder_level: Number(formData.reorder_level),
       cost_price: String(parseFloat(formData.cost_price).toFixed(2)),
       markup_percentage: String(
         parseFloat(formData.markup_percentage).toFixed(2)
       ),
       selling_price: String(parseFloat(formData.selling_price).toFixed(2)),
+      category: formData.category,
+      supplier: formData.supplier,
+      brand: formData.brand,
     };
 
     postProductMutation.mutate(submitData, {
@@ -454,7 +468,7 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
 
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                Brand Name
+                Manufacturer
               </label>
               <input
                 name="brand"
@@ -463,7 +477,7 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
                 className={`w-full h-12 px-3 py-2 border rounded bg-gray-50 focus:outline-none ${
                   errors.brand ? "border-red-500" : "border-gray-300"
                 }`}
-                placeholder="Enter Brand Name"
+                placeholder="Enter Manufacturer"
               />
               {errors.brand && (
                 <p className="text-red-500 font-bold text-sm mt-1">
