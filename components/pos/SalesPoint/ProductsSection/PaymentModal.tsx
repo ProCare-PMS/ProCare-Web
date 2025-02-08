@@ -86,13 +86,34 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     },
   });
 
+  const getPaymentMethods = (title: string) => {
+    const paymentMethods: { [key: string]: string[] } = {
+      "Mobile Money": ["mobile_money"],
+      "Credit Card": ["credit_card"],
+      "Cash": ["cash"],
+      "Multipay": ["cash", "mobile_money", "credit_card"],
+    };
+  
+    return paymentMethods[title] || ["cash"]; // Default to Cash
+  };
+
+  const clearAllData = () => {
+    // Clear all related localStorage items
+    localStorage.removeItem("orderList");
+    localStorage.removeItem("selectedCustomer");
+    localStorage.removeItem("discount");
+    
+    // Clear state
+    setOrderItems([]);
+    setCustomer(null);
+    setDiscount(null);
+  };
+
   const handleFinalize = () => {
     const salesItemsData = {
       discount_type: "percentage",
       discount_value: discount,
-      payment_methods: {
-        title,
-      },
+      payment_methods: getPaymentMethods(title),
       saleitem_set: orderItems.map((item) => ({
         id: item.id,
         product: item.name,
@@ -111,20 +132,21 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
         is_pharmacist: true,
         is_mca: true,
       },
-      status: "pending",
+      status: "completed",
     };
 
     finalizePaymentMutation.mutate(salesItemsData, {
       onSuccess: () => {
         // Clear localStorage first to prevent any race conditions
-        localStorage.removeItem("orderList");
-        localStorage.removeItem("selectedCustomer");
-
+        clearAllData();
         // Invalidate queries to refresh data
         queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] }); //recent transactions table key
 
         // Close the modal
         onClose();
+
+        // Reload the page to ensure all components are reset
+        window.location.reload();
 
         // Show success message
         SwalToaster(
