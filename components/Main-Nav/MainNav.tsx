@@ -16,13 +16,18 @@ const MainNav = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [getUser, setGetUser] = useState<any>({});
+  const accountType = localStorage.getItem("accountType");
 
   //get personal info data
   const { data: getPersonalData } = useQuery({
     queryKey: ["personalInformation"],
     queryFn: async () =>
       await customAxios
-        .get(`${endpoints.user}${getUser?.id}/`)
+        .get(
+          accountType === "employee"
+            ? `${endpoints.managements}employees/${getUser?.id}/`
+            : `${endpoints.user}${getUser?.id}/`
+        )
         .then((res) => res?.data),
     enabled: !!getUser?.id,
   });
@@ -72,7 +77,9 @@ const MainNav = () => {
             />
             <div className="font-inter">
               <h2 className="text-sm font-semibold sev">
-                {getPersonalData?.first_name} {getPersonalData?.last_name}
+                {accountType === "employee"
+                  ? getPersonalData?.full_name
+                  : `${getPersonalData?.first_name} ${getPersonalData?.last_name}`}
               </h2>
               <span className="text-sm font-medium text-[#858C95]">
                 {new Date().toDateString()}

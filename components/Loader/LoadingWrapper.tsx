@@ -6,9 +6,11 @@ import { usePathname, useRouter } from "next/navigation";
 import Loading from "@/components/Loader/Loader";
 import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+import ProtectPage from "../ProtectPage";
 
 const LoadingWrapper = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
   const isMutating = useIsMutating();
   const router = useRouter();
   const pathname = usePathname();
@@ -33,6 +35,15 @@ const LoadingWrapper = ({ children }: { children: React.ReactNode }) => {
     "/user-passcode",
   ];
 
+  const protectedRoutes: { [key: string]: string[] } = {
+    "/dashboard": ["is_mca", "is_pharmacist", "is_manager"],
+    "/settings": ["is_manager", "is_pharmacist"],
+    "/analytics": ["is_manager", "is_pharmacist"],
+    "/inventory": ["is_manager", "is_pharmacist", "is_mca"],
+    "/pos": ["is_manager", "is_pharmacist", "is_mca"],
+    "/management": ["is_manager", "is_pharmacist"],
+  };
+
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
 
@@ -41,6 +52,15 @@ const LoadingWrapper = ({ children }: { children: React.ReactNode }) => {
       router.push("/login");
     }
   }, [pathname, router]);
+
+  // Apply role-based protection for protected routes
+  // if (protectedRoutes[pathname]) {
+  //   const ProtectedComponent = ProtectPage(
+  //     () => <>{children}</>,
+  //     protectedRoutes[pathname]
+  //   );
+  //   return <ProtectedComponent />;
+  // }
 
   return (
     <div>

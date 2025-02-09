@@ -69,5 +69,8 @@ export const login =
 export const logoutAction = () => (dispatch: AppDispatch) => {
   localStorage.removeItem("authToken");
   localStorage.removeItem("user");
+  localStorage.removeItem("accounts");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("accountType");
   dispatch(logout());
 };
