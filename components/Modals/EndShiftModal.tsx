@@ -36,7 +36,11 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
     mutationKey: ["logout"],
     mutationFn: logoutUser,
     onSuccess: () => {
-      dispatch(logoutAction());
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
+      localStorage.removeItem("accounts");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("accountType");
       router.push("/login");
       toast.success("User logged out successfully");
     },
@@ -82,7 +86,9 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                 <span className="block capitalize text-gray-400 font-thin">
                   Name
                 </span>
-                <span className="block">{accounts[0]?.name}</span>
+                <span className="block">
+                  {accounts ? accounts[0]?.name : ""}
+                </span>
               </div>
             </div>
           </div>

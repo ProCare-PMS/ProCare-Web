@@ -7,14 +7,21 @@ import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 
 const DashboardNote = () => {
+  const accountType = localStorage.getItem("accountType");
   const [getUser, setGetUser] = useState<any>({});
+  const [showNote, setShowNote] = useState<boolean>(true);
 
+  //console.log({ accountType });
   //get personal info data
   const { data: getPersonalData } = useQuery({
     queryKey: ["personalInformation"],
     queryFn: async () =>
       await customAxios
-        .get(`${endpoints.user}${getUser?.id}/`)
+        .get(
+          accountType === "employee"
+            ? `${endpoints.managements}employees/${getUser?.id}/`
+            : `${endpoints.user}${getUser?.id}/`
+        )
         .then((res) => res?.data),
     enabled: !!getUser?.id,
   });
@@ -32,6 +39,7 @@ const DashboardNote = () => {
 
       // Save the updated object back to localStorage
       localStorage.setItem("user", JSON.stringify(userObject));
+      setShowNote(false);
 
       console.log("User updated:", userObject);
     } else {
@@ -49,7 +57,7 @@ const DashboardNote = () => {
 
   return (
     <div>
-      {!getUser?.saveNumber && (
+      {showNote && accountType !== "employee" && (
         <div className="border border-[#2648EA] mt-8 bg-[#EFF0FE] font-inter rounded-xl p-4 flex flex-col md:flex-row items-center justify-center md:justify-between gap-4">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             {/* <Home color="blue" /> */}

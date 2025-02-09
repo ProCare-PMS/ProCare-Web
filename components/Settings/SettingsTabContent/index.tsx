@@ -11,6 +11,8 @@ import BillingSetting from "../BillingSetting/BillingSetting";
 
 export default function SettingsTabsContent() {
   const [value, setValue] = React.useState(0);
+  const userdata = localStorage.getItem("user");
+  const user = userdata && JSON.parse(userdata);
 
   function CustomTabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
@@ -41,7 +43,7 @@ export default function SettingsTabsContent() {
 
   return (
     <div className="">
-      <Box  sx={{ width: "100%", typography: "body1" }}>
+      <Box sx={{ width: "100%", typography: "body1" }}>
         <Box
           className="bg-white"
           sx={{
@@ -75,12 +77,14 @@ export default function SettingsTabsContent() {
               {...a11yProps(2)}
               sx={{ textTransform: "none" }}
             />
-            <Tab
-              className="font-inter text-sm font-semibold text-[#858C95]"
-              label="Billing"
-              {...a11yProps(2)}
-              sx={{ textTransform: "none" }}
-            />
+            {!!!user?.is_manager && (
+              <Tab
+                className="font-inter text-sm font-semibold text-[#858C95]"
+                label="Billing"
+                {...a11yProps(2)}
+                sx={{ textTransform: "none" }}
+              />
+            )}
           </Tabs>
         </Box>
         <CustomTabPanel className="px-[4.5rem]" value={value} index={0}>
