@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Printer } from 'lucide-react';
- //B2C
+
 interface Product {
   id: number;
   name: string;
@@ -48,50 +48,82 @@ const ThermalReceipt: React.FC = () => {
   const finalPrice = totalPrice - discount;
 
   return (
-    <div className="bg-white p-4 font-mono text-xs w-72 mx-auto border border-gray-300 shadow-lg">
-      <div className="text-center mb-2">
-        <h1 className="font-bold text-sm">{ user && user?.pharmacy?.facility_name}</h1>
-        <p className="text-[10px]">Payment Receipt</p>
+    <div className="bg-white p-6 font-mono text-xs w-80 mx-auto border border-gray-300 shadow-lg">
+      {/* Header Section */}
+      <div className="text-center mb-4">
+        <h1 className="font-bold text-base mb-1">
+          {user?.pharmacy?.facility_name || 'Pharmacy Name'}
+        </h1>
+        <p className="text-xs mb-1">{user?.pharmacy?.address || 'Address'}</p>
+        <div className="border-b-2 border-black w-full mb-2" />
+        <p className="font-bold">SALES RECEIPT</p>
       </div>
 
-      <div className="border-b border-dashed border-gray-400 pb-2 mb-2">
-        <p>Date: {new Date().toLocaleString()}</p>
-        <p>Cashier: {user ? `${user.first_name} ${user.last_name}` : 'N/A'}</p>
-        {customer && <p>Customer: {customer.full_name}</p>}
-      </div>
-
-      <div className="mb-2">
-        {orderItems.map((product, index) => (
-          <div key={index} className="flex justify-between">
-            <span>{product.name} x{product.quantity}</span>
-            <span>GH₵{(parseFloat(product.selling_price) * product.quantity).toFixed(2)}</span>
+      {/* Transaction Info */}
+      <div className="mb-4 text-xs">
+        <div className="flex justify-between mb-1">
+          <span>Date:</span>
+          <span>{new Date().toLocaleString()}</span>
+        </div>
+        <div className="flex justify-between mb-1">
+          <span>Cashier:</span>
+          <span>{user ? `${user.first_name} ${user.last_name}` : 'N/A'}</span>
+        </div>
+        {customer && (
+          <div className="flex justify-between mb-1">
+            <span>Customer:</span>
+            <span>{customer.full_name}</span>
           </div>
-        ))}
+        )}
       </div>
 
-      <div className="border-t border-dashed border-gray-400 pt-2">
-        <div className="flex justify-between">
-          <span>Subtotal</span>
+      {/* Items Table */}
+      <div className="mb-4">
+        <div className="border-y border-black py-1">
+          <div className="grid grid-cols-12 font-bold">
+            <div className="col-span-5">Item</div>
+            <div className="col-span-2 text-center">Qty</div>
+            <div className="col-span-5 text-right">Amount</div>
+          </div>
+        </div>
+        
+        <div className="py-2">
+          {orderItems.map((product, index) => (
+            <div key={index} className="grid grid-cols-12 mb-1">
+              <div className="col-span-5 truncate">{product.name}</div>
+              <div className="col-span-2 text-center">{product.quantity}</div>
+              <div className="col-span-5 text-right">
+                GH₵{(parseFloat(product.selling_price) * product.quantity).toFixed(2)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Totals Section */}
+      <div className="border-t border-black pt-2">
+        <div className="flex justify-between mb-1">
+          <span>Subtotal:</span>
           <span>GH₵{totalPrice.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between">
-          <span>Discount</span>
+        <div className="flex justify-between mb-1">
+          <span>Discount:</span>
           <span>GH₵{discount.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between font-bold">
-          <span>Total</span>
+        <div className="flex justify-between font-bold text-sm border-t border-black pt-2">
+          <span>TOTAL:</span>
           <span>GH₵{finalPrice.toFixed(2)}</span>
         </div>
       </div>
 
-      <div className="text-center mt-2 text-[10px]">
-        <p>Thank you for your purchase!</p>
-      </div>
-
-      <div className="mt-2 text-center">
-        <button className="inline-flex items-center text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded">
-          <Printer className="w-3 h-3 mr-1"/> Reprint
-        </button>
+      {/* Footer */}
+      <div className="text-center mt-6 space-y-1">
+        <p className="font-bold">Thank you for your purchase!</p>
+        <p className="text-[10px]">For returns and exchanges, please present this receipt</p>
+        <p className="text-[10px]">within 7 days of purchase.</p>
+        <div className="border-t border-dashed border-gray-400 mt-2 pt-2">
+          <p className="text-[10px]">Receipt Generated: {new Date().toLocaleString()}</p>
+        </div>
       </div>
     </div>
   );
