@@ -14,7 +14,7 @@ import {
   stepTwoSchema,
   stepThreeSchema,
 } from "@/lib/schema/schema";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { endpoints } from "@/api/Endpoints";
 import customAxios from "@/api/CustomAxios";
 import {
@@ -23,8 +23,9 @@ import {
   initialWorkingHours,
 } from "@/lib/utils";
 import { AddUserTypes, DayAbbreviation, WorkingHourField } from "@/lib/Types";
+import SwalToaster from "../SwalToaster/SwalToaster";
 
-// Modal Component
+// Modal Componentform
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -34,7 +35,7 @@ interface AddUserModalProps {
 const rolesValLabels: { label: string; value: string }[] = [
   { label: "Manager", value: "manager" },
   { label: "Pharmacist", value: "pharmacist" },
-  { label: "Technician", value: "technician" },
+  { label: "MCA", value: "technician" },
 ];
 
 const permissionsoptions: { label: string; value: string }[] = [
@@ -64,6 +65,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     working_hours: defaultWorkingHours,
     //permission: [],
   });
+  const queryClient = useQueryClient();
 
   //mutation
   const postManagementEmployees = useMutation({
@@ -149,7 +151,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
       password: "emptypassword",
     };
 
-    console.log({ payload });
+    //console.log({ payload });
 
     const result = AddUserSchema.safeParse(formValues);
 
@@ -159,7 +161,26 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     }
 
     // Post only when the form is complete and the user confirms submission
-    postManagementEmployees.mutate({ formData: payload });
+    postManagementEmployees.mutate(
+      { formData: payload },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["management"] });
+          onClose();
+          //reset the form
+          setFormValues({
+            full_name: "",
+            email: "",
+            contact: "",
+            address: "",
+            role: "",
+            working_hours: defaultWorkingHours,
+          });
+          setStep(1);
+          SwalToaster("User added successfully!", "success");
+        },
+      }
+    );
   };
 
   return (

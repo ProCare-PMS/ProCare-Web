@@ -19,6 +19,7 @@ const MainNavItem = ({ href, icon: Icon, label }: MainNavItemProps) => {
   return (
     <Link
       href={href}
+      prefetch={true}
       className={clsx(
         "flex gap-2 items-center font-inter border-2 border-white text-sm px-3 py-1 font-semibold transition text-[#858C95]",
         isActive && "!border-2 !border-[#2648EA] rounded-[5px] !text-[#2648EA]"

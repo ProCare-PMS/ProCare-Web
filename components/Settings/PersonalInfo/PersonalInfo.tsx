@@ -18,6 +18,7 @@ const PersonalInfo = () => {
   //const getUser = JSON.parse(localStorage.getItem("user") || "{}");
   const [getUser, setGetUser] = useState<any>({});
   const queryClient = useQueryClient();
+  const accountType = localStorage.getItem("accountType");
 
   // Set user from localStorage on client side
   useEffect(() => {
@@ -26,6 +27,8 @@ const PersonalInfo = () => {
       setGetUser(user);
     }
   }, []);
+
+  console.log("getUser", getUser);
 
   const editPersonalInfo = useMutation({
     mutationFn: async (value: any) =>
@@ -39,7 +42,11 @@ const PersonalInfo = () => {
     queryKey: ["personalInformation"],
     queryFn: async () =>
       await customAxios
-        .get(`${endpoints.user}${getUser?.id}/`)
+        .get(
+          accountType === "employee"
+            ? `${endpoints.managements}employees/${getUser?.id}/`
+            : `${endpoints.user}${getUser?.id}/`
+        )
         .then((res) => res?.data),
     enabled: !!getUser?.id,
   });
@@ -89,10 +96,18 @@ const PersonalInfo = () => {
   }, [reset, getPersonalData]);
 
   return (
-    <form className="bg-white shadow-lg rounded-xl px-8 2xl:px-12 pt-12 pb-20 flex mt-3 flex-col gap-10 " onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="bg-white shadow-lg rounded-xl px-8 2xl:px-12 pt-12 pb-20 flex mt-3 flex-col gap-10 "
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <div className="flex items-start w-full">
         <div className="flex flex-col items-center gap-3">
-          <label className="text-start w-full max-2xl:text-sm font-medium" htmlFor="profileimage">Profile Picture</label>
+          <label
+            className="text-start w-full max-2xl:text-sm font-medium"
+            htmlFor="profileimage"
+          >
+            Profile Picture
+          </label>
           {/* Profile Picture Section */}
           <div className="relative size-40 ">
             <Image
@@ -126,7 +141,10 @@ const PersonalInfo = () => {
       <div className="grid grid-cols-3 justify-between gap-8 2xl:gap-x-12 gap-y-7 w-full">
         {/* First Name */}
         <div className="flex flex-col">
-          <label htmlFor="first_name" className="mb-1 font-medium max-2xl:text-sm">
+          <label
+            htmlFor="first_name"
+            className="mb-1 font-medium max-2xl:text-sm"
+          >
             First Name
           </label>
           <input
@@ -147,7 +165,10 @@ const PersonalInfo = () => {
 
         {/* Last Name */}
         <div className="flex flex-col">
-          <label htmlFor="last_name" className="mb-1 font-medium max-2xl:text-sm">
+          <label
+            htmlFor="last_name"
+            className="mb-1 font-medium max-2xl:text-sm"
+          >
             Last Name
           </label>
           <input
@@ -168,7 +189,10 @@ const PersonalInfo = () => {
 
         {/* Other Names */}
         <div className="flex flex-col">
-          <label htmlFor="other_name" className="mb-1 font-medium max-2xl:text-sm">
+          <label
+            htmlFor="other_name"
+            className="mb-1 font-medium max-2xl:text-sm"
+          >
             Other Name(s)
           </label>
           <input
@@ -201,7 +225,10 @@ const PersonalInfo = () => {
 
         {/* Phone */}
         <div className="flex flex-col">
-          <label htmlFor="phone_number" className="mb-1 font-medium max-2xl:text-sm">
+          <label
+            htmlFor="phone_number"
+            className="mb-1 font-medium max-2xl:text-sm"
+          >
             Phone Number
           </label>
           <input
@@ -241,7 +268,10 @@ const PersonalInfo = () => {
 
         {/* License Number */}
         <div className="col-span-1 flex flex-col">
-          <label htmlFor="license_number" className="mb-1 font-medium max-2xl:text-sm">
+          <label
+            htmlFor="license_number"
+            className="mb-1 font-medium max-2xl:text-sm"
+          >
             License Number
           </label>
           <input

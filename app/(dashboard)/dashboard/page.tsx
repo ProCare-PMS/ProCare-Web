@@ -13,6 +13,9 @@ import { endpoints } from "@/api/Endpoints";
 import DashboardTable from "@/components/Tables/DashbaordTable";
 
 const DashbaordHomePage = () => {
+  const userdata = localStorage.getItem("user");
+  const user = userdata && JSON.parse(userdata);
+
   const { data: dashboardData, isLoading } = useQuery({
     queryKey: ["dashboardData"],
     queryFn: async () =>
@@ -20,14 +23,14 @@ const DashbaordHomePage = () => {
     select: (findData) => findData?.data,
   });
 
-  console.log(dashboardData);
-
   return (
     <div className="container grid gap-y-8 pb-6 px-6 pt-7 bg-[#F5F5F5]">
       <div className="hidden md:block">
         <DashboardNote />
       </div>
-      <DashboardStats dashboardData={dashboardData} isLoading={isLoading} />
+      {(user?.is_pharmacist || user?.is_manager) && (
+        <DashboardStats dashboardData={dashboardData} isLoading={isLoading} />
+      )}
       <div className="flex flex-col md:flex-row items-center gap-6">
         <DashboardSubTables
           title="Expiry List"
