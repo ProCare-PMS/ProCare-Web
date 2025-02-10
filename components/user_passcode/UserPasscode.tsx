@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { loginFailure, loginSuccess } from "@/redux/authSlice";
+import { setAccountType } from "@/redux/accountTypeSlice";
 
 const UserPasscode = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
@@ -89,7 +90,8 @@ const UserPasscode = () => {
             localStorage.setItem("user", JSON.stringify(user));
             localStorage.setItem("accountType", accountType);
             toast.success("Login successful! Redirecting to the dashboard.");
-            dispatch(loginSuccess({ token, refreshToken, user }));
+            dispatch(loginSuccess({ token, refreshToken, user, accountType }));
+            dispatch(setAccountType(accountType));
             router.push("/dashboard");
             localStorage.removeItem("accountId");
           }

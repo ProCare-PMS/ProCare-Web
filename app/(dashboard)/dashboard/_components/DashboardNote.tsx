@@ -5,55 +5,34 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { updateUser } from "@/redux/authSlice";
 
 const DashboardNote = () => {
+  const dispatch = useDispatch();
   const accountType = localStorage.getItem("accountType");
-  const [getUser, setGetUser] = useState<any>({});
   const [showNote, setShowNote] = useState<boolean>(true);
+  const user = useSelector((state: RootState) => state.auth.user);
 
-  //console.log({ accountType });
-  //get personal info data
   const { data: getPersonalData } = useQuery({
     queryKey: ["personalInformation"],
     queryFn: async () =>
       await customAxios
         .get(
           accountType === "employee"
-            ? `${endpoints.managements}employees/${getUser?.id}/`
-            : `${endpoints.user}${getUser?.id}/`
+            ? `${endpoints.managements}employees/${user?.id}/`
+            : `${endpoints.user}${user?.id}/`
         )
         .then((res) => res?.data),
-    enabled: !!getUser?.id,
+    enabled: !!user?.id,
   });
 
   const handleSaveBtn = () => {
-    // Retrieve the current user object from localStorage
-    const userData = localStorage.getItem("user");
-
-    if (userData) {
-      // Parse the JSON string into an object
-      const userObject = JSON.parse(userData);
-
-      // Add or update the `saveNumber` property
-      userObject.saveNumber = true;
-
-      // Save the updated object back to localStorage
-      localStorage.setItem("user", JSON.stringify(userObject));
-      setShowNote(false);
-
-      console.log("User updated:", userObject);
-    } else {
-      console.error("No user data found in localStorage.");
-    }
+    dispatch(updateUser({ saveNumber: true }));
+    setShowNote(false);
   };
-
-  // Set user from localStorage on client side
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      setGetUser(user);
-    }
-  }, []);
 
   return (
     <div>

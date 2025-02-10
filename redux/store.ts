@@ -1,16 +1,44 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import {
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import authReducer from "./authSlice";
 import facilityReducer from "./facilitySlice";
 import personalInforResponseReducer from "./personalInformationResponse";
 import firstLoginReducer from "./firstLoginSlice";
+import accountTypeReducer from "./accountTypeSlice";
+
+const persistConfig = {
+  key: "root",
+  storage,
+  // whitelist: ["auth", "pharmacyId", "personalInfoResponse", "firstLogin"],
+};
+
+const reducer = combineReducers({
+  auth: authReducer,
+  pharmacyId: facilityReducer,
+  personalInfoResponse: personalInforResponseReducer,
+  firstLogin: firstLoginReducer,
+  accountType: accountTypeReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, reducer);
 
 const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    pharmacyId: facilityReducer,
-    personalInfoResponse: personalInforResponseReducer,
-    firstLogin: firstLoginReducer,
-  },
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER], // Ignore redux-persist actions
+      },
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
