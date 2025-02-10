@@ -1,10 +1,10 @@
-"use client"
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
-import { toast } from "react-toastify";
+import SwalToaster from "@/components/SwalToaster/SwalToaster";
 
 interface AddPurchaseProps {
   onClose: () => void;
@@ -16,25 +16,22 @@ interface ProductForm {
   quantity?: string;
   unitPrice?: string;
   searchTerm?: string;
+  product?: any; // Store the full product object
 }
 
 const AddPurchase = ({ onClose }: AddPurchaseProps) => {
   const [products, setProducts] = useState<ProductForm[]>([{ id: 1 }]);
-  const [dropdownStates, setDropdownStates] = useState<{ [key: number]: boolean }>({});
-  const [supplierDropdownOpen, setSupplierDropdownOpen] = useState(false);
-  const [selectedSupplier, setSelectedSupplier] = useState<{id?: string, name?: string}>({});
-  const [supplierSearchTerm, setSupplierSearchTerm] = useState("");
-  
+  const [dropdownStates, setDropdownStates] = useState<{
+    [key: number]: boolean;
+  }>({});
+  const [purchaseDate, setPurchaseDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const queryClient = useQueryClient();
   const dropdownRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
-  const supplierDropdownRef = useRef<HTMLDivElement | null>(null);
-
-  const { data: suppliers } = useQuery({
-    queryKey: ["suppliers"],
-    queryFn: () =>
-      customAxios
-        .get(endpoints.inventorySupplier)
-        .then((res) => res?.data?.results),
-  });
+  const formatDateTime = (date: string) => {
+    return `${date}T14:15:22Z`; // Format to match backend's expected format
+  };
 
   const { data: inventoryProducts } = useQuery({
     queryKey: ["inventoryProducts"],
@@ -49,17 +46,13 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
     const handleClickOutside = (event: MouseEvent) => {
       Object.entries(dropdownRefs.current).forEach(([id, ref]) => {
         if (ref && !ref.contains(event.target as Node)) {
-          setDropdownStates(prev => ({ ...prev, [parseInt(id)]: false }));
+          setDropdownStates((prev) => ({ ...prev, [parseInt(id)]: false }));
         }
       });
-      
-      if (supplierDropdownRef.current && !supplierDropdownRef.current.contains(event.target as Node)) {
-        setSupplierDropdownOpen(false);
-      }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleAddProduct = () => {
@@ -70,7 +63,7 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
   };
 
   const handleProductSearch = (searchTerm: string, index: number) => {
-    setProducts(prevProducts => {
+    setProducts((prevProducts) => {
       const updatedProducts = [...prevProducts];
       updatedProducts[index] = {
         ...updatedProducts[index],
@@ -81,61 +74,24 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
   };
 
   const handleProductInputClick = (index: number) => {
-    setDropdownStates(prev => ({ ...prev, [index]: true }));
-  };
-
-  const handleProductSelect = (product: any, index: number) => {
-    setProducts(prevProducts => {
-      const updatedProducts = [...prevProducts];
-      updatedProducts[index] = {
-        ...updatedProducts[index],
-        productId: product.id,
-        searchTerm: product.name,
-        quantity: product.quantity.toString(),
-        unitPrice: product.selling_price
-      };
-      return updatedProducts;
-    });
-    setDropdownStates(prev => ({ ...prev, [index]: false }));
-  };
-
-  const handleSupplierSearch = (searchTerm: string) => {
-    setSupplierSearchTerm(searchTerm);
-  };
-
-  const handleSupplierInputClick = () => {
-    setSupplierDropdownOpen(true);
-  };
-
-  const handleSupplierSelect = (supplier: any) => {
-    setSelectedSupplier({
-      id: supplier.id,
-      name: supplier.name
-    });
-    setSupplierSearchTerm(supplier.name);
-    setSupplierDropdownOpen(false);
+    setDropdownStates((prev) => ({ ...prev, [index]: true }));
   };
 
   const getFilteredProducts = (searchTerm: string) => {
     if (!searchTerm) return inventoryProducts || [];
-    return inventoryProducts?.filter((product: any) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
-  };
-
-  const getFilteredSuppliers = () => {
-    if (!supplierSearchTerm) return suppliers || [];
-    return suppliers?.filter((supplier: any) =>
-      supplier.name.toLowerCase().includes(supplierSearchTerm.toLowerCase())
-    ) || [];
+    return (
+      inventoryProducts?.filter((product: any) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ) || []
+    );
   };
 
   const handleQuantityChange = (index: number, value: string) => {
-    setProducts(prevProducts => {
+    setProducts((prevProducts) => {
       const updatedProducts = [...prevProducts];
       updatedProducts[index] = {
         ...updatedProducts[index],
-        quantity: value
+        quantity: value,
       };
       return updatedProducts;
     });
@@ -145,8 +101,128 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
     return products.reduce((total, product) => {
       const quantity = Number(product.quantity) || 0;
       const price = Number(product.unitPrice) || 0;
-      return total + (quantity * price);
+      return total + quantity * price;
     }, 0);
+  };
+
+  const handleProductSelect = (product: any, index: number) => {
+    setProducts((prevProducts) => {
+      const updatedProducts = [...prevProducts];
+      updatedProducts[index] = {
+        ...updatedProducts[index],
+        productId: product.id,
+        searchTerm: product.name,
+        quantity: "",
+        unitPrice: product.selling_price,
+        product: {
+          ...product,
+          quantity: 0, // Reset quantity for the new product
+          product_status: "Available",
+        },
+      };
+
+      console.log(product.id)
+      return updatedProducts;
+    });
+    setDropdownStates((prev) => ({ ...prev, [index]: false }));
+  };
+
+  const formatPurchaseData = () => {
+    return products
+      .filter(
+        (product) => product.productId && product.quantity && product.product
+      )
+      .map((product) => {
+        // Format the base product data
+        const formattedProduct = {
+          name: product.product.name,
+          strength: product.product.strength || "",
+          unit: product.product.unit || "",
+          quantity: Number(product.quantity),
+          expiry_date: formatDateTime(
+            product.product.expiry_date || purchaseDate
+          ),
+          id: product.productId,
+          reorder_level: Number(product.product.reorder_level || 0),
+          cost_price: product.product.cost_price || "0",
+          markup_percentage: product.product.markup_percentage || "0",
+          selling_price: product.product.selling_price || "0",
+          category: product.product.category,
+          supplier: product.product.supplier,
+          brand: product.product.brand || "",
+          product_status: "Available",
+          manufacture_date: formatDateTime(purchaseDate),
+          unit_price: product.product.unit_price || "0",
+        };
+
+
+        // Create the purchase request object
+        const purchaseRequest = {
+          product: formattedProduct,
+          product_id: parseInt(product.productId || "0"),
+          quantity: parseInt(product.quantity || "0"),
+          purchase_date: purchaseDate,
+        };
+
+        console.log("Formatted purchase request:", purchaseRequest);
+        return purchaseRequest;
+      });
+  };
+
+  
+
+  const addPurchaseMutation = useMutation({
+    mutationFn: async (data: Record<string, any>) => {
+      try {
+        // Clean up the data by removing undefined values
+        const cleanData = JSON.parse(JSON.stringify(data));
+        console.log("Clean purchase data being sent:", cleanData);
+
+        const response = await customAxios.post(
+          endpoints.inventories + "purchases/",
+          cleanData
+        );
+        return response;
+      } catch (error: any) {
+        console.error("Mutation error details:", {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+        });
+        throw error;
+      }
+    },
+  });
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
+
+    const purchaseData = formatPurchaseData();
+
+    if (purchaseData.length === 0) {
+      SwalToaster("Please add at least one product with quantity!", "error");
+      return;
+    }
+
+    try {
+      for (const purchase of purchaseData) {
+        console.log(purchase)
+        await addPurchaseMutation.mutateAsync(purchase);
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] });
+      onClose();
+      SwalToaster("Purchases added successfully!", "success");
+    } catch (error: any) {
+      console.error("Purchase error:", error);
+      const errorMessage =
+        error.response?.data?.detail ||
+        error.response?.data?.message ||
+        "Failed to add purchases. Please try again.";
+      SwalToaster(errorMessage, "error");
+    }
   };
 
   return (
@@ -156,46 +232,24 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
           <h3 className="font-bold text-2xl font-inter">Add Purchase</h3>
           <CloseOutlinedIcon onClick={onClose} className="cursor-pointer" />
         </div>
-        <hr />
         <div className="grid">
           <div>
             <h2 className="text-[#202224] font-bold text-base font-inter">
               Purchase Details
             </h2>
-            <form>
-              <div className="grid gap-y-2 mt-3">
+            <hr />
+            <form onSubmit={handleSubmit} className="mt-8">
+              <div className="mb-4">
                 <label className="text-[#323539] font-inter font-medium text-sm">
-                  Select Supplier
+                  Purchase Date
                 </label>
-                <div className="relative" ref={supplierDropdownRef}>
-                  <input
-                    type="text"
-                    name="supplier"
-                    id="supplier"
-                    className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] w-[400px] text-[#858C95] text-sm font-normal"
-                    placeholder="Search supplier..."
-                    value={supplierSearchTerm}
-                    onChange={(e) => handleSupplierSearch(e.target.value)}
-                    onClick={handleSupplierInputClick}
-                  />
-                  {supplierDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md mt-1 max-h-48 overflow-y-auto z-10 w-[400px]">
-                      {getFilteredSuppliers().map((supplier: any) => (
-                        <div
-                          key={supplier.id}
-                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => handleSupplierSelect(supplier)}
-                        >
-                          {supplier.name}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <input
+                  type="date"
+                  value={purchaseDate}
+                  onChange={(e) => setPurchaseDate(e.target.value)}
+                  className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal w-full"
+                />
               </div>
-
-              <hr className="my-7" />
-
               <div>
                 <h2 className="text-[#202224] font-bold text-base font-inter">
                   Products Details
@@ -206,7 +260,10 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
                       key={product.id}
                       className="grid grid-cols-3 gap-5 mt-3 pb-3 mb-3"
                     >
-                      <div className="grid gap-y-2 relative" ref={el => dropdownRefs.current[index] = el}>
+                      <div
+                        className="grid gap-y-2 relative"
+                        ref={(el) => (dropdownRefs.current[index] = el)}
+                      >
                         <label className="text-[#323539] font-inter font-medium text-sm">
                           Select Product
                         </label>
@@ -216,20 +273,26 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
                           className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                           placeholder="Search product..."
                           value={product.searchTerm || ""}
-                          onChange={(e) => handleProductSearch(e.target.value, index)}
+                          onChange={(e) =>
+                            handleProductSearch(e.target.value, index)
+                          }
                           onClick={() => handleProductInputClick(index)}
                         />
                         {dropdownStates[index] && (
                           <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md mt-1 max-h-48 overflow-y-auto z-10">
-                            {getFilteredProducts(product.searchTerm || "").map((item: any) => (
-                              <div
-                                key={item.id}
-                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                onClick={() => handleProductSelect(item, index)}
-                              >
-                                {item.name}
-                              </div>
-                            ))}
+                            {getFilteredProducts(product.searchTerm || "").map(
+                              (item: any) => (
+                                <div
+                                  key={item.id}
+                                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                  onClick={() =>
+                                    handleProductSelect(item, index)
+                                  }
+                                >
+                                  {item.name}
+                                </div>
+                              )
+                            )}
                           </div>
                         )}
                       </div>
@@ -243,7 +306,9 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
                           id="quantity"
                           placeholder="Enter Quantity"
                           value={product.quantity || ""}
-                          onChange={(e) => handleQuantityChange(index, e.target.value)}
+                          onChange={(e) =>
+                            handleQuantityChange(index, e.target.value)
+                          }
                           className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
                         />
                       </div>
@@ -268,7 +333,6 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
                     <h3 className="font-inter text-[#858C95] font-normal text-sm">
                       TOTAL AMOUNT(GHS)
                     </h3>
-                    <input />
                     <span className="font-bold text-xl mt-2 font-inter text-[#202224]">
                       GHS {calculateTotal().toFixed(2)}
                     </span>
