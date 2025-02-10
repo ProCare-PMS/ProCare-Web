@@ -11,10 +11,11 @@ import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import DashboardTable from "@/components/Tables/DashbaordTable";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 const DashbaordHomePage = () => {
-  const userdata = localStorage.getItem("user");
-  const user = userdata && JSON.parse(userdata);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const { data: dashboardData, isLoading } = useQuery({
     queryKey: ["dashboardData"],
