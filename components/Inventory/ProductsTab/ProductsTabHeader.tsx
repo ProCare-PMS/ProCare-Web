@@ -52,6 +52,8 @@ const ProductsTabHeader: React.FC = () => {
     },
   }); 
 
+  console.log(inventoryProductsData)
+
   const handleFilterChange = (filters: FilterState) => {
     const newFilters = Object.entries(filters)
       .filter(([_, value]) => value)
