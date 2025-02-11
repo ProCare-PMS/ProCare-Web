@@ -17,8 +17,15 @@ import accountTypeReducer from "./accountTypeSlice";
 
 const persistConfig = {
   key: "root",
+  version: 1,
   storage,
-  // whitelist: ["auth", "pharmacyId", "personalInfoResponse", "firstLogin"],
+  whitelist: [
+    "auth",
+    "pharmacyId",
+    "personalInfoResponse",
+    "firstLogin",
+    "accountType",
+  ],
 };
 
 const reducer = combineReducers({
@@ -36,7 +43,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER], // Ignore redux-persist actions
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
 });
