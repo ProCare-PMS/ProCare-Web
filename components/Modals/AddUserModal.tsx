@@ -68,7 +68,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     //permission: [],
   });
   const queryClient = useQueryClient();
-  const methodss = 1;
+  const methodss = "POST";
 
   const postManagementEmployees = useMutation({
     mutationFn: async (value: any) => {
