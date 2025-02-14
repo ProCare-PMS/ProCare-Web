@@ -6,10 +6,11 @@ import {
   PurchaseTabTable,
 } from "@/type";
 import clsx from "clsx";
+import { PurchaseType } from "../Tables/purchases-tab-columns";
 
 type ModalProps = {
   setModal: (value: boolean) => void;
-  item: PurchaseTabTable;
+  item: PurchaseType;
 };
 
 const PurchasesTableModal = ({ setModal, item }: ModalProps) => {
@@ -37,20 +38,20 @@ const PurchasesTableModal = ({ setModal, item }: ModalProps) => {
         {/* Modal Stats */}
         <div
           className="grid grid-cols-4 gap-10 bg-[#F8F9FB] border py-2 px-4 rounded-[8px]"
-          key={item.purchaseId}
+          key={item.id}
         >
           <div className="grid w-full gap-1">
             <span className="text-[#858C95] text-sm font-normal">
               PURCHASE ID
             </span>
             <span className="text-[#202224] text-base font-semibold">
-              Receipt #{item.purchaseId}
+              Receipt #{item.id}
             </span>
           </div>
           <div className="grid w-full gap-1">
             <span className="text-[#858C95] text-sm font-normal">Supplier</span>
             <span className="text-[#202224] text-base font-normal">
-              {item.supplier}
+              {item.pharmacy}
             </span>
           </div>
           <div className="grid w-full gap-1">
@@ -64,19 +65,19 @@ const PurchasesTableModal = ({ setModal, item }: ModalProps) => {
               Unit Price
             </span>
             <span className="text-[#202224] text-base font-normal">
-              {item.unitPrice}
+              {item.product.unit_price}
             </span>
           </div>
           <div className="grid gap-1">
             <span>AMOUNT</span>
             <span className="text-[#202224] text-base font-normal">
-              {item.amount}
+              {item.product.cost_price}
             </span>
           </div>
           <div className="grid gap-1">
             <span className="text-[#858C95] text-sm font-normal">Date</span>
             <span className="text-[#202224] text-base font-normal">
-              {item.date}
+              {item.purchase_date}
             </span>
           </div>
         </div>
@@ -86,8 +87,8 @@ const PurchasesTableModal = ({ setModal, item }: ModalProps) => {
         {/* Products */}
         <div className=" ">
           {" "}
-          {/* overflow-y-auto h-[200px] p-3 */}
-          {item.purchases.map((purchase, index) => (
+          {/* overflow-y-auto h-[200px] p-3 
+          {item.product.map((purchase, index) => (
             <div key={index + purchase.name}>
               <div
                 className="flex items-center justify-between"
@@ -123,6 +124,7 @@ const PurchasesTableModal = ({ setModal, item }: ModalProps) => {
               <hr className="my-6" />
             </div>
           ))}
+          */}
         </div>
       </div>
     </div>

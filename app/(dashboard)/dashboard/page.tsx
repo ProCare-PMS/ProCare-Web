@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import DashboardNote from "./_components/DashboardNote";
 import DashboardStats from "@/components/Dashboard/DashboardStats";
 import { DashboardSubTables } from "@/components/Dashboard/DashboardSubTables";
@@ -11,10 +11,12 @@ import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import DashboardTable from "@/components/Tables/DashbaordTable";
+import DataTable from "@/components/Tables/data-table";
 
 const DashbaordHomePage = () => {
   const userdata = localStorage.getItem("user");
   const user = userdata && JSON.parse(userdata);
+  const [page, setPage] = useState(1);
 
   const { data: dashboardData, isLoading } = useQuery({
     queryKey: ["dashboardData"],
@@ -22,6 +24,17 @@ const DashbaordHomePage = () => {
       await customAxios.get(endpoints.dashboard).then((res) => res),
     select: (findData) => findData?.data,
   });
+
+  const { data: recentTransactionsData } = useQuery({
+    queryKey: ["recentTransactionsData", page],
+    queryFn: async () =>
+      await customAxios
+        .get(`${endpoints.sales}?page=${page}`)
+        .then((res) => res),
+    select: (findData) => findData?.data,
+  });
+
+  //console.log(recentTransactionsData);
 
   return (
     <div className="container grid gap-y-8 pb-6 px-6 pt-7 bg-[#F5F5F5]">
@@ -47,9 +60,16 @@ const DashbaordHomePage = () => {
       <div className="bg-white shadow-custom p-4 mb-12 mt-4 rounded-[8px]">
         <DashboardTableHeader />
 
-        <DashboardTable
+        <DataTable
           columns={dashboardTransactionColumns}
-          data={dashboardData || []}
+          data={
+            recentTransactionsData || {
+              results: [],
+              count: 0,
+              links: { next: null, previous: null },
+              total_pages: 0,
+            }
+          }
           isLoading={isLoading}
         />
       </div>
