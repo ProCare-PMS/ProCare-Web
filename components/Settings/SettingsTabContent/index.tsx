@@ -65,19 +65,23 @@ export default function SettingsTabsContent() {
               {...a11yProps(0)}
               sx={{ textTransform: "none" }}
             />
-            <Tab
-              className="font-inter text-sm font-semibold text-[#858C95]"
-              label="Company Info"
-              {...a11yProps(1)}
-              sx={{ textTransform: "none" }}
-            />
-            <Tab
-              className="font-inter text-sm font-semibold text-[#858C95]"
-              label="Security"
-              {...a11yProps(2)}
-              sx={{ textTransform: "none" }}
-            />
-            {!!!user?.is_manager && (
+            {!(user?.is_mca || user?.is_pharmacy) && (
+              <Tab
+                className="font-inter text-sm font-semibold text-[#858C95]"
+                label="Company Info"
+                {...a11yProps(1)}
+                sx={{ textTransform: "none" }}
+              />
+            )}
+            {!(user?.is_mca || user?.is_pharmacy) && (
+              <Tab
+                className="font-inter text-sm font-semibold text-[#858C95]"
+                label="Security"
+                {...a11yProps(2)}
+                sx={{ textTransform: "none" }}
+              />
+            )}
+            {!(user?.is_manager || user?.is_mca || user?.is_pharmacy) && (
               <Tab
                 className="font-inter text-sm font-semibold text-[#858C95]"
                 label="Billing"

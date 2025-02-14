@@ -24,6 +24,8 @@ import {
 } from "@/lib/utils";
 import { AddUserTypes, DayAbbreviation, WorkingHourField } from "@/lib/Types";
 import SwalToaster from "../SwalToaster/SwalToaster";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 // Modal Componentform
 interface AddUserModalProps {
@@ -66,14 +68,26 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     //permission: [],
   });
   const queryClient = useQueryClient();
+  const methodss = "POST";
 
-  //mutation
   const postManagementEmployees = useMutation({
     mutationFn: async (value: any) => {
-      const res = await customAxios
-        .post(endpoints.managements + "employees/create/", value.formData)
-        .then((res) => res);
-      return res;
+      if (!value?.method || !value?.formData) {
+        throw new Error("Invalid request data");
+      }
+
+      const url =
+        endpoints.managements +
+        (value.method === "POST"
+          ? "employees/create/"
+          : `employees/${value.id}/`);
+
+      const res =
+        value.method === "POST"
+          ? await customAxios.post(url, value.formData)
+          : await customAxios.put(url, value.formData);
+
+      return res.data; // Return the actual response data
     },
   });
 
@@ -162,7 +176,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
 
     // Post only when the form is complete and the user confirms submission
     postManagementEmployees.mutate(
-      { formData: payload },
+      { formData: payload, method: methodss ? "PUT" : "POST" },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["management"] });

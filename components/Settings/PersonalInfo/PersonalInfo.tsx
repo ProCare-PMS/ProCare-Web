@@ -28,7 +28,7 @@ const PersonalInfo = () => {
     }
   }, []);
 
-  console.log("getUser", getUser);
+  //console.log("getUser", getUser);
 
   const editPersonalInfo = useMutation({
     mutationFn: async (value: any) =>
@@ -267,29 +267,31 @@ const PersonalInfo = () => {
         </div>
 
         {/* License Number */}
-        <div className="col-span-1 flex flex-col">
-          <label
-            htmlFor="license_number"
-            className="mb-1 font-medium max-2xl:text-sm"
-          >
-            License Number
-          </label>
-          <input
-            type="text"
-            id="license_number"
-            {...register("license_number")}
-            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
-              errors.license_number ? "border-red-500" : ""
-            }`}
-            placeholder="Enter License Number"
-            disabled
-          />
-          {errors.license_number && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.license_number.message}
-            </p>
-          )}
-        </div>
+        {accountType !== "employee" && (
+          <div className="col-span-1 flex flex-col">
+            <label
+              htmlFor="license_number"
+              className="mb-1 font-medium max-2xl:text-sm"
+            >
+              License Number
+            </label>
+            <input
+              type="text"
+              id="license_number"
+              {...register("license_number")}
+              className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
+                errors.license_number ? "border-red-500" : ""
+              }`}
+              placeholder="Enter License Number"
+              disabled
+            />
+            {errors.license_number && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.license_number.message}
+              </p>
+            )}
+          </div>
+        )}
 
         <div className="col-span-3 mt-12 flex justify-end w-full">
           {/* Submit Button */}

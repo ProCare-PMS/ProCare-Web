@@ -5,6 +5,11 @@ export interface User {
   last_name: string;
   custom_pharmacy_id: string;
   token: string;
+  is_pharmacist?: boolean;
+  is_manager?: boolean;
+  is_mca?: boolean;
+  saveNumber?: boolean;
+  accountType?: string;
 }
 
 export interface AuthState {
@@ -13,6 +18,7 @@ export interface AuthState {
   refreshToken?: string | null;
   user: User | null;
   error: string | null;
+  accountType: string | null;
 }
 
 export interface LoginCredentials {
@@ -74,7 +80,6 @@ export interface SuppliersResponse {
   //modified_at: "2025-01-04T22:45:32.995488Z";
 }
 
-
 interface ProductsType {
   productName: string;
   unit: string;
@@ -89,4 +94,8 @@ interface ProductsType {
     productExpiry: string;
     productPrice: number;
   };
+}
+
+export interface AccountTypes {
+  accountType: string;
 }

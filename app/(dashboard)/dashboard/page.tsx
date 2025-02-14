@@ -12,10 +12,11 @@ import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import DashboardTable from "@/components/Tables/DashbaordTable";
 import DataTable from "@/components/Tables/data-table";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 const DashbaordHomePage = () => {
-  const userdata = localStorage.getItem("user");
-  const user = userdata && JSON.parse(userdata);
+  const user = useSelector((state: RootState) => state.auth.user);
   const [page, setPage] = useState(1);
 
   const { data: dashboardData, isLoading } = useQuery({
@@ -24,6 +25,8 @@ const DashbaordHomePage = () => {
       await customAxios.get(endpoints.dashboard).then((res) => res),
     select: (findData) => findData?.data,
   });
+
+  console.log(dashboardData)
 
   const { data: recentTransactionsData } = useQuery({
     queryKey: ["recentTransactionsData", page],
@@ -47,7 +50,7 @@ const DashbaordHomePage = () => {
       <div className="flex flex-col md:flex-row items-center gap-6">
         <DashboardSubTables
           title="Expiry List"
-          data={dashboardData?.expiry_soon_products_list}
+          data={dashboardData?.expiring_soon_products_list}
           isLoading={isLoading}
         />
         <DashboardLowStockAlert
