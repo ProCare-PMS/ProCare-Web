@@ -18,19 +18,27 @@ import {
 import customAxios from "@/api/CustomAxios";
 
 export interface ProductsType {
-  id: string;
-  name: string;
-  unit: string;
   brand: string;
-  quantity: number;
-  expiry_date: string;
-  unitPrice: string;
-  product_status: string;
   category: string;
+  cost_price: string;
+  created_at: string;
+  expiry_date: string;
+  id: string;
+  low_stock: boolean;
+  manufacture_date: string | null;
+  markup_percentage: string;
+  modified_at: string;
+  name: string;
+  pharmacy: string;
+  product_status: string;
+  quantity: number;
   reorder_level: number;
   selling_price: string;
-  created_at: string;
   slug: string;
+  strength: string;
+  supplier: string;
+  unit: string;
+  unit_price: string | null;
   
 }
 interface ProductsCellProps {

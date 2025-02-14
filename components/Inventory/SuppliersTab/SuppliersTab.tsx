@@ -29,22 +29,12 @@ const SuppliersTab = () => {
 
   const { data: inventorySupplierData, isLoading } = useQuery({
     queryKey: ["inventorySupplier", page],
-    queryFn: async () => {
-      const response = await customAxios.get(
+    queryFn: async () => 
+       await customAxios.get(
         `${endpoints.inventorySupplier}?page=${page}`
-      );
+      ).then((res) =>res),
+      select: (findData) => findData?.data?.results,
 
-      return {
-        results: response.data.results.sort(
-          (a: SuppliersType, b: SuppliersType) =>
-            new Date(b.total_purchase_quantity).getTime() -
-            new Date(a.total_purchase_quantity).getTime()
-        ),
-        total_pages: response.data.total_pages,
-        count: response.data.count,
-        links: response.data.links,
-      };
-    },
   });
 
   console.log(inventorySupplierData);

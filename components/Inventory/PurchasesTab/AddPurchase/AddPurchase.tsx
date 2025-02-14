@@ -115,7 +115,7 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
         quantity: "",
         unitPrice: product.selling_price,
         product: {
-          ...product,
+          product_id: product.id,
           quantity: 0, // Reset quantity for the new product
           product_status: "Available",
         },
@@ -159,7 +159,7 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
         // Create the purchase request object
         const purchaseRequest = {
           product: formattedProduct,
-          product_id: parseInt(product.productId || "0"),
+          product_id: formattedProduct.id,
           quantity: parseInt(product.quantity || "0"),
           purchase_date: purchaseDate,
         };

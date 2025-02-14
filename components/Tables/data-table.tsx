@@ -54,7 +54,7 @@ function DataTable<TData, TValue>({
   }, [data]);
 
   const table = useReactTable({
-    data: data.results,
+    data: data?.results || [],
     columns,
     state: {
       globalFilter,
@@ -141,8 +141,8 @@ function DataTable<TData, TValue>({
         <TableBody>
           {isLoading ? (
             <LoadingSkeleton />
-          ) : table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+          ) : table?.getRowModel().rows?.length ? (
+            table?.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}

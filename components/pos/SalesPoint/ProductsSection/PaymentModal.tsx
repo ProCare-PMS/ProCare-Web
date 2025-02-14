@@ -91,6 +91,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
   }, 0);
 
   const finalPrice = totalPrice - discount;
+  console.log(finalPrice)
 
   const itemPrice = finalPrice > 0 ? finalPrice : 0;
 
@@ -130,7 +131,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
       discount_value: discount,
       payment_methods: getPaymentMethods(title),
       saleitem_set: orderItems.map((item) => ({
-        id: item.id,
+        product_id: item.id,
         product: item.name,
         quantity: item.quantity,
         total_item_price: parseFloat(item.selling_price),
@@ -155,7 +156,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
         // Clear localStorage first to prevent any race conditions
         clearAllData();
         // Invalidate queries to refresh data
-        queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] }); //recent transactions table key
+        queryClient.invalidateQueries({ queryKey: ["recentTransactionsData"] }); //recent transactions table key
 
         // Close the modal
         onClose();
@@ -167,7 +168,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
         SwalToaster(
           "Sale completed successfully!",
           "success",
-          `Total amount: ${finalPrice}`
+          `Total amount: ${finalPrice.toFixed(2)}`
         );
       },
       onError: (error) => {
