@@ -153,7 +153,6 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
         .then((res) => res?.data?.results),
   });
 
-  console.log(suppliers);
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
