@@ -67,11 +67,14 @@ export const Columns: ColumnDef<any>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ getValue }) => <ActionMenu />, // Render ActionMenu component for each row
+    cell: ({ row }) => {
+      console.log("row originsl", row.original);
+      return <ActionMenu formData={row.original} />;
+    },
   },
 ];
 
-const ActionMenu = () => {
+const ActionMenu = (formData: any) => {
   const [isOpen, setIsOpen] = useState(false); // Toggle popup visibility
   const menuRef = useRef<HTMLDivElement>(null); // Reference to the action menu div
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -182,11 +185,14 @@ const ActionMenu = () => {
         </div>
       )}
 
-      <AddUserModal
-        isOpen={showModal}
-        onClose={handleCloseModal}
-        title="Edit"
-      />
+      {!!formData && (
+        <AddUserModal
+          isOpen={showModal}
+          onClose={handleCloseModal}
+          title="Edit"
+          formData={formData}
+        />
+      )}
 
       {/* Reusable Modal for Activation/Deactivation */}
       <ActivateDeactivateUserModal

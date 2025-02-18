@@ -1,5 +1,5 @@
 // components/AddUserModal.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import Person3OutlinedIcon from "@mui/icons-material/Person3Outlined";
 import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
@@ -32,6 +32,7 @@ interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
+  formData?: any;
 }
 
 const rolesValLabels: { label: string; value: string }[] = [
@@ -56,6 +57,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   isOpen,
   onClose,
   title,
+  formData,
 }) => {
   const [step, setStep] = useState<number>(1);
   const [formValues, setFormValues] = useState<AddUserTypes>({
@@ -65,10 +67,31 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     address: "",
     role: "",
     working_hours: defaultWorkingHours,
-    //permission: [],
   });
+
   const queryClient = useQueryClient();
   const methodss = "POST";
+
+  useEffect(() => {
+    if (!!formData) {
+      console.log({ formData });
+      setFormValues({
+        ...formData,
+        full_name: formData.full_name || "",
+        email: formData.email || "",
+        contact: formData.contact || "",
+        address: formData.address || "",
+        role: formData.is_manager
+          ? "Manager"
+          : formData.is_mca
+          ? "MCA"
+          : formData.is_pharmacist
+          ? "Pharmacist"
+          : "", // Ensure this exists in `formData`
+        working_hours: formData.working_hours || defaultWorkingHours, // Prevent undefined issues
+      });
+    }
+  }, [formData]);
 
   const postManagementEmployees = useMutation({
     mutationFn: async (value: any) => {
@@ -115,7 +138,15 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     }));
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormValues((prev) => ({ ...prev, [name]: value }));
+  // };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
@@ -176,7 +207,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
 
     // Post only when the form is complete and the user confirms submission
     postManagementEmployees.mutate(
-      { formData: payload, method: methodss ? "PUT" : "POST" },
+      { formData: payload, method: formData?.id ? "PUT" : "POST" },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["management"] });
@@ -196,6 +227,8 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
       }
     );
   };
+
+  //console.log(formData);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-5 rounded-[1rem]">
@@ -255,7 +288,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     className="input bg-white p-2 border-2 rounded focus:outline-none"
                     type="text"
                     placeholder="Enter user name"
-                    value={formValues.full_name}
+                    value={formValues?.full_name}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -270,7 +303,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     className="input bg-white p-2 border-2 rounded focus:outline-none"
                     type="email"
                     placeholder="Enter email address"
-                    value={formValues.email}
+                    value={formValues?.email}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -285,7 +318,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     className="input bg-white p-2 border-2 rounded focus:outline-none"
                     type="text"
                     placeholder="Enter contact"
-                    value={formValues.contact}
+                    value={formValues?.contact}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -300,7 +333,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     className="input bg-white p-2 border-2 rounded focus:outline-none"
                     type="text"
                     placeholder="Enter address"
-                    value={formValues.address}
+                    value={formValues?.address}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -321,28 +354,6 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     isClearable
                   />
                 </div>
-
-                {/* <div className="flex flex-col w-3/5">
-                  <label className="text-gray-700 font-medium mb-2">
-                    Permissions
-                  </label>
-                  <CustomSelect
-                    idField="permission"
-                    nameField="permission"
-                    optionData={permissionsoptions}
-                    value={permissionsoptions.filter((option) =>
-                      formValues.permission.includes(option?.value)
-                    )}
-                    onChange={(selected) =>
-                      handleChange(
-                        "permission",
-                        selected ? selected.map((item: any) => item.value) : []
-                      )
-                    }
-                    isClearable
-                    isMulti
-                  />
-                </div> */}
               </div>
             )}
 

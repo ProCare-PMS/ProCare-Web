@@ -80,16 +80,16 @@ export default function AnalyticsTabsContent() {
           />
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0}>
+      <CustomTabPanel value={value} index={0} className={""}>
         <InventoryReports />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
+      <CustomTabPanel value={value} index={1} className={""}>
         <SalesAnalyticsPage />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
+      <CustomTabPanel value={value} index={2} className={""}>
         <PurchaseAnalyticsPage />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
+      <CustomTabPanel value={value} index={3} className={""}>
         <FinancialReporting />
       </CustomTabPanel>
     </Box>

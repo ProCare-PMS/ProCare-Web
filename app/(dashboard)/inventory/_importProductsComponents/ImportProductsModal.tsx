@@ -32,6 +32,29 @@ const ImportProductsModal = ({
     }
   };
 
+  // const handleDownload = async (fileName: string) => {
+  //   if (!fileName) {
+  //     toast.error("No file specified for download. Please try again.");
+  //     console.log("Nothing to download");
+  //     return;
+  //   }
+
+  //   const link = document.createElement("a");
+  //   link.href = `assets/Template/${fileName}.xlsx`;
+  //   try {
+  //     const response = await fetch(link.href, { method: "HEAD" });
+  //     if (!response.ok) {
+  //       toast.error("Template File not found or failed to download.");
+  //       return;
+  //     }
+  //   } catch (error) {
+  //     toast.error("Failed to connect to the server. Please try again.");
+  //     return;
+  //   }
+  //   link.download = fileName;
+  //   link.click();
+  // };
+
   const handleDownload = async (fileName: string) => {
     if (!fileName) {
       toast.error("No file specified for download. Please try again.");
@@ -39,20 +62,31 @@ const ImportProductsModal = ({
       return;
     }
 
-    const link = document.createElement("a");
-    link.href = `${baseUrl}/assets/Template/${fileName}.xlsx`;
+    const fileUrl = `/assets/Template/${fileName}.xlsx`;
+
     try {
-      const response = await fetch(link.href, { method: "HEAD" });
+      // Check if the file exists
+      const response = await fetch(fileUrl, { method: "HEAD" });
       if (!response.ok) {
-        toast.error("Template File not found or failed to download.");
-        return;
+        throw new Error("Template file not found.");
       }
+
+      // Create a temporary link element for downloading
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", `${fileName}.xlsx`);
+
+      // Append to the DOM, trigger the download, then clean up
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } catch (error) {
-      toast.error("Failed to connect to the server. Please try again.");
-      return;
+      // Handle errors
+      toast.error(
+        "Failed to download the file. Please check if the file exists."
+      );
+      console.error("Download error:", error);
     }
-    link.download = fileName;
-    link.click();
   };
 
   return (
