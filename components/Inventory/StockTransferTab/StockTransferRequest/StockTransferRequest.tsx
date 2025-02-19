@@ -1,13 +1,19 @@
-import React, { useState } from "react";
-import { Search } from "lucide-react";
+import React, { useState, ChangeEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
-import { stockTransferRequestColumns } from "@/components/Tables/stock-transfer-request-columns";
 import DataTable from "@/components/Tables/data-table";
+import { requestsColumns } from "./Columns";
+import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
+import { ArrowLeft } from "lucide-react";
 
-const StockTransferRequest = () => {
+interface Props {
+  onClose: () => void;
+}
+
+const StockTransferRequest = ({ onClose } : Props) => {
   const [page, setPage] = useState(1);
+  const [searchValues, setSearchValues] = useState<string>("");
   const { data: inventoryBranchSyncData, isLoading } = useQuery({
     queryKey: ["inventoryBranchSync", page],
     queryFn: async () =>
@@ -23,26 +29,29 @@ const StockTransferRequest = () => {
     setPage(newPage);
   };
 
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setSearchValues(event.target.value);
+  };
+
   return (
     <div className="bg-white mt shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)] p-6 rounded-[8px]">
       <div className="flex items-center  justify-between mb-6">
-        <h2 className="text-[#202224] font-semibold text-2xl">Requests</h2>
-
-        <div className="flex flex-row border-2 w-[300px] border-[#EAEBF0] rounded-xl items-center  gap-2 bg-transparent p-1">
-          <Search size={16} />
-          <input
-            type="search"
-            name="search"
-            placeholder="Search by transfer id"
-            id=""
-            className="text-sm p-1  focus:outline-none bg-transparent"
-          />
+        <div className="flex items-center gap-4">
+          <ArrowLeft onClick={onClose}  className="cursor-pointer" />
+          <h2 className="text-[#202224] font-semibold text-2xl">Requests</h2>
         </div>
+
+        <SearchFieldInput
+          value={searchValues}
+          onChange={handleSearchChange}
+          placeholder="Search by transfer id"
+        />
       </div>
 
       <DataTable
-        columns={stockTransferRequestColumns}
+        columns={requestsColumns}
         onPageChange={handlePageChange}
+        searchValue={searchValues}
         data={
           inventoryBranchSyncData || {
             results: [],
