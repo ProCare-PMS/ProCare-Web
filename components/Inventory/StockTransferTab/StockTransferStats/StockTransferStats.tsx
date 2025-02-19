@@ -9,9 +9,34 @@ interface StockTransferProps {
 const StockTransferStats = ({ isLoading }: StockTransferProps) => {
   const stockTransfer = [
     {
-      icon: "/assets/images/stock.png",
-      title: "STOCK COUNT",
+      icon: "/icons/total_transfers_icon.svg",
+      title: "TOTAL TRANSFERS",
       count: 23975,
+      bgColor: "#F4F7FE"
+    },
+    {
+      icon: "/icons/total_requests_icon.svg",
+      title: "TOTAL REQUESTS",
+      count: 23975,
+      bgColor: "#F4F7FE"
+    },
+    {
+      icon: "/icons/approved_requests_icon.svg",
+      title: "APPROVED REQUESTS",
+      count: 239,
+      bgColor: "#F3FFF6"
+    },
+    {
+      icon: "/icons/rejected.svg",
+      title: "REJECTED REQUESTS",
+      count: 275,
+      bgColor: "#FFEFEE"
+    },
+    {
+      icon: "/icons/pending_requests_icon.svg",
+      title: "PENDING REQUESTS",
+      count: 975,
+      bgColor: "#FFFAF2"
     },
   ];
   return (
@@ -26,12 +51,14 @@ const StockTransferStats = ({ isLoading }: StockTransferProps) => {
             {isLoading ? (
               <div className="w-[35px] h-[35px] bg-gray-200 rounded-full" />
             ) : (
+              <div className="rounded-full p-2 flex items-center justify-center w-10 h-10" style={{ backgroundColor: `${statItem.bgColor}` }}>
               <Image
                 src={statItem.icon}
                 alt="stock svg"
-                width={35}
-                height={35}
+                width={20}
+                height={20}
               />
+              </div>
             )}
             <div className="flex flex-col text-right mr-4">
               <span
@@ -44,7 +71,7 @@ const StockTransferStats = ({ isLoading }: StockTransferProps) => {
                 {!isLoading && statItem.title}
               </span>
               <span
-                className={`text-[#344054] text-right font-inter font-bold text-2xl ${
+                className={`text-[#2B3674] text-right font-inter font-bold text-2xl ${
                   isLoading ? "bg-gray-200 rounded h-8 w-16 mt-2 ml-auto" : ""
                 }`}
               >
