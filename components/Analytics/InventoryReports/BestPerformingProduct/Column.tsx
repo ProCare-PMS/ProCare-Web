@@ -1,10 +1,24 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 
-export const Column: ColumnDef<any>[] = [
+interface BestPerformingProductType {
+  id: string;
+  name: string;
+  category_name: string;
+  quantity: number;
+  selling_price: number;
+  total_sales: number;
+  sales_value: number;
+}
+
+export const Column: ColumnDef<BestPerformingProductType>[] = [
   {
-    accessorKey: "productName",
+    accessorKey: "name",
     header: "Product Name",
+  },
+  {
+    accessorKey: "total_sales",
+    header: "Quantity Sold",
   },
   {
     accessorKey: "performance",
@@ -13,8 +27,15 @@ export const Column: ColumnDef<any>[] = [
       <span style={{ color: "green" }}>{getValue<string>()}</span>
     ),
   },
-  {
-    accessorKey: "quantitySold",
-    header: "Quantity Sold",
-  },
 ];
+
+
+{/* 
+  {
+    accessorKey: "performance",
+    header: "Performance (%)",
+    cell: ({ getValue }) => (
+      <span style={{ color: "green" }}>{getValue<string>()}</span>
+    ),
+  },
+  */}
