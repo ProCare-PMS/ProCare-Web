@@ -26,6 +26,11 @@ export interface LoginCredentials {
   password: string;
 }
 
+
+export interface StockTransferResponse {
+  
+}
+
 export interface DashboardStatsResponse {
   daily_items_sold: number;
   daily_profit: string;

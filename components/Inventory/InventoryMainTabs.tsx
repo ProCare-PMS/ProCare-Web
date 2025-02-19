@@ -9,13 +9,19 @@ import SuppliersTab from "./SuppliersTab/SuppliersTab";
 import PurchasesTab from "./PurchasesTab/PurchasesTab";
 import ExpiryReportTab from "./ExpiryReportTab/ExpiryReportTab";
 import StockTransferTab from "./StockTransferTab/StockTransferTab";
-import { TabPanelProps } from "@/lib/Types";
+
+interface TabPanelProps {
+  children: React.ReactNode;
+  value: number;
+  index: number;
+  className?: string; // Made optional with ?
+}
 
 export default function InventoryMainTabs() {
   const [value, setValue] = React.useState(0);
 
   function CustomTabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
+    const { children, value, index, className = "", ...other } = props;
 
     return (
       <div
@@ -23,6 +29,7 @@ export default function InventoryMainTabs() {
         hidden={value !== index}
         id={`simple-tabpanel-${index}`}
         aria-labelledby={`simple-tab-${index}`}
+        className={className}
         {...other}
       >
         {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
