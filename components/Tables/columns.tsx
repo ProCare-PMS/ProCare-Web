@@ -169,6 +169,7 @@ export const dashboardTransactionColumns: ColumnDef<DashboardRecentTransactions>
     },
     {
       id: "actions",
+      header: "Actions",
       cell: ({ row }) => <ActionsCell key={row.original.id} row={row} />,
     },
   ];
