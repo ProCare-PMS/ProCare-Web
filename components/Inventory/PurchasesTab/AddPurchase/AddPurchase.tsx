@@ -204,7 +204,7 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
     if (purchaseData.length === 0) {
       SwalToaster("Please add at least one product with quantity!", "error");
       return;
-    }
+    } 
 
     try {
       for (const purchase of purchaseData) {
@@ -212,7 +212,7 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
         await addPurchaseMutation.mutateAsync(purchase);
       }
 
-      queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] });
+      queryClient.invalidateQueries({ queryKey: ["inventoryPurchases"] });
       onClose();
       SwalToaster("Purchases added successfully!", "success");
     } catch (error: any) {

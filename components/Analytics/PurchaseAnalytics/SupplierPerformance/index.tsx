@@ -17,7 +17,7 @@ function SupplierPerformanceTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
 
   //get data for the table
-  const { data: analyticsPerformanceData } = useQuery({
+  const { data: analyticsPerformanceData, isLoading } = useQuery({
     queryKey: ["purchasePerfomance"],
     queryFn: () =>
       customAxios
@@ -63,12 +63,11 @@ function SupplierPerformanceTable() {
               12 October, 2024
             </span>
           </div>
-
-          {/* <SearchFieldInput
+          <SearchFieldInput
             value={searchValues}
             onChange={handleSearchValueChange}
-          /> */}
-
+          />{" "}
+          *
           {/* <span className="iconHolder w-10 h-10">
             <Image
               src="/assets/images/filterFrame.svg"
@@ -93,13 +92,19 @@ function SupplierPerformanceTable() {
         </div>
       </div>
 
-       
-      <DashboardTable
+      <DataTable
         columns={Columns}
-        data={analyticsPerformanceData || []}
+        data={
+          analyticsPerformanceData || {
+            results: [],
+            count: 0,
+            links: { next: null, previous: null },
+            total_pages: 0,
+          }
+        }
         searchValue={searchValues}
+        isLoading={isLoading}
       />
-      
     </div>
   );
 }
