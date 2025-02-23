@@ -20,7 +20,7 @@ function BestSellingProductTable() {
     queryKey: ["bestSellingData"],
     queryFn: async () =>
       customAxios
-        .get(endpoints.analytics + "products/category-analysis/")
+        .get(endpoints.analytics + "products/best-performing/")
         .then((res) => res),
     select: (foundData) => foundData?.data || [],
   });

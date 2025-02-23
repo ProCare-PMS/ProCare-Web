@@ -28,7 +28,6 @@ const DashboardStats = ({ dashboardData, isLoading }: DashboardStatsProps) => {
     {
       title: "Items Sold",
       value: dashboardData?.daily_items_sold === 0 ? "- items" : `${dashboardData?.daily_items_sold} items`,
-      subtitle: "",
       imageSrc: dashboardData?.daily_items_sold === 0 ? "/icons/itemssoldline.png" : "/icons/Line.png",
       link: "inventory/item-sold",
       badgeText: dashboardData?.daily_sales === "0.00" ? "-" : "Decline",
@@ -86,10 +85,16 @@ const DashboardStats = ({ dashboardData, isLoading }: DashboardStatsProps) => {
       {stats.map((stat, index) => (
         <DashboardStatsCard
           key={index}
-          {...stat}
+          title={stat.title}
+          value={stat.value}
+          subtitle={stat.subtitle || ""}
           buttonIndex={index}
           showDetails={showDetails}
           onToggleDetails={handleShowDetails}
+          imageSrc={stat.imageSrc}
+          link={stat.link}
+          badgeText={stat.badgeText}
+          badgeColor={stat.badgeColor}
         />
       ))}
     </div>

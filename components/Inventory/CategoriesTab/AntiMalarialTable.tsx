@@ -1,4 +1,4 @@
-import { ArrowLeft, X } from "lucide-react";
+import { ArrowLeft, X, Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import {
   Table,
@@ -13,7 +13,7 @@ import { ProductsType } from "@/components/Tables/products-tab-columns";
 
 interface AddCategoryTableProps {
   onClose: () => void;
-  products: ProductsType[]
+  products: ProductsType[];
 }
 
 interface Product {
@@ -87,6 +87,13 @@ const AntiMalarialTable = ({ onClose, products }: AddCategoryTableProps) => {
             ))}
           </TableBody>
         </Table>
+
+        <div className="flex items-center justify-end mt-8">
+          <button className="border border-[#2648EA] text-[#2648EA] font-bold px-4 py-1 rounded-[6px] flex items-center gap-4">
+            <Plus />
+            Add Product
+          </button>
+        </div>
       </div>
     </div>
   );

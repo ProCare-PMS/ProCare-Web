@@ -12,7 +12,7 @@ function InventoryReports() {
       <div className="mt-5 flex gap-4">
         <BestPerformingProductTable />
         <UnderPerformingProductTable />
-      </div>
+      </div> 
       <StockAdjustment />
       <InventoryAgingReportTable />
     </div>
