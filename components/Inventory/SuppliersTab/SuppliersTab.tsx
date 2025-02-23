@@ -33,7 +33,7 @@ const SuppliersTab = () => {
        await customAxios.get(
         `${endpoints.inventorySupplier}?page=${page}`
       ).then((res) =>res),
-      select: (findData) => findData?.data?.results,
+      select: (findData) => findData?.data,
 
   });
 
@@ -51,7 +51,7 @@ const SuppliersTab = () => {
 
   return (
     <>
-      <div className="">
+    <div>
         <SuppliersTabStats
           stats={inventorySupplierData?.results}
           isLoading={isLoading}
