@@ -7,38 +7,54 @@ interface SuppliersProps {
   isLoading: boolean;
 }
 
-const SuppliersTabStats = ({ stats, isLoading }: SuppliersProps) => {
+const SuppliersTabStats = ({ stats = [], isLoading }: SuppliersProps) => {
   // Total suppliers count
-  const totalSuppliers = stats?.length || 0;
+  // Ensure stats is always an array
+  if (!Array.isArray(stats)) {
+    stats = [];
+  }
 
-  // Total supplies (quantity)
-  const totalSuppliesQuantity = stats.reduce(
-    (sum, supplier) => sum + supplier.total_purchase_quantity,
-    0
-  );
+  // Total suppliers count
+  const totalSuppliers = stats.length || 0;
 
-   // Find top supplier
-   const topSupplier =
-   stats.length > 0
-     ? stats.reduce((max, supplier) =>
-         supplier.total_purchase_quantity > max.total_purchase_quantity
-           ? supplier
-           : max
-       )
-     : null;
+  // Total supplies (quantity) with a fallback
+  const totalSuppliesQuantity = stats.length
+    ? stats.reduce(
+        (sum, supplier) => sum + (supplier.total_purchase_quantity || 0),
+        0
+      )
+    : 0;
 
- // Find top supply day
- const supplyDayCounts: Record<string, number> = {};
+  // Find top supplier safely
+  const topSupplier = stats.length
+    ? stats.reduce((max, supplier) =>
+        (supplier.total_purchase_quantity || 0) >
+        (max.total_purchase_quantity || 0)
+          ? supplier
+          : max
+      )
+    : null;
 
- stats.forEach((supplier) => {
-   const dayOfWeek = new Date(supplier.last_purchase_date).toLocaleDateString("en-US", { weekday: "long" });
-   supplyDayCounts[dayOfWeek] = (supplyDayCounts[dayOfWeek] || 0) + 1;
- });
+  // Find top supply day
+  const supplyDayCounts: Record<string, number> = {};
 
- const topSupplyDay = Object.keys(supplyDayCounts).reduce((a, b) =>
-   supplyDayCounts[a] > supplyDayCounts[b] ? a : b
- );
+  stats.forEach((supplier) => {
+    if (supplier.last_purchase_date) {
+      const dayOfWeek = new Date(
+        supplier.last_purchase_date
+      ).toLocaleDateString("en-US", {
+        weekday: "long",
+      });
+      supplyDayCounts[dayOfWeek] = (supplyDayCounts[dayOfWeek] || 0) + 1;
+    }
+  });
 
+  const topSupplyDay =
+    Object.keys(supplyDayCounts).length > 0
+      ? Object.keys(supplyDayCounts).reduce((a, b) =>
+          supplyDayCounts[a] > supplyDayCounts[b] ? a : b
+        )
+      : "-";
   const statsCounts = [
     {
       icon: "/assets/images/supplier1.png",
