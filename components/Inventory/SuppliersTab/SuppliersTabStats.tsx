@@ -9,29 +9,52 @@ interface SuppliersProps {
 
 const SuppliersTabStats = ({ stats = [], isLoading }: SuppliersProps) => {
   // Total suppliers count
-  const totalSuppliers = stats?.length || 0;
-
-  const topSupplier = stats.length > 0
-  ? stats.reduce((max, supplier) =>
-      (supplier.total_purchase_quantity || 0) > (max.total_purchase_quantity || 0)
-        ? supplier
-        : max
-    )
-  : null;
-
-const supplyDayCounts: Record<string, number> = {};
-
-stats.forEach((supplier) => {
-  if (supplier.last_purchase_date) {
-    const dayOfWeek = new Date(supplier.last_purchase_date).toLocaleDateString("en-US", { weekday: "long" });
-    supplyDayCounts[dayOfWeek] = (supplyDayCounts[dayOfWeek] || 0) + 1;
+  // Ensure stats is always an array
+  if (!Array.isArray(stats)) {
+    stats = [];
   }
-});
 
-const topSupplyDay = Object.keys(supplyDayCounts).reduce((a, b) =>
-  supplyDayCounts[a] > supplyDayCounts[b] ? a : b
-, "");
+  // Total suppliers count
+  const totalSuppliers = stats.length || 0;
 
+  // Total supplies (quantity) with a fallback
+  const totalSuppliesQuantity = stats.length
+    ? stats.reduce(
+        (sum, supplier) => sum + (supplier.total_purchase_quantity || 0),
+        0
+      )
+    : 0;
+
+  // Find top supplier safely
+  const topSupplier = stats.length
+    ? stats.reduce((max, supplier) =>
+        (supplier.total_purchase_quantity || 0) >
+        (max.total_purchase_quantity || 0)
+          ? supplier
+          : max
+      )
+    : null;
+
+  // Find top supply day
+  const supplyDayCounts: Record<string, number> = {};
+
+  stats.forEach((supplier) => {
+    if (supplier.last_purchase_date) {
+      const dayOfWeek = new Date(
+        supplier.last_purchase_date
+      ).toLocaleDateString("en-US", {
+        weekday: "long",
+      });
+      supplyDayCounts[dayOfWeek] = (supplyDayCounts[dayOfWeek] || 0) + 1;
+    }
+  });
+
+  const topSupplyDay =
+    Object.keys(supplyDayCounts).length > 0
+      ? Object.keys(supplyDayCounts).reduce((a, b) =>
+          supplyDayCounts[a] > supplyDayCounts[b] ? a : b
+        )
+      : "-";
   const statsCounts = [
     {
       icon: "/assets/images/supplier1.png",
