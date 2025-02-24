@@ -78,6 +78,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onFilterChange }) => {
               <option value="">Select unit</option>
               <option value="Pack">Pack</option>
               <option value="Strip">Strip</option>
+              <option value="Tablet">Tablet</option>
             </select>
           </div>
 
