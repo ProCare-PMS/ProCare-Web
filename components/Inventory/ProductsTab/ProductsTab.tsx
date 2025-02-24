@@ -13,8 +13,6 @@ const ProductsTab = () => {
     select: (findData) => findData?.data,
   });
 
-  console.log(dashboardData);
-
   return (
     <div className="">
       {" "}

@@ -124,18 +124,6 @@ const ProductsTabHeader: React.FC = () => {
     setSearchValues(event.target.value);
   };
 
-  const showAddProductsModal = () => {
-    setIsModalOpen(true);
-    setShowImport(false);
-    setShowMenu(false);
-  };
-
-  const showImportModal = () => {
-    setShowImport(true);
-    setIsModalOpen(false);
-    setShowMenu(false);
-  };
-
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setShowMenu(false);
