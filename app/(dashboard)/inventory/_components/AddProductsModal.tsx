@@ -188,6 +188,7 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
     postProductMutation.mutate(submitData, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboardData"] });
         setModal();
         SwalToaster("Product added successfully!", "success");
       },
