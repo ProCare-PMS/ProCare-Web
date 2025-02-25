@@ -71,6 +71,7 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["inventorySupplier"] });
+          queryClient.invalidateQueries({ queryKey: ["inventorySupplier"] });
           SwalToaster("Supplier Created Successfully", "success");
           onClose();
         },
