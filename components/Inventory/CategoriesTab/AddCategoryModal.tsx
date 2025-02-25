@@ -71,6 +71,7 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["inventoryCategories"] });
+          queryClient.invalidateQueries({ queryKey: ["dashboardData"] });
           SwalToaster("Category Created Successfully", "success");
           onClose();
         },

@@ -37,7 +37,6 @@ const SuppliersTab = () => {
 
   });
 
-  console.log(inventorySupplierData);
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
