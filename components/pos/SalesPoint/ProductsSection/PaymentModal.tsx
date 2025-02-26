@@ -153,15 +153,11 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
 
     finalizePaymentMutation.mutate(salesItemsData, {
       onSuccess: () => {
-        // Clear localStorage first to prevent any race conditions
         clearAllData();
-        // Invalidate queries to refresh data
-        queryClient.invalidateQueries({ queryKey: ["recentTransactionsData"] }); //recent transactions table key
+        queryClient.invalidateQueries({ queryKey: ["recentTransactionsData"] }); 
 
-        // Close the modal
         onClose();
 
-        // Reload the page to ensure all components are reset
         window.location.reload();
 
         // Show success message
@@ -186,7 +182,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
+       
       />
       <div
         className="relative bg-white rounded-xl shadow-xl w-[800px] h-[600px] flex flex-col"

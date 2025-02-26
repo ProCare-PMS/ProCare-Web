@@ -147,25 +147,41 @@ export const dashboardTransactionColumns: ColumnDef<DashboardRecentTransactions>
     {
       accessorKey: "type",
       header: "Type",
-      cell: ({ row }) => (
-        <p className="rounded-3xl font-inter text-sm font-normal">
-          <span
-            className={clsx(
-              "rounded-3xl font-inter text-sm font-normal px-3 py-2",
-              {
-                "text-[#219653] bg-[#21965314]":
-                  row.original.payment_methods.includes("Bank"),
-                "text-[#FFA70B] bg-[#FFA70B14]":
-                  row.original.payment_methods.includes("Momo"),
-                "text-[#D34053] bg-[#D3405314]":
-                  row.original.payment_methods.includes("Cash"),
-              }
-            )}
-          >
-            {row.original.payment_methods.join(", ")}
-          </span>
-        </p>
-      ),
+      cell: ({ row }) => {
+        // Map payment methods to user-friendly names
+        const paymentMethods = row.original.payment_methods.map((method) => {
+          switch (method) {
+            case "mobile_money":
+              return "Momo";
+            case "credit_card":
+              return "Bank";
+            case "Cash":
+              return "Cash";
+            default:
+              return method; // Fallback for unknown methods
+          }
+        });
+    
+        return (
+          <p className="rounded-3xl font-inter text-sm font-normal">
+            <span
+              className={clsx(
+                "rounded-3xl font-inter text-sm font-normal px-3 py-2",
+                {
+                  "text-[#219653] bg-[#21965314]":
+                    row.original.payment_methods.includes("credit_card"),
+                  "text-[#FFA70B] bg-[#FFA70B14]":
+                    row.original.payment_methods.includes("mobile_money"),
+                  "text-[#D34053] bg-[#D3405314]":
+                    row.original.payment_methods.includes("Cash"),
+                }
+              )}
+            >
+              {paymentMethods.join(", ")}
+            </span>
+          </p>
+        );
+      },
     },
     {
       id: "actions",
