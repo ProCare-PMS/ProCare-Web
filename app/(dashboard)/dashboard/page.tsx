@@ -75,7 +75,6 @@ const DashbaordHomePage = () => {
         />
       </div>
 
-      {/* <DashboardMainTable /> */}
     </div>
   );
 };

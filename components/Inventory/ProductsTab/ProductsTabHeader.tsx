@@ -36,6 +36,7 @@ const ProductsTabHeader: React.FC = () => {
   const [showImport, setShowImport] = useState<boolean>(false);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const filterRef = useRef<HTMLDivElement | null>(null);
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<FilterState>({
     unit: "",
@@ -128,6 +129,9 @@ const ProductsTabHeader: React.FC = () => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setShowMenu(false);
     }
+    if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+      setShowFilters(false);
+    }
   };
 
   const handlePageChange = (newPage: number) => {
@@ -141,6 +145,17 @@ const ProductsTabHeader: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Functions to handle modal opening with dropdown closing
+  const openAddProductModal = () => {
+    setIsModalOpen(true);
+    setShowMenu(false);
+  };
+
+  const openImportModal = () => {
+    setShowImport(true);
+    setShowMenu(false);
+  };
 
   return (
     <div>
@@ -165,15 +180,25 @@ const ProductsTabHeader: React.FC = () => {
             </Button>
 
             {showMenu && (
-              <div className="bg-white absolute w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl">
+              <div 
+                className="bg-white absolute w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300"
+              >
                 <ul className="flex flex-col text-[#344054] items-center divide-y divide-gray-300">
-                  <li className="px-3 py-2 text-sm">
-                    <button type="button" onClick={() => setIsModalOpen(true)}>
+                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
+                    <button 
+                      type="button" 
+                      onClick={openAddProductModal}
+                      className="w-full text-left"
+                    >
                       Add Individually
                     </button>
                   </li>
-                  <li className="px-3 py-2 text-sm">
-                    <button type="button" onClick={() => setShowImport(true)}>
+                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
+                    <button 
+                      type="button" 
+                      onClick={openImportModal}
+                      className="w-full text-left"
+                    >
                       Import Products
                     </button>
                   </li>
@@ -182,16 +207,18 @@ const ProductsTabHeader: React.FC = () => {
             )}
           </div>
 
-          <div className="relative">
+          <div className="relative" ref={filterRef}>
             <div
-              className="border p-2 cursor-pointer border-[#494A50] rounded-[12px]"
+              className="border p-2 cursor-pointer border-[#494A50] rounded-[12px] hover:bg-gray-50 transition-colors"
               onClick={toggleFilters}
             >
               <SlidersVertical className="text-[#494A50]" />
             </div>
 
             {showFilters && (
-              <FilterDropdown onFilterChange={handleFilterChange} />
+              <div className="absolute top-2 right-0 z-20 animate-in fade-in slide-in-from-top-2 duration-300">
+                <FilterDropdown onFilterChange={handleFilterChange} />
+              </div>
             )}
           </div>
         </div>

@@ -175,7 +175,6 @@ const DashbaordChart = ({ data }: DashbaordChartProps) => {
       </div>
     </Card>
   );
-}
+};
 
-
-export default DashbaordChart
+export default DashbaordChart;
