@@ -3,78 +3,93 @@
 import { useState, useRef, useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import AddUserModal from "../../Modals/AddUserModal";
 import ActivateDeactivateUserModal from "@/components/Modals/ActivateDeactivateModal";
 import { daysOfWeek } from "./Data";
 
-export const Columns: ColumnDef<any>[] = [
-  {
-    accessorKey: "full_name",
-    header: "User Name",
-  },
-  {
-    accessorKey: "email",
-    header: "Email Address",
-  },
-  {
-    accessorKey: "contact",
-    header: "Contact",
-  },
-  {
-    accessorKey: "role",
-    header: "Role",
-  },
-  {
-    accessorKey: "working_hours",
-    header: "Working Days",
-    cell: ({ getValue }) => {
-      // Sunday to Saturday
-      const workingHours = getValue() as { day: string }[]; // Should be an array of objects with a "day" key
-
-      return (
-        <div style={{ display: "flex", gap: "4px" }}>
-          {daysOfWeek.map((day, index) => {
-            const isWorkingDay = workingHours?.some((workingHour) => {
-              if (workingHour?.day === day.label) {
-                return day.value;
-              }
-            });
-
-            return (
-              <div
-                key={index}
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  borderRadius: "50%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: isWorkingDay ? "blue" : "gray",
-                  color: isWorkingDay ? "white" : "black",
-                  border: isWorkingDay ? "2px solid blue" : "1px solid gray",
-                }}
-              >
-                {day.value}
-              </div>
-            );
-          })}
-        </div>
-      );
+export const Columns: any = ({
+  handleEdit,
+  handleActivate,
+}: {
+  handleEdit: any;
+  handleActivate: any;
+}) => {
+  const columns: ColumnDef<any>[] = [
+    {
+      accessorKey: "full_name",
+      header: "User Name",
     },
-  },
-
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      console.log("row originsl", row.original);
-      return <ActionMenu formData={row.original} />;
+    {
+      accessorKey: "email",
+      header: "Email Address",
     },
-  },
-];
+    {
+      accessorKey: "contact",
+      header: "Contact",
+    },
+    {
+      accessorKey: "role",
+      header: "Role",
+    },
+    {
+      accessorKey: "working_hours",
+      header: "Working Days",
+      cell: ({ getValue }) => {
+        // Sunday to Saturday
+        const workingHours = getValue() as { day: string }[]; // Should be an array of objects with a "day" key
 
-const ActionMenu = (formData: any) => {
+        return (
+          <div style={{ display: "flex", gap: "4px" }}>
+            {daysOfWeek.map((day, index) => {
+              const isWorkingDay = workingHours?.some((workingHour) => {
+                if (workingHour?.day === day.label) {
+                  return day.value;
+                }
+              });
+
+              return (
+                <div
+                  key={index}
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: isWorkingDay ? "blue" : "gray",
+                    color: isWorkingDay ? "white" : "black",
+                    border: isWorkingDay ? "2px solid blue" : "1px solid gray",
+                  }}
+                >
+                  {day.value}
+                </div>
+              );
+            })}
+          </div>
+        );
+      },
+    },
+
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        console.log("row originsl", row.original);
+        return (
+          <ActionMenu
+            formData={row.original}
+            handleActivate={handleActivate}
+            handleMenuEdit={handleEdit}
+          />
+        );
+      },
+    },
+  ];
+
+  return columns;
+};
+
+const ActionMenu = ({ formData, handleMenuEdit, handleActivate }: any) => {
   const [isOpen, setIsOpen] = useState(false); // Toggle popup visibility
   const menuRef = useRef<HTMLDivElement>(null); // Reference to the action menu div
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -83,6 +98,7 @@ const ActionMenu = (formData: any) => {
     "deactivate"
   ); // For managing modal type
 
+  console.log({ handleMenuEdit });
   // Toggle popup visibility
   const togglePopup = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent click from propagating and triggering other handlers
@@ -116,7 +132,6 @@ const ActionMenu = (formData: any) => {
   };
 
   const handleModalSubmit = (password: string) => {
-    console.log("Password entered:", password);
     handleCloseModal(); // Close the modal after submission
   };
 
@@ -168,7 +183,7 @@ const ActionMenu = (formData: any) => {
                 cursor: "pointer",
                 borderBottom: "1px solid #eee",
               }}
-              onClick={handleEdit}
+              onClick={() => handleMenuEdit(formData)}
             >
               Edit Details
             </li>
@@ -183,15 +198,6 @@ const ActionMenu = (formData: any) => {
             </li>
           </ul>
         </div>
-      )}
-
-      {!!formData && (
-        <AddUserModal
-          isOpen={showModal}
-          onClose={handleCloseModal}
-          title="Edit"
-          formData={formData}
-        />
       )}
 
       {/* Reusable Modal for Activation/Deactivation */}

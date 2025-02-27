@@ -8,12 +8,13 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+//import storage from "redux-persist/lib/storage";
 import authReducer from "./authSlice";
 import facilityReducer from "./facilitySlice";
 import personalInforResponseReducer from "./personalInformationResponse";
 import firstLoginReducer from "./firstLoginSlice";
 import accountTypeReducer from "./accountTypeSlice";
+import storage from "@/lib/persistStorage";
 
 const persistConfig = {
   key: "root",

@@ -37,7 +37,7 @@ interface DataTableProps<TData, TValue> {
   onPageChange?: (page: number) => void;
 }
 
-function DataTable<TData, TValue>({ 
+function DataTable<TData, TValue>({
   columns,
   data,
   searchValue = "",
@@ -80,7 +80,7 @@ function DataTable<TData, TValue>({
   };
 
   const handleNextPage = () => {
-    if (currentPage < data.total_pages) {
+    if (currentPage < data?.total_pages) {
       const newPage = currentPage + 1;
       setCurrentPage(newPage);
       onPageChange?.(newPage);
@@ -106,12 +106,12 @@ function DataTable<TData, TValue>({
     <div className="!rounded-[6px]">
       <Table>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {table?.getHeaderGroups()?.map((headerGroup) => (
             <TableRow
               className="bg-[#F1F4F9] font-inter p-1 w-full !rounded-[60px] hover:bg-[#dbdee2]"
-              key={headerGroup.id}
+              key={headerGroup?.id}
             >
-              {headerGroup.headers.map((header) => (
+              {headerGroup?.headers?.map((header) => (
                 <TableHead
                   className="font-bold text-sm text-[#202224] cursor-pointer"
                   key={header.id}
@@ -152,10 +152,7 @@ function DataTable<TData, TValue>({
                     key={cell.id}
                     className="font-inter text-[#202224] text-sm font-normal"
                   >
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
               </TableRow>
@@ -173,7 +170,7 @@ function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      
+
       {!isLoading && (
         <div className="flex items-center justify-end space-x-2 py-4">
           <button
@@ -186,14 +183,14 @@ function DataTable<TData, TValue>({
           <button
             className="border border-[#D0D5DD] font-inter py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleNextPage}
-            disabled={currentPage === data.total_pages}
+            disabled={currentPage === data?.total_pages}
           >
             Next
           </button>
           <div className="flex justify-between items-center py-2">
             <p className="text-nowrap text-[#344054] font-inter font-medium text-sm">
-              {data.total_pages > 0
-                ? `Page ${currentPage} of ${data.total_pages}`
+              {data?.total_pages > 0
+                ? `Page ${currentPage} of ${data?.total_pages}`
                 : "No results found"}
             </p>
           </div>
@@ -204,4 +201,3 @@ function DataTable<TData, TValue>({
 }
 
 export default DataTable;
-

@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 function VerificationSuccess() {
   return (
@@ -21,6 +22,16 @@ function VerificationSuccess() {
           </h1>
         </div>
       </header>
+      <main className="text-center my-10">
+        <a
+          href="/login"
+          // target="_blank"
+          // rel="noopener noreferrer"
+          className="text-white bg-blue-500 p-3 rounded-[5px] hover:bg-blue-600 transition-colors duration-300"
+        >
+          Please Click on this link and login
+        </a>
+      </main>
     </div>
   );
 }
