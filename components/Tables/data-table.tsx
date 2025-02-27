@@ -9,7 +9,14 @@ import {
   useReactTable,
   SortingState,
 } from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface BackendPaginationData {
   count: number;
@@ -57,9 +64,12 @@ function DataTable<TData, TValue>({
     <div className="rounded-md">
       <Table>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-gray-100 hover:bg-gray-200">
-              {headerGroup.headers.map((header) => (
+          {table?.getHeaderGroups()?.map((headerGroup) => (
+            <TableRow
+              className="bg-[#F1F4F9] font-inter p-1 w-full !rounded-[60px] hover:bg-[#dbdee2]"
+              key={headerGroup?.id}
+            >
+              {headerGroup?.headers?.map((header) => (
                 <TableHead
                   key={header.id}
                   className="font-bold text-sm text-gray-900 cursor-pointer"
@@ -67,8 +77,15 @@ function DataTable<TData, TValue>({
                 >
                   {header.isPlaceholder ? null : (
                     <div className="flex items-center">
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                      {header.column.getIsSorted() === "desc" ? " 🔽" : header.column.getIsSorted() ? " 🔼" : ""}
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      {header.column.getIsSorted() === "desc"
+                        ? " 🔽"
+                        : header.column.getIsSorted()
+                        ? " 🔼"
+                        : ""}
                     </div>
                   )}
                 </TableHead>
@@ -92,7 +109,10 @@ function DataTable<TData, TValue>({
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="text-sm text-gray-700">
+                  <TableCell
+                    key={cell.id}
+                    className="font-inter text-[#202224] text-sm font-normal"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -100,7 +120,10 @@ function DataTable<TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="text-center text-gray-500">
+              <TableCell
+                colSpan={columns.length}
+                className="text-center text-gray-500"
+              >
                 No results found.
               </TableCell>
             </TableRow>
@@ -118,15 +141,19 @@ function DataTable<TData, TValue>({
             Previous
           </button>
           <button
-            className="border border-gray-300 py-2 px-4 rounded-md text-gray-700 font-medium text-sm disabled:opacity-50"
+            className="border border-[#D0D5DD] font-inter py-2 px-4 rounded-[6px] text-[#344054] font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === data.total_pages}
+            disabled={currentPage === data?.total_pages}
           >
             Next
           </button>
-          <p className="text-gray-700 text-sm">
-            {data.total_pages > 0 ? `Page ${currentPage} of ${data.total_pages}` : "No results"}
-          </p>
+          <div className="flex justify-between items-center py-2">
+            <p className="text-nowrap text-[#344054] font-inter font-medium text-sm">
+              {data?.total_pages > 0
+                ? `Page ${currentPage} of ${data?.total_pages}`
+                : "No results found"}
+            </p>
+          </div>
         </div>
       )}
     </div>
