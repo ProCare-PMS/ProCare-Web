@@ -28,7 +28,7 @@ interface DashbaordChartProps {
   data: TopCategory[];
 }
 
-export function DashbaordChart({ data }: DashbaordChartProps) {
+const DashbaordChart = ({ data }: DashbaordChartProps) => {
   // Predefined colors for consistency
   const colors = ["#0A77FF", "#2648EA", "#D3E7FF"];
 
@@ -175,4 +175,6 @@ export function DashbaordChart({ data }: DashbaordChartProps) {
       </div>
     </Card>
   );
-}
+};
+
+export default DashbaordChart;

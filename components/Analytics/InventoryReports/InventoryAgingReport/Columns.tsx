@@ -10,6 +10,7 @@ import InventoryAgingReportsDetails, {
   AgingReportType,
 } from "./InventoryAgingReportsDetails";
 
+
 interface ActionsCellProps {
   row: {
     original: AgingReportType;
@@ -47,14 +48,14 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
   );
 };
 
-export const Columns: ColumnDef<any>[] = [
+export const Columns: ColumnDef<AgingReportType>[] = [
   {
     accessorKey: "product_name",
     header: "Product Name",
     size: 900,
   },
   {
-    accessorKey: "batch_id",
+    accessorKey: "batch_id", 
     header: "Batch ID",
     size: 100,
   },
@@ -76,24 +77,35 @@ export const Columns: ColumnDef<any>[] = [
     cell: ({ row }) => {
       const expiryStatus = row.getValue("expiry_status");
 
-      // Type guard to check if expiryStatus is a string
       if (typeof expiryStatus !== "string") {
         return <div className="text-black">Unknown</div>;
       }
 
-      let color = "text-black"; // default color
+      // Extract number of months if present
+      const monthsMatch = expiryStatus.match(/(\d+)\s*Months?/);
+      const months = monthsMatch ? parseInt(monthsMatch[1]) : null;
 
-      if (expiryStatus.includes("week")) {
-        color = "text-red-500";
-      } else if (expiryStatus.includes("month")) {
-        color = "text-yellow-500";
-      } else if (expiryStatus.includes("year")) {
-        color = "text-green-500";
-      } else if (expiryStatus === "Expired") {
-        color = "text-red-500";
+      let colorClass = "";
+
+      if (expiryStatus === "Expired") {
+        colorClass = "text-red-500 bg-red-50";
+      } else if (months !== null) {
+        if (months <= 3 && months >= 2) {
+          colorClass = "text-yellow-500 bg-yellow-50";
+        } else if (months >= 4 && months <= 7) {
+          colorClass = "text-blue-500 bg-blue-50";
+        } else if (months >= 8) {
+          colorClass = "text-green-500 bg-green-50";
+        } else if (months < 2) {
+          colorClass = "text-red-500 bg-red-50";
+        }
       }
 
-      return <div className={clsx(color)}>{expiryStatus}</div>;
+      return (
+        <div className={clsx("px-3 py-2  rounded-[8px] inline-block", colorClass)}>
+          {expiryStatus}
+        </div>
+      );
     },
   },
   {

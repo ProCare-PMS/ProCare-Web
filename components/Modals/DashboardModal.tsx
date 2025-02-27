@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { X } from "lucide-react";
-import { DashboardTransactions, dashboardTransactions } from "@/type";
 import clsx from "clsx";
-import { DashbaordModalType, DashboardRecentTransactions } from "../Tables/columns";
+import { DashboardRecentTransactions } from "../Tables/columns";
 
 type ModalProps = {
   setModal: (value: boolean) => void;
@@ -21,27 +20,41 @@ const DashboardModal = ({ setModal, item, title }: ModalProps) => {
     };
   }, []);
 
-  const totalAmount = item?.saleitem_set.reduce(
+  const totalAmount = item?.saleitem_set?.reduce(
     (sum, item) => sum + item.total_item_price,
     0
-  )
+  );
 
-  const formattedDate = item?.created_at 
-  ? new Date(item.created_at).toLocaleDateString("en-US", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-    })
-  : "";
+  const formattedDate = useMemo(() => {
+    return item?.created_at
+      ? new Date(item.created_at).toLocaleDateString("en-US", {
+          month: "2-digit",
+          day: "2-digit",
+          year: "numeric",
+        })
+      : "";
+  }, [item?.created_at]);
 
-const formattedTime = item?.created_at
-  ? new Date(item.created_at).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    })
-  : "";
-  const truncatedId = item?.id ? `${item.id.slice(0, 5)}...` : "";
+  const formattedTime = useMemo(() => {
+    return item?.created_at
+      ? new Date(item.created_at).toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+      : "";
+  }, [item?.created_at]);
+
+  const truncatedId = useMemo(() => {
+    return item?.id ? `${item.id.slice(0, 5)}...` : "";
+  }, [item?.id]);
+
+  const statusClasses: Record<string, string> = {
+    completed: "text-[#219653] bg-[#21965314]",
+    pending: "text-[#FFA70B] bg-[#FFA70B14]",
+    failed: "text-[#D34053] bg-[#D3405314]",
+    defaultStatus: "text-gray-500 bg-gray-200", // Fallback class
+  };
 
   return (
     <div className="w-screen h-screen z-20 bg-opacity-30 bg-slate-500 top-0 right-0 fixed flex items-center justify-center">
@@ -77,24 +90,24 @@ const formattedTime = item?.created_at
             </span>
           </div>
           {item?.employee && (
-            <div className="grid gap-2">
-              <span className="text-[#858C95] text-sm font-normal">
-                Items Sold
-              </span>
-              <span className="text-[#202224] text-base font-normal">
-                {item?.employee}
-              </span>
-            </div>
-          )}
-          {item?.employee && (
-            <div className="grid gap-2">
-              <span className="text-[#858C95] text-sm font-normal">
-                Items Returned
-              </span>
-              <span className="text-[#202224] text-base font-normal">
-                {item?.employee}
-              </span>
-            </div>
+            <>
+              <div className="grid gap-2">
+                <span className="text-[#858C95] text-sm font-normal">
+                  Items Sold
+                </span>
+                <span className="text-[#202224] text-base font-normal">
+                  {item.employee}
+                </span>
+              </div>
+              <div className="grid gap-2">
+                <span className="text-[#858C95] text-sm font-normal">
+                  Items Returned
+                </span>
+                <span className="text-[#202224] text-base font-normal">
+                  {item.employee}
+                </span>
+              </div>
+            </>
           )}
 
           <div className="grid gap-1">
@@ -106,19 +119,15 @@ const formattedTime = item?.created_at
           <div className="grid gap-1">
             <span>AMOUNT</span>
             <span className="text-[#202224] text-base font-normal">
-            GH₵{totalAmount}
+              GH₵{totalAmount?.toFixed(2)}
             </span>
           </div>
           <div className="grid gap-1">
             <span>TYPE</span>
             <span
-              className={clsx(
-                " rounded-3xl w-[80%]  py-1 px-3 font-inter text-sm font-normal",
-                {
-                  "text-[#219653] bg-[#21965314]": item?.status === "completed",
-                  "text-[#D34053] bg-[#D3405314]": item?.status === "completed",
-                  "text-[#FFA70B] bg-[#FFA70B14]": item?.status === "completed",
-                }
+               className={clsx(
+                "rounded-3xl w-[80%] py-1 px-3 font-inter text-sm font-normal",
+                statusClasses[item?.status ?? "defaultStatus"]
               )}
             >
               {item?.status}
@@ -128,7 +137,7 @@ const formattedTime = item?.created_at
             <div className="grid gap-1">
               <span>STATUS</span>
               <span className="text-[#202224] text-base font-normal">
-                {item?.status}
+                {item?.status ?? "Unknown"}
               </span>
             </div>
           )}

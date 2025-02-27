@@ -53,10 +53,6 @@ export const stockTransferRequestColumns: ColumnDef<StockTransferRequestsTable>[
       header: "Reviewed By",
     },
     {
-      accessorKey: "pharmacyId",
-      header: "Contact",
-    },
-    {
       accessorKey: "location",
       header: "Contact",
     },

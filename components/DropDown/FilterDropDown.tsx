@@ -60,7 +60,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="bg-white absolute top-12 py-8 px-6 w-[300px] shadow-md hover:shadow-lg right-4 z-20 rounded-[8px]">
+    <div className="bg-white absolute top-6 py-8 px-6 w-[300px] shadow-md hover:shadow-lg right-4 z-20 rounded-[8px]">
       <h3 className="font-semibold font-inter mb-4 text-[#344054] text-sm">Filter</h3>
       <hr className="text-[#F0F0F0]" />
       <form onSubmit={handleApply}>
@@ -78,6 +78,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onFilterChange }) => {
               <option value="">Select unit</option>
               <option value="Pack">Pack</option>
               <option value="Strip">Strip</option>
+              <option value="Tablet">Tablet</option>
             </select>
           </div>
 

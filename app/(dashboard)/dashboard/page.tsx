@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 import DashboardNote from "./_components/DashboardNote";
 import DashboardStats from "@/components/Dashboard/DashboardStats";
-import { DashboardSubTables } from "@/components/Dashboard/DashboardSubTables";
+import  DashboardSubTables  from "@/components/Dashboard/DashboardSubTables";
 import { dashboardTransactionColumns } from "@/components/Tables/columns";
 import DashboardTableHeader from "@/components/Dashboard/DashboardTableHeader";
-import { DashbaordChart } from "@/components/Dashboard/DashboardChart";
-import { DashboardLowStockAlert } from "@/components/Dashboard/DashboardLowStock";
+import  DashbaordChart  from "@/components/Dashboard/DashboardChart";
+import DashboardLowStockAlert  from "@/components/Dashboard/DashboardLowStock";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
@@ -26,7 +26,6 @@ const DashbaordHomePage = () => {
     select: (findData) => findData?.data,
   });
 
-  console.log(dashboardData)
 
   const { data: recentTransactionsData } = useQuery({
     queryKey: ["recentTransactionsData", page],
@@ -37,7 +36,6 @@ const DashbaordHomePage = () => {
     select: (findData) => findData?.data,
   });
 
-  //console.log(recentTransactionsData);
 
   return (
     <div className="container grid gap-y-8 pb-6 px-6 pt-7 bg-[#F5F5F5]">
@@ -55,7 +53,7 @@ const DashbaordHomePage = () => {
         />
         <DashboardLowStockAlert
           title="Low Stock Alert"
-          data={[]}
+          data={dashboardData?.low_stock_products_list}
           isLoading={isLoading}
         />
         <DashbaordChart data={dashboardData?.top_categories || []} />
@@ -77,7 +75,6 @@ const DashbaordHomePage = () => {
         />
       </div>
 
-      {/* <DashboardMainTable /> */}
     </div>
   );
 };

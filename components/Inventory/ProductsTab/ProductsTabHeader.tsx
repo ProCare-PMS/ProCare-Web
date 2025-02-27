@@ -8,7 +8,10 @@ import AddProducts from "@/app/(dashboard)/inventory/_components/AddProductsModa
 import ImportProductsModal from "@/app/(dashboard)/inventory/_importProductsComponents/ImportProductsModal";
 import { Button } from "@/components/ui/button";
 import FilterDropdown from "@/components/DropDown/FilterDropDown";
-import { productsTabColumns, ProductsType } from "@/components/Tables/products-tab-columns";
+import {
+  productsTabColumns,
+  ProductsType,
+} from "@/components/Tables/products-tab-columns";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
@@ -33,35 +36,77 @@ const ProductsTabHeader: React.FC = () => {
   const [showImport, setShowImport] = useState<boolean>(false);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const filterRef = useRef<HTMLDivElement | null>(null);
   const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState<FilterState>({
+    unit: "",
+    category: "",
+    reorderLevel: "",
+    expiryDate: "",
+    status: "",
+  });
+
+  const handleFilterChange = (newFilters: FilterState) => {
+    setFilters(newFilters);
+  };
 
   const { data: inventoryProductsData, isLoading } = useQuery({
     queryKey: ["inventoryProducts", page],
     queryFn: async () => {
-      const response = await customAxios.get(`${endpoints.inventoryProduct}?page=${page}`);
-      
+      const response = await customAxios.get(
+        `${endpoints.inventoryProduct}?page=${page}`
+      );
+      return response.data;
+    },
+    select: (data) => {
+      let filteredResults = data.results;
+
+      if (filters.unit) {
+        filteredResults = filteredResults.filter(
+          (product: ProductsType) => product.unit === filters.unit
+        );
+      }
+      if (filters.category) {
+        filteredResults = filteredResults.filter(
+          (product: ProductsType) => product.category === filters.category
+        );
+      }
+      if (filters.reorderLevel) {
+        filteredResults = filteredResults.filter(
+          (product: ProductsType) =>
+            product.reorder_level === parseInt(filters.reorderLevel)
+        );
+      }
+      if (filters.expiryDate) {
+        filteredResults = filteredResults.filter((product: ProductsType) => {
+          const productExpiryDate = new Date(product.expiry_date);
+          const selectedExpiryDate = new Date(filters.expiryDate);
+          return (
+            productExpiryDate.toISOString().split("T")[0] ===
+            selectedExpiryDate.toISOString().split("T")[0]
+          );
+        });
+      }
+      if (filters.status) {
+        filteredResults = filteredResults.filter(
+          (product: ProductsType) => product.product_status === filters.status
+        );
+      }
+
       return {
-        results: response.data.results.sort(
+        results: filteredResults.sort(
           (a: ProductsType, b: ProductsType) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         ),
-        total_pages: response.data.total_pages,
-        count: response.data.count,
-        links: response.data.links,
+        total_pages: data.total_pages,
+        count: data.count,
+        links: data.links,
       };
     },
-  }); 
+  });
 
-  console.log(inventoryProductsData)
+  console.log(inventoryProductsData);
 
-  const handleFilterChange = (filters: FilterState) => {
-    const newFilters = Object.entries(filters)
-      .filter(([_, value]) => value)
-      .map(([id, value]) => ({ id, value }));
-    setColumnFilters(newFilters);
-    setShowFilters(false);
-  };
- 
   const toggleMenu = (): void => {
     setShowMenu((prev) => !prev);
     setShowFilters(false);
@@ -80,21 +125,12 @@ const ProductsTabHeader: React.FC = () => {
     setSearchValues(event.target.value);
   };
 
-  const showAddProductsModal = () => {
-    setIsModalOpen(true);
-    setShowImport(false);
-    setShowMenu(false);
-  };
-
-  const showImportModal = () => {
-    setShowImport(true);
-    setIsModalOpen(false);
-    setShowMenu(false);
-  };
-
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setShowMenu(false);
+    }
+    if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+      setShowFilters(false);
     }
   };
 
@@ -109,6 +145,17 @@ const ProductsTabHeader: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Functions to handle modal opening with dropdown closing
+  const openAddProductModal = () => {
+    setIsModalOpen(true);
+    setShowMenu(false);
+  };
+
+  const openImportModal = () => {
+    setShowImport(true);
+    setShowMenu(false);
+  };
 
   return (
     <div>
@@ -133,15 +180,25 @@ const ProductsTabHeader: React.FC = () => {
             </Button>
 
             {showMenu && (
-              <div className="bg-white absolute w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl">
+              <div 
+                className="bg-white absolute w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300"
+              >
                 <ul className="flex flex-col text-[#344054] items-center divide-y divide-gray-300">
-                  <li className="px-3 py-2 text-sm">
-                    <button type="button" onClick={() => setIsModalOpen(true)}>
+                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
+                    <button 
+                      type="button" 
+                      onClick={openAddProductModal}
+                      className="w-full text-left"
+                    >
                       Add Individually
                     </button>
                   </li>
-                  <li className="px-3 py-2 text-sm">
-                    <button type="button" onClick={() => setShowImport(true)}>
+                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
+                    <button 
+                      type="button" 
+                      onClick={openImportModal}
+                      className="w-full text-left"
+                    >
                       Import Products
                     </button>
                   </li>
@@ -150,16 +207,18 @@ const ProductsTabHeader: React.FC = () => {
             )}
           </div>
 
-          <div className="relative">
+          <div className="relative" ref={filterRef}>
             <div
-              className="border p-2 cursor-pointer border-[#494A50] rounded-[12px]"
+              className="border p-2 cursor-pointer border-[#494A50] rounded-[12px] hover:bg-gray-50 transition-colors"
               onClick={toggleFilters}
             >
               <SlidersVertical className="text-[#494A50]" />
             </div>
 
             {showFilters && (
-              <FilterDropdown onFilterChange={handleFilterChange} />
+              <div className="absolute top-2 right-0 z-20 animate-in fade-in slide-in-from-top-2 duration-300">
+                <FilterDropdown onFilterChange={handleFilterChange} />
+              </div>
             )}
           </div>
         </div>
@@ -167,7 +226,14 @@ const ProductsTabHeader: React.FC = () => {
 
       <DataTable
         columns={productsTabColumns}
-        data={inventoryProductsData || { results: [], count: 0, links: { next: null, previous: null }, total_pages: 0 }}
+        data={
+          inventoryProductsData || {
+            results: [],
+            count: 0,
+            links: { next: null, previous: null },
+            total_pages: 0,
+          }
+        }
         searchValue={searchValues}
         isLoading={isLoading}
         onPageChange={handlePageChange}

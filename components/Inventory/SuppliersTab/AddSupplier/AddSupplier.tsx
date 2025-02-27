@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { MoveLeft } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { z } from "zod";
@@ -26,6 +26,7 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
     email: "",
     quantity: ""
   });
+  const queryClient = useQueryClient();
 
   const postSupplier = useMutation({
     mutationFn: async (value: any) => {
@@ -69,6 +70,8 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
       { formData },
       {
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["inventorySupplier"] });
+          queryClient.invalidateQueries({ queryKey: ["inventorySupplier"] });
           SwalToaster("Supplier Created Successfully", "success");
           onClose();
         },
