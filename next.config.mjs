@@ -4,7 +4,10 @@ const nextConfig = {
   // output: "export",
   images: {
     domains: ["images.unsplash.com"], // Add the domain of the image source here
-    unoptimized: true,
+    unoptimized: false,
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production', // Remove console in production
   },
   eslint: {
     ignoreDuringBuilds: true,
