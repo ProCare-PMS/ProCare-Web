@@ -12,7 +12,7 @@ interface Props {
 }
 
 const StockTransferHistory = ({ onClose }: Props) => {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1); 
   const [searchValues, setSearchValues] = useState<string>("");
   const { data: inventoryBranchSyncData, isLoading } = useQuery({
     queryKey: ["inventoryBranchSync", page],

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "@/components/Tables/data-table";
-import { posProductsColumns, Product } from "./Columns";
+import { posProductsColumns } from "./Columns";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import OrderList from "./OrderList";
-import { CircleUserRound, ShoppingCart } from "lucide-react";
+import { CircleUserRound, ShoppingCart, Menu, X } from "lucide-react";
 import CustomerList from "./CustomerList";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
@@ -23,6 +23,7 @@ interface InventoryResponse {
 
 const ProductsSection = () => {
   const [page, setPage] = useState(1);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { data: inventoryProductsData, isLoading } = useQuery<InventoryResponse>({
     queryKey: ["inventoryProducts", page],
@@ -43,7 +44,7 @@ const ProductsSection = () => {
 
   const [searchValues, setSearchValues] = useState<string>("");
   const [data, setData] = useState<ProductsType[]>(inventoryProductsData?.results || []);
-  const [orderList, setOrderList] = useState<Product[]>([]);
+  const [orderList, setOrderList] = useState<ProductsType[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [isOrderListVisible, setIsOrderListVisible] = useState(false);
   const [showCustomers, setShowCustomer] = useState(false);
@@ -60,9 +61,9 @@ const ProductsSection = () => {
     if (savedOrderList) {
       try {
         const parsedOrderList = JSON.parse(savedOrderList);
-        const validOrderList = parsedOrderList.filter((item: Product) => item && item.quantity !== undefined);
+        const validOrderList = parsedOrderList.filter((item: ProductsType) => item && item.quantity !== undefined);
   
-        setCartItemCount(validOrderList.reduce((total: number, item: Product) => total + item.quantity, 0));
+        setCartItemCount(validOrderList.reduce((total: number, item: ProductsType) => total + item.quantity, 0));
         setOrderList(validOrderList);
       } catch (error) {
         console.error("Error parsing order list from localStorage:", error);
@@ -117,7 +118,7 @@ const ProductsSection = () => {
       let updatedList;
       if (!existingProduct) {
         // Convert ProductsType to Product by adding quantity
-        const newProduct: Product = { ...product, quantity: 1 };
+        const newProduct: ProductsType = { ...product, quantity: 1 };
         updatedList = [...prevOrderList, newProduct];
       } else {
         updatedList = prevOrderList;
@@ -150,31 +151,68 @@ const ProductsSection = () => {
     localStorage.removeItem('orderList');
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
-    <div className="flex gap-x-6 mt-8">
+    <div className="flex flex-col md:flex-row gap-x-0 md:gap-x-6 mt-8">
       <div
-        className={`${
-          isOrderListVisible && orderList.length > 0 ? "w-[60%]" : "w-full"
-        } pr-4 transition-all bg-white shadow-custom p-4 mb-12 rounded-[8px] relative`}
+        className={`
+          w-full 
+          ${isOrderListVisible && orderList.length > 0 ? "md:w-[60%]" : "md:w-full"} 
+          pr-0 md:pr-4 
+          transition-all 
+          bg-white 
+          shadow-custom 
+          p-4 
+          mb-12 
+          rounded-[8px] 
+          relative
+        `}
       >
-        <div className="flex justify-between items-center my-3">
-          <h2 className="text-2xl font-bold font-inter text-[#202224]">
+        <div className="flex flex-col md:flex-row justify-between items-center my-3">
+          <h2 className="text-2xl font-bold font-inter text-[#202224] mb-4 md:mb-0">
             Products
           </h2>
 
-          <div className="flex gap-4">
-            <div className="bg-[#0A77FF] rounded-[4px] p-2">
-              <CircleUserRound
-                onClick={() => setShowCustomer(true)}
-                className="text-white cursor-pointer"
-                color="white"
+          <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+            <div className="flex justify-between items-center w-full">
+              <div className="flex gap-4">
+                <div className="bg-[#0A77FF] rounded-[4px] p-2">
+                  <CircleUserRound
+                    onClick={() => setShowCustomer(true)}
+                    className="text-white cursor-pointer"
+                    color="white"
+                  />
+                </div>
+                <div className="md:hidden">
+                  {isMobileMenuOpen ? (
+                    <X 
+                      onClick={toggleMobileMenu} 
+                      className="text-gray-600 cursor-pointer" 
+                    />
+                  ) : (
+                    <Menu 
+                      onClick={toggleMobileMenu} 
+                      className="text-gray-600 cursor-pointer" 
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className={`
+              ${isMobileMenuOpen ? 'block' : 'hidden'} 
+              md:block 
+              w-full md:w-auto
+            `}>
+              <SearchFieldInput
+                value={searchValues}
+                onChange={handleSearchValueChange}
+                placeholder="Search for product"
               />
             </div>
-            <SearchFieldInput
-              value={searchValues}
-              onChange={handleSearchValueChange}
-              placeholder="Search for product"
-            />
           </div>
         </div>
 
@@ -188,7 +226,7 @@ const ProductsSection = () => {
         
         {cartItemCount > 0 && (
           <div 
-            className="absolute top-32 right-8 cursor-pointer hover:scale-105 transition-transform"
+            className="absolute top-32 right-2 md:right-8 cursor-pointer hover:scale-105 transition-transform"
             onClick={toggleOrderList}
           >
             <div className="relative">

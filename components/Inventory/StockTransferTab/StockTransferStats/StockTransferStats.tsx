@@ -11,40 +11,40 @@ const StockTransferStats = ({ isLoading }: StockTransferProps) => {
     {
       icon: "/icons/total_transfers_icon.svg",
       title: "TOTAL TRANSFERS",
-      count: 23975,
+      count: "-",
       bgColor: "#F4F7FE"
     },
     {
       icon: "/icons/total_requests_icon.svg",
       title: "TOTAL REQUESTS",
-      count: 23975,
+      count: "-",
       bgColor: "#F4F7FE"
-    },
+    }, 
     {
       icon: "/icons/approved_requests_icon.svg",
       title: "APPROVED REQUESTS",
-      count: 239,
+      count: "-",
       bgColor: "#F3FFF6"
     },
     {
       icon: "/icons/rejected.svg",
       title: "REJECTED REQUESTS",
-      count: 275,
+      count: "-",
       bgColor: "#FFEFEE"
     },
     {
       icon: "/icons/pending_requests_icon.svg",
       title: "PENDING REQUESTS",
-      count: 975,
+      count: "-",
       bgColor: "#FFFAF2"
     },
   ];
   return (
-    <div className="flex items-center lg:gap-4 justify-between">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
       {stockTransfer.map((statItem: any, index: number) => (
         <div key={index}>
           <div
-            className={`flex items-center py-4 w-[230px] px-2 rounded-[8px] justify-between border border-[#D0D5DD] ${
+            className={`flex items-center py-4 w-full md:w-[230px] px-2 rounded-[8px] justify-between border border-[#D0D5DD] ${
               isLoading ? "animate-pulse bg-gray-100" : ""
             }`}
           >
