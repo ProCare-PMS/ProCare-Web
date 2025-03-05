@@ -44,9 +44,11 @@ const DashboardSubTables = ({ title, data, isLoading }: TableProps) => {
     <div className="bg-white p-6 rounded-xl w-[450px] h-[498px] flex-1 flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-medium font-nunito_sans text-gray-900">{title}</h2>
+        {/* 
         <Link href="/inventory?tab=4" className="text-blue-600 font-inter flex items-center gap-1 font-semibold text-sm">
           Open <ExternalLink className="text-blue-600" />
         </Link>
+        */}
       </div>
 
       <Table>

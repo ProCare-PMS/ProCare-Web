@@ -52,12 +52,14 @@ const DashboardLowStockAlert = ({ title, data, isLoading }: TableProps) => {
     <div className="bg-white p-6 rounded-xl w-[450px] h-[498px] flex-1 flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-medium text-[#202224]">{title}</h2>
+        {/* 
         <Link
           href="/page_under_construction"
           className="text-[#2648EA] flex items-center gap-1 font-semibold text-sm"
         >
           Open <ExternalLink className="text-[#2648EA]" />
         </Link>
+        */}
       </div>
 
       <Table className="bg-white rounded-xl">
