@@ -64,7 +64,7 @@ const AntiMalarialTable = ({
   };
 
   return (
-    <>
+    <div >
       <div
         className={`fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
           isClosing ? "opacity-0" : "opacity-50"
@@ -75,7 +75,7 @@ const AntiMalarialTable = ({
       </div>
       <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
         <div
-          className={`bg-white p-6 rounded-lg shadow-lg !w-[800px] pointer-events-auto transition-all duration-300 ease-in-out ${
+          className={`bg-white p-6 rounded-lg shadow-lg !w-[600px] pointer-events-auto transition-all duration-300 ease-in-out ${
             isClosing
               ? "opacity-0 scale-95 translate-y-4"
               : "opacity-100 scale-100 translate-y-0"
@@ -129,18 +129,17 @@ const AntiMalarialTable = ({
               Add Product
             </button>
           </div>
-        </div>
+        </div> 
       </div>
 
       {addProductModal && (
         <AddCategoryProduct
           onProductClose={closeProductModal}
-          slug={slug}
           categoryId={categoryId}
           categoryName={categoryName}
         />
       )}
-    </>
+    </div>
   );
 };
 
