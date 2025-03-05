@@ -20,9 +20,10 @@ WORKDIR /app
 COPY --from=BUILD_IMAGE /app/package*.json ./
 COPY --from=BUILD_IMAGE /app/.next ./.next
 COPY --from=BUILD_IMAGE /app/public ./public
+COPY --from=BUILD_IMAGE /app/node_modules ./node_modules
 
 # Install only production dependencies
-RUN npm install --production --legacy-peer-deps
+# RUN npm install --production --legacy-peer-deps
 
 # Set environment variables
 ENV NODE_ENV=production
