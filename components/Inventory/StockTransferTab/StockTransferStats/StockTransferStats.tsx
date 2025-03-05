@@ -11,31 +11,31 @@ const StockTransferStats = ({ isLoading }: StockTransferProps) => {
     {
       icon: "/icons/total_transfers_icon.svg",
       title: "TOTAL TRANSFERS",
-      count: 23975,
+      count: "-",
       bgColor: "#F4F7FE"
     },
     {
       icon: "/icons/total_requests_icon.svg",
       title: "TOTAL REQUESTS",
-      count: 23975,
+      count: "-",
       bgColor: "#F4F7FE"
     }, 
     {
       icon: "/icons/approved_requests_icon.svg",
       title: "APPROVED REQUESTS",
-      count: 239,
+      count: "-",
       bgColor: "#F3FFF6"
     },
     {
       icon: "/icons/rejected.svg",
       title: "REJECTED REQUESTS",
-      count: 275,
+      count: "-",
       bgColor: "#FFEFEE"
     },
     {
       icon: "/icons/pending_requests_icon.svg",
       title: "PENDING REQUESTS",
-      count: 975,
+      count: "-",
       bgColor: "#FFFAF2"
     },
   ];
