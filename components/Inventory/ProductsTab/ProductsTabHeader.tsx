@@ -105,7 +105,6 @@ const ProductsTabHeader: React.FC = () => {
     },
   });
 
-  console.log(inventoryProductsData);
 
   const toggleMenu = (): void => {
     setShowMenu((prev) => !prev);
@@ -159,10 +158,10 @@ const ProductsTabHeader: React.FC = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col md:flex-row items-center justify-between mb-8">
         <h2 className="text-[#202224] font-semibold text-2xl">Products</h2>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col md:flex-row items-center gap-3">
           <SearchFieldInput
             value={searchValues}
             onChange={handleSearchChange}
@@ -172,7 +171,7 @@ const ProductsTabHeader: React.FC = () => {
           <div className="relative" ref={menuRef}>
             <Button
               type="button"
-              className="text-white flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
+              className="text-white flex items-center gap-2 rounded-[12px] font-inter w-full md:w-[149px]"
               variant="secondary"
               onClick={toggleMenu}
             >
@@ -216,7 +215,7 @@ const ProductsTabHeader: React.FC = () => {
             </div>
 
             {showFilters && (
-              <div className="absolute top-2 right-0 z-20 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="absolute top-2 left-24 md:right-0 z-20 animate-in fade-in slide-in-from-top-2 duration-300">
                 <FilterDropdown onFilterChange={handleFilterChange} />
               </div>
             )}

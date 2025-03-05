@@ -39,21 +39,23 @@ const CategoriesTabProducts = () => {
     select: (findData) => findData?.data?.results,
   });
 
-  console.log(categories);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [selectedCategoryProducts, setSelectedCategoryProducts] = useState<ProductsType[]>([]);
   const [selectedSlug, setSelectedSlug] = useState("");
+  const [selectedCategoryName, setSelectedCategoryName] = useState("");
+  const [selectedCategoryID, setSelectedCategoryID] = useState("")
   const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-  const openCategoryTable = (products: ProductsType[], slug: string, categoryId: string) => {
+  const openCategoryTable = (products: ProductsType[], slug: string, categoryId: string, categoryName: string) => {
     // Start animation
     setIsAnimating(true);
     
     // Set data
     setSelectedCategoryProducts(products);
     setSelectedSlug(slug);
+    setSelectedCategoryName(categoryName);
+    setSelectedCategoryID(categoryId)
     
     // Open modal with slight delay for animation
     setTimeout(() => {
@@ -107,7 +109,7 @@ const CategoriesTabProducts = () => {
               </h1>
               <span
                 className="text-left text-[#2648EA] font-medium font-inter text-base cursor-pointer underline"
-                onClick={() => openCategoryTable(category.products, category.slug, category.id)}
+                onClick={() => openCategoryTable(category.products, category.slug, category.id, category.name)}
               >
                 View {category.products.length} products
               </span>
@@ -145,6 +147,8 @@ const CategoriesTabProducts = () => {
               products={selectedCategoryProducts}
               onClose={onClose}
               slug={selectedSlug}
+              categoryName={selectedCategoryName}
+              categoryId={selectedCategoryID}
             />
           </div>
         )}

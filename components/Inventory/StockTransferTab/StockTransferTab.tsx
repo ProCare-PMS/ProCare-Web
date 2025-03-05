@@ -22,7 +22,7 @@ const StockTransferTab = () => {
         .get(`${endpoints.inventoryBranchSync}?page=${page}`)
         .then((res) => res),
     select: (findData) => findData?.data,
-  });
+  }); 
 
   console.log(inventoryBranchSyncData);
 
