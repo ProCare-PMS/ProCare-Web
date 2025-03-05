@@ -229,7 +229,7 @@ const ProductsTabHeader: React.FC = () => {
           inventoryProductsData || {
             results: [],
             count: 0,
-            links: { next: null, previous: null },
+            links: { next: null, previous: null },  
             total_pages: 0,
           }
         }

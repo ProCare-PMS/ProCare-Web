@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -17,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 interface BackendPaginationData {
   count: number;
@@ -68,48 +69,32 @@ function DataTable<TData, TValue>({
     onGlobalFilterChange: setGlobalFilter,
   });
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      const newPage = currentPage - 1;
-      setCurrentPage(newPage);
-      onPageChange?.(newPage);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < data.total_pages) {
-      const newPage = currentPage + 1;
-      setCurrentPage(newPage);
-      onPageChange?.(newPage);
-    }
-  };
-
-  // Generate page numbers to display
-  const generatePageNumbers = () => {
+  // Improved page number generation with more intelligent display
+  const pageNumbers = useMemo(() => {
     const totalPages = data.total_pages;
-    const currentPageNum = currentPage;
-    const pageNumbers = [];
+    const current = currentPage;
+    
+    if (totalPages <= 0) return [];
 
-    if (totalPages <= 5) {
-      // If total pages are 5 or less, show all
-      for (let i = 1; i <= totalPages; i++) {
-        pageNumbers.push(i);
-      }
-    } else {
-      // More complex pagination logic
-      if (currentPageNum <= 3) {
-        // First few pages
-        pageNumbers.push(1, 2, 3, 4, totalPages);
-      } else if (currentPageNum >= totalPages - 2) {
-        // Last few pages
-        pageNumbers.push(1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
-      } else {
-        // Middle pages
-        pageNumbers.push(1, currentPageNum - 1, currentPageNum, currentPageNum + 1, totalPages);
-      }
+    // Always show first and last page
+    const pages = new Set([1, totalPages]);
+
+    // Add current page and its immediate neighbors
+    pages.add(current);
+    pages.add(current - 1);
+    pages.add(current + 1);
+
+    // Add ellipsis indicators if needed
+    const sortedPages = Array.from(pages).filter(p => p > 0 && p <= totalPages).sort((a, b) => a - b);
+    
+    return sortedPages;
+  }, [currentPage, data.total_pages]);
+
+  const handlePageChange = (page: number) => {
+    if (page > 0 && page <= data.total_pages) {
+      setCurrentPage(page);
+      onPageChange?.(page);
     }
-
-    return [...new Set(pageNumbers)].sort((a, b) => a - b);
   };
 
   return (
@@ -169,45 +154,78 @@ function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {!isLoading && (
-        <div className="flex flex-wrap items-center justify-between sm:justify-end space-y-2 sm:space-y-0 space-x-0 sm:space-x-2 py-4">
-          <div className="flex items-center space-x-2 w-full sm:w-auto">
+      {!isLoading && data.total_pages > 0 && (
+        <div className="flex gap-4 items-center justify-end between py-4 px-2">
+          <div className="flex items-center space-x-2 mb-2 sm:mb-0">
+            {/* First Page Button */}
             <button
-              className="border border-gray-300 py-2 px-4 rounded-md text-gray-700 font-medium text-sm disabled:opacity-50"
-              onClick={handlePreviousPage}
+              onClick={() => handlePageChange(1)}
               disabled={currentPage === 1}
+              className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100"
             >
-              Previous
+              <ChevronsLeft className="h-5 w-5" />
             </button>
 
-            {/* Page number buttons */}
-            {generatePageNumbers().map((pageNum) => (
-              <button
-                key={pageNum}
-                onClick={() => {
-                  setCurrentPage(pageNum);
-                  onPageChange?.(pageNum);
-                }}
-                className={`border border-gray-300 py-2 px-4 rounded-md text-sm 
-                  ${currentPage === pageNum 
-                    ? 'bg-blue-500 text-white' 
-                    : 'text-gray-700 hover:bg-gray-100'} transition-colors`}
-              >
-                {pageNum}
-              </button>
-            ))}
-
+            {/* Previous Page Button */}
             <button
-              className="border border-gray-300 py-2 px-4 rounded-md text-gray-700 font-medium text-sm disabled:opacity-50"
-              onClick={handleNextPage}
-              disabled={currentPage === data.total_pages}
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100"
             >
-              Next
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+
+            {/* Page Numbers */}
+            <div className="flex items-center space-x-1">
+              {pageNumbers.map((pageNum, index) => {
+                const isActive = pageNum === currentPage;
+                
+                return (
+                  <React.Fragment key={pageNum}>
+                    {index > 0 && pageNumbers[index - 1] + 1 < pageNum && (
+                      <span className="px-2 text-gray-500">...</span>
+                    )}
+                    <button
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`px-4 py-2 border rounded-md text-sm transition-colors ${
+                        isActive 
+                          ? 'bg-blue-500 text-white' 
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  </React.Fragment>
+                );
+              })}
+            </div>
+
+            {/* Next Page Button */}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === data.total_pages}
+              className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+
+            {/* Last Page Button */}
+            <button
+              onClick={() => handlePageChange(data.total_pages)}
+              disabled={currentPage === data.total_pages}
+              className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100"
+            >
+              <ChevronsRight className="h-5 w-5" />
             </button>
           </div>
-          <p className="text-gray-700 text-sm w-full sm:w-auto text-center sm:text-right">
-            {data.total_pages > 0 ? `Page ${currentPage} of ${data.total_pages}` : "No results"}
-          </p>
+
+          {/* Page Info */}
+          <div className="text-sm text-gray-600">
+            Page {currentPage} of {data.total_pages} 
+            <span className="ml-2 text-gray-500">
+              ({data.count} total items)
+            </span>
+          </div>
         </div>
       )}
     </div>
