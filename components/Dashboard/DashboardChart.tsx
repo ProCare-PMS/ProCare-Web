@@ -76,7 +76,7 @@ const DashbaordChart = ({ data }: DashbaordChartProps) => {
   const dataArray = data.length === 0 ? emptyData : chartData;
 
   return (
-    <Card className="flex flex-col bg-white h-[428px] w-[300px] rounded-[10px]">
+    <Card className="flex flex-col bg-white h-[498px] w-[300px] rounded-[10px]">
       <div className="flex items-center justify-between py-2 px-4">
         <CardTitle className="text-base text-[#323539] font-inter">
           Best Selling Products

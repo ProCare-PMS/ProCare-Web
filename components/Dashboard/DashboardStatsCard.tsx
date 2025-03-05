@@ -27,7 +27,7 @@ const DashboardStatsCard = ({
   badgeColor,
 }: StatCardProps) => {
   return (
-    <div className="flex flex-col shadow-custom rounded-xl p-5 bg-white md:w-[18rem]">
+    <div className="flex flex-col shadow-custom rounded-xl p-5 w-full bg-white md:w-[18rem]">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-medium text-[#202224] text-xl">{title}</h3>
         <button

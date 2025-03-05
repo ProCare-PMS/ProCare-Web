@@ -8,7 +8,7 @@ import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import { ArrowLeft } from "lucide-react";
 
 interface Props {
-  onClose: () => void;
+  onClose: () => void; 
 }
 
 const StockTransferRequest = ({ onClose } : Props) => {

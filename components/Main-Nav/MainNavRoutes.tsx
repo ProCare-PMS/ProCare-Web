@@ -49,7 +49,11 @@ const navRoutes = [
   },
 ];
 
-const MainNavRoutes = () => {
+interface Props {
+  toggleMobileNav: () => void
+}
+
+const MainNavRoutes = ({ toggleMobileNav } : Props) => {
   const userdata = localStorage.getItem("user");
   const user = userdata && JSON.parse(userdata);
 
@@ -58,13 +62,14 @@ const MainNavRoutes = () => {
   );
 
   return (
-    <div className="flex items-center font-inter gap-5">
+    <div className="flex flex-col md:flex-row items-center font-inter gap-5 w-full">
       {filteredRoutes.map((route) => (
         <MainNavItem
           key={route.label}
           icon={route.icon}
           label={route.label}
           href={route.href}
+          toggleMobileNav={toggleMobileNav}
         />
       ))}
     </div>

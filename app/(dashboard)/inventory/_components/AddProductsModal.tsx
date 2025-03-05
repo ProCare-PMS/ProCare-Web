@@ -36,7 +36,7 @@ const initialFormData: FormData = {
   unit: "",
   quantity: "",
   expiry_date: "",
-  reorder_level: "",
+  reorder_level: "", 
   cost_price: "",
   markup_percentage: "",
   selling_price: "",

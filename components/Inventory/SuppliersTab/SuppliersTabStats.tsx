@@ -79,11 +79,11 @@ const SuppliersTabStats = ({ stats = [], isLoading }: SuppliersProps) => {
   ];
 
   return (
-    <div className="flex items-center lg:gap-8 justify-between">
+    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
       {statsCounts.map((statItem) => (
         <div
           key={statItem.title}
-          className={`flex items-center w-[20rem] gap-4 py-4 px-5 rounded-[8px] justify-between border border-[#D0D5DD] ${
+          className={`flex items-center w-full md:w-[20rem] gap-4 py-4 px-5 rounded-[8px] justify-between border border-[#D0D5DD] ${
             isLoading ? "animate-pulse bg-gray-100" : ""
           }`}
         >
