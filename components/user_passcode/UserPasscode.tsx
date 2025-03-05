@@ -146,7 +146,7 @@ const UserPasscode = () => {
                     key={index}
                     id={`otp-${index}`}
                     className="border-2 w-16 h-12 border-[#D0D5DD] rounded-[8px] text-center text-4xl text-slate-400"
-                    type="text"
+                    type="password"
                     maxLength={1}
                     value={digit}
                     onChange={(e) => handleChange(e.target.value, index)}

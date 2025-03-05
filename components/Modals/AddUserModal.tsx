@@ -70,11 +70,9 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   });
 
   const queryClient = useQueryClient();
-  const methodss = "POST";
 
   useEffect(() => {
     if (!!formData) {
-      console.log({ formData });
       setFormValues({
         ...formData,
         full_name: formData.full_name || "",
@@ -103,7 +101,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
         endpoints.managements +
         (value.method === "POST"
           ? "employees/create/"
-          : `employees/${value.id}/`);
+          : `employees/${formData.id}/`);
 
       const res =
         value.method === "POST"
@@ -146,7 +144,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    e.preventDefault();
+    //e.preventDefault();
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
@@ -228,15 +226,13 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     );
   };
 
-  //console.log(formData);
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-5 rounded-[1rem]">
       <div className="relative bg-white w-[90rem] h-[30rem] max-w-6xl p-6 shadow-lg  rounded-[1rem]">
         <form onSubmit={handleSubmit}>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">{title} User</h2>
-            <button className="text-dark" onClick={onClose}>
+            <button type="button" className="text-dark" onClick={onClose}>
               <CloseOutlinedIcon />
             </button>
           </div>
@@ -424,6 +420,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                 }`}
                 onClick={prevStep}
                 disabled={step === 1}
+                type="button"
               >
                 Previous
               </button>
@@ -432,7 +429,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                 className={`bg-indigo-600 text-white px-6 py-2 rounded-[0.5rem] w-[10rem]`}
                 onClick={step === 3 ? handleSubmit : validateStep}
               >
-                {step === 3 ? "Submit" : "Next"}
+                {step === 3 ? (formData?.id ? "Edit" : "Submit") : "Next"}
               </button>
             </div>
           </div>
