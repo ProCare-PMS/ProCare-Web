@@ -1,5 +1,5 @@
 # Build Stage
-FROM node:18-alpine AS BUILD_IMAGE
+FROM node:18-alpine AS base
 
 WORKDIR /app
 
@@ -9,21 +9,18 @@ RUN npm install --legacy-peer-deps
 
 # Copy the source code and build it
 COPY . .
-RUN npm run build
+RUN npm run build  # Build only in the build stage
 
 # Production Stage
-FROM node:18-alpine AS PRODUCTION_STAGE
+FROM node:18-alpine AS prod
 
 WORKDIR /app
 
-# Copy the necessary build files
-COPY --from=BUILD_IMAGE /app/package*.json ./
-COPY --from=BUILD_IMAGE /app/.next ./.next
-COPY --from=BUILD_IMAGE /app/public ./public
-COPY --from=BUILD_IMAGE /app/node_modules ./node_modules
-
-# Install only production dependencies
-# RUN npm install --production --legacy-peer-deps
+# Copy the necessary build files from the build stage
+COPY --from=base /app/package*.json ./
+COPY --from=base /app/.next ./.next
+COPY --from=base /app/public ./public
+COPY --from=base /app/node_modules ./node_modules
 
 # Set environment variables
 ENV NODE_ENV=production
@@ -34,4 +31,5 @@ ENV NEXT_PUBLIC_GOOGLE_ANALYTICS_ID="G-75Y3BYG07B"
 
 EXPOSE 6325
 
+# Start the app
 CMD ["npm", "start"]
