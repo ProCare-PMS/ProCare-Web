@@ -13,8 +13,8 @@ function SearchFieldInput({
   placeholder = "Search...",
 }: SearchInputProps) {
   return (
-    <div className="w-full">
-      <div className="iconInputholder flex items-center gap-4 !w-full border-2 border-[#EAEBF0] rounded-2xl px-2">
+    <div className="">
+      <div className="iconInputholder flex items-center gap-4 border-2 border-[#EAEBF0] rounded-2xl px-2">
         <span className="w-7 h-10 flex justify-center items-center px-1">
           <Image
             src="/assets/images/searchVector.svg"

@@ -6,13 +6,14 @@ import DataTable from "@/components/Tables/data-table";
 import { historyColumns } from "./Columns";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import { ArrowLeft } from "lucide-react";
+import { HistoryTransfers, historyTransfers } from "./Data";
 
 interface Props {
   onClose: () => void;
 }
 
 const StockTransferHistory = ({ onClose }: Props) => {
-  const [page, setPage] = useState(1); 
+  const [page, setPage] = useState(1);
   const [searchValues, setSearchValues] = useState<string>("");
   const { data: inventoryBranchSyncData, isLoading } = useQuery({
     queryKey: ["inventoryBranchSync", page],
@@ -48,7 +49,19 @@ const StockTransferHistory = ({ onClose }: Props) => {
           placeholder="Search by transfer ID"
         />
       </div>
+      <DataTable
+        columns={historyColumns}
+        onPageChange={handlePageChange}
+        searchValue={searchValues}
+        data={{
+          results: historyTransfers, // Pass the dummy data here
+          count: historyTransfers.length, // Set count to the length of the array
+          links: { next: null, previous: null }, // Pagination links (not used here)
+          total_pages: 1, // Only one page for dummy data
+        }}
+      />
 
+      {/* 
       <DataTable
         columns={historyColumns}
         onPageChange={handlePageChange}
@@ -62,6 +75,7 @@ const StockTransferHistory = ({ onClose }: Props) => {
           }
         }
       />
+      */}
     </div>
   );
 };

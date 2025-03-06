@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { string } from "zod";
+import { RequestsTransfers, requestsTransfers } from "./Data";
+import StockRequestViewModal from "./StockRequestViewModal";
 
+interface RequestProducts {
+  name: string;
+  price: string;
+  quantity: number;
+}
 export interface RequestsType {
   id: string;
   transfer_id: string;
@@ -13,18 +20,19 @@ export interface RequestsType {
   location: string;
   date: string;
   time: string;
+  items: RequestProducts[];
 }
 
 interface ActionsCellProps {
   row: {
-    original: RequestsType;
+    original: RequestsTransfers;
   };
 }
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const payment = row.original;
   const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<RequestsType | null>(
+  const [selectedItem, setSelectedItem] = useState<RequestsTransfers | null>(
     null
   );
 
@@ -39,11 +47,17 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
       >
         View
       </span>
+      {selectedItem && (
+        <StockRequestViewModal
+          item={selectedItem}
+          setModal={() => setSelectedItem(null)}
+        />
+      )}
     </div>
   );
 };
 
-export const requestsColumns: ColumnDef<RequestsType>[] = [
+export const requestsColumns: ColumnDef<RequestsTransfers>[] = [
   {
     accessorKey: "transfer_id",
     header: "Transfer ID",
@@ -71,6 +85,6 @@ export const requestsColumns: ColumnDef<RequestsType>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => <ActionsCell key={row.original.id} row={row} />,
+    cell: ({ row }) => <ActionsCell key={row.original.transfer_id} row={row} />,
   },
 ];

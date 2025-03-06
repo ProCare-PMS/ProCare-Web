@@ -3,6 +3,16 @@
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { string } from "zod";
+import { HistoryTransfers, historyTransfers } from "./Data";
+import StockTransferViewModal from "./StockTransferViewModal";
+
+interface HistoryProducts {
+  name: string;
+  price: string;
+  quantity: number;
+  reason?: string;
+  status: string;
+}
 
 export interface HistoryType {
   id: string;
@@ -12,6 +22,7 @@ export interface HistoryType {
   pharmacy_name: string;
   location: string;
   date: string;
+  items: HistoryProducts[];
   time: string;
   contact: string;
 }
@@ -25,9 +36,7 @@ interface ActionsCellProps {
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const payment = row.original;
   const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<HistoryType | null>(
-    null
-  );
+  const [selectedItem, setSelectedItem] = useState<HistoryType | null>(null);
 
   return (
     <div>
@@ -40,11 +49,17 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
       >
         View
       </span>
+      {selectedItem && (
+        <StockTransferViewModal
+          item={selectedItem}
+          setModal={() => setSelectedItem(null)}
+        />
+      )}
     </div>
   );
 };
 
-export const historyColumns: ColumnDef<HistoryType>[] = [
+export const historyColumns: ColumnDef<HistoryTransfers>[] = [
   {
     accessorKey: "transfer_id",
     header: "Transfer ID",
@@ -68,6 +83,6 @@ export const historyColumns: ColumnDef<HistoryType>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => <ActionsCell key={row.original.id} row={row} />,
+    cell: ({ row }) => <ActionsCell key={row.original.transfer_id} row={row} />,
   },
 ];
