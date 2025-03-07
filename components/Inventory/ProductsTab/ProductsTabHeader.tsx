@@ -12,7 +12,6 @@ import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
-import { ColumnFiltersState } from "@tanstack/react-table";
 import DataTable from "@/components/Tables/data-table";
 import AddProducts from "@/app/(dashboard)/inventory/_components/AddProductsModal";
 import ImportProductsModal from "@/app/(dashboard)/inventory/_importProductsComponents/ImportProductsModal";
