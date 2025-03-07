@@ -57,10 +57,10 @@ const SuppliersTab = () => {
         />
 
         <div className="p-6 bg-white mt-7 shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)]">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-6">
             <h2 className="text-[#202224] font-semibold text-2xl">Suppliers</h2>
 
-            <div className="flex items-center gap-3">
+            <div className="flex mt-4 md:mt-0 items-center gap-3">
               <SearchFieldInput
                 value={searchValues}
                 onChange={handleSearchValueChange}

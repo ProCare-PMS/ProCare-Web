@@ -50,11 +50,11 @@ const ExpiryReportStats = ({ isLoading, expiredProduct }: ExpiryReportStatsProps
   ];
 
   return (
-    <div className="flex items-center justify-between gap-4 flex-wrap">
+    <div className="flex flex-col md:flex-row items-center justify-between gap-4 flex-wrap">
       {expiryStats.map((stat) => (
         <div
           key={stat.title}
-          className={`flex border w-[290px] border-[#D0D5DD] rounded-[8px] py-4 px-5 items-center justify-between ${
+          className={`flex border w-full md:w-[290px] border-[#D0D5DD] rounded-[8px] py-4 px-5 items-center justify-between ${
             isLoading ? "animate-pulse bg-gray-100" : ""
           }`}
         >

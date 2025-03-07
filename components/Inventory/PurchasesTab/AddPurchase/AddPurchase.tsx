@@ -40,7 +40,6 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
     select: (findData) => findData?.data?.results,
   });
 
-  console.log(inventoryProducts)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

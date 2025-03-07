@@ -29,6 +29,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
   const [user, setUser] = useState<any | null>(null);
   const receiptRef = useRef<HTMLDivElement>(null);
   const [discount, setDiscount] = useState<any | null>(null);
+  const [amountTendered, setAmountTendered] = useState<number>(0);
+  const [balance, setBalance] = useState<number>(0);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -60,8 +62,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     };
   }, []);
 
-
-
   const handlePrint = useReactToPrint({
     contentRef: receiptRef,
     documentTitle: "Payment Receipt",
@@ -83,7 +83,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
           top: 0;
         }
       }
-    `
+    `,
   });
 
   const totalPrice = orderItems.reduce((total, product) => {
@@ -91,9 +91,20 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
   }, 0);
 
   const finalPrice = totalPrice - discount;
-  console.log(finalPrice)
 
   const itemPrice = finalPrice > 0 ? finalPrice : 0;
+
+  // Handle amount tendered change
+  const handleAmountTenderedChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const tenderedAmount = parseFloat(e.target.value);
+    setAmountTendered(tenderedAmount);
+
+    // Calculate balance (0 if no balance to be given)
+    const calculatedBalance = tenderedAmount - itemPrice;
+    setBalance(calculatedBalance > 0 ? calculatedBalance : 0);
+  };
 
   const finalizePaymentMutation = useMutation({
     mutationFn: async (data: Record<string, any>) => {
@@ -154,7 +165,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     finalizePaymentMutation.mutate(salesItemsData, {
       onSuccess: () => {
         clearAllData();
-        queryClient.invalidateQueries({ queryKey: ["recentTransactionsData"] }); 
+        queryClient.invalidateQueries({ queryKey: ["recentTransactionsData"] });
 
         onClose();
 
@@ -180,13 +191,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-       
-      />
-      <div
-        className="relative bg-white rounded-xl shadow-xl w-[800px] h-[600px] flex flex-col"
-      >
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+      <div className="relative bg-white rounded-xl shadow-xl w-[800px] h-[600px] flex flex-col">
         <div className="p-6 flex-1 overflow-y-auto">
           <div className="flex items-center gap-4 mb-8">
             <button
@@ -283,34 +289,37 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
             <div className="grid grid-cols-2 gap-x-3 mt-4">
               <div>
                 <label
-                  htmlFor=""
+                  htmlFor="amountTendered"
                   className="text-[#323539] font-medium text-sm"
                 >
                   Amount Tendered
                 </label>
                 <input
+                  id="amountTendered"
                   type="number"
                   placeholder="Enter amount"
+                  value={amountTendered}
+                  onChange={handleAmountTenderedChange}
                   className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
                 />
               </div>
               <div>
                 <label
-                  htmlFor=""
+                  htmlFor="balance"
                   className="text-[#323539] font-medium text-sm"
                 >
                   Balance
                 </label>
                 <input
+                  id="balance"
                   type="number"
-                  placeholder="50.00"
+                  value={balance.toFixed(2)}
                   disabled={true}
                   className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
                 />
               </div>
             </div>
           )}
-
           <div className="mt-6 text-right">
             <div className="inline-block">
               <p className="text-sm text-gray-500">TOTAL PRICE</p>
@@ -320,9 +329,12 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
             </div>
           </div>
         </div>
-        <div ref={receiptRef}  id="receipt-content"
+        <div
+          ref={receiptRef}
+          id="receipt-content"
           className="fixed left-[-9999px] top-[-9999px]"
-          style={{ width: '80mm' }} >
+          style={{ width: "80mm" }}
+        >
           <ThermalReceipt />
         </div>
 

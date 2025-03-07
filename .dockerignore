@@ -1,0 +1,11 @@
+node_modules/
+.git
+*.log
+*.md
+*.env
+*.test.js
+*.test.ts
+Dockerfile
+.dockerignore
+.next/cache
+.next/

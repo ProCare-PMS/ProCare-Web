@@ -3,6 +3,8 @@ import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
+import { useMediaQuery, useTheme } from "@mui/material";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import SalesPoint from "../SalesPoint";
 import Customers from "../Customers";
@@ -13,85 +15,146 @@ interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
-}
-
-function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
+  className?: string;
 }
 
 export default function PosMainPage() {
   const [value, setValue] = React.useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  function CustomTabPanel(props: TabPanelProps) {
+    const { children, value, index, className = "", ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        className={className}
+        {...other}
+      >
+        {value === index && <Box sx={{ p: isMobile ? 1 : 3 }}>{children}</Box>}
+      </div>
+    );
+  }
+
+  function a11yProps(index: number) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+    if (isMobile) {
+      setMobileMenuOpen(false);
+    }
   };
 
-  return (
-    <Box sx={{ width: "100%", marginInline: "auto", marginTop: "-20px" }}>
-      <Box
-        sx={{
-          backgroundColor: "#F5F5F5",
-          paddingBlock: "20px",
-          width: "100%",
-          textDecoration: "lowercase",
-        }}
-      >
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          centered
-          aria-label="basic tabs example"
-        >
-          <Tab
-            className="font-inter text-sm font-semibold text-[#858C95]"
-            label="Sales Point"
-            {...a11yProps(0)}
-            sx={{ textTransform: "none" }}
-          />
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
-          <Tab
-            className="font-inter text-sm font-semibold text-[#858C95]"
-            label="Customers"
-            {...a11yProps(1)}
-            sx={{ textTransform: "none" }}
-          />
-          <Tab
-            className="font-inter text-sm font-semibold text-[#858C95]"
-            label="Returns"
-            {...a11yProps(2)}
-            sx={{ textTransform: "none" }}
-          />
-          <Tab
-            className="font-inter text-sm font-semibold text-[#858C95]"
-            label="Held Transactions"
-            {...a11yProps(3)}
-            sx={{ textTransform: "none" }}
-          />
-        </Tabs>
-      </Box>
+  const tabLabels = [
+    "Sales Point", 
+    "Customers", 
+    "Returns", 
+    "Held Transactions"
+  ];
+
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        marginInline: "auto",
+        marginTop: isMobile ? "0" : "-20px",
+        typography: "body1",
+      }}
+    >
+      {isMobile ? (
+        <div className="relative">
+          <button 
+            onClick={toggleMobileMenu} 
+            className="w-full p-3 bg-[#F5F5F5] flex items-center justify-between"
+          >
+            <span className="font-inter text-sm font-semibold text-[#858C95]">
+              {tabLabels[value]}
+            </span>
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+          
+          {mobileMenuOpen && (
+            <div className="absolute z-10 w-full bg-white shadow-md">
+              {tabLabels.map((label, index) => (
+                <div 
+                  key={index}
+                  onClick={() => {
+                    setValue(index);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`
+                    p-3 
+                    text-sm 
+                    font-inter 
+                    font-semibold 
+                    ${value === index 
+                      ? 'bg-blue-50 text-blue-600' 
+                      : 'text-[#858C95] hover:bg-gray-100'}
+                  `}
+                >
+                  {label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <Box
+          sx={{
+            backgroundColor: "#F5F5F5",
+            paddingBlock: "20px",
+            width: "100%",
+            textDecoration: "lowercase",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="pos tabs"
+            variant="standard"
+            sx={{
+              '& .MuiTabs-flexContainer': {
+                justifyContent: 'center',
+              }
+            }}
+          >
+            {tabLabels.map((label, index) => (
+              <Tab
+                key={index}
+                className="font-inter text-sm font-semibold text-[#858C95]"
+                label={label}
+                {...a11yProps(index)}
+                sx={{ 
+                  textTransform: "none",
+                  minWidth: 'auto',
+                  padding: '0 16px',
+                }}
+              />
+            ))}
+          </Tabs>
+        </Box>
+      )}
+
       <Box
         sx={{
           width: "100%",
-          minHeight: "100vh",
+          minHeight: isMobile ? "auto" : "100vh",
           marginInline: "auto",
         }}
       >

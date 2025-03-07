@@ -1,11 +1,7 @@
 "use client";
 
-import React, { useState, ChangeEvent, useRef, useEffect } from "react";
-import ProductStockTable from "./ProductStockTable";
-import clsx from "clsx";
-import { Plus, SlidersVertical } from "lucide-react";
-import AddProducts from "@/app/(dashboard)/inventory/_components/AddProductsModal";
-import ImportProductsModal from "@/app/(dashboard)/inventory/_importProductsComponents/ImportProductsModal";
+import React, { useState, ChangeEvent, useRef, useEffect, useMemo } from "react";
+import { Plus, SlidersVertical, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FilterDropdown from "@/components/DropDown/FilterDropDown";
 import {
@@ -16,8 +12,9 @@ import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
-import { ColumnFiltersState } from "@tanstack/react-table";
 import DataTable from "@/components/Tables/data-table";
+import AddProducts from "@/app/(dashboard)/inventory/_components/AddProductsModal";
+import ImportProductsModal from "@/app/(dashboard)/inventory/_importProductsComponents/ImportProductsModal";
 
 interface FilterState {
   unit: string;
@@ -27,17 +24,50 @@ interface FilterState {
   status: string;
 }
 
+// Define sort options
+type SortOption = "alphabetical" | "newest" | "oldest";
+
+// Fetch all data function - this can be reused
+const fetchAllInventoryProducts = async () => {
+  let allResults: ProductsType[] = [];
+  let nextUrl = endpoints.inventoryProduct;
+  
+  // Keep fetching until there's no next page
+  while (nextUrl) {
+    const response = await customAxios.get(nextUrl);
+    allResults = [...allResults, ...response.data.results];
+    nextUrl = response.data.links.next;
+    
+    // If using actual URLs for pagination, extract the endpoint
+    if (nextUrl && nextUrl.includes('https://')) {
+      const url = new URL(nextUrl);
+      let pathname = url.pathname;
+      
+      // Fix duplicate /api/api/ issue
+      if (pathname.includes('/api/')) {
+        pathname = pathname.replace('/api/', '');
+      }
+      
+      nextUrl = pathname + url.search;
+    }
+  }
+  
+  return allResults;
+};
+
 const ProductsTabHeader: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>("Products");
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [searchValues, setSearchValues] = useState<string>("");
   const [showImport, setShowImport] = useState<boolean>(false);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sortOption, setSortOption] = useState<SortOption>("alphabetical"); // Default to alphabetical
+  const [showSortOptions, setShowSortOptions] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const filterRef = useRef<HTMLDivElement | null>(null);
-  const [page, setPage] = useState(1);
+  const sortRef = useRef<HTMLDivElement | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(10);
   const [filters, setFilters] = useState<FilterState>({
     unit: "",
     category: "",
@@ -45,84 +75,142 @@ const ProductsTabHeader: React.FC = () => {
     expiryDate: "",
     status: "",
   });
-
+  
+  // Fetch all inventory products data
+  const { data: allProductsData, isLoading: isLoadingAllProducts } = useQuery({
+    queryKey: ["inventoryProducts"],
+    queryFn: fetchAllInventoryProducts,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes to reduce API calls
+  });
+  
+  // Apply filtering, searching, and sorting to all data
+  const filteredProducts = useMemo(() => {
+    if (!allProductsData) return [];
+    
+    let results = [...allProductsData];
+    
+    // Apply search filter
+    if (searchValues) {
+      const searchLower = searchValues.toLowerCase();
+      results = results.filter(product => 
+        product.name.toLowerCase().includes(searchLower) ||
+        product.slug.toLowerCase().includes(searchLower) ||
+        (product.brand && product.brand.toLowerCase().includes(searchLower))
+      );
+    }
+    
+    // Apply other filters
+    if (filters.unit) {
+      results = results.filter(product => product.unit === filters.unit);
+    }
+    
+    if (filters.category) {
+      results = results.filter(product => product.category === filters.category);
+    }
+    
+    if (filters.reorderLevel) {
+      results = results.filter(product => 
+        product.reorder_level === parseInt(filters.reorderLevel)
+      );
+    }
+    
+    if (filters.expiryDate) {
+      results = results.filter(product => {
+        const productExpiryDate = new Date(product.expiry_date);
+        const selectedExpiryDate = new Date(filters.expiryDate);
+        return (
+          productExpiryDate.toISOString().split("T")[0] ===
+          selectedExpiryDate.toISOString().split("T")[0]
+        );
+      });
+    }
+    
+    if (filters.status) {
+      results = results.filter(product => 
+        product.product_status === filters.status
+      );
+    }
+    
+    // Apply sorting based on selected option
+    switch (sortOption) {
+      case "alphabetical":
+        // Sort alphabetically by name
+        return results.sort((a, b) => a.name.localeCompare(b.name));
+      case "newest":
+        // Sort by newest first (creation date)
+        return results.sort(
+          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      case "oldest":
+        // Sort by oldest first (creation date)
+        return results.sort(
+          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+      default:
+        return results;
+    }
+  }, [allProductsData, searchValues, filters, sortOption]);
+  
+  // Create paginated data for the current view
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedResults = filteredProducts.slice(startIndex, endIndex);
+    
+    return {
+      results: paginatedResults,
+      count: filteredProducts.length,
+      total_pages: Math.ceil(filteredProducts.length / pageSize),
+      links: {
+        next: currentPage < Math.ceil(filteredProducts.length / pageSize) ? "has-next" : null,
+        previous: currentPage > 1 ? "has-previous" : null
+      }
+    };
+  }, [filteredProducts, currentPage, pageSize]);
+  
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
+    setCurrentPage(1); // Reset to first page when filters change
   };
-
-  const { data: inventoryProductsData, isLoading } = useQuery({
-    queryKey: ["inventoryProducts", page],
-    queryFn: async () => {
-      const response = await customAxios.get(
-        `${endpoints.inventoryProduct}?page=${page}`
-      );
-      return response.data;
-    },
-    select: (data) => {
-      let filteredResults = data.results;
-
-      if (filters.unit) {
-        filteredResults = filteredResults.filter(
-          (product: ProductsType) => product.unit === filters.unit
-        );
-      }
-      if (filters.category) {
-        filteredResults = filteredResults.filter(
-          (product: ProductsType) => product.category === filters.category
-        );
-      }
-      if (filters.reorderLevel) {
-        filteredResults = filteredResults.filter(
-          (product: ProductsType) =>
-            product.reorder_level === parseInt(filters.reorderLevel)
-        );
-      }
-      if (filters.expiryDate) {
-        filteredResults = filteredResults.filter((product: ProductsType) => {
-          const productExpiryDate = new Date(product.expiry_date);
-          const selectedExpiryDate = new Date(filters.expiryDate);
-          return (
-            productExpiryDate.toISOString().split("T")[0] ===
-            selectedExpiryDate.toISOString().split("T")[0]
-          );
-        });
-      }
-      if (filters.status) {
-        filteredResults = filteredResults.filter(
-          (product: ProductsType) => product.product_status === filters.status
-        );
-      }
-
-      return {
-        results: filteredResults.sort(
-          (a: ProductsType, b: ProductsType) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        ),
-        total_pages: data.total_pages,
-        count: data.count,
-        links: data.links,
-      };
-    },
-  });
-
-  console.log(inventoryProductsData);
-
+  
   const toggleMenu = (): void => {
     setShowMenu((prev) => !prev);
     setShowFilters(false);
+    setShowSortOptions(false);
   };
 
   const toggleFilters = (): void => {
     setShowFilters((prev) => !prev);
     setShowMenu(false);
+    setShowSortOptions(false);
   };
 
-  const handleTabClick = (tabName: string): void => {
-    setActiveTab(tabName);
+  const toggleSortOptions = (): void => {
+    setShowSortOptions((prev) => !prev);
+    setShowMenu(false);
+    setShowFilters(false);
   };
+
+  const handleSortOptionChange = (option: SortOption): void => {
+    setSortOption(option);
+    setShowSortOptions(false);
+    setCurrentPage(1); // Reset to first page when sort changes
+  };
+
+ 
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchValues(event.target.value);
+    setCurrentPage(1); // Reset to first page when search changes
+  };
+  
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+  
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setCurrentPage(1); // Reset to first page when page size changes
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -132,15 +220,13 @@ const ProductsTabHeader: React.FC = () => {
     if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
       setShowFilters(false);
     }
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+    if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
+      setShowSortOptions(false);
+    }
   };
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -157,22 +243,80 @@ const ProductsTabHeader: React.FC = () => {
     setShowMenu(false);
   };
 
+  // Get sort option display text
+  const getSortOptionText = (option: SortOption): string => {
+    switch (option) {
+      case "alphabetical": return "A-Z";
+      case "newest": return "Newest";
+      case "oldest": return "Oldest";
+      default: return "Sort";
+    }
+  };
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col md:flex-row items-center justify-between mb-8">
         <h2 className="text-[#202224] font-semibold text-2xl">Products</h2>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col md:flex-row items-center gap-3">
           <SearchFieldInput
             value={searchValues}
             onChange={handleSearchChange}
             placeholder="Search for product"
           />
 
+          {/* Sort Dropdown */}
+          <div className="relative" ref={sortRef}>
+            <Button
+              type="button"
+              className="flex items-center gap-2 rounded-[12px] bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-inter w-full md:w-[120px]"
+              variant="outline"
+              onClick={toggleSortOptions}
+            >
+              {getSortOptionText(sortOption)} <ChevronDown size={16} />
+            </Button>
+
+            {showSortOptions && (
+              <div 
+                className="bg-white absolute w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300"
+              >
+                <ul className="flex flex-col text-[#344054] items-center divide-y divide-gray-300">
+                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
+                    <button 
+                      type="button" 
+                      onClick={() => handleSortOptionChange("alphabetical")}
+                      className={`w-full text-left ${sortOption === "alphabetical" ? "font-semibold" : ""}`}
+                    >
+                      A-Z
+                    </button>
+                  </li>
+                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
+                    <button 
+                      type="button" 
+                      onClick={() => handleSortOptionChange("newest")}
+                      className={`w-full text-left ${sortOption === "newest" ? "font-semibold" : ""}`}
+                    >
+                      Newest
+                    </button>
+                  </li>
+                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
+                    <button 
+                      type="button" 
+                      onClick={() => handleSortOptionChange("oldest")}
+                      className={`w-full text-left ${sortOption === "oldest" ? "font-semibold" : ""}`}
+                    >
+                      Oldest
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+
           <div className="relative" ref={menuRef}>
             <Button
               type="button"
-              className="text-white flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
+              className="text-white flex items-center gap-2 rounded-[12px] font-inter w-full md:w-[149px]"
               variant="secondary"
               onClick={toggleMenu}
             >
@@ -216,7 +360,7 @@ const ProductsTabHeader: React.FC = () => {
             </div>
 
             {showFilters && (
-              <div className="absolute top-2 right-0 z-20 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="absolute top-2 left-24 md:right-0 z-20 animate-in fade-in slide-in-from-top-2 duration-300">
                 <FilterDropdown onFilterChange={handleFilterChange} />
               </div>
             )}
@@ -226,17 +370,12 @@ const ProductsTabHeader: React.FC = () => {
 
       <DataTable
         columns={productsTabColumns}
-        data={
-          inventoryProductsData || {
-            results: [],
-            count: 0,
-            links: { next: null, previous: null },
-            total_pages: 0,
-          }
-        }
+        data={paginatedData}
         searchValue={searchValues}
-        isLoading={isLoading}
+        isLoading={isLoadingAllProducts}
         onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        pageSize={pageSize}
       />
 
       {isModalOpen && (

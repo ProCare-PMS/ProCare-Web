@@ -15,6 +15,7 @@ const StockTransferTab = () => {
   const [page, setPage] = useState(1);
   const [showRequests, setShowRequets] = useState<boolean>(false); //showing the requests table
   const [showHistory, setShowHistory] = useState<boolean>(false); //showing the history table
+
   const { data: inventoryBranchSyncData, isLoading } = useQuery({
     queryKey: ["inventoryBranchSync", page],
     queryFn: async () =>
@@ -24,7 +25,17 @@ const StockTransferTab = () => {
     select: (findData) => findData?.data,
   });
 
-  console.log(inventoryBranchSyncData);
+  //Pharmacies Available
+  const { data: pharmaciesData,  } = useQuery({
+    queryKey: ["otherPharmacies", page],
+    queryFn: async () =>
+      await customAxios
+        .get(`${endpoints.otherPharmacies}?page=${page}`)
+        .then((res) => res),
+    select: (findData) => findData?.data,
+  });
+
+  console.log(pharmaciesData);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -62,21 +73,21 @@ const StockTransferTab = () => {
 
                 <button
                   onClick={() => setShowRequets(true)}
-                  className="flex items-center gap-2 border py-2 px-3 border-[#D0D5DD] rounded-[6px]"
+                  className="flex items-center gap-2 border py-2 px-6 border-[#D0D5DD] rounded-[6px]"
                 >
-                  <CircleCheckBig className="text-sm  text-[#6B6C74]" />
-                  <p className="text-[#6B6C74] font-semibold text-sm">
+                  <CircleCheckBig className="inline-block align-middle text-sm text-[#6B6C74]" />
+                  <span className="inline-block align-middle text-[#6B6C74] font-semibold text-sm">
                     View Requests
-                  </p>
+                  </span>
                 </button>
                 <button
                   onClick={() => setShowHistory(true)}
-                  className="flex items-center gap-2 border py-2 px-3 border-[#D0D5DD] rounded-[6px]"
+                  className="flex items-center gap-2 border py-2 px-6 border-[#D0D5DD] rounded-[6px]"
                 >
-                  <ListChecks className="text-sm text-[#6B6C74]" />
-                  <p className="text-[#6B6C74] font-semibold text-sm">
+                  <ListChecks className="inline-block align-middle text-sm text-[#6B6C74]" />
+                  <span className="inline-block align-middle text-[#6B6C74] font-semibold text-sm">
                     View History
-                  </p>
+                  </span>
                 </button>
               </div>
             </div>

@@ -58,8 +58,9 @@ const DashbaordHomePage = () => {
         />
         <DashbaordChart data={dashboardData?.top_categories || []} />
       </div>
-      <div className="bg-white shadow-custom p-4 mb-12 mt-4 rounded-[8px]">
+      <div className="bg-white shadow-custom p-4 mb-12 mt-4 rounded-[8px] w-full overflow-hidden">
         <DashboardTableHeader />
+        <div className="w-full overflow-x-auto">
 
         <DataTable
           columns={dashboardTransactionColumns}
@@ -73,6 +74,7 @@ const DashbaordHomePage = () => {
           }
           isLoading={isLoading}
         />
+        </div>
       </div>
 
     </div>

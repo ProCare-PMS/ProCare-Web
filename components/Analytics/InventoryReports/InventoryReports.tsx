@@ -13,7 +13,7 @@ function InventoryReports() {
         <BestPerformingProductTable />
         <UnderPerformingProductTable />
       </div> 
-      <StockAdjustment />
+      <StockAdjustment /> 
       <InventoryAgingReportTable />
     </div>
   );

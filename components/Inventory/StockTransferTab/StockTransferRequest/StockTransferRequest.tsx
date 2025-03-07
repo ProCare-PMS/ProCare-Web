@@ -6,12 +6,13 @@ import DataTable from "@/components/Tables/data-table";
 import { requestsColumns } from "./Columns";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import { ArrowLeft } from "lucide-react";
+import { RequestsTransfers, requestsTransfers } from "./Data";
 
 interface Props {
   onClose: () => void;
 }
 
-const StockTransferRequest = ({ onClose } : Props) => {
+const StockTransferRequest = ({ onClose }: Props) => {
   const [page, setPage] = useState(1);
   const [searchValues, setSearchValues] = useState<string>("");
   const { data: inventoryBranchSyncData, isLoading } = useQuery({
@@ -37,7 +38,7 @@ const StockTransferRequest = ({ onClose } : Props) => {
     <div className="bg-white mt shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)] p-6 rounded-[8px]">
       <div className="flex items-center  justify-between mb-6">
         <div className="flex items-center gap-4">
-          <ArrowLeft onClick={onClose}  className="cursor-pointer" />
+          <ArrowLeft onClick={onClose} className="cursor-pointer" />
           <h2 className="text-[#202224] font-semibold text-2xl">Requests</h2>
         </div>
 
@@ -52,6 +53,18 @@ const StockTransferRequest = ({ onClose } : Props) => {
         columns={requestsColumns}
         onPageChange={handlePageChange}
         searchValue={searchValues}
+        data={{
+          results: requestsTransfers, // Pass the dummy data here
+          count: requestsTransfers.length, // Set count to the length of the array
+          links: { next: null, previous: null }, // Pagination links (not used here)
+          total_pages: 1, // Only one page for dummy data
+        }}
+      />
+      {/* 
+      <DataTable
+        columns={requestsColumns}
+        onPageChange={handlePageChange}
+        searchValue={searchValues}
         data={
           inventoryBranchSyncData || {
             results: [],
@@ -61,6 +74,7 @@ const StockTransferRequest = ({ onClose } : Props) => {
           }
         }
       />
+      */}
     </div>
   );
 };
