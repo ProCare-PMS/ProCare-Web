@@ -29,6 +29,8 @@ function InventoryAgingReportTable() {
     setSetSearchValues(event.target.value);
   };
 
+  console.log({ agingReportData });
+
   return (
     <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px] mt-8">
       <div className="flex justify-between items-center my-3">
