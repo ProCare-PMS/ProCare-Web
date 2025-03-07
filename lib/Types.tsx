@@ -5,6 +5,7 @@ export interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
+  className: string;
 }
 
 export type WorkingHourField = "start_time" | "end_time";

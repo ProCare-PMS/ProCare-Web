@@ -1,6 +1,6 @@
 "use client";
 import DataTable from "@/components/Tables/data-table";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Columns } from "./Columns";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
@@ -13,16 +13,16 @@ import { endpoints } from "@/api/Endpoints";
 function UserManagementTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showEdit, setShowEdit] = useState<boolean>(false);
+  const [formData, setFormData] = useState<any>({});
 
   //get management data
   const { data: getAllmanagementData } = useQuery({
     queryKey: ["management"],
     queryFn: () =>
       customAxios.get(endpoints.managements + "employees/").then((res) => res),
-    select: (findManagedData) => findManagedData?.data,
+    select: (findManagedData) => findManagedData?.data || [],
   });
-
-  console.log(getAllmanagementData)
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -35,7 +35,17 @@ function UserManagementTable() {
   };
 
   const handleCloseModal = () => {
+    setShowEdit(false);
     setShowModal(false); // Close modal
+  };
+
+  const handleActivate = (originalRow: any) => {
+    console.log("we are here");
+  };
+
+  const handleEdit = (originalRow: any) => {
+    setFormData(originalRow);
+    setShowEdit(true);
   };
 
   return (
@@ -72,16 +82,38 @@ function UserManagementTable() {
         </div>
       </div>
 
-    
       <DataTable
-        columns={Columns}
-        data={getAllmanagementData || { results: [], count: 0, links: { next: null, previous: null }, total_pages: 0 }}
+        columns={Columns({
+          handleEdit: handleEdit,
+          handleActivate: handleActivate,
+        })}
+        data={
+          getAllmanagementData || {
+            results: [],
+            count: 0,
+            links: { next: null, previous: null },
+            total_pages: 0,
+          }
+        }
         searchValue={searchValues}
       />
-      
 
-      {/* Add User Modal */}
-      <AddUserModal isOpen={showModal} onClose={handleCloseModal} title="Add" />
+      {!!showEdit && (
+        <AddUserModal
+          isOpen={showEdit}
+          onClose={handleCloseModal}
+          title="Edit"
+          formData={formData}
+        />
+      )}
+
+      {!!showModal && (
+        <AddUserModal
+          isOpen={showModal}
+          onClose={handleCloseModal}
+          title="Add"
+        />
+      )}
     </div>
   );
 }

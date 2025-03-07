@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { MoveLeft } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { z } from "zod";
@@ -26,6 +26,7 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
     email: "",
     quantity: ""
   });
+  const queryClient = useQueryClient();
 
   const postSupplier = useMutation({
     mutationFn: async (value: any) => {
@@ -69,6 +70,8 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
       { formData },
       {
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["inventorySupplier"] });
+          queryClient.invalidateQueries({ queryKey: ["inventorySupplier"] });
           SwalToaster("Supplier Created Successfully", "success");
           onClose();
         },
@@ -82,7 +85,7 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white shadow-custom w-[60%] py-4 px-8 mb-12 rounded-[8px] mt-8 grid gap-y-5">
+      <div className="bg-white shadow-custom w-[70%] md:w-[60%] py-4 px-8 mb-12 rounded-[8px] mt-8 grid gap-y-5">
         <div className="flex items-center justify-between gap-4 mb-4">
           <h3 className="font-bold text-2xl font-inter">Add Supplier</h3>
           <CloseOutlinedIcon onClick={onClose} className="cursor-pointer" />
@@ -94,7 +97,7 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
         </h3>
 
         <form onSubmit={handleSubmitRequest}>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Supplier Name */}
             <div className="grid gap-y-2">
               <label

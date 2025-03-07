@@ -3,8 +3,6 @@ import axios from "axios";
 import { AppDispatch } from "./store";
 import { loginSuccess, loginFailure, logout } from "./authSlice";
 import { LoginCredentials, User } from "@/Types";
-import customAxios from "@/api/CustomAxios";
-import { endpoints } from "@/api/Endpoints";
 
 // Login action
 export const login =
@@ -17,6 +15,7 @@ export const login =
         last_name: string;
         custom_pharmacy_id: string;
         refreshToken: string;
+        accountType: string;
       }>("/login", credentials);
 
       const {
@@ -26,6 +25,7 @@ export const login =
         last_name,
         custom_pharmacy_id,
         refreshToken,
+        accountType,
       } = response.data;
 
       // Create the user object
@@ -38,9 +38,9 @@ export const login =
       };
 
       // Save token to localStorage for persistence
-      localStorage.setItem("authToken", token);
+      //localStorage.setItem("authToken", token);
 
-      dispatch(loginSuccess({ token, refreshToken, user }));
+      dispatch(loginSuccess({ token, refreshToken, user, accountType }));
     } catch (error: any) {
       console.error("Login error:", error);
       let errorMessage = "An error occurred. Please try again.";
@@ -67,7 +67,5 @@ export const login =
 
 // Logout action
 export const logoutAction = () => (dispatch: AppDispatch) => {
-  localStorage.removeItem("authToken");
-  localStorage.removeItem("user");
   dispatch(logout());
 };

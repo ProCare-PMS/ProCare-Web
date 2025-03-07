@@ -3,9 +3,7 @@ name: deploy-image
 on:
   push:
     branches:
-      - deploy
       - ci
-      - master
       - main
 
 jobs:
@@ -35,8 +33,8 @@ jobs:
           push: true
           tags: curmens/procare_frontend:latest
           platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=curmens/procare_frontend:cache
-          cache-to: type=registry,ref=curmens/procare_frontend:cache,mode=max
+          # cache-from: type=registry,ref=curmens/procare_frontend:cache
+          # cache-to: type=registry,ref=curmens/procare_frontend:cache,mode=max
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -53,6 +51,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.STAGING_KEY }}
           script: |
-            cd web/nginx-proxy
+            cd apps/procare/frontend
             docker compose pull
-            docker compose -f docker-compose.prod.yml up --build -d
+            docker compose -f docker-compose.yml up --build -d

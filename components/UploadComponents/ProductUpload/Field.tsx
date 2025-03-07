@@ -31,14 +31,12 @@ export const fields = [
       type: "input",
     },
   },
+  {
+    label: "Unit",
+    key: "unit",
+    alternateMatches: ["unit", "Unit"],
+    fieldType: {
+      type: "input",
+    },
+  },
 ] as const;
-
-// validations: [
-//   {
-//     // Can be "required" / "unique" / "regex"
-//     rule: "required",
-//     errorMessage: "Name is required",
-//     // There can be "info" / "warning" / "error" levels. Optional. Default "error".
-//     level: "error",
-//   },
-// ],

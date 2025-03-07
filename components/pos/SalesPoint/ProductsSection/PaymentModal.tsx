@@ -16,6 +16,7 @@ import { endpoints } from "@/api/Endpoints";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import SwalToaster from "@/components/SwalToaster/SwalToaster";
 import { Plus } from "lucide-react";
+import ThermalReceipt from "./ThermalReceipt";
 
 interface PaymentModalProps {
   onClose: () => void;
@@ -26,8 +27,10 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
   const [orderItems, setOrderItems] = useState<Product[]>([]);
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [user, setUser] = useState<any | null>(null);
-  const componentRef = useRef<HTMLDivElement>(null);
+  const receiptRef = useRef<HTMLDivElement>(null);
   const [discount, setDiscount] = useState<any | null>(null);
+  const [amountTendered, setAmountTendered] = useState<number>(0);
+  const [balance, setBalance] = useState<number>(0);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -60,16 +63,28 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
   }, []);
 
   const handlePrint = useReactToPrint({
-    contentRef: componentRef,
+    contentRef: receiptRef,
     documentTitle: "Payment Receipt",
+    onAfterPrint: () => {
+      // Add any cleanup logic here if needed
+    },
+    pageStyle: `
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        #receipt-content,
+        #receipt-content * {
+          visibility: visible;
+        }
+        #receipt-content {
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+      }
+    `,
   });
-
-  const removeProduct = (productName: string) => {
-    setOrderItems((items) => items.filter((item) => item.name !== productName));
-    // Update localStorage
-    const updatedItems = orderItems.filter((item) => item.name !== productName);
-    localStorage.setItem("orderList", JSON.stringify(updatedItems));
-  };
 
   const totalPrice = orderItems.reduce((total, product) => {
     return total + parseFloat(product.selling_price) * product.quantity;
@@ -78,6 +93,18 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
   const finalPrice = totalPrice - discount;
 
   const itemPrice = finalPrice > 0 ? finalPrice : 0;
+
+  // Handle amount tendered change
+  const handleAmountTenderedChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const tenderedAmount = parseFloat(e.target.value);
+    setAmountTendered(tenderedAmount);
+
+    // Calculate balance (0 if no balance to be given)
+    const calculatedBalance = tenderedAmount - itemPrice;
+    setBalance(calculatedBalance > 0 ? calculatedBalance : 0);
+  };
 
   const finalizePaymentMutation = useMutation({
     mutationFn: async (data: Record<string, any>) => {
@@ -90,10 +117,10 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     const paymentMethods: { [key: string]: string[] } = {
       "Mobile Money": ["mobile_money"],
       "Credit Card": ["credit_card"],
-      "Cash": ["cash"],
-      "Multipay": ["cash", "mobile_money", "credit_card"],
+      Cash: ["cash"],
+      Multipay: ["cash", "mobile_money", "credit_card"],
     };
-  
+
     return paymentMethods[title] || ["cash"]; // Default to Cash
   };
 
@@ -102,7 +129,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     localStorage.removeItem("orderList");
     localStorage.removeItem("selectedCustomer");
     localStorage.removeItem("discount");
-    
+
     // Clear state
     setOrderItems([]);
     setCustomer(null);
@@ -115,14 +142,14 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
       discount_value: discount,
       payment_methods: getPaymentMethods(title),
       saleitem_set: orderItems.map((item) => ({
-        id: item.id,
+        product_id: item.id,
         product: item.name,
         quantity: item.quantity,
         total_item_price: parseFloat(item.selling_price),
       })),
       //total_base_price: totalPrice,
       //total_price_with_discount: finalPrice,
-      employee: { 
+      employee: {
         full_name: `${user.first_name} ${user.last_name}`,
         email: user.email,
         contact: user.phone_number,
@@ -137,22 +164,18 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
 
     finalizePaymentMutation.mutate(salesItemsData, {
       onSuccess: () => {
-        // Clear localStorage first to prevent any race conditions
         clearAllData();
-        // Invalidate queries to refresh data
-        queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] }); //recent transactions table key
+        queryClient.invalidateQueries({ queryKey: ["recentTransactionsData"] });
 
-        // Close the modal
         onClose();
 
-        // Reload the page to ensure all components are reset
         window.location.reload();
 
         // Show success message
         SwalToaster(
           "Sale completed successfully!",
           "success",
-          `Total amount: ${finalPrice}`
+          `Total amount: ${finalPrice.toFixed(2)}`
         );
       },
       onError: (error) => {
@@ -168,14 +191,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div
-        ref={componentRef}
-        className="relative bg-white rounded-xl shadow-xl w-[800px] h-[600px] flex flex-col"
-      >
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+      <div className="relative bg-white rounded-xl shadow-xl w-[800px] h-[600px] flex flex-col">
         <div className="p-6 flex-1 overflow-y-auto">
           <div className="flex items-center gap-4 mb-8">
             <button
@@ -272,34 +289,37 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
             <div className="grid grid-cols-2 gap-x-3 mt-4">
               <div>
                 <label
-                  htmlFor=""
+                  htmlFor="amountTendered"
                   className="text-[#323539] font-medium text-sm"
                 >
                   Amount Tendered
                 </label>
                 <input
+                  id="amountTendered"
                   type="number"
                   placeholder="Enter amount"
+                  value={amountTendered}
+                  onChange={handleAmountTenderedChange}
                   className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
                 />
               </div>
               <div>
                 <label
-                  htmlFor=""
+                  htmlFor="balance"
                   className="text-[#323539] font-medium text-sm"
                 >
                   Balance
                 </label>
                 <input
+                  id="balance"
                   type="number"
-                  placeholder="50.00"
+                  value={balance.toFixed(2)}
                   disabled={true}
                   className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
                 />
               </div>
             </div>
           )}
-
           <div className="mt-6 text-right">
             <div className="inline-block">
               <p className="text-sm text-gray-500">TOTAL PRICE</p>
@@ -308,6 +328,14 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
               </span>
             </div>
           </div>
+        </div>
+        <div
+          ref={receiptRef}
+          id="receipt-content"
+          className="fixed left-[-9999px] top-[-9999px]"
+          style={{ width: "80mm" }}
+        >
+          <ThermalReceipt />
         </div>
 
         <div className="p-6 bg-gray-50 rounded-b-xl border-t flex items-center justify-end gap-3">

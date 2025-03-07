@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { EllipsisVertical, LayoutGrid } from "lucide-react";
 import AntiMalarialTable from "./AntiMalarialTable";
 import customAxios from "@/api/CustomAxios";
@@ -40,15 +40,37 @@ const CategoriesTabProducts = () => {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const [selectedCategoryProducts, setSelectedCategoryProducts] = useState<ProductsType[]>([]);
+  const [selectedSlug, setSelectedSlug] = useState("");
+  const [selectedCategoryName, setSelectedCategoryName] = useState("");
+  const [selectedCategoryID, setSelectedCategoryID] = useState("")
+  const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-  const openCategoryTable = (products: ProductsType[]) => {
+  const openCategoryTable = (products: ProductsType[], slug: string, categoryId: string, categoryName: string) => {
+    // Start animation
+    setIsAnimating(true);
+    
+    // Set data
     setSelectedCategoryProducts(products);
-    setIsModalOpen(true);
+    setSelectedSlug(slug);
+    setSelectedCategoryName(categoryName);
+    setSelectedCategoryID(categoryId)
+    
+    // Open modal with slight delay for animation
+    setTimeout(() => {
+      setIsModalOpen(true);
+      setTimeout(() => setIsAnimating(false), 300);
+    }, 50);
   };
 
   const onClose = () => {
-    setIsModalOpen(false);
+    setIsAnimating(true);
+    // Delay closing to allow animation
+    setTimeout(() => {
+      setIsModalOpen(false);
+      setIsAnimating(false);
+    }, 50);
   };
 
   if (isLoading) {
@@ -68,6 +90,7 @@ const CategoriesTabProducts = () => {
       <div className="grid grid-cols-2 md:grid-cols-3 mx-auto place-items-center lg:grid-cols-5 gap-8">
         {categories?.map((category: CategoryProduct) => (
           <div
+            ref={(el) => (categoryRefs.current[category.id] = el)}
             className="border border-[#D0D5DD] w-[230px] rounded-[8px] py-8 px-6"
             key={category.id}
           >
@@ -86,7 +109,7 @@ const CategoriesTabProducts = () => {
               </h1>
               <span
                 className="text-left text-[#2648EA] font-medium font-inter text-base cursor-pointer underline"
-                onClick={() => openCategoryTable(category.products)}
+                onClick={() => openCategoryTable(category.products, category.slug, category.id, category.name)}
               >
                 View {category.products.length} products
               </span>
@@ -95,12 +118,66 @@ const CategoriesTabProducts = () => {
         ))}
       </div>
 
-      {isModalOpen && (
-        <AntiMalarialTable 
-          products={selectedCategoryProducts}
-          onClose={onClose}
-        />
-      )}
+      {/* Modal backdrop with animation */}
+      <div 
+        className={`fixed inset-0 bg-black transition-opacity duration-300 z-40 ${
+          isModalOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'
+        }`} 
+        onClick={onClose}
+      />
+
+      {/* Modal container with animation */}
+      <div 
+        className={`fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-300 ${
+          isModalOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        {(isModalOpen || isAnimating) && (
+          <div
+            className="animate-modal-open w-full max-w-[800px]"
+            style={{
+              animation: isModalOpen 
+                ? 'modalOpenAnimation 300ms forwards ease-out' 
+                : isAnimating 
+                  ? 'modalCloseAnimation 300ms forwards ease-in' 
+                  : 'none'
+            }}
+          >
+            <AntiMalarialTable
+              products={selectedCategoryProducts}
+              onClose={onClose}
+              slug={selectedSlug}
+              categoryName={selectedCategoryName}
+              categoryId={selectedCategoryID}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Add necessary keyframe animations */}
+      <style jsx global>{`
+        @keyframes modalOpenAnimation {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        @keyframes modalCloseAnimation {
+          from {
+            opacity: 1;
+            transform: scale(1);
+          }
+          to {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+        }
+      `}</style>
     </div>
   );
 };

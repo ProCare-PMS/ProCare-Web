@@ -1,0 +1,19 @@
+services:
+  web-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web-service
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - 6235:6235
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
+    external: true

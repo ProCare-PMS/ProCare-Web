@@ -5,51 +5,38 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { updateUser } from "@/redux/authSlice";
 
 const DashboardNote = () => {
-  const [getUser, setGetUser] = useState<any>({});
+  const dispatch = useDispatch();
+  const accountType = localStorage.getItem("accountType");
+  const [showNote, setShowNote] = useState<boolean>(true);
+  const user = useSelector((state: RootState) => state.auth.user);
 
-  //get personal info data
   const { data: getPersonalData } = useQuery({
     queryKey: ["personalInformation"],
     queryFn: async () =>
       await customAxios
-        .get(`${endpoints.user}${getUser?.id}/`)
+        .get(
+          accountType === "employee"
+            ? `${endpoints.managements}employees/${user?.id}/`
+            : `${endpoints.user}${user?.id}/`
+        )
         .then((res) => res?.data),
-    enabled: !!getUser?.id,
+    enabled: !!user?.id,
   });
 
   const handleSaveBtn = () => {
-    // Retrieve the current user object from localStorage
-    const userData = localStorage.getItem("user");
-
-    if (userData) {
-      // Parse the JSON string into an object
-      const userObject = JSON.parse(userData);
-
-      // Add or update the `saveNumber` property
-      userObject.saveNumber = true;
-
-      // Save the updated object back to localStorage
-      localStorage.setItem("user", JSON.stringify(userObject));
-
-      //console.log("User updated:", userObject);
-    } else {
-      console.error("No user data found in localStorage.");
-    }
+    dispatch(updateUser({ saveNumber: true }));
+    setShowNote(false);
   };
-
-  // Set user from localStorage on client side
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      setGetUser(user);
-    }
-  }, []);
 
   return (
     <div>
-      {getUser?.saveNumber && getUser?.saveNumber === false && (
+      {showNote && accountType !== "employee" && (
         <div className="border border-[#2648EA] mt-8 bg-[#EFF0FE] font-inter rounded-xl p-4 flex flex-col md:flex-row items-center justify-center md:justify-between gap-4">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             {/* <Home color="blue" /> */}

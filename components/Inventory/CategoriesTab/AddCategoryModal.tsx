@@ -2,7 +2,7 @@
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import SwalToaster from "@/components/SwalToaster/SwalToaster";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import React, { useState } from "react";
 import { z } from "zod";
@@ -22,6 +22,7 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
     name: "",
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const queryClient = useQueryClient();
 
   const postCategoryMutation = useMutation({
     mutationKey: ["categories"],
@@ -34,7 +35,7 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; 
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -69,6 +70,8 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
       { formData },
       {
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["inventoryCategories"] });
+          queryClient.invalidateQueries({ queryKey: ["dashboardData"] });
           SwalToaster("Category Created Successfully", "success");
           onClose();
         },

@@ -36,7 +36,7 @@ const initialFormData: FormData = {
   unit: "",
   quantity: "",
   expiry_date: "",
-  reorder_level: "",
+  reorder_level: "", 
   cost_price: "",
   markup_percentage: "",
   selling_price: "",
@@ -153,7 +153,6 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
         .then((res) => res?.data?.results),
   });
 
-  console.log(suppliers);
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
@@ -189,6 +188,7 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
     postProductMutation.mutate(submitData, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboardData"] });
         setModal();
         SwalToaster("Product added successfully!", "success");
       },

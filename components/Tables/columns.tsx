@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import DashboardModal from "../Modals/DashboardModal";
 import clsx from "clsx";
+import { ProductsType } from "./products-tab-columns";
 
 export type Product = {
   name: string;
@@ -14,7 +15,7 @@ export type Product = {
 };
 
 export type DashbaordModalType = {
-  transactionId: string;
+  id: string;
   date: string;
   time: string;
   itemsSold?: number;
@@ -26,16 +27,38 @@ export type DashbaordModalType = {
   products: Product[];
 };
 
+type SaleItem = {
+  id: string;
+  pharmacy: string;
+  product: ProductsType;
+  quantity: number;
+  total_item_price: number;
+};
+
+export interface DashboardRecentTransactions {
+  created_at: string;
+  discount_type: "percentage" | "fixed";
+  discount_value: string;
+  employee: string | null;
+  id: string;
+  modified_at: string;
+  payment_methods: string[];
+  pharmacy: string;
+  saleitem_set: SaleItem[];
+  status: "completed" | "pending" | "cancelled";
+}
+
 interface ActionsCellProps {
   row: {
-    original: DashbaordModalType;
+    original: DashboardRecentTransactions;
   };
 }
 
 const ActionsCell = ({ row }: ActionsCellProps) => {
   const payment = row.original;
   const [modal, setModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<DashbaordModalType | null>(null);
+  const [selectedItem, setSelectedItem] =
+    useState<DashboardRecentTransactions | null>(null);
 
   return (
     <div>
@@ -59,58 +82,110 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
   );
 };
 
-export const dashboardTransactionColumns: ColumnDef<DashbaordModalType>[] = [
-  {
-    accessorKey: "transactionId",
-    header: "Transaction ID",
-  },
-  {
-    accessorKey: "date",
-    header: "Date",
-  },
-  {
-    accessorKey: "time",
-    header: "Time",
-  },
-  {
-    accessorKey: "itemsSold",
-    header: "Items Sold",
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-left">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-GH", {
-        style: "currency",
-        currency: "ghs",
-      }).format(amount);
-
-      return <div className="!text-left ">{formatted}</div>;
+export const dashboardTransactionColumns: ColumnDef<DashboardRecentTransactions>[] =
+  [
+    {
+      accessorKey: "id",
+      header: "Transaction",
+      cell: ({ row }) => {
+        const transactionId = row.original.id.substring(0, 5); // Get the first 5 characters
+        return <span>{`Receipt #${transactionId}`}</span>;
+      },
     },
-  },
-  {
-    accessorKey: "type",
-    header: "Type",
-    cell: (value: any) => (
-      <p className="rounded-3xl font-inter text-sm font-normal">
-        <span
-          className={clsx(" rounded-3xl font-inter text-sm font-normal", {
-            "text-[#219653] bg-[#21965314] !w-[40px] py-2 rounded-3xl px-3 ":
-              value.getValue() === "Bank",
-            "text-[#FFA70B] bg-[#FFA70B14] px-3 !w-[40px] py-2":
-              value.getValue() === "Momo",
-            "text-[#D34053] bg-[#D3405314] px-3 !w-[40px] py-2 ":
-              value.getValue() === "Cash",
-          })}
-        >
-          {value.getValue()}
-        </span>
-      </p>
-    ),
-  },
-  {
-    id: "actions",
-    cell: ActionsCell,
-  },
-];
+    {
+      accessorKey: "created_at",
+      header: "Date",
+      cell: ({ row }) => {
+        const createdAt = new Date(row.original.created_at);
+        const formattedDate = createdAt.toLocaleDateString("en-US", {
+          month: "2-digit",
+          day: "2-digit",
+          year: "numeric",
+        });
+
+        return <span>{formattedDate}</span>;
+      },
+    },
+    {
+      accessorKey: "time",
+      header: "Time",
+      cell: ({ row }) => {
+        const createdAt = new Date(row.original.created_at);
+        const formattedTime = createdAt.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+
+        return <span>{formattedTime}</span>;
+      },
+    },
+    {
+      accessorKey: "itemsSold",
+      header: "Items Sold",
+      cell: ({ row }) => {
+        return <span>{row.original.saleitem_set.length}</span>;
+      },
+    },
+    {
+      accessorKey: "amount",
+      header: () => <div className="text-left">Amount</div>,
+      cell: ({ row }) => {
+        const totalAmount = row.original.saleitem_set.reduce(
+          (sum, item) => sum + item.total_item_price,
+          0
+        );
+
+        const formatted = new Intl.NumberFormat("en-GH", {
+          style: "currency",
+          currency: "GHS",
+        }).format(totalAmount);
+
+        return <div className="!text-left">{formatted}</div>;
+      },
+    },
+    {
+      accessorKey: "type",
+      header: "Type",
+      cell: ({ row }) => {
+        // Map payment methods to user-friendly names
+        const paymentMethods = row.original.payment_methods.map((method) => {
+          switch (method) {
+            case "mobile_money":
+              return "Momo";
+            case "credit_card":
+              return "Bank";
+            case "Cash":
+              return "Cash";
+            default:
+              return method; // Fallback for unknown methods
+          }
+        });
+    
+        return (
+          <p className="rounded-3xl font-inter text-sm font-normal">
+            <span
+              className={clsx(
+                "rounded-3xl font-inter text-sm font-normal px-3 py-2",
+                {
+                  "text-[#219653] bg-[#21965314]":
+                    row.original.payment_methods.includes("credit_card"),
+                  "text-[#FFA70B] bg-[#FFA70B14]":
+                    row.original.payment_methods.includes("mobile_money"),
+                  "text-[#D34053] bg-[#D3405314]":
+                    row.original.payment_methods.includes("Cash"),
+                }
+              )}
+            >
+              {paymentMethods.join(", ")}
+            </span>
+          </p>
+        );
+      },
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => <ActionsCell key={row.original.id} row={row} />,
+    },
+  ];

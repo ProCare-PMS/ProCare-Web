@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { loginFailure, loginSuccess } from "@/redux/authSlice";
+import { setAccountType } from "@/redux/accountTypeSlice";
 
 const UserPasscode = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
@@ -77,16 +78,20 @@ const UserPasscode = () => {
       },
       {
         onSuccess: (responseData) => {
+          //console.log("Login successful:", responseData);
           const token = responseData?.access;
           const user = responseData?.user;
           const refreshToken = responseData?.refresh;
+          const accountType = responseData?.account_type;
 
           if (token && user && refreshToken) {
             localStorage.setItem("authToken", token);
             localStorage.setItem("refreshToken", refreshToken);
             localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("accountType", accountType);
             toast.success("Login successful! Redirecting to the dashboard.");
-            dispatch(loginSuccess({ token, refreshToken, user }));
+            dispatch(loginSuccess({ token, refreshToken, user, accountType }));
+            dispatch(setAccountType(accountType));
             router.push("/dashboard");
             localStorage.removeItem("accountId");
           }
@@ -99,7 +104,9 @@ const UserPasscode = () => {
               apiErrors.non_field_errors.length > 0
             ) {
               console.error(apiErrors.non_field_errors[0]);
+              console.error(apiErrors.non_field_errors[0]);
             } else {
+              console.error("An unexpected error occurred. Please try again.");
               console.error("Invalid Passcode");
             }
             dispatch(loginFailure("Invalid Passcode"));
@@ -117,7 +124,7 @@ const UserPasscode = () => {
     <div className="bg-[#F9F9F9] h-screen w-screen flex justify-center items-center">
       <div className="flex flex-col items-center justify-between gap-4">
         <h2 className="text-[#2648EA] font-semibold text-3xl">
-         Enter Passcode
+          Enter Passcode
         </h2>
         <div className="bg-white w-96 h-[450px] px-6 py-8 flex flex-col justify-center shadow-lg rounded-xl">
           <div className="w-[40%] h-[40%] mx-auto shadow-md rounded-xl">
@@ -141,7 +148,7 @@ const UserPasscode = () => {
                     key={index}
                     id={`otp-${index}`}
                     className="border-2 w-16 h-12 border-[#D0D5DD] rounded-[8px] text-center text-4xl text-slate-400"
-                    type="text"
+                    type="password"
                     maxLength={1}
                     value={digit}
                     onChange={(e) => handleChange(e.target.value, index)}

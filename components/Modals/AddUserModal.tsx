@@ -1,5 +1,5 @@
 // components/AddUserModal.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import Person3OutlinedIcon from "@mui/icons-material/Person3Outlined";
 import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
@@ -14,7 +14,7 @@ import {
   stepTwoSchema,
   stepThreeSchema,
 } from "@/lib/schema/schema";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { endpoints } from "@/api/Endpoints";
 import customAxios from "@/api/CustomAxios";
 import {
@@ -23,18 +23,22 @@ import {
   initialWorkingHours,
 } from "@/lib/utils";
 import { AddUserTypes, DayAbbreviation, WorkingHourField } from "@/lib/Types";
+import SwalToaster from "../SwalToaster/SwalToaster";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
-// Modal Component
+// Modal Componentform
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
+  formData?: any;
 }
 
 const rolesValLabels: { label: string; value: string }[] = [
   { label: "Manager", value: "manager" },
   { label: "Pharmacist", value: "pharmacist" },
-  { label: "Technician", value: "technician" },
+  { label: "MCA", value: "technician" },
 ];
 
 const permissionsoptions: { label: string; value: string }[] = [
@@ -53,6 +57,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   isOpen,
   onClose,
   title,
+  formData,
 }) => {
   const [step, setStep] = useState<number>(1);
   const [formValues, setFormValues] = useState<AddUserTypes>({
@@ -62,16 +67,48 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     address: "",
     role: "",
     working_hours: defaultWorkingHours,
-    //permission: [],
   });
 
-  //mutation
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!!formData) {
+      setFormValues({
+        ...formData,
+        full_name: formData.full_name || "",
+        email: formData.email || "",
+        contact: formData.contact || "",
+        address: formData.address || "",
+        role: formData.is_manager
+          ? "Manager"
+          : formData.is_mca
+          ? "MCA"
+          : formData.is_pharmacist
+          ? "Pharmacist"
+          : "", // Ensure this exists in `formData`
+        working_hours: formData.working_hours || defaultWorkingHours, // Prevent undefined issues
+      });
+    }
+  }, [formData]);
+
   const postManagementEmployees = useMutation({
     mutationFn: async (value: any) => {
-      const res = await customAxios
-        .post(endpoints.managements + "employees/create/", value.formData)
-        .then((res) => res);
-      return res;
+      if (!value?.method || !value?.formData) {
+        throw new Error("Invalid request data");
+      }
+
+      const url =
+        endpoints.managements +
+        (value.method === "POST"
+          ? "employees/create/"
+          : `employees/${formData.id}/`);
+
+      const res =
+        value.method === "POST"
+          ? await customAxios.post(url, value.formData)
+          : await customAxios.put(url, value.formData);
+
+      return res.data; // Return the actual response data
     },
   });
 
@@ -99,7 +136,15 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     }));
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormValues((prev) => ({ ...prev, [name]: value }));
+  // };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    //e.preventDefault();
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
@@ -149,7 +194,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
       password: "emptypassword",
     };
 
-    console.log({ payload });
+    //console.log({ payload });
 
     const result = AddUserSchema.safeParse(formValues);
 
@@ -159,7 +204,26 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     }
 
     // Post only when the form is complete and the user confirms submission
-    postManagementEmployees.mutate({ formData: payload });
+    postManagementEmployees.mutate(
+      { formData: payload, method: formData?.id ? "PUT" : "POST" },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["management"] });
+          onClose();
+          //reset the form
+          setFormValues({
+            full_name: "",
+            email: "",
+            contact: "",
+            address: "",
+            role: "",
+            working_hours: defaultWorkingHours,
+          });
+          setStep(1);
+          SwalToaster("User added successfully!", "success");
+        },
+      }
+    );
   };
 
   return (
@@ -168,7 +232,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
         <form onSubmit={handleSubmit}>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">{title} User</h2>
-            <button className="text-dark" onClick={onClose}>
+            <button type="button" className="text-dark" onClick={onClose}>
               <CloseOutlinedIcon />
             </button>
           </div>
@@ -220,7 +284,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     className="input bg-white p-2 border-2 rounded focus:outline-none"
                     type="text"
                     placeholder="Enter user name"
-                    value={formValues.full_name}
+                    value={formValues?.full_name}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -235,7 +299,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     className="input bg-white p-2 border-2 rounded focus:outline-none"
                     type="email"
                     placeholder="Enter email address"
-                    value={formValues.email}
+                    value={formValues?.email}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -250,7 +314,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     className="input bg-white p-2 border-2 rounded focus:outline-none"
                     type="text"
                     placeholder="Enter contact"
-                    value={formValues.contact}
+                    value={formValues?.contact}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -265,7 +329,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     className="input bg-white p-2 border-2 rounded focus:outline-none"
                     type="text"
                     placeholder="Enter address"
-                    value={formValues.address}
+                    value={formValues?.address}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -286,28 +350,6 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     isClearable
                   />
                 </div>
-
-                {/* <div className="flex flex-col w-3/5">
-                  <label className="text-gray-700 font-medium mb-2">
-                    Permissions
-                  </label>
-                  <CustomSelect
-                    idField="permission"
-                    nameField="permission"
-                    optionData={permissionsoptions}
-                    value={permissionsoptions.filter((option) =>
-                      formValues.permission.includes(option?.value)
-                    )}
-                    onChange={(selected) =>
-                      handleChange(
-                        "permission",
-                        selected ? selected.map((item: any) => item.value) : []
-                      )
-                    }
-                    isClearable
-                    isMulti
-                  />
-                </div> */}
               </div>
             )}
 
@@ -378,6 +420,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                 }`}
                 onClick={prevStep}
                 disabled={step === 1}
+                type="button"
               >
                 Previous
               </button>
@@ -386,7 +429,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                 className={`bg-indigo-600 text-white px-6 py-2 rounded-[0.5rem] w-[10rem]`}
                 onClick={step === 3 ? handleSubmit : validateStep}
               >
-                {step === 3 ? "Submit" : "Next"}
+                {step === 3 ? (formData?.id ? "Edit" : "Submit") : "Next"}
               </button>
             </div>
           </div>

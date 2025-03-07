@@ -23,8 +23,19 @@ function UnderPerformingProductTable() {
       customAxios
         .get(endpoints.analytics + "products/worst-performing/")
         .then((res) => res),
-    select: (worstProduct) => worstProduct?.data?.results,
+    select: (worstProduct) => {
+      const totalSalesValue = worstProduct?.data?.total_sales_value || 1; // Avoid division by zero
+      return worstProduct?.data?.products
+        ?.map((product:any) => ({
+          ...product,
+          performance: ((product.sales_value / totalSalesValue) * 100).toFixed(
+            2
+          ),
+        }))
+        ?.filter((product:any) => product.performance < 10); // Adjust threshold
+    },
   });
+  console.log(worstPerformingProductData)
 
   return (
     <div className="bg-white p-6 rounded-xl flex-1">
@@ -50,9 +61,9 @@ function UnderPerformingProductTable() {
         </div>
       </div>
 
-      {/* 
+       
       <MiniSubTable columns={Column} data={worstPerformingProductData || []} />
-      */}
+      
     </div>
   );
 }

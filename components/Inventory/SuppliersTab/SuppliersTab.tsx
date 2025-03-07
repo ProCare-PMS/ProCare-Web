@@ -29,25 +29,14 @@ const SuppliersTab = () => {
 
   const { data: inventorySupplierData, isLoading } = useQuery({
     queryKey: ["inventorySupplier", page],
-    queryFn: async () => {
-      const response = await customAxios.get(
+    queryFn: async () => 
+       await customAxios.get(
         `${endpoints.inventorySupplier}?page=${page}`
-      );
+      ).then((res) =>res),
+      select: (findData) => findData?.data,
 
-      return {
-        results: response.data.results.sort(
-          (a: SuppliersType, b: SuppliersType) =>
-            new Date(b.total_purchase_quantity).getTime() -
-            new Date(a.total_purchase_quantity).getTime()
-        ),
-        total_pages: response.data.total_pages,
-        count: response.data.count,
-        links: response.data.links,
-      };
-    },
   });
 
-  console.log(inventorySupplierData);
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -61,17 +50,17 @@ const SuppliersTab = () => {
 
   return (
     <>
-      <div className="">
+    <div>
         <SuppliersTabStats
           stats={inventorySupplierData?.results}
           isLoading={isLoading}
         />
 
         <div className="p-6 bg-white mt-7 shadow-[6px_6px_54px_0_rgba(0,0,0,0.05)]">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-6">
             <h2 className="text-[#202224] font-semibold text-2xl">Suppliers</h2>
 
-            <div className="flex items-center gap-3">
+            <div className="flex mt-4 md:mt-0 items-center gap-3">
               <SearchFieldInput
                 value={searchValues}
                 onChange={handleSearchValueChange}
