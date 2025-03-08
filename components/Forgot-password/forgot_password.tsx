@@ -1,18 +1,33 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { endpoints } from "@/api/Endpoints";
 import Image from "next/image";
+import {toast} from "sonner";
+import customAxios from "@/api/CustomAxios";
+import PasswordResetModal from "./passwordReset";
 
 export default function Forgot_password() {
-  const [email, setEmail] = useState("");
+  const [pharmacyId, setPharmacyId] = useState("");
   const [resetSent, setResetSent] = useState(false);
+  const [token, setToken] = useState('')
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Handle form submission logic here, e.g., API calls
-    console.log("Email:", email);
-    setEmail("");
-
+    try {
+      const res = await customAxios.post(endpoints.forgotPassword, {
+        custom_pharmacy_id: pharmacyId
+      });
+      setPharmacyId("");
+      setToken(res.data.token)
+      toast.success("A 6-digit code has been sent to your account email")
+      return res.data;
+    } catch (error: any) {
+      if(error?.response?.status === 400) {
+        toast.error("Enter a valid pharmacy Id")
+      }
+      throw error;
+    }
     //handle reset hook
     setTimeout(() => {
       setResetSent(true);
@@ -27,7 +42,7 @@ export default function Forgot_password() {
               Forgot your Password?
             </h3>
             <p className="w-4/5 font-inter text-lg leading-6 tracking-tighter text-center">
-              Enter you email below and we’ll send you instructions on how to
+              Enter you pharmacy Id below and we&apos;ll send you instructions on how to
               reset your password
             </p>
           </div>
@@ -39,19 +54,19 @@ export default function Forgot_password() {
               >
                 <div className="mb-4">
                   <label
-                    htmlFor="email"
+                    htmlFor="pharmacy-id"
                     className="font-inter text-lg font-medium leading-5 tracking-wider text-left mb-3"
                   >
-                    Email
+                    Pharmacy Id
                   </label>
                   <input
-                    id="email"
-                    type="email"
-                    placeholder="Enter email"
+                    id="pharmacy-id"
+                    placeholder="Enter pharmacyId"
                     className="mt-3 appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-[#F8F9FB]"
                     autoComplete="off"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    value={pharmacyId}
+                    onChange={(e) => setPharmacyId(e.target.value)}
                   />
                 </div>
                 {/* button here */}
@@ -59,7 +74,7 @@ export default function Forgot_password() {
                   type="submit"
                   className="bg-blue-500 text-white py-2 px-4 rounded w-full"
                 >
-                  Send Reset Link
+                  Send Reset Code
                 </button>
               </form>
             </div>
@@ -93,6 +108,10 @@ export default function Forgot_password() {
           )}
         </div>
       </div>
+      {
+        token &&
+        <PasswordResetModal token={token}/>
+      }
     </div>
   );
 }
