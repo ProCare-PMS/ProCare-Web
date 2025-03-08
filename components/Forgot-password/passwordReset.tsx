@@ -87,7 +87,7 @@ const PasswordResetModal: React.FC<PasswordResetModalProps> = ({token}) => {
       return res.data;
     } catch (error: any) {
       if (error?.response?.status === 400) {
-        setSubmitError(error.response.data.message || "Invalid OTP or password");
+        setSubmitError(error.response.data.message || "Invalid OTP");
       } else if (error?.response?.status === 401) {
         setSubmitError("OTP has expired. Please request a new one.");
       } else {
