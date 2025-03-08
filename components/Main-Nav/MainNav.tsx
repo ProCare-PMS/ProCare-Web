@@ -11,7 +11,6 @@ import EndShiftModal from "../Modals/EndShiftModal";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoIosClose } from "react-icons/io";
 
-
 const MainNav = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,13 +54,13 @@ const MainNav = () => {
     };
 
     // Add event listener
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Initial check
     handleResize();
 
     // Cleanup event listener
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -94,8 +93,10 @@ const MainNav = () => {
               <div className="font-inter">
                 <h2 className="text-sm font-semibold sev">
                   {accountType === "employee"
-                    ? getPersonalData?.full_name
-                    : `${getPersonalData?.first_name} ${getPersonalData?.last_name}`}
+                    ? getPersonalData?.full_name ?? ""
+                    : `${getPersonalData?.first_name ?? ""} ${
+                        getPersonalData?.last_name ?? ""
+                      }`}
                 </h2>
                 <span className="text-sm font-medium text-[#858C95]">
                   {new Date().toDateString()}
@@ -165,7 +166,7 @@ const MainNav = () => {
 
         <div className="p-4">
           <div className="flex md:hidden">
-          <MainNavRoutes toggleMobileNav={toggleMobileNav} />
+            <MainNavRoutes toggleMobileNav={toggleMobileNav} />
           </div>
         </div>
       </div>

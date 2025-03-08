@@ -1,6 +1,7 @@
 export const endpoints = {
   dashboard: "/inventories/dashboard/",
   analytics: "/analytics/",
+  forgotPassword: "/forgot-password/",
   inventories: "/inventories/",
   managements: "/managements/",
   login: "/login/",
@@ -14,6 +15,7 @@ export const endpoints = {
   inventoryBranchSync: "/inventories/stock-transfers/",
   inventoryCategories: "/inventories/categories/",
   inventoryLowStock: "/inventories/products/low_stock/",
+  resetPassword: '/reset-password/',
   sales: "/sales/",
   salesItems: "/sales/sale-items/",
   posCustomers: "/sales/customers/",

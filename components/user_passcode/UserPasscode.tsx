@@ -104,10 +104,12 @@ const UserPasscode = () => {
               apiErrors.non_field_errors.length > 0
             ) {
               console.error(apiErrors.non_field_errors[0]);
+              console.error(apiErrors.non_field_errors[0]);
             } else {
               console.error("An unexpected error occurred. Please try again.");
+              console.error("Invalid Passcode");
             }
-            dispatch(loginFailure("An unexpected error occurred"));
+            dispatch(loginFailure("Invalid Passcode"));
           } else {
             console.error(
               error.response.data.message || "An unexpected error occurred."

@@ -65,7 +65,7 @@ export default function SettingsTabsContent() {
               {...a11yProps(0)}
               sx={{ textTransform: "none" }}
             />
-            {!!user?.is_mca && (
+            {(!!user?.is_mca || !!user?.is_manager) && (
               <Tab
                 className="font-inter text-sm font-semibold text-[#858C95]"
                 label="Company Info"
@@ -73,7 +73,7 @@ export default function SettingsTabsContent() {
                 sx={{ textTransform: "none" }}
               />
             )}
-            {!!user?.is_mca && (
+            {(!!user?.is_mca || !!user?.is_manager) && (
               <Tab
                 className="font-inter text-sm font-semibold text-[#858C95]"
                 label="Security"
@@ -81,7 +81,7 @@ export default function SettingsTabsContent() {
                 sx={{ textTransform: "none" }}
               />
             )}
-            {!(user?.is_manager || user?.is_mca || user?.is_pharmacist) && (
+            {!(user?.is_mca || user?.is_pharmacist || !user?.is_manager) && (
               <Tab
                 className="font-inter text-sm font-semibold text-[#858C95]"
                 label="Billing"

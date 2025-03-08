@@ -1,36 +1,28 @@
-# Build Stage
-FROM node:18-alpine AS BUILD_IMAGE
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Install dependencies (including dev dependencies)
+# Copy package.json and package-lock.json to install dependencies first (so Docker can cache it effectively)
 COPY package*.json ./
+
+# Install all dependencies including dev dependencies
 RUN npm install --legacy-peer-deps
 
-# Copy the source code and build it
+# Copy the source code into the container
 COPY . .
+
+# Build the Next.js app
 RUN npm run build
 
-# Production Stage
-FROM node:18-alpine AS PRODUCTION_STAGE
-
-WORKDIR /app
-
-# Copy the necessary build files
-COPY --from=BUILD_IMAGE /app/package*.json ./
-COPY --from=BUILD_IMAGE /app/.next ./.next
-COPY --from=BUILD_IMAGE /app/public ./public
-
-# Install only production dependencies
-RUN npm install --production --legacy-peer-deps
-
-# Set environment variables
+# Set environment variables for production
 ENV NODE_ENV=production
 ENV NEXTAUTH_SECRET=adminsecretorcapplication
 ENV NEXT_PUBLIC_API_URL="https://api.rxpms.prohealium.com/api"
 ENV NEXT_PUBLIC_MS_CLARITY_ID="pnmwnhdol7"
 ENV NEXT_PUBLIC_GOOGLE_ANALYTICS_ID="G-75Y3BYG07B"
 
+# Expose the port for the app
 EXPOSE 6325
 
+# Start the app in production mode
 CMD ["npm", "start"]
