@@ -50,10 +50,12 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     if (employee) {
       setUser(JSON.parse(employee));
     }
+    
 
     if (discount) {
       setDiscount(JSON.parse(discount));
     }
+    
 
     // Disable scrolling when modal is open
     document.body.style.overflow = "hidden";
@@ -136,6 +138,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     setDiscount(null);
   };
 
+
   const handleFinalize = () => {
     const salesItemsData = {
       discount_type: "percentage",
@@ -150,14 +153,14 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
       //total_base_price: totalPrice,
       //total_price_with_discount: finalPrice,
       employee: {
-        full_name: `${user.first_name} ${user.last_name}`,
+        full_name: `${user.full_name}`,
         email: user.email,
         contact: user.phone_number,
-        address: user.pharmacy.address,
-        license_number: user.pharmacy.license_number,
-        is_manager: true,
-        is_pharmacist: true,
-        is_mca: true,
+        address: user.address || user.pharmacy.address,
+        license_number:  user.license_number || user.pharmacy.license_number,
+        is_manager: user?.is_manager ,
+        is_pharmacist: user?.is_pharmacist ,
+        is_mca: user?.is_mca ,
       },
       status: "completed",
     };
@@ -267,14 +270,25 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
           </div>
 
           {title === "Multipay" && (
-            <div className="mt-4">
-              <p className="text-[#323539] font-medium text-sm">Cash</p>
-              <div className="flex items-center gap-8 mt-2">
-                <input
-                  type="number"
-                  placeholder="Enter amount"
-                  className="w-[30%] px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
-                />
+            <>
+              <div className="mt-4 flex items-center gap-4">
+                <div>
+                  <span className="text-[#323539] font-medium text-sm">Cash</span>
+                  <input
+                    type="number"
+                    placeholder="Enter amount"
+                    className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div>
+                  <span className="text-[#323539] font-medium text-sm">Mobile Money</span>
+                  <input
+                    type="number"
+                    placeholder="Enter amount"
+                    className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
+                  />
+                </div>
+
                 <div className="flex items-center gap-2">
                   <Plus className="text-[#2648EA]" />
                   <span className="text-[#2648EA] text-sm font-semibold">
@@ -282,7 +296,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
                   </span>
                 </div>
               </div>
-            </div>
+            </>
           )}
 
           {title === "Cash" && (
