@@ -36,13 +36,13 @@ const PaymentOptions = () => {
     {
       id: "insurance",
       title: "Insurance",
-      icon: "/icons/insurance.png",
+      icon: "/icons/i.png",
       altText: "Insurance Icon",
     },
     {
       id: "multipay",
       title: "Multipay",
-      icon: "/icons/multipay.png",
+      icon: "/icons/mp.png",
       altText: "Multipay Icon",
     },
   ];
