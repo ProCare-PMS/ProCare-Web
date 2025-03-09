@@ -6,12 +6,21 @@ import { useDispatch } from "react-redux";
 import { logoutAction } from "@/redux/authActions";
 import { AppDispatch } from "@/redux/store";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 
 interface EndShiftModalProps {
   setModal: () => void;
+}
+
+interface logoutSummaryType {
+  name: string;
+  total_sales: string;
+  hours_spent: string;
+  cash_sales: string;
+  mobile_money_sales: string;
+  bank_sales: string;
 }
 
 const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
@@ -30,6 +39,15 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
       )
       .then((res) => res);
   };
+
+  //Getting the logout info from the backend
+  const { data: logoutSummary } = useQuery<logoutSummaryType>({
+    queryKey: ["logoutSummaryData"],
+    queryFn: () =>
+      customAxios.get(endpoints.logoutSummary).then((res) => res?.data),
+  });
+
+  console.log(logoutSummary);
 
   // Define mutation for the logout action
   const logoutMutation = useMutation({
@@ -74,20 +92,24 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                 <span className="block capitalize text-gray-400 font-thin">
                   Sales:
                 </span>
-                <span className="block font-bold">₵ -</span>
+                <span className="block font-bold">
+                  ₵ {logoutSummary?.total_sales}
+                </span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="block capitalize text-gray-400 font-thin">
-                  hours spent
+                  Hours spent:
                 </span>
-                <span className="block">-</span>
+                <span className="block">{logoutSummary?.hours_spent}</span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="block capitalize text-gray-400 font-thin">
                   Name
                 </span>
                 <span className="block">
-                  {accounts ? accounts[0]?.name : ""}
+                  {/* 
+                  {accounts ? accounts[0]?.name : ""} */}{" "}
+                  {logoutSummary?.name}
                 </span>
               </div>
             </div>
@@ -98,13 +120,15 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                 <span className="block capitalize text-gray-400 font-thin">
                   cash sales:
                 </span>
-                <span className="block">₵ -</span>
+                <span className="block">₵ {logoutSummary?.cash_sales}</span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="block capitalize text-gray-400 font-thin">
-                  momo sales
+                  momo sales:
                 </span>
-                <span className="block">₵ -</span>
+                <span className="block">
+                  ₵ {logoutSummary?.mobile_money_sales}
+                </span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="block capitalize text-gray-400 font-thin">
@@ -118,7 +142,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
             <div className="title font-bold capitalize">
               CONFIRM AMOUNT RECEIVED IN:
             </div>
-            <div className="flex justify-between items-center mb-2 py-2">
+            <div className="grid grid-cols-3 gap-x-4 mb-2 py-2">
               <div className="flex flex-col gap-2">
                 <label className="block">Cash (GHS)</label>
                 <div className="inputField">
