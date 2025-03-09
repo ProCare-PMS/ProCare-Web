@@ -69,13 +69,15 @@ const MainNav = () => {
         <div className="container mx-auto px-2">
           <div className="flex items-center justify-between h-[5rem] p-3">
             {/* Logo */}
-            <Image
-              src="/RxPMSlogo.png"
-              width={180}
-              height={100}
-              className="mt-[-0.8rem]"
-              alt="RxPMS"
-            />
+            <Link href="/">
+              <Image
+                src="/RxPMSlogo.png"
+                width={180}
+                height={100}
+                className="mt-[-0.8rem]"
+                alt="RxPMS"
+              />
+            </Link>
 
             {/* Navigation Routes */}
             <div className="hidden md:flex">

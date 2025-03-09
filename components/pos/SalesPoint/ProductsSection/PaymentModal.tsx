@@ -138,6 +138,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     setDiscount(null);
   };
 
+  const fullName = `${user?.first_name} ${user?.last_name}`
+  console.log(fullName)
+
 
   const handleFinalize = () => {
     const salesItemsData = {
@@ -153,7 +156,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
       //total_base_price: totalPrice,
       //total_price_with_discount: finalPrice,
       employee: {
-        full_name: `${user.full_name}`,
+        full_name: `${user.full_name}` || `${fullName}`,
         email: user.email,
         contact: user.phone_number,
         address: user.address || user.pharmacy.address,
