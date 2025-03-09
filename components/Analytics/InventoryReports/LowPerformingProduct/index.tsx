@@ -35,7 +35,6 @@ function UnderPerformingProductTable() {
         ?.filter((product:any) => product.performance < 10); // Adjust threshold
     },
   });
-  console.log(worstPerformingProductData)
 
   return (
     <div className="bg-white p-6 rounded-xl flex-1">

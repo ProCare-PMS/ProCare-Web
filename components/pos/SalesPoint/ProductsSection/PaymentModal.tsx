@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowLeft, X, Printer } from "lucide-react";
+import { ArrowLeft, X, Printer, Minus } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -31,6 +31,10 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
   const [discount, setDiscount] = useState<any | null>(null);
   const [amountTendered, setAmountTendered] = useState<number>(0);
   const [balance, setBalance] = useState<number>(0);
+  const [showMobileMoneyInput, setShowMobileMoneyInput] =
+    useState<boolean>(false);
+  const [cashAmount, setCashAmount] = useState<number>(0);
+  const [mobileMoneyAmount, setMobileMoneyAmount] = useState<number>(0);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -50,12 +54,10 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     if (employee) {
       setUser(JSON.parse(employee));
     }
-    
 
     if (discount) {
       setDiscount(JSON.parse(discount));
     }
-    
 
     // Disable scrolling when modal is open
     document.body.style.overflow = "hidden";
@@ -96,6 +98,28 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
 
   const itemPrice = finalPrice > 0 ? finalPrice : 0;
 
+  const updateMultipayBalance = (cash: number, mobileMoney: number) => {
+    const totalTendered = cash + mobileMoney;
+    const calculatedBalance = totalTendered - itemPrice;
+    setAmountTendered(totalTendered);
+    setBalance(calculatedBalance > 0 ? calculatedBalance : 0);
+  };
+  // Handle cash amount change for multipay
+  const handleCashAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const amount = e.target.value ? parseFloat(e.target.value) : 0;
+    setCashAmount(amount);
+    updateMultipayBalance(amount, mobileMoneyAmount);
+  };
+
+  // Handle mobile money amount change for multipay
+  const handleMobileMoneyAmountChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const amount = e.target.value ? parseFloat(e.target.value) : 0;
+    setMobileMoneyAmount(amount);
+    updateMultipayBalance(cashAmount, amount);
+  };
+
   // Handle amount tendered change
   const handleAmountTenderedChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -106,6 +130,13 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     // Calculate balance (0 if no balance to be given)
     const calculatedBalance = tenderedAmount - itemPrice;
     setBalance(calculatedBalance > 0 ? calculatedBalance : 0);
+  };
+
+  const toggleMobileMoneyInput = () => {
+    setShowMobileMoneyInput(!showMobileMoneyInput);
+    if (!showMobileMoneyInput) {
+      setMobileMoneyAmount(0);
+    }
   };
 
   const finalizePaymentMutation = useMutation({
@@ -138,11 +169,49 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     setDiscount(null);
   };
 
-  const fullName = `${user?.first_name} ${user?.last_name}`
-  console.log(fullName)
-
+  const fullName = `${user?.first_name} ${user?.last_name}`;
+  console.log(fullName);
 
   const handleFinalize = () => {
+    if (title === "Multipay") {
+      const totalPaid =
+        cashAmount + (showMobileMoneyInput ? mobileMoneyAmount : 0);
+      if (totalPaid < itemPrice) {
+        SwalToaster(
+          "Insufficient Amount",
+          "error",
+          `Total payment (${totalPaid.toFixed(
+            2
+          )}) is less than the required amount (${itemPrice.toFixed(2)})`
+        );
+        return;
+      }
+    } else if (title === "Cash" && amountTendered < itemPrice) {
+      SwalToaster(
+        "Insufficient Amount",
+        "error",
+        `Amount tendered (${amountTendered.toFixed(
+          2
+        )}) is less than the required amount (${itemPrice.toFixed(2)})`
+      );
+      return;
+    }
+
+    const paymentAmounts: Record<string, number> = {};
+
+    if (title === "Multipay") {
+      paymentAmounts.cash = cashAmount;
+      if (showMobileMoneyInput) {
+        paymentAmounts.mobile_money = mobileMoneyAmount;
+      }
+    } else if (title === "Cash") {
+      paymentAmounts.cash = amountTendered;
+    } else if (title === "Mobile Money") {
+      paymentAmounts.mobile_money = itemPrice;
+    } else if (title === "Credit Card") {
+      paymentAmounts.credit_card = itemPrice;
+    }
+
     const salesItemsData = {
       discount_type: "percentage",
       discount_value: discount,
@@ -160,10 +229,10 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
         email: user.email,
         contact: user.phone_number,
         address: user.address || user.pharmacy.address,
-        license_number:  user.license_number || user.pharmacy.license_number,
-        is_manager: user?.is_manager ,
-        is_pharmacist: user?.is_pharmacist ,
-        is_mca: user?.is_mca ,
+        license_number: user.license_number || user.pharmacy.license_number,
+        is_manager: user?.is_manager,
+        is_pharmacist: user?.is_pharmacist,
+        is_mca: user?.is_mca,
       },
       status: "completed",
     };
@@ -274,30 +343,86 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
 
           {title === "Multipay" && (
             <>
-              <div className="mt-4 flex items-center gap-4">
+              <div className="mt-4 flex flex-col gap-4">
                 <div>
                   <span className="text-[#323539] font-medium text-sm">Cash</span>
                   <input
                     type="number"
                     placeholder="Enter amount"
+                    value={cashAmount || ""}
+                    onChange={handleCashAmountChange}
                     className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
                   />
                 </div>
-                <div>
-                  <span className="text-[#323539] font-medium text-sm">Mobile Money</span>
-                  <input
-                    type="number"
-                    placeholder="Enter amount"
-                    className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
-                  />
-                </div>
+                
+                {showMobileMoneyInput && (
+                  <div>
+                    <span className="text-[#323539] font-medium text-sm">Mobile Money</span>
+                    <input
+                      type="number"
+                      placeholder="Enter amount"
+                      value={mobileMoneyAmount || ""}
+                      onChange={handleMobileMoneyAmountChange}
+                      className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                )}
 
-                <div className="flex items-center gap-2">
-                  <Plus className="text-[#2648EA]" />
-                  <span className="text-[#2648EA] text-sm font-semibold">
-                    Another Pay
-                  </span>
+                <div 
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={toggleMobileMoneyInput}
+                >
+                  {showMobileMoneyInput ? (
+                    <>
+                      <Minus className="text-red-500" />
+                      <span className="text-red-500 text-sm font-semibold">
+                        Remove Mobile Money
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="text-[#2648EA]" />
+                      <span className="text-[#2648EA] text-sm font-semibold">
+                        Another Pay
+                      </span>
+                    </>
+                  )}
                 </div>
+                
+                {(cashAmount > 0 || (showMobileMoneyInput && mobileMoneyAmount > 0)) && (
+                  <div className="grid grid-cols-2 gap-x-3 mt-2">
+                    <div>
+                      <label
+                        htmlFor="totalTendered"
+                        className="text-[#323539] font-medium text-sm"
+                      >
+                        Total Tendered
+                      </label>
+                      <input
+                        id="totalTendered"
+                        type="number"
+                        value={(cashAmount + (showMobileMoneyInput ? mobileMoneyAmount : 0)).toFixed(2)}
+                        disabled={true}
+                        className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="multipayBalance"
+                        className="text-[#323539] font-medium text-sm"
+                      >
+                        Balance
+                      </label>
+                      <input
+                        id="multipayBalance"
+                        type="number"
+                        value={balance.toFixed(2)}
+                        disabled={true}
+                        className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </>
           )}
