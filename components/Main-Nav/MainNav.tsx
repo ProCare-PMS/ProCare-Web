@@ -38,6 +38,13 @@ const MainNav = () => {
     enabled: !!getUser?.id,
   }).data;
 
+  console.log(getPersonalData, "getPersonalData");
+  const iconName =
+    accountType === "employee"
+      ? getPersonalData?.full_name.split(" ")[0][0] +
+        getPersonalData?.full_name.split(" ")[1][0]
+      : getPersonalData?.first_name[0] + getPersonalData?.last_name[0];
+
   const handleOpenModal = useCallback(() => setIsModalOpen(true), []);
   const handleCloseModal = useCallback(() => setIsModalOpen(false), []);
 
@@ -86,12 +93,15 @@ const MainNav = () => {
 
             {/* User Avatar and Dropdown */}
             <div className="flex relative items-center gap-[6px]">
-              <Image
+              {/* <Image
                 width={30}
                 height={30}
                 src="/icons/Avatar.png"
                 alt="Avatar Icon"
-              />
+              /> */}
+              <span className="text-[#f1f0ef] bg-rose-700 rounded-full p-1 border-2">
+                {iconName}
+              </span>
               <div className="font-inter">
                 <h2 className="text-sm font-semibold sev">
                   {accountType === "employee"
@@ -118,7 +128,8 @@ const MainNav = () => {
                           href="/settings"
                           className="py-3 px-6 text-[#344054] flex items-center gap-2 text-sm"
                         >
-                          <CircleUser /> Profile
+                          <CircleUser />
+                          Profile
                         </Link>
                       </li>
                       <hr />

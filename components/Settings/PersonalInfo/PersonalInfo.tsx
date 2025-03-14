@@ -56,7 +56,7 @@ const PersonalInfo = () => {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(ProfileSchema),
@@ -297,7 +297,12 @@ const PersonalInfo = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="px-6 py-2 bg-[#2648EA] text-white shadow-md hover:bg-blue-600 w-48 rounded-[0.3rem]"
+            className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] ${
+              isDirty
+                ? "bg-[#2648EA] hover:bg-blue-600"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
+            disabled={isDirty === false}
           >
             Edit
           </button>

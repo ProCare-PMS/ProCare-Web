@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface Activity {
   type: string;
@@ -12,21 +12,21 @@ interface Activity {
 }
 
 const activities: Activity[] = [
-  {
-    type: "Today",
-    category: "All Users",
-    children: [
-      { name: "John Doe", status: "Successful", time: "10 mins ago" },
-      { name: "Jane Smith", status: "Failed", time: "5 hours ago" },
-    ],
-  },
-  {
-    type: "Yesterday",
-    category: "All Users",
-    children: [
-      { name: "Alice Cooper", status: "Successful", time: "2 days ago" },
-    ],
-  },
+  // {
+  //   type: "Today",
+  //   category: "All Users",
+  //   children: [
+  //     { name: "John Doe", status: "Successful", time: "10 mins ago" },
+  //     { name: "Jane Smith", status: "Failed", time: "5 hours ago" },
+  //   ],
+  // },
+  // {
+  //   type: "Yesterday",
+  //   category: "All Users",
+  //   children: [
+  //     { name: "Alice Cooper", status: "Successful", time: "2 days ago" },
+  //   ],
+  // },
 ];
 
 function ActivityLog() {
