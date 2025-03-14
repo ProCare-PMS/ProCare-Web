@@ -40,7 +40,7 @@ const CompanyInfoSettings = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(CompanySchema),
@@ -81,10 +81,18 @@ const CompanyInfoSettings = () => {
   }, [reset, getPharmacyDetails]);
 
   return (
-    <form className="bg-white shadow-lg rounded-xl px-8 2xl:px-12 pt-12 pb-20 flex mt-3 flex-col gap-10" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="bg-white shadow-lg rounded-xl px-8 2xl:px-12 pt-12 pb-20 flex mt-3 flex-col gap-10"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <div className="flex items-start w-full">
         <div className="flex flex-col items-center gap-3">
-          <label className="text-start w-full max-2xl:text-sm font-medium" htmlFor="profileimage">Company Logo</label>
+          <label
+            className="text-start w-full max-2xl:text-sm font-medium"
+            htmlFor="profileimage"
+          >
+            Company Logo
+          </label>
           {/* Profile Picture Section */}
           <div className="relative size-40">
             <Image
@@ -118,7 +126,10 @@ const CompanyInfoSettings = () => {
       <div className="grid grid-cols-3 justify-between gap-8 2xl:gap-x-12 gap-y-7 w-full">
         {/* First Name */}
         <div className="flex flex-col">
-          <label htmlFor="facility_name" className="mb-1 font-medium max-2xl:text-sm">
+          <label
+            htmlFor="facility_name"
+            className="mb-1 font-medium max-2xl:text-sm"
+          >
             Company Name
           </label>
           <input
@@ -139,7 +150,10 @@ const CompanyInfoSettings = () => {
 
         {/* Last Name */}
         <div className="flex flex-col">
-          <label htmlFor="lastName" className="mb-1 font-medium max-2xl:text-sm">
+          <label
+            htmlFor="lastName"
+            className="mb-1 font-medium max-2xl:text-sm"
+          >
             Location
           </label>
           <input
@@ -160,7 +174,10 @@ const CompanyInfoSettings = () => {
 
         {/* Other Names */}
         <div className="flex flex-col">
-          <label htmlFor="license_number" className="mb-1 font-medium max-2xl:text-sm">
+          <label
+            htmlFor="license_number"
+            className="mb-1 font-medium max-2xl:text-sm"
+          >
             Phamarcy ID
           </label>
           <input
@@ -217,9 +234,15 @@ const CompanyInfoSettings = () => {
 
         <div className="col-span-3 mt-6 flex justify-end w-full">
           {/* Submit Button */}
+
           <button
             type="submit"
-            className="px-6 py-2 bg-[#2648EA] text-white shadow-md hover:bg-blue-600 w-48 rounded-[0.3rem]"
+            className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] ${
+              isDirty
+                ? "bg-[#2648EA] hover:bg-blue-600"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
+            disabled={isDirty === false} // Disable button when no changes are made
           >
             Edit
           </button>
