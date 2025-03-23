@@ -47,7 +47,6 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
       customAxios.get(endpoints.logoutSummary).then((res) => res?.data),
   });
 
-  console.log(logoutSummary);
 
   // Define mutation for the logout action
   const logoutMutation = useMutation({
@@ -74,7 +73,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-lg w-[60%] p-6 relative">
+      <div className="bg-white rounded-2xl shadow-lg w-[80%]  md:w-[80%] p-6 relative">
         <div className="flex justify-between items-center border-b mb-2">
           <h2 className="text-lg font-bold mb-4">End Shift Confirmation</h2>
           <button
@@ -87,7 +86,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
 
         <div className="divide-y divide-solid p-3">
           <div className="first">
-            <div className="flex gap-[10rem] items-center mb-2 py-2">
+            <div className="grid grid-cols-2 md:grid-cols-3 mb-2 py-2">
               <div className="flex flex-col gap-2">
                 <span className="block capitalize text-gray-400 font-thin">
                   Sales:
@@ -115,7 +114,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
             </div>
           </div>
           <div className="second">
-            <div className="flex gap-[10rem] items-center mb-2 py-2">
+            <div className="grid grid-cols-2 md:grid-cols-3 mb-2 py-2">
               <div className="flex flex-col gap-2">
                 <span className="block capitalize text-gray-400 font-thin">
                   cash sales:
@@ -139,17 +138,17 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
             </div>
           </div>
           <div className="third">
-            <div className="title font-bold capitalize">
+            <div className="title text-sm md:text-base font-bold capitalize">
               CONFIRM AMOUNT RECEIVED IN:
             </div>
-            <div className="grid grid-cols-3 gap-x-4 mb-2 py-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 mb-2 py-2">
               <div className="flex flex-col gap-2">
                 <label className="block">Cash (GHS)</label>
                 <div className="inputField">
                   <input
                     type="text"
                     placeholder="Enter cash amount"
-                    className="border border-gray-300 rounded px-4 py-1"
+                    className="border w-full border-gray-300 rounded px-4 py-1"
                   />
                 </div>
               </div>
@@ -159,7 +158,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                   <input
                     type="text"
                     placeholder="Enter mobile money amount"
-                    className="border border-gray-300 rounded px-4 py-1"
+                    className="border w-full border-gray-300 rounded px-4 py-1"
                   />
                 </div>
               </div>
@@ -169,7 +168,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                   <input
                     type="text"
                     placeholder="Enter bank amount"
-                    className="border border-gray-300 rounded px-4 py-1"
+                    className="border w-full border-gray-300 rounded px-4 py-1"
                   />
                 </div>
               </div>
