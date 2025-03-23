@@ -1,15 +1,12 @@
 "use client";
 import Image from "next/image";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { MdLinearScale } from "react-icons/md";
 import { TbSquareRoundedNumber2, TbSquareRoundedNumber3 } from "react-icons/tb";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { CircleAlert, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { userRegistrationSchema } from "@/lib/schema/schema";
 import { endpoints } from "@/api/Endpoints";
 import customAxios from "@/api/CustomAxios";
@@ -122,7 +119,7 @@ const RegistrationPage = () => {
 
   return (
     <div className="w-full h-screen mx-auto py-6 px-8 bg-home">
-      <div className="flex gap-4 items-center  md:ml-[2.25rem] h-3">
+      <div className="flex gap-4 items-center  md:ml-[2.25rem]">
         <Image
           src="/RxPMSlogo.png"
           width={150}
@@ -155,12 +152,13 @@ const RegistrationPage = () => {
           </span>
         </div>
 
-        <form onSubmit={handleSubmit} className="">
-          <div className="flex flex-col md:w-[55.5rem]  md:gap-4 md:flex-row bg-white px-[4.62rem] py-[2.62rem] rounded-2xl my-4">
-            <div className="flex flex-col gap-4 w-full">
+        <form onSubmit={handleSubmit} className="mt-4">
+          <div className="flex flex-col  w-[28rem] md:w-[55.5rem]  md:gap-4 md:flex-row bg-white px-[1.62rem] py-[2.62rem] rounded-2xl my-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 my-0 p-0">
+              {/* First Name */}
               <div>
                 <div className="flex justify-between">
-                  <label htmlFor="first_name" className="font-bold">
+                  <label htmlFor="first_name" className="font-semibold text-base text-[#323539]">
                     First Name
                   </label>
                   {errors.first_name && (
@@ -179,11 +177,33 @@ const RegistrationPage = () => {
                   placeholder="First Name"
                 />
               </div>
-
+              {/* Last Name */}
               <div>
                 <div className="flex justify-between">
-                  <label htmlFor="email" className="font-bold">
-                    email
+                  <label htmlFor="last_name" className="font-semibold text-base text-[#323539]">
+                    Last Name
+                  </label>
+                  {errors.last_name && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.last_name}
+                    </p>
+                  )}
+                </div>
+
+                <Input
+                  id="last_name"
+                  name="last_name"
+                  type="text"
+                  className="bg-home rounded-[5px] w-full border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                  placeholder="Last Name"
+                />
+              </div>
+
+              {/* Email */}
+              <div>
+                <div className="flex justify-between">
+                  <label htmlFor="email"className="font-semibold text-base text-[#323539]">
+                    Email
                   </label>
                   {errors.email && (
                     <p className="text-red-500 text-xs mt-1">{errors.email}</p>
@@ -199,9 +219,32 @@ const RegistrationPage = () => {
                 />
               </div>
 
+              {/* Phone Number */}
               <div>
                 <div className="flex justify-between">
-                  <label htmlFor="password" className="font-bold">
+                  <label htmlFor="phone_number" className="font-semibold text-base text-[#323539]">
+                    Phone Number
+                  </label>
+                  {errors.phone_number && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.phone_number}
+                    </p>
+                  )}
+                </div>
+
+                <Input
+                  id="phone_number"
+                  name="phone_number"
+                  type="tel"
+                  className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                  placeholder="Phone Number"
+                />
+              </div>
+
+              {/* Pasword */}
+              <div>
+                <div className="flex justify-between">
+                  <label htmlFor="password" className="font-semibold text-base text-[#323539]">
                     Password
                   </label>
                   {errors.password && (
@@ -229,9 +272,10 @@ const RegistrationPage = () => {
                 </div>
               </div>
 
+              {/* Confirm Password */}
               <div>
                 <div className="flex justify-between">
-                  <label htmlFor="password2" className="font-bold">
+                  <label htmlFor="password2" className="font-semibold text-base text-[#323539]">
                     Confirm Password
                   </label>
                   {errors.password2 && (
@@ -258,54 +302,11 @@ const RegistrationPage = () => {
                   </button>
                 </div>
               </div>
-            </div>
 
-            <div className="space-y-4 w-full">
+              {/* Ghana Card */}
               <div>
                 <div className="flex justify-between">
-                  <label htmlFor="last_name" className="font-bold">
-                    Last Name
-                  </label>
-                  {errors.last_name && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.last_name}
-                    </p>
-                  )}
-                </div>
-
-                <Input
-                  id="last_name"
-                  name="last_name"
-                  type="text"
-                  className="bg-home rounded-[5px] w-full border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                  placeholder="Last Name"
-                />
-              </div>
-
-              <div>
-                <div className="flex justify-between">
-                  <label htmlFor="phone_number" className="font-bold">
-                    Phone Number
-                  </label>
-                  {errors.phone_number && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.phone_number}
-                    </p>
-                  )}
-                </div>
-
-                <Input
-                  id="phone_number"
-                  name="phone_number"
-                  type="tel"
-                  className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                  placeholder="Phone Number"
-                />
-              </div>
-
-              <div>
-                <div className="flex justify-between">
-                  <label htmlFor="ghana_card" className="font-bold">
+                  <label htmlFor="ghana_card" className="font-semibold text-base text-[#323539]">
                     Ghana Card
                   </label>
                   {errors.ghana_card && (
