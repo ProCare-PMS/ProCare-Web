@@ -39,7 +39,8 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
   const paymentMethods = {
     cash: '',
     momo: '',
-    bank: ''
+    bank: '',
+    insurance: ''
   }
   const [amountReceived, setAmountReceived] =  useState(paymentMethods)
 
@@ -116,7 +117,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
         <div className="divide-y divide-solid p-3">
           {/* <div className="first">
             <div className="grid grid-cols-2 md:grid-cols-3 mb-2 py-2">
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5">
                 <span className="block capitalize text-gray-400 font-thin">
                   Sales:
                 </span>
@@ -124,13 +125,13 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                   ₵ {logoutSummary?.total_sales}
                 </span>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5">
                 <span className="block capitalize text-gray-400 font-thin">
                   Hours spent:
                 </span>
                 <span className="block">{logoutSummary?.hours_spent}</span>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5">
                 <span className="block capitalize text-gray-400 font-thin">
                   Name
                 </span>
@@ -143,13 +144,13 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
           </div>
           <div className="second">
             <div className="grid grid-cols-2 md:grid-cols-3 mb-2 py-2">
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5">
                 <span className="block capitalize text-gray-400 font-thin">
                   cash sales:
                 </span>
                 <span className="block">₵ {logoutSummary?.cash_sales}</span>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5">
                 <span className="block capitalize text-gray-400 font-thin">
                   momo sales:
                 </span>
@@ -157,7 +158,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                   ₵ {logoutSummary?.mobile_money_sales}
                 </span>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5">
                 <span className="block capitalize text-gray-400 font-thin">
                   bank sales
                 </span>
@@ -170,8 +171,8 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
             <div className="title text-sm md:text-base mb-4 font-semibold capitalize">
               CONFIRM AMOUNT RECEIVED IN <span className="font-bold">GH¢</span>:
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 mb-2 py-2">
-              <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2.5 lg:gap-y-4 mb-2 py-2">
+              <div className="flex flex-col gap-0.5">
                 <label className="flex items-center gap-1">
                   <p>Cash</p>
                   {/* <HiCash className="text-green-500"/> */}
@@ -189,7 +190,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                   />
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5">
                 <label className="block">Mobile Money</label>
                 <div className="inputField">
                   <input
@@ -204,7 +205,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                   />
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5">
                 <label className="block">Bank</label>
                 <div className="inputField">
                   <input
@@ -215,6 +216,21 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                     name="bank"
                     id="bank"
                     placeholder="Enter bank amount"
+                    className="border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <label className="block">Insurance</label>
+                <div className="inputField">
+                  <input
+                    type="text"
+                    value={amountReceived.insurance}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    name="insurance"
+                    id="insurance"
+                    placeholder="Enter insurance amount"
                     className="border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1"
                   />
                 </div>
