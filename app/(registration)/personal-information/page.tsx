@@ -119,41 +119,41 @@ const RegistrationPage = () => {
 
   return (
     <div className="w-full h-screen mx-auto py-6 px-8 bg-home">
-      <div className="flex gap-4 items-center  md:ml-[2.25rem]">
-        <Image
-          src="/RxPMSlogo.png"
-          width={150}
-          height={100}
-          className="mt-[-0.8rem]"
-          alt="Procare Logo"
-        />
-        <span className="font-bold text-2xl font-inter">Registration</span>
-      </div>
+      <div className="flex flex-col md:flex-row md:gap-4 items-center md:ml-6 mb-6">
+              <Image
+                src="/RxPMSlogo.png"
+                width={150}
+                height={100}
+                alt="Procare Logo"
+                className="md:mt-[-0.8rem]"
+              />
+              <span className="font-bold text-2xl font-inter">Registration</span>
+            </div>
 
       <div className="flex flex-col items-center justify-center">
         <h1 className="text-2xl md:text-3xl font-inter text-center font-bold mb-2">
           Personal Information
         </h1>
-        <p className="font-roboto">Admin Details</p>
+        <p className="font-roboto text-xl mb-6">Admin Details</p>
         <div className="flex items-center gap-2 px-4">
-          <span className="text-main text-sm flex gap-2 font-inter items-center font-semibold">
+          <span className="text-main text-sm  hidden md:flex gap-2 font-inter items-center font-semibold">
             <IoIosCheckmarkCircle className="text-main text-4xl" />
             Pharmacy Details
-            <MdLinearScale className="text-main text-xl" />
+            <MdLinearScale className="text-main hidden md:block text-xl" />
           </span>
           <span className="text-sm flex gap-2 text-main font-inter items-center font-semibold">
-            <TbSquareRoundedNumber2 className="text-main text-3xl" />
+            <TbSquareRoundedNumber2 className="text-main  text-3xl" />
             Personal Inforamtion
-            <MdLinearScale />
+            <MdLinearScale className="hidden md:block" />
           </span>
-          <span className="text-sm flex gap-2 items-center font-inter font-semibold">
+          <span className="text-sm hidden md:flex gap-2 items-center font-inter font-semibold">
             <TbSquareRoundedNumber3 className="text-3xl text-slate-400" />
             Make Payment
           </span>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-4">
-          <div className="flex flex-col  w-[28rem] md:w-[55.5rem]  md:gap-4 md:flex-row bg-white px-[1.62rem] py-[2.62rem] rounded-2xl my-4">
+          <div className="flex flex-col  w-[23rem] md:w-[55.5rem]  md:gap-4 md:flex-row bg-white px-[1.62rem] py-[2.62rem] rounded-2xl my-4">
             <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 my-0 p-0">
               {/* First Name */}
               <div>
@@ -327,22 +327,22 @@ const RegistrationPage = () => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="flex flex-col md:flex-row gap-4 px-[1.62rem] md:px-0 items-center justify-between">
             <Link
               href="/pharmacy-information"
-              className="text-main border-main font-inter text-center w-[140px] border-2 rounded-[5px] px-5 py-2 font-semibold text-sm"
+              className="text-main border-main font-inter text-center w-full md:w-[140px] border-2 rounded-[5px] px-5 py-2 font-semibold text-sm"
             >
               Previous
             </Link>
 
             <button
               type="submit"
-              className="w-[140px] bg-blue-600 text-white rounded-[5px] px-5 py-2 font-semibold text-sm"
+              className=" w-full hidden md:w-[140px] bg-blue-600 text-white rounded-[5px] px-5 py-2 font-semibold text-sm"
             >
               Next
             </button>
           </div>
-        </form>
+        </form> 
       </div>
     </div>
   );
