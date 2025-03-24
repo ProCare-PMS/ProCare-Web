@@ -120,13 +120,13 @@ const RegistrationPage = () => {
 
   return (
     <div className="w-full h-screen py-6 mx-auto px-8 bg-home">
-      <div className="flex gap-4 items-center md:ml-6">
+      <div className="flex flex-col md:flex-row md:gap-4 items-center md:ml-6 mb-6">
         <Image
           src="/RxPMSlogo.png"
           width={150}
           height={100}
           alt="Procare Logo"
-          className="mt-[-0.8rem]"
+          className="md:mt-[-0.8rem]"
         />
         <span className="font-bold text-2xl font-inter">Registration</span>
       </div>
@@ -155,7 +155,7 @@ const RegistrationPage = () => {
 
         <div className="mt-4">
           <form className="" onSubmit={handleSubmit}>
-            <div className="flex flex-col w-[28rem] md:w-[55.5rem] md:flex-row bg-white px-[1.62rem] py-6 rounded-xl">
+            <div className="flex flex-col w-[23rem] md:w-[55.5rem] md:flex-row bg-white px-[1.62rem] py-6 rounded-xl">
               <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 my-0 p-0">
                 <div>
                   <div className="flex justify-between">
@@ -348,8 +348,8 @@ const RegistrationPage = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col md:flex-row md:items-center justify-between my-5">
-              <p className="text-center font-inter md:text-justify">
+            <div className="flex flex-col md:flex-row md:items-center px-[1.62rem] justify-between my-5">
+              <p className="text-center font-inter mb-6 md:mb-0 md:text-justify">
                 Already have an account? <br />
                 <Link
                   href="/login"
