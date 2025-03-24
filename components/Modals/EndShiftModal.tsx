@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import { HiCash } from "react-icons/hi";
 
 interface EndShiftModalProps {
   setModal: () => void;
@@ -23,11 +24,24 @@ interface logoutSummaryType {
   bank_sales: string;
 }
 
+interface paymentMethods {
+  cash: string;
+  momo: string;
+  bank: string;
+}
+
 const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const getAccountDetails = localStorage.getItem("accounts");
   const accounts = getAccountDetails ? JSON.parse(getAccountDetails) : null;
+  const [total, setTotal] = useState(0)
+  const paymentMethods = {
+    cash: '',
+    momo: '',
+    bank: ''
+  }
+  const [amountReceived, setAmountReceived] =  useState(paymentMethods)
 
   // Define logoutUser to dispatch the logout and handle redirection
   const logoutUser = async () => {
@@ -39,6 +53,21 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
       )
       .then((res) => res);
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAmountReceived({ ...amountReceived, [e.target.name]: e.target.value });
+  };
+
+  useEffect(() => {
+    const totalReceived = (amountReceived : paymentMethods) => {
+      let sum = 0
+      for(const[key, value] of Object.entries(amountReceived)){
+        sum += Number(value)
+      } 
+      setTotal(sum)
+    }
+    totalReceived(amountReceived)
+  }, [amountReceived])
 
   //Getting the logout info from the backend
   const { data: logoutSummary } = useQuery<logoutSummaryType>({
@@ -73,7 +102,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-lg w-[80%]  md:w-[80%] p-6 relative">
+      <div className="bg-white rounded-2xl shadow-lg w-[80%]  md:w-[80%] max-w-[900px] p-6 relative">
         <div className="flex justify-between items-center border-b mb-2">
           <h2 className="text-lg font-bold mb-4">End Shift Confirmation</h2>
           <button
@@ -85,7 +114,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
         </div>
 
         <div className="divide-y divide-solid p-3">
-          <div className="first">
+          {/* <div className="first">
             <div className="grid grid-cols-2 md:grid-cols-3 mb-2 py-2">
               <div className="flex flex-col gap-2">
                 <span className="block capitalize text-gray-400 font-thin">
@@ -106,8 +135,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                   Name
                 </span>
                 <span className="block">
-                  {/* 
-                  {accounts ? accounts[0]?.name : ""} */}{" "}
+                  {" "}
                   {logoutSummary?.name}
                 </span>
               </div>
@@ -137,59 +165,86 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
               </div>
             </div>
           </div>
+           */}
           <div className="third">
-            <div className="title text-sm md:text-base font-bold capitalize">
-              CONFIRM AMOUNT RECEIVED IN:
+            <div className="title text-sm md:text-base mb-4 font-semibold capitalize">
+              CONFIRM AMOUNT RECEIVED IN <span className="font-bold">GH¢</span>:
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 mb-2 py-2">
               <div className="flex flex-col gap-2">
-                <label className="block">Cash (GHS)</label>
+                <label className="flex items-center gap-1">
+                  <p>Cash</p>
+                  {/* <HiCash className="text-green-500"/> */}
+                </label>
                 <div className="inputField">
                   <input
                     type="text"
+                    value={amountReceived.cash}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    name="cash"
+                    id="cash"
                     placeholder="Enter cash amount"
-                    className="border w-full border-gray-300 rounded px-4 py-1"
+                    className="border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1"
                   />
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="block">Mobile Money (GHS)</label>
+                <label className="block">Mobile Money</label>
                 <div className="inputField">
                   <input
                     type="text"
+                    value={amountReceived.momo}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    name="momo"
+                    id="momo"
                     placeholder="Enter mobile money amount"
-                    className="border w-full border-gray-300 rounded px-4 py-1"
+                    className="border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1"
                   />
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="block">Bank (GHS)</label>
+                <label className="block">Bank</label>
                 <div className="inputField">
                   <input
                     type="text"
+                    value={amountReceived.bank}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    name="bank"
+                    id="bank"
                     placeholder="Enter bank amount"
-                    className="border w-full border-gray-300 rounded px-4 py-1"
+                    className="border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1"
                   />
                 </div>
               </div>
             </div>
-            <div className="button section mt-4">
-              <div className="flex gap-3 justify-end w-full">
-                <button
-                  type="button"
-                  onClick={setModal}
-                  className="px-6 py-2 bg-white text-dark shadow-md  w-56 rounded-[0.3rem]"
-                >
-                  Cancel
-                </button>
+            <div className="button section mt-12">
+              <div className="flex gap-3 justify-between items-center w-full">
 
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="px-6 py-2 bg-[#2648EA] text-white text-center shadow-md hover:bg-blue-600 w-56 rounded-[0.3rem]"
-                >
-                  End Shift
-                </button>
+                <div className="font-medium">
+                  Total Amount: <span className="font-semibold text-sm">GH¢ {total.toFixed(2)}</span>
+                </div>
+
+                <div className="space-x-3">
+                  <button
+                    type="button"
+                    onClick={setModal}
+                    className="px-6 py-2 bg-white text-dark shadow-md  w-56 rounded-[0.3rem]"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="px-6 py-2 bg-[#2648EA] text-white text-center shadow-md hover:bg-blue-600 w-56 rounded-[0.3rem]"
+                  >
+                    End Shift
+                  </button>
+                </div>
+
               </div>
             </div>
           </div>
