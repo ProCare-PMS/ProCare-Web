@@ -78,7 +78,6 @@ const UserPasscode = () => {
       },
       {
         onSuccess: (responseData) => {
-          //console.log("Login successful:", responseData);
           const token = responseData?.access;
           const user = responseData?.user;
           const refreshToken = responseData?.refresh;

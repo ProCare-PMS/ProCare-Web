@@ -40,7 +40,7 @@ function UserManagementTable() {
   };
 
   const handleActivate = (originalRow: any) => {
-    console.log("we are here");
+    console.log("...");
   };
 
   const handleEdit = (originalRow: any) => {

@@ -74,7 +74,6 @@ export const Columns: any = ({
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
-        console.log("row originsl", row.original);
         return (
           <ActionMenu
             formData={row.original}
