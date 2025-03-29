@@ -155,7 +155,7 @@ export const dashboardTransactionColumns: ColumnDef<DashboardRecentTransactions>
               return "Momo";
             case "credit_card":
               return "Bank";
-            case "Cash":
+            case "cash":
               return "Cash";
             default:
               return method; // Fallback for unknown methods

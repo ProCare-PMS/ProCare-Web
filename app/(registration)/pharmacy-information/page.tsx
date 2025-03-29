@@ -120,13 +120,13 @@ const RegistrationPage = () => {
 
   return (
     <div className="w-full h-screen py-6 mx-auto px-8 bg-home">
-      <div className="flex gap-4 items-center md:ml-6">
+      <div className="flex flex-col md:flex-row md:gap-4 items-center md:ml-6 mb-6">
         <Image
           src="/RxPMSlogo.png"
           width={150}
           height={100}
           alt="Procare Logo"
-          className="mt-[-0.8rem]"
+          className="md:mt-[-0.8rem]"
         />
         <span className="font-bold text-2xl font-inter">Registration</span>
       </div>
@@ -136,32 +136,32 @@ const RegistrationPage = () => {
           Pharmacy Information
         </h1>
         {/* <p className="font-roboto">Details about your pharmacy</p> */}
-        <div className="flex items-center gap-2 px-4 mb-1">
+        <div className="flex items-center gap-2 px-4 ">
           <span className="text-main text-sm flex gap-2 font-inter items-center font-semibold">
             <IoIosCheckmarkCircle className="text-main text-4xl" />
             Pharmacy Details
-            <MdLinearScale className="text-main text-xl" />
+            <MdLinearScale className="hidden md:block text-main text-xl" />
           </span>
-          <span className="text-sm flex gap-2 font-inter items-center font-semibold">
+          <span className="text-sm hidden md:flex gap-2 font-inter items-center font-semibold">
             <TbSquareRoundedNumber2 className="text-3xl text-slate-400" />
-            Personal Inforamtion
+            Personal Information
             <MdLinearScale />
           </span>
-          <span className="text-sm flex gap-2 font-inter items-center font-semibold">
+          <span className="text-sm hidden md:flex gap-2 font-inter items-center font-semibold">
             <TbSquareRoundedNumber3 className="text-3xl text-slate-400" />
             Make Payment
           </span>
         </div>
 
-        <div>
+        <div className="mt-4">
           <form className="" onSubmit={handleSubmit}>
-            <div className="flex flex-col md:w-[55.5rem] md:flex-row bg-white px-[1.62rem] py-6 rounded-xl">
-              <div className="grid grid-cols-2 w-full gap-4 my-0 p-0">
+            <div className="flex flex-col w-[23rem] md:w-[55.5rem] md:flex-row bg-white px-[1.62rem] py-6 rounded-xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 my-0 p-0">
                 <div>
                   <div className="flex justify-between">
                     <label
                       htmlFor="facility_name"
-                      className="block text-gray-700 text-sm font-bold"
+                      className="font-semibold text-base text-[#323539]"
                     >
                       Facility Name
                     </label>
@@ -185,7 +185,7 @@ const RegistrationPage = () => {
                   <div className="flex justify-between">
                     <label
                       htmlFor="facility_number"
-                      className="block text-gray-700 text-sm font-bold"
+                      className="font-semibold text-base text-[#323539]"
                     >
                       Facility Number
                     </label>
@@ -209,7 +209,7 @@ const RegistrationPage = () => {
                   <div className="flex justify-between">
                     <label
                       htmlFor="facility_email"
-                      className="block text-gray-700 text-sm font-bold"
+                     className="font-semibold text-base text-[#323539]"
                     >
                       Facility Email
                     </label>
@@ -233,7 +233,7 @@ const RegistrationPage = () => {
                   <div className="flex justify-between">
                     <label
                       htmlFor="address"
-                      className="block text-gray-700 text-sm font-bold"
+                     className="font-semibold text-base text-[#323539]"
                     >
                       Address
                     </label>
@@ -257,7 +257,7 @@ const RegistrationPage = () => {
                   <div className="flex justify-between">
                     <label
                       htmlFor="city"
-                      className="block text-gray-700 text-sm font-bold"
+                      className="font-semibold text-base text-[#323539]"
                     >
                       City
                     </label>
@@ -279,7 +279,7 @@ const RegistrationPage = () => {
                   <div className="flex justify-between">
                     <label
                       htmlFor="region"
-                      className="block text-gray-700 text-sm font-bold"
+                     className="font-semibold text-base text-[#323539]"
                     >
                       Region
                     </label>
@@ -303,7 +303,7 @@ const RegistrationPage = () => {
                   <div className="flex justify-between">
                     <label
                       htmlFor="ghana_post_address"
-                      className="block text-gray-700 text-sm font-bold"
+                      className="font-semibold text-base text-[#323539]"
                     >
                       Ghana Post Address
                     </label>
@@ -327,7 +327,7 @@ const RegistrationPage = () => {
                   <div className="flex justify-between">
                     <label
                       htmlFor="license_number"
-                      className="block text-gray-700 text-sm font-bold"
+                      className="font-semibold text-base text-[#323539]"
                     >
                       License Number
                     </label>
@@ -348,8 +348,8 @@ const RegistrationPage = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col md:flex-row md:items-center justify-between my-5">
-              <p className="text-center font-inter md:text-justify">
+            <div className="flex flex-col md:flex-row md:items-center px-[1.62rem] justify-between my-5">
+              <p className="text-center font-inter mb-6 md:mb-0 md:text-justify">
                 Already have an account? <br />
                 <Link
                   href="/login"
@@ -361,7 +361,7 @@ const RegistrationPage = () => {
 
               <button
                 type="submit"
-                className="w-[140px] bg-blue-600 text-white rounded-[5px] px-5 py-2 font-semibold text-sm"
+                className="w-full md:w-[140px] bg-blue-600 text-white rounded-[5px] px-5 py-2 font-semibold text-sm"
                 disabled={postPharmacyInformation.isPending}
               >
                 Next
