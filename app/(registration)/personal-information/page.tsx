@@ -34,14 +34,12 @@ const RegistrationPage = () => {
   // Mutation function
   const postPersonalInformation = useMutation({
     mutationFn: async (value: any) => {
-      //console.log("Sending data to API:", value.formData); // Debugging log
       try {
         const res = await customAxios.post(endpoints.signup, value.formData);
 
         return res;
       } catch (error) {
-        console.error("API Error:", error); // Log the entire error
-        throw error; // Re-throw to trigger onError
+        throw error;
       }
     },
   });

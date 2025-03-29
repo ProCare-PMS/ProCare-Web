@@ -9,11 +9,6 @@ export default function ResetPassword() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Handle form submission logic here, e.g., API calls
-    console.log("rmail:", email);
-    console.log("Password:", password);
-    console.log("confirmpassword:", confirmpassword);
-    // Reset form fields after submission
     setemail("");
     setPassword("");
     setConfirmPassword("");

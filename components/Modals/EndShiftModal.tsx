@@ -47,8 +47,6 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
       customAxios.get(endpoints.logoutSummary).then((res) => res?.data),
   });
 
-  console.log(logoutSummary);
-
   // Define mutation for the logout action
   const logoutMutation = useMutation({
     mutationKey: ["logout"],
