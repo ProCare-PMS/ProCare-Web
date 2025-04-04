@@ -36,8 +36,6 @@ const DashbaordHomePage = () => {
     select: (findData) => findData?.data,
   });
 
-  console.log(recentTransactionsData)
-
 
   return (
     <div className="container grid gap-y-8 pb-6 px-6 pt-7 bg-[#F5F5F5]">
@@ -47,7 +45,7 @@ const DashbaordHomePage = () => {
       {(user?.is_pharmacist || user?.is_manager) && (
         <DashboardStats dashboardData={dashboardData} isLoading={isLoading} />
       )}
-      <div className="flex flex-col md:flex-row items-center gap-6">
+      <div className="flex overflow-hidden flex-col md:flex-row items-center gap-6">
         <DashboardSubTables
           title="Expiry List"
           data={dashboardData?.expiring_soon_products_list}

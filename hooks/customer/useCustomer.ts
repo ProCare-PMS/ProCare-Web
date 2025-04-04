@@ -26,29 +26,32 @@ export const useAddCustomer = (onSuccessCallback?: () => void) => {
   return useMutation({
     mutationFn: async (customerData: CustomerSchema) => {
       const result = AddCustomerSchema.safeParse(customerData);
-      
+
       if (!result.success) {
         const errors = result.error.format();
         const errorMessages = Object.entries(errors)
-          .filter(([key]) => key !== 'success')
-          .map(([key, value]) => 
-            Array.isArray(value) && value.length ? `${key}: ${value.join(', ')}` : ''
+          .filter(([key]) => key !== "success")
+          .map(([key, value]) =>
+            Array.isArray(value) && value.length
+              ? `${key}: ${value.join(", ")}`
+              : ""
           )
           .filter(Boolean);
-        
-        throw new Error(errorMessages.join('\n'));
+
+        throw new Error(errorMessages.join("\n"));
       }
 
       return customAxios.post(endpoints.posCustomers, customerData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['customers'] });
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
       SwalToaster("Customer added successfully!", "success");
       onSuccessCallback?.();
     },
     onError: (error) => {
-      console.error(error);
-      toast.error(error instanceof Error ? error.message : "Customer could not be added!");
+      toast.error(
+        error instanceof Error ? error.message : "Customer could not be added!"
+      );
     },
   });
 };

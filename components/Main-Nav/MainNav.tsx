@@ -38,7 +38,6 @@ const MainNav = () => {
     enabled: !!getUser?.id,
   }).data;
 
-  console.log(getPersonalData, "getPersonalData");
   const iconName =
     accountType === "employee"
       ? getPersonalData?.full_name.split(" ")[0][0] +
@@ -93,14 +92,8 @@ const MainNav = () => {
 
             {/* User Avatar and Dropdown */}
             <div className="flex relative items-center gap-[6px]">
-              {/* <Image
-                width={30}
-                height={30}
-                src="/icons/Avatar.png"
-                alt="Avatar Icon"
-              /> */}
               <span className="text-[#f1f0ef] bg-rose-700 rounded-full p-1 border-2">
-                {iconName}
+                {typeof iconName === "string" ? iconName : ""}
               </span>
               <div className="font-inter">
                 <h2 className="text-sm font-semibold sev">
