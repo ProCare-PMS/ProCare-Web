@@ -28,6 +28,8 @@ interface paymentMethods {
   cash: string;
   momo: string;
   bank: string;
+  insurance: string;
+  total: number;
 }
 
 const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
@@ -37,14 +39,15 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
   const accounts = getAccountDetails ? JSON.parse(getAccountDetails) : null;
   const [total, setTotal] = useState(0)
   const paymentMethods = {
-    cash: '',
-    momo: '',
-    bank: '',
-    insurance: ''
+    cash: '0',
+    momo: '0',
+    bank: '0',
+    insurance: '0',
+    total: Number(total.toFixed(2)),
   }
   const [amountReceived, setAmountReceived] =  useState(paymentMethods)
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
-  // Define logoutUser to dispatch the logout and handle redirection
   const logoutUser = async () => {
     const getRefreshToken = localStorage.getItem("refreshToken") || "";
     await customAxios
@@ -57,15 +60,24 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmountReceived({ ...amountReceived, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: ''
+      });
+    }
   };
 
   useEffect(() => {
     const totalReceived = (amountReceived : paymentMethods) => {
       let sum = 0
       for(const[key, value] of Object.entries(amountReceived)){
-        sum += Number(value)
+        if(key !== 'total') {
+          sum += Number(value)
+        }
       } 
       setTotal(sum)
+      setAmountReceived(prev => ({...prev, total: sum}))
     }
     totalReceived(amountReceived)
   }, [amountReceived])
@@ -78,7 +90,6 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
   });
 
 
-  // Define mutation for the logout action
   const logoutMutation = useMutation({
     mutationKey: ["logout"],
     mutationFn: logoutUser,
@@ -96,14 +107,55 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
     },
   });
 
-  // Call the mutation when you want to log the user out
+
+  const submitPaymentMethodsMutation = useMutation({
+    mutationKey: ["submitPaymentMethods"],
+    mutationFn: (data: paymentMethods) => 
+      customAxios.post(endpoints.logoutSummary, data).then((res) => res?.data),
+    onSuccess: () => {
+      logoutMutation.mutate();
+    },
+    onError: (error) => {
+      toast.error("Failed to submit payment methods");
+    },
+  });
+
+
+  const validateInputs = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    const fields = ['cash', 'momo', 'bank', 'insurance'];
+    const numberRegex = /^\d+(\.\d{1,2})?$/;
+    
+    let isValid = true;
+
+    fields.forEach(field => {
+      if (amountReceived[field as keyof paymentMethods] === '') {
+        newErrors[field] = `Please enter ${field} amount`;
+        isValid = false;
+      }
+    
+      else if (!numberRegex.test(String(amountReceived[field as keyof paymentMethods]))) {
+        newErrors[field] = `Please enter a valid amount (e.g. 123 or 123.45)`;
+        isValid = false;
+      }
+    });
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  // pre-validating and then submitting payment data
   const handleLogout = () => {
-    logoutMutation.mutate();
+    if (validateInputs()) {
+      submitPaymentMethodsMutation.mutate(amountReceived);
+    } else {
+      toast.error("Please correct the errors before ending shift");
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-lg w-[80%]  md:w-[80%] max-w-[900px] p-6 relative">
+      <div className="bg-white rounded-2xl shadow-lg w-[80%] md:w-[80%] max-w-[900px] p-6 relative">
         <div className="flex justify-between items-center border-b mb-2">
           <h2 className="text-lg font-bold mb-4">End Shift Confirmation</h2>
           <button
@@ -115,58 +167,6 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
         </div>
 
         <div className="divide-y divide-solid p-3">
-          {/* <div className="first">
-            <div className="grid grid-cols-2 md:grid-cols-3 mb-2 py-2">
-              <div className="flex flex-col gap-0.5">
-                <span className="block capitalize text-gray-400 font-thin">
-                  Sales:
-                </span>
-                <span className="block font-bold">
-                  ₵ {logoutSummary?.total_sales}
-                </span>
-              </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="block capitalize text-gray-400 font-thin">
-                  Hours spent:
-                </span>
-                <span className="block">{logoutSummary?.hours_spent}</span>
-              </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="block capitalize text-gray-400 font-thin">
-                  Name
-                </span>
-                <span className="block">
-                  {" "}
-                  {logoutSummary?.name}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="second">
-            <div className="grid grid-cols-2 md:grid-cols-3 mb-2 py-2">
-              <div className="flex flex-col gap-0.5">
-                <span className="block capitalize text-gray-400 font-thin">
-                  cash sales:
-                </span>
-                <span className="block">₵ {logoutSummary?.cash_sales}</span>
-              </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="block capitalize text-gray-400 font-thin">
-                  momo sales:
-                </span>
-                <span className="block">
-                  ₵ {logoutSummary?.mobile_money_sales}
-                </span>
-              </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="block capitalize text-gray-400 font-thin">
-                  bank sales
-                </span>
-                <span className="block">₵ -</span>
-              </div>
-            </div>
-          </div>
-           */}
           <div className="third">
             <div className="title text-sm md:text-base mb-4 font-semibold capitalize">
               CONFIRM AMOUNT RECEIVED IN <span className="font-bold">GH¢</span>:
@@ -184,10 +184,14 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                     onChange={handleChange}
                     autoComplete="off"
                     name="cash"
+                    required
+                    pattern="^\d+(\.\d{1,2})?$" 
+                    title="Enter a valid amount (e.g. 123 or 123.45)"
                     id="cash"
                     placeholder="Enter cash amount"
-                    className="border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1"
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.cash ? 'border-red-500' : ''}`}
                   />
+                  {errors.cash && <p className="text-red-500 text-xs mt-1">{errors.cash}</p>}
                 </div>
               </div>
               <div className="flex flex-col gap-0.5">
@@ -198,11 +202,15 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                     value={amountReceived.momo}
                     onChange={handleChange}
                     autoComplete="off"
+                    required
+                    pattern="^\d+(\.\d{1,2})?$" 
+                    title="Enter a valid amount (e.g. 123 or 123.45)"
                     name="momo"
                     id="momo"
                     placeholder="Enter mobile money amount"
-                    className="border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1"
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.momo ? 'border-red-500' : ''}`}
                   />
+                  {errors.momo && <p className="text-red-500 text-xs mt-1">{errors.momo}</p>}
                 </div>
               </div>
               <div className="flex flex-col gap-0.5">
@@ -214,10 +222,14 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                     onChange={handleChange}
                     autoComplete="off"
                     name="bank"
+                    required
+                    pattern="^\d+(\.\d{1,2})?$" 
+                    title="Enter a valid amount (e.g. 123 or 123.45)"
                     id="bank"
                     placeholder="Enter bank amount"
-                    className="border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1"
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.bank ? 'border-red-500' : ''}`}
                   />
+                  {errors.bank && <p className="text-red-500 text-xs mt-1">{errors.bank}</p>}
                 </div>
               </div>
               <div className="flex flex-col gap-0.5">
@@ -228,11 +240,15 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                     value={amountReceived.insurance}
                     onChange={handleChange}
                     autoComplete="off"
+                    required
+                    pattern="^\d+(\.\d{1,2})?$" 
+                    title="Enter a valid amount (e.g. 123 or 123.45)"
                     name="insurance"
                     id="insurance"
                     placeholder="Enter insurance amount"
-                    className="border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1"
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.insurance ? 'border-red-500' : ''}`}
                   />
+                  {errors.insurance && <p className="text-red-500 text-xs mt-1">{errors.insurance}</p>}
                 </div>
               </div>
             </div>
@@ -247,13 +263,13 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                   <button
                     type="button"
                     onClick={setModal}
-                    className="px-6 py-2 bg-white text-dark shadow-md  w-56 rounded-[0.3rem]"
+                    className="px-6 py-2 bg-white text-dark shadow-md w-56 rounded-[0.3rem]"
                   >
                     Cancel
                   </button>
 
                   <button
-                    type="button"
+                    type="submit"
                     onClick={handleLogout}
                     className="px-6 py-2 bg-[#2648EA] text-white text-center shadow-md hover:bg-blue-600 w-56 rounded-[0.3rem]"
                   >

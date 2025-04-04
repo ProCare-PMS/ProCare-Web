@@ -23,5 +23,5 @@ export const endpoints = {
   user: "/user/",
   verifyEmail: "/verify-email",
   otherPharmacies: "/inventories/stock-transfers/",
-  logoutSummary: "/logout-summary"
+  logoutSummary: "/logout-summary/"
 };
