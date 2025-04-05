@@ -74,6 +74,7 @@ const PersonalInfo = () => {
         onSuccess: () => {
           SwalToaster("Personal Information Updated Successfully!", "success");
           queryClient.invalidateQueries({ queryKey: ["personalInformation"] });
+          setEnableEdit(false);
         },
         onError: () => {
           SwalToaster("Failed to update personal information!", "error");
