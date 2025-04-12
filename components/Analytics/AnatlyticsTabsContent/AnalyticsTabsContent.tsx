@@ -8,6 +8,7 @@ import InventoryReports from "../InventoryReports/InventoryReports";
 import SalesAnalyticsPage from "../SalesAnalytics";
 import PurchaseAnalyticsPage from "../PurchaseAnalytics";
 import FinancialReporting from "../FinancialReporting";
+import ExpensesMainPage from "../Expenses";
 
 export default function AnalyticsTabsContent() {
   const [value, setValue] = React.useState(0);
@@ -75,7 +76,13 @@ export default function AnalyticsTabsContent() {
           <Tab
             className="font-inter text-sm font-semibold text-[#858C95]"
             label="Financial Reporting"
-            {...a11yProps(2)}
+            {...a11yProps(3)}
+            sx={{ textTransform: "none" }}
+          />
+          <Tab
+            className="font-inter text-sm font-semibold text-[#858C95]"
+            label="Expenses"
+            {...a11yProps(4)}
             sx={{ textTransform: "none" }}
           />
         </Tabs>
@@ -91,6 +98,9 @@ export default function AnalyticsTabsContent() {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3} className={""}>
         <FinancialReporting />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4} className={""}>
+        <ExpensesMainPage />
       </CustomTabPanel>
     </Box>
   );
