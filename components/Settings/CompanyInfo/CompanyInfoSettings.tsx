@@ -59,6 +59,7 @@ const CompanyInfoSettings = () => {
       onSuccess: () => {
         SwalToaster("Company Information Updated successfully!", "success");
         queryClient.invalidateQueries({ queryKey: ["companyInformation"] });
+        setEnableEdit(false)
       },
       onError: () => {
         SwalToaster("Error updating company information!", "error");

@@ -42,6 +42,7 @@ const SecuritySettings = () => {
   const onSubmit = (data: PasswordFormValues) => {
     console.log("Password Data:", data);
     // Handle password update logic here
+    setEnableEdit(false);
   };
 
   return (
