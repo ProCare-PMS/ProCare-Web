@@ -15,7 +15,7 @@ export const endpoints = {
   inventoryBranchSync: "/inventories/stock-transfers/",
   inventoryCategories: "/inventories/categories/",
   inventoryLowStock: "/inventories/products/low_stock/",
-  resetPassword: '/reset-password/',
+  resetPassword: "/reset-password/",
   sales: "/sales/",
   salesItems: "/sales/sale-items/",
   posCustomers: "/sales/customers/",
@@ -23,5 +23,6 @@ export const endpoints = {
   user: "/user/",
   verifyEmail: "/verify-email",
   otherPharmacies: "/inventories/stock-transfers/",
-  logoutSummary: "/logout-summary/"
+  logoutSummary: "/logout-summary/",
+  changepasscode: "/change-passcode/",
 };

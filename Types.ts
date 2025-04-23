@@ -26,10 +26,7 @@ export interface LoginCredentials {
   password: string;
 }
 
-
-export interface StockTransferResponse {
-  
-}
+export interface StockTransferResponse {}
 
 export interface DashboardStatsResponse {
   daily_items_sold: number;
@@ -58,6 +55,7 @@ interface accountFirstLogin {
 export interface FirstLoginState {
   step: string;
   account: accountFirstLogin[];
+  accountcode?: string;
 }
 
 export interface ImportPageProps {
@@ -103,4 +101,5 @@ interface ProductsType {
 
 export interface AccountTypes {
   accountType: string;
+  passcode?: string;
 }

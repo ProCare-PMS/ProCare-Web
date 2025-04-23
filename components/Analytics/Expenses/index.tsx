@@ -1,9 +1,10 @@
 import React from "react";
+import ExpenseIndex from "./PharmacyExpenseTable";
 
 function ExpensesMainPage() {
   return (
     <div>
-      <span>intro page</span>
+      <ExpenseIndex />
     </div>
   );
 }
