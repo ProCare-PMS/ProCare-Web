@@ -48,7 +48,7 @@ export const Columns: ColumnDef<any>[] = [
   {
     accessorKey: "id",
     header: "Transaction ID",
-    cell: ({ getValue }) => `Receipt# ${getValue()}`,
+    cell: ({ getValue }) => `Receipt# ${getValue() ?? ""}`,
   },
   {
     accessorKey: "user",
@@ -70,10 +70,18 @@ export const Columns: ColumnDef<any>[] = [
   {
     accessorKey: "date",
     header: "Date",
+    cell: ({ getValue }) => {
+      const dateValue = getValue() as string | number | Date;
+      return dateValue ? new Date(dateValue).toLocaleDateString() : "";
+    },
   },
   {
     accessorKey: "time",
     header: "Time",
+    cell: ({ getValue }) => {
+      const timeValue = getValue() as string | number | Date;
+      return timeValue ? new Date(timeValue).toLocaleTimeString() : "";
+    },
   },
   {
     accessorKey: "amount",

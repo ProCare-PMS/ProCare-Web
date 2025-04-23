@@ -98,7 +98,7 @@ export function ClockInOutBars() {
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
-            <BarChart accessibilityLayer data={chartData}>
+            <BarChart accessibilityLayer data={[]}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="time"

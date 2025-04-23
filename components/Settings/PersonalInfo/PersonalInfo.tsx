@@ -10,6 +10,9 @@ import { endpoints } from "@/api/Endpoints";
 import { ProfileSchema } from "@/lib/schema/schema";
 import SwalToaster from "@/components/SwalToaster/SwalToaster";
 import { PencilLine } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setAccountType, setPasscode } from "@/redux/accountTypeSlice";
 
 type ProfileFormValues = z.infer<typeof ProfileSchema>;
 
@@ -19,6 +22,10 @@ const PersonalInfo = () => {
   const [getUser, setGetUser] = useState<any>({});
   const queryClient = useQueryClient();
   const accountType = localStorage.getItem("accountType");
+  const oldPasscode = useSelector(
+    (state: RootState) => state.accountType.passcode
+  );
+  const dispatch = useDispatch();
 
   // Set user from localStorage on client side
   useEffect(() => {
@@ -34,6 +41,13 @@ const PersonalInfo = () => {
     mutationFn: async (value: any) =>
       await customAxios
         .patch(`${endpoints.user}${getUser?.id}/`, value)
+        .then((res) => res),
+  });
+
+  const changePassCode = useMutation({
+    mutationFn: async (value: any) =>
+      await customAxios
+        .post(endpoints.changepasscode, value)
         .then((res) => res),
   });
 
@@ -69,12 +83,29 @@ const PersonalInfo = () => {
   });
 
   const onSubmit = (data: ProfileFormValues) => {
+    const { pin } = data;
+
+    const passCodePin = {
+      old_passcode: oldPasscode,
+      new_passcode: pin,
+    };
+
     !!enableEdit &&
       editPersonalInfo.mutate(data, {
         onSuccess: () => {
           SwalToaster("Personal Information Updated Successfully!", "success");
           queryClient.invalidateQueries({ queryKey: ["personalInformation"] });
           setEnableEdit(false);
+          if (pin !== "")
+            return changePassCode.mutate(passCodePin, {
+              onSuccess: () => {
+                dispatch(setPasscode(pin));
+                SwalToaster("Passcode Updated Successfully!", "success");
+              },
+              onError: () => {
+                SwalToaster("Failed to update passcode!", "error");
+              },
+            });
         },
         onError: () => {
           SwalToaster("Failed to update personal information!", "error");
@@ -299,7 +330,21 @@ const PersonalInfo = () => {
           <input
             type="text"
             id="pin"
-            {...register("pin")}
+            maxLength={4} // This restricts typing more than 4 characters
+            {...register("pin", {
+              maxLength: {
+                value: 4,
+                message: "PIN must be exactly 4 characters",
+              },
+              minLength: {
+                value: 4,
+                message: "PIN must be exactly 4 characters",
+              },
+              pattern: {
+                value: /^\d{4}$/,
+                message: "PIN must be 4 digits",
+              },
+            })}
             className={`${
               enableEdit === false
                 ? "bg-[#EAEBF0]"
