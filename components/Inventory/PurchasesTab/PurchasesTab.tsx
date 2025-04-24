@@ -20,7 +20,8 @@ const PurchasesTab = () => {
     select: (findData) => findData?.data,
   });
 
-  console.log(inventoryPurchasesData);
+  console.log(inventoryPurchasesData)
+
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>

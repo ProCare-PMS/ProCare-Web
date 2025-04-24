@@ -238,7 +238,7 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
             </h2>
             <hr />
             <form onSubmit={handleSubmit} className="mt-8">
-              <div className="mb-4">
+              <div className="mb-4 hidden">
                 <label className="text-[#323539] font-inter font-medium text-sm">
                   Purchase Date
                 </label>
@@ -250,9 +250,7 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
                 />
               </div>
               <div>
-                <h2 className="text-[#202224] font-bold text-base font-inter">
-                  Products Details
-                </h2>
+                
                 <div className="overflow-y-auto h-[200px] p-3">
                   {products.map((product, index) => (
                     <div

@@ -170,9 +170,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
   };
 
   const fullName = `${user?.first_name} ${user?.last_name}`;
-  console.log(fullName);
+ 
 
-  const handleFinalize = () => {
+  const handleFinalize = () => { 
     if (title === "Multipay") {
       const totalPaid =
         cashAmount + (showMobileMoneyInput ? mobileMoneyAmount : 0);
@@ -234,7 +234,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
         is_pharmacist: user?.is_pharmacist,
         is_mca: user?.is_mca,
       },
-      status: "completed",
+      status: "pending", // change status to pending for hold transactions
     };
 
     finalizePaymentMutation.mutate(salesItemsData, {
@@ -481,7 +481,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
         </div>
 
         <div className="p-6 bg-gray-50 rounded-b-xl border-t flex items-center justify-end gap-3">
-          <button className="px-6 py-2.5 border border-[#2648EA] text-[#2648EA] font-semibold rounded-lg hover:bg-blue-50 transition-colors">
+          <button  onClick={() => handleFinalize()} className="px-6 py-2.5 border border-[#2648EA] text-[#2648EA] font-semibold rounded-lg hover:bg-blue-50 transition-colors">
             Hold Transaction
           </button>
           <button
@@ -492,7 +492,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
             Print
           </button>
           <button
-            onClick={() => handleFinalize()}
+           
             className="px-6 py-2.5 bg-[#2648EA] text-white font-semibold rounded-lg hover:bg-[#2648EA] transition-colors"
           >
             Finalize Payment

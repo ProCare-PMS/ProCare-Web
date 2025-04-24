@@ -1,11 +1,5 @@
 import React, { useEffect } from "react";
 import { X } from "lucide-react";
-import {
-  DashboardTransactions,
-  dashboardTransactions,
-  PurchaseTabTable,
-} from "@/type";
-import clsx from "clsx";
 import { PurchaseType } from "../Tables/purchases-tab-columns";
 
 type ModalProps = {

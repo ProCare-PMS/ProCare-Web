@@ -169,7 +169,7 @@ const AddSupplier = ({ onClose }: AddSupplierProps) => {
             </div>
           </div>
           {/* Quantity Form */}
-          <div className="grid gap-y-2 mt-6">
+          <div className=" hidden">
             <label
               htmlFor="quantity"
               className="text-[#323539] font-inter font-medium text-sm"

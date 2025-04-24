@@ -89,7 +89,7 @@ export const dashboardTransactionColumns: ColumnDef<DashboardRecentTransactions>
       header: "Transaction",
       cell: ({ row }) => {
         const transactionId = row.original.id.substring(0, 5); // Get the first 5 characters
-        return <span>{`Receipt #${transactionId}`}</span>;
+        return <span>{`Receipt #${transactionId}...`}</span>;
       },
     },
     {

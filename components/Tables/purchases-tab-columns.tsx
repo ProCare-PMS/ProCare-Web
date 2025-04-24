@@ -5,6 +5,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import DashboardModal from "../Modals/DashboardModal";
 import PurchasesTableModal from "../Modals/PurchasesTableModal";
 import { ProductsType } from "./products-tab-columns";
+import customAxios from "@/api/CustomAxios";
+import { endpoints } from "@/api/Endpoints";
+import { useQuery } from "@tanstack/react-query";
 
 export interface PurchaseType {
   created_at: string;
@@ -54,10 +57,32 @@ export const purchasesTabColumns: ColumnDef<PurchaseType>[] = [
   {
     accessorKey: "id",
     header: "Purchase ID",
+    cell: ({ row }) => {
+      const transactionId = row.original.id.substring(0, 5);
+      return <span>{`Receipt #${transactionId}...`}</span>;
+    },
   },
   {
     accessorKey: "pharmacy",
     header: "Supplier",
+    cell: ({ row }) => {
+      const supplierId = row.original.pharmacy;
+
+      const { data: supplierData, isLoading } = useQuery({
+        queryKey: ["supplier", supplierId],
+        queryFn: async () =>
+          await customAxios
+            .get(`/inventories/suppliers/${supplierId}/`)
+            .then((res) => res.data),
+      });
+
+      if (!supplierData) {
+        return <span>No Supplier</span>;
+      }
+
+      // Display supplier name if available, otherwise show ID
+      return <span>{supplierData?.name || supplierId}</span>;
+    },
   },
   {
     accessorKey: "quantity",
@@ -102,3 +127,26 @@ export const purchasesTabColumns: ColumnDef<PurchaseType>[] = [
     cell: ActionsCell,
   },
 ];
+
+{
+  /* 
+  cell: ({ row }) => {
+    const supplierId = row.original.pharmacy;
+    
+    // Use React Query hook directly in the cell renderer
+    const { data: supplierData, isLoading } = useQuery({
+      queryKey: ["supplier", supplierId],
+      queryFn: async () => 
+        await customAxios.get(`/inventories/suppliers/${supplierId}/`).then((res) => res.data),
+      enabled: !!supplierId,
+    });
+    
+    if (isLoading) {
+      return <span className="text-gray-400">Loading...</span>;
+    }
+    
+    // Display supplier name if available, otherwise show ID
+    return <span>{supplierData?.name || supplierId}</span>;
+  },
+  */
+}
