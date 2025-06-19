@@ -325,7 +325,7 @@ const RegistrationPage = () => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-4 px-[1.62rem] md:px-0 items-center justify-between">
+          <div className="flex flex-col md:flex-row gap-4 py-16 px-[1.62rem] md:px-0 items-center justify-between">
             <Link
               href="/pharmacy-information"
               className="text-main border-main font-inter text-center w-full md:w-[140px] border-2 rounded-[5px] px-5 py-2 font-semibold text-sm"
@@ -335,7 +335,7 @@ const RegistrationPage = () => {
 
             <button
               type="submit"
-              className=" w-full hidden md:w-[140px] bg-blue-600 text-white rounded-[5px] px-5 py-2 font-semibold text-sm"
+              className=" w-full md:w-[140px] bg-blue-600 text-white rounded-[5px] px-5 py-2 font-semibold text-sm"
             >
               Next
             </button>
