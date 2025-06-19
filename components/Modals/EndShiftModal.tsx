@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
+import { HiCash } from "react-icons/hi";
 
 interface EndShiftModalProps {
   setModal: () => void;
@@ -23,179 +24,274 @@ interface logoutSummaryType {
   bank_sales: string;
 }
 
+interface paymentMethods {
+  cash: string;
+  momo: string;
+  bank: string;
+  insurance: string;
+  total: number;
+}
+
 const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const getAccountDetails = localStorage.getItem("accounts");
   const accounts = getAccountDetails ? JSON.parse(getAccountDetails) : null;
+  const [total, setTotal] = useState(0);
+  const paymentMethods = {
+    cash: '0',
+    momo: '0',
+    bank: '0',
+    insurance: '0',
+    total: Number(total.toFixed(2)),
+  };
+  const [amountReceived, setAmountReceived] = useState(paymentMethods);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Define logoutUser to dispatch the logout and handle redirection
-  const logoutUser = async () => {
-    const getRefreshToken = localStorage.getItem("refreshToken") || "";
-    await customAxios
-      .post(
-        endpoints.logout,
-        !!getRefreshToken ? { refresh: getRefreshToken } : { refresh: "" }
-      )
-      .then((res) => res);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAmountReceived({ ...amountReceived, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: ''
+      });
+    }
   };
 
-  //Getting the logout info from the backend
+  useEffect(() => {
+    const totalReceived = (amountReceived: paymentMethods) => {
+      let sum = 0;
+      for (const [key, value] of Object.entries(amountReceived)) {
+        if (key !== 'total') {
+          sum += Number(value);
+        }
+      }
+      setTotal(sum);
+      setAmountReceived(prev => ({ ...prev, total: sum }));
+    };
+    totalReceived(amountReceived);
+  }, [amountReceived.cash, amountReceived.momo, amountReceived.bank, amountReceived.insurance]);
+
+  // Getting the logout info from the backend
   const { data: logoutSummary } = useQuery<logoutSummaryType>({
     queryKey: ["logoutSummaryData"],
     queryFn: () =>
       customAxios.get(endpoints.logoutSummary).then((res) => res?.data),
   });
 
+  // This function will handle the API logout call
+  const logoutUser = async () => {
+    const getRefreshToken = localStorage.getItem("refreshToken") || "";
+    return customAxios.post(
+      endpoints.logout,
+      !!getRefreshToken ? { refresh: getRefreshToken } : { refresh: "" }
+    );
+  };
 
-  // Define mutation for the logout action
-  const logoutMutation = useMutation({
-    mutationKey: ["logout"],
-    mutationFn: logoutUser,
-    onSuccess: () => {
+  // Submit payment methods to the backend
+  const submitPaymentMethods = async (data: paymentMethods) => {
+    return customAxios.post(endpoints.logoutSummary, data);
+  };
+
+  // Optimized logout process that doesn't block the UI
+  const performOptimisticLogout = async (data: paymentMethods) => {
+    try {
+      setIsSubmitting(true);
+      
+      // Store the data for submission
+      const paymentData = { ...data };
+      const refreshToken = localStorage.getItem("refreshToken") || "";
+      
+      // Clear storage and redirect immediately
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
       localStorage.removeItem("accounts");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("accountType");
-      router.push("/login");
+      
+      // Show success message and redirect
       toast.success("User logged out successfully");
-    },
-    onError: (error) => {
+      router.push("/login");
+      
+      // After redirecting, continue with API calls in the background
+      try {
+        // These requests run after the user is redirected
+        await submitPaymentMethods(paymentData);
+        await logoutUser();
+      } catch (error) {
+        // We can log errors but user won't see them as they're already redirected
+        console.error("Background logout process failed:", error);
+      }
+    } catch (error) {
+      // This would only trigger for errors in the immediate code before redirect
+      setIsSubmitting(false);
       toast.error("Failed to log out");
-    },
-  });
+    }
+  };
 
-  // Call the mutation when you want to log the user out
+  const validateInputs = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    const fields = ['cash', 'momo', 'bank', 'insurance'];
+    const numberRegex = /^\d+(\.\d{1,2})?$/;
+    
+    let isValid = true;
+
+    fields.forEach(field => {
+      if (amountReceived[field as keyof paymentMethods] === '') {
+        newErrors[field] = `Please enter ${field} amount`;
+        isValid = false;
+      } else if (!numberRegex.test(String(amountReceived[field as keyof paymentMethods]))) {
+        newErrors[field] = `Please enter a valid amount (e.g. 123 or 123.45)`;
+        isValid = false;
+      }
+    });
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  // Handle the logout process
   const handleLogout = () => {
-    logoutMutation.mutate();
+    if (validateInputs()) {
+      performOptimisticLogout(amountReceived);
+    } else {
+      toast.error("Please correct the errors before ending shift");
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-lg w-[80%]  md:w-[80%] p-6 relative">
+      <div className="bg-white rounded-2xl shadow-lg w-[80%] md:w-[80%] max-w-[900px] p-6 relative">
         <div className="flex justify-between items-center border-b mb-2">
           <h2 className="text-lg font-bold mb-4">End Shift Confirmation</h2>
           <button
             className="text-gray-500 hover:text-gray-800"
             onClick={setModal}
+            disabled={isSubmitting}
           >
             <CloseOutlinedIcon />
           </button>
         </div>
 
         <div className="divide-y divide-solid p-3">
-          <div className="first">
-            <div className="grid grid-cols-2 md:grid-cols-3 mb-2 py-2">
-              <div className="flex flex-col gap-2">
-                <span className="block capitalize text-gray-400 font-thin">
-                  Sales:
-                </span>
-                <span className="block font-bold">
-                  ₵ {logoutSummary?.total_sales}
-                </span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="block capitalize text-gray-400 font-thin">
-                  Hours spent:
-                </span>
-                <span className="block">{logoutSummary?.hours_spent}</span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="block capitalize text-gray-400 font-thin">
-                  Name
-                </span>
-                <span className="block">
-                  {/* 
-                  {accounts ? accounts[0]?.name : ""} */}{" "}
-                  {logoutSummary?.name}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="second">
-            <div className="grid grid-cols-2 md:grid-cols-3 mb-2 py-2">
-              <div className="flex flex-col gap-2">
-                <span className="block capitalize text-gray-400 font-thin">
-                  cash sales:
-                </span>
-                <span className="block">₵ {logoutSummary?.cash_sales}</span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="block capitalize text-gray-400 font-thin">
-                  momo sales:
-                </span>
-                <span className="block">
-                  ₵ {logoutSummary?.mobile_money_sales}
-                </span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="block capitalize text-gray-400 font-thin">
-                  bank sales
-                </span>
-                <span className="block">₵ -</span>
-              </div>
-            </div>
-          </div>
           <div className="third">
-            <div className="title text-sm md:text-base font-bold capitalize">
-              CONFIRM AMOUNT RECEIVED IN:
+            <div className="title text-sm md:text-base mb-4 font-semibold capitalize">
+              CONFIRM AMOUNT RECEIVED IN <span className="font-bold">GH¢</span>:
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 mb-2 py-2">
-              <div className="flex flex-col gap-2">
-                <label className="block">Cash (GHS)</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2.5 lg:gap-y-4 mb-2 py-2">
+              <div className="flex flex-col gap-0.5">
+                <label className="flex items-center gap-1">
+                  <p>Cash</p>
+                </label>
                 <div className="inputField">
                   <input
                     type="text"
+                    value={amountReceived.cash}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    name="cash"
+                    required
+                    disabled={isSubmitting}
+                    pattern="^\d+(\.\d{1,2})?$" 
+                    title="Enter a valid amount (e.g. 123 or 123.45)"
+                    id="cash"
                     placeholder="Enter cash amount"
-                    className="border w-full border-gray-300 rounded px-4 py-1"
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.cash ? 'border-red-500' : ''} ${isSubmitting ? 'bg-gray-100' : ''}`}
                   />
+                  {errors.cash && <p className="text-red-500 text-xs mt-1">{errors.cash}</p>}
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
-                <label className="block">Mobile Money (GHS)</label>
+              <div className="flex flex-col gap-0.5">
+                <label className="block">Mobile Money</label>
                 <div className="inputField">
                   <input
                     type="text"
+                    value={amountReceived.momo}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    required
+                    disabled={isSubmitting}
+                    pattern="^\d+(\.\d{1,2})?$" 
+                    title="Enter a valid amount (e.g. 123 or 123.45)"
+                    name="momo"
+                    id="momo"
                     placeholder="Enter mobile money amount"
-                    className="border w-full border-gray-300 rounded px-4 py-1"
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.momo ? 'border-red-500' : ''} ${isSubmitting ? 'bg-gray-100' : ''}`}
                   />
+                  {errors.momo && <p className="text-red-500 text-xs mt-1">{errors.momo}</p>}
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
-                <label className="block">Bank (GHS)</label>
+              <div className="flex flex-col gap-0.5">
+                <label className="block">Bank</label>
                 <div className="inputField">
                   <input
                     type="text"
+                    value={amountReceived.bank}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    name="bank"
+                    required
+                    disabled={isSubmitting}
+                    pattern="^\d+(\.\d{1,2})?$" 
+                    title="Enter a valid amount (e.g. 123 or 123.45)"
+                    id="bank"
                     placeholder="Enter bank amount"
-                    className="border w-full border-gray-300 rounded px-4 py-1"
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.bank ? 'border-red-500' : ''} ${isSubmitting ? 'bg-gray-100' : ''}`}
                   />
+                  {errors.bank && <p className="text-red-500 text-xs mt-1">{errors.bank}</p>}
+                </div>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <label className="block">Insurance</label>
+                <div className="inputField">
+                  <input
+                    type="text"
+                    value={amountReceived.insurance}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    required
+                    disabled={isSubmitting}
+                    pattern="^\d+(\.\d{1,2})?$" 
+                    title="Enter a valid amount (e.g. 123 or 123.45)"
+                    name="insurance"
+                    id="insurance"
+                    placeholder="Enter insurance amount"
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.insurance ? 'border-red-500' : ''} ${isSubmitting ? 'bg-gray-100' : ''}`}
+                  />
+                  {errors.insurance && <p className="text-red-500 text-xs mt-1">{errors.insurance}</p>}
                 </div>
               </div>
             </div>
-            <div className="button section mt-4">
-              <div className="flex gap-3 justify-end w-full">
-                <button
-                  type="button"
-                  onClick={setModal}
-                  className="px-6 py-2 bg-white text-dark shadow-md  w-56 rounded-[0.3rem]"
-                >
-                  Cancel
-                </button>
+            <div className="button section mt-12">
+              <div className="flex gap-3 justify-between items-center w-full">
+                <div className="font-medium">
+                  Total Amount: <span className="font-semibold text-sm">GH¢ {total.toFixed(2)}</span>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="px-6 py-2 bg-[#2648EA] text-white text-center shadow-md hover:bg-blue-600 w-56 rounded-[0.3rem]"
-                >
-                  End Shift
-                </button>
+                <div className="space-x-3">
+                  <button
+                    type="button"
+                    onClick={setModal}
+                    disabled={isSubmitting}
+                    className={`px-6 py-2 bg-white text-dark shadow-md w-56 rounded-[0.3rem] ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    onClick={handleLogout}
+                    disabled={isSubmitting}
+                    className={`px-6 py-2 bg-[#2648EA] text-white text-center shadow-md hover:bg-blue-600 w-56 rounded-[0.3rem] ${isSubmitting ? 'bg-blue-400 cursor-not-allowed' : ''}`}
+                  >
+                    {isSubmitting ? "Processing..." : "End Shift"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Close Button */}
       </div>
     </div>
   );

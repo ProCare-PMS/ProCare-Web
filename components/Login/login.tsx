@@ -34,7 +34,6 @@ export default function Login() {
         const res = await customAxios.post(endpoints.login, value.formData);
         return res.data;
       } catch (error) {
-        console.error("API Error:", error);
         throw error;
       }
     },
@@ -110,17 +109,14 @@ export default function Login() {
 
   return (
     <div className="bg-[#F9F9F9] flex justify-center items-center w-full md:w-1/2 h-screen">
-      <div className="bg-[#FFFFFF] w-[524px] h-[500px] p-8 rounded-lg shadow">
+      <div className="bg-[#FFFFFF] w-[80%] h-[70%] py-12 px-8 rounded-2xl shadow">
         <form
           className="m-auto flex flex-col justify-center gap-2"
           onSubmit={handleSubmit}
         >
-          <h2 className="font-inter text-4xl font-bold leading-14 text-left mb-8">
+          <h2 className="font-inter text-4xl font-bold leading-14 text-left mb-4">
             Login
           </h2>
-          {/* <p className="text-gray-600 mb-4">
-            Log in to access your account securely
-          </p> */}
           <div className="mb-4">
             <div className="flex justify-between">
               <label
@@ -170,7 +166,7 @@ export default function Login() {
               autoComplete="off"
             />
           </div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input type="checkbox" className="mr-2" />
               <span className="text-sm text-gray-600">Remember me</span>

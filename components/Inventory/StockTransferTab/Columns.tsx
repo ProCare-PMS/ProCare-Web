@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
+import { MoveRight } from "lucide-react";
+import StockTransferListModal from "@/components/Modals/StockTransferListModal";
+import { Button } from "@/components/ui/button";
 
 export interface OtherPharmaciesType {
   id: string;
@@ -26,15 +29,25 @@ const ActionsCell = ({ row }: ActionsCellProps) => {
 
   return (
     <div>
-      <span
-        className="text-[#2648EA] cursor-pointer font-semibold text-sm underline"
+      <Button
+        type="button"
+        className="text-white relative flex items-center gap-2 rounded-[20px] py-2 px-6 font-inter"
+        variant="secondary"
         onClick={() => {
           setModal(true);
           setSelectedItem(payment);
         }}
       >
         View
-      </span>
+        <MoveRight  />
+      </Button>
+
+      {selectedItem && (
+        <StockTransferListModal
+          item={selectedItem}
+          setModal={() => setSelectedItem(null)}
+        />
+      )}
     </div>
   );
 };

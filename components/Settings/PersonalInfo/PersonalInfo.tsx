@@ -10,15 +10,22 @@ import { endpoints } from "@/api/Endpoints";
 import { ProfileSchema } from "@/lib/schema/schema";
 import SwalToaster from "@/components/SwalToaster/SwalToaster";
 import { PencilLine } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setAccountType, setPasscode } from "@/redux/accountTypeSlice";
 
 type ProfileFormValues = z.infer<typeof ProfileSchema>;
 
 const PersonalInfo = () => {
   const [profileImage, setProfileImage] = useState("/imgPlace.jpeg");
-  //const getUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const [enableEdit, setEnableEdit] = useState(false);
   const [getUser, setGetUser] = useState<any>({});
   const queryClient = useQueryClient();
   const accountType = localStorage.getItem("accountType");
+  const oldPasscode = useSelector(
+    (state: RootState) => state.accountType.passcode
+  );
+  const dispatch = useDispatch();
 
   // Set user from localStorage on client side
   useEffect(() => {
@@ -37,6 +44,13 @@ const PersonalInfo = () => {
         .then((res) => res),
   });
 
+  const changePassCode = useMutation({
+    mutationFn: async (value: any) =>
+      await customAxios
+        .post(endpoints.changepasscode, value)
+        .then((res) => res),
+  });
+
   //get personal info data
   const { data: getPersonalData } = useQuery({
     queryKey: ["personalInformation"],
@@ -51,6 +65,12 @@ const PersonalInfo = () => {
     enabled: !!getUser?.id,
   });
 
+  const iconName =
+    accountType === "employee"
+      ? getPersonalData?.full_name.split(" ")[0][0] +
+        getPersonalData?.full_name.split(" ")[1][0]
+      : getPersonalData?.first_name[0] + getPersonalData?.last_name[0];
+
   // React Hook Form with Zod validation
   const {
     register,
@@ -63,16 +83,34 @@ const PersonalInfo = () => {
   });
 
   const onSubmit = (data: ProfileFormValues) => {
-    //console.log(data);
-    editPersonalInfo.mutate(data, {
-      onSuccess: () => {
-        SwalToaster("Personal Information Updated Successfully!", "success");
-        queryClient.invalidateQueries({ queryKey: ["personalInformation"] });
-      },
-      onError: () => {
-        SwalToaster("Failed to update personal information!", "error");
-      },
-    });
+    const { pin } = data;
+
+    const passCodePin = {
+      old_passcode: oldPasscode,
+      new_passcode: pin,
+    };
+
+    !!enableEdit &&
+      editPersonalInfo.mutate(data, {
+        onSuccess: () => {
+          SwalToaster("Personal Information Updated Successfully!", "success");
+          queryClient.invalidateQueries({ queryKey: ["personalInformation"] });
+          setEnableEdit(false);
+          if (pin !== "")
+            return changePassCode.mutate(passCodePin, {
+              onSuccess: () => {
+                dispatch(setPasscode(pin));
+                SwalToaster("Passcode Updated Successfully!", "success");
+              },
+              onError: () => {
+                SwalToaster("Failed to update passcode!", "error");
+              },
+            });
+        },
+        onError: () => {
+          SwalToaster("Failed to update personal information!", "error");
+        },
+      });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,29 +148,40 @@ const PersonalInfo = () => {
           </label>
           {/* Profile Picture Section */}
           <div className="relative size-40 ">
-            <Image
-              id="profileimage"
-              width={150}
-              height={100}
-              src={profileImage}
-              alt="Profile"
-              className="rounded-full w-full h-full border border-[#2648EA] object-cover"
-            />
-            <label
-              htmlFor="profilePic"
-              className="absolute bottom-0 -right-2.5 cursor-pointer"
-            >
-              <div className="bg-white rounded-full p-2 border border-[#2648EA]">
-                <PencilLine className=" outline-current text-[#2648EA]" />
+            {profileImage === "/imgPlace.jpeg" ? (
+              <div className="w-full h-full bg-rose-700  rounded-full relative flex justify-center items-center">
+                {/* <div className="bg-green-400 w-1/2 h-1/2">jjjj</div> */}
+                <span className="text-[#f1f0ef] text-5xl">
+                  {typeof iconName === "string" ? iconName : ""}
+                </span>
               </div>
-            </label>
-            <input
-              type="file"
-              id="profilePic"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageChange}
-            />
+            ) : (
+              <>
+                <Image
+                  id="profileimage"
+                  width={150}
+                  height={100}
+                  src={profileImage}
+                  alt="Profile"
+                  className="rounded-full w-full h-full border border-[#2648EA] object-cover"
+                />
+                <label
+                  htmlFor="profilePic"
+                  className="absolute bottom-0 -right-2.5 cursor-pointer"
+                >
+                  <div className="bg-white rounded-full p-2 border border-[#2648EA]">
+                    <PencilLine className=" outline-current text-[#2648EA]" />
+                  </div>
+                </label>
+                <input
+                  type="file"
+                  id="profilePic"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -151,10 +200,15 @@ const PersonalInfo = () => {
             type="text"
             id="first_name"
             {...register("first_name")}
-            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.first_name ? "border-red-500" : ""
             }`}
             placeholder="Enter first name"
+            disabled={enableEdit === false}
           />
           {errors.first_name && (
             <p className="text-red-500 text-sm mt-1">
@@ -175,10 +229,16 @@ const PersonalInfo = () => {
             type="text"
             id="last_name"
             {...register("last_name")}
-            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
-              errors.last_name ? "border-red-500" : ""
-            }`}
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            }
+               placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
+                 errors.last_name ? "border-red-500" : ""
+               }`}
             placeholder="Enter last name"
+            disabled={enableEdit === false}
           />
           {errors.last_name && (
             <p className="text-red-500 text-sm mt-1">
@@ -199,8 +259,13 @@ const PersonalInfo = () => {
             type="text"
             id="other_name"
             {...register("other_name")}
-            className="bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3"
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3`}
             placeholder="Enter other name(s)"
+            disabled={enableEdit === false}
           />
         </div>
 
@@ -213,10 +278,15 @@ const PersonalInfo = () => {
             type="email"
             id="email"
             {...register("email")}
-            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.email ? "border-red-500" : ""
             }`}
             placeholder="Enter email address"
+            disabled={enableEdit === false}
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -235,10 +305,15 @@ const PersonalInfo = () => {
             type="tel"
             id="phone_number"
             {...register("phone_number")}
-            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.phone_number ? "border-red-500" : ""
             }`}
             placeholder="Enter Phone Number"
+            disabled={enableEdit === false}
           />
           {errors.phone_number && (
             <p className="text-red-500 text-sm mt-1">
@@ -255,8 +330,26 @@ const PersonalInfo = () => {
           <input
             type="text"
             id="pin"
-            {...register("pin")}
-            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
+            maxLength={4} // This restricts typing more than 4 characters
+            {...register("pin", {
+              maxLength: {
+                value: 4,
+                message: "PIN must be exactly 4 characters",
+              },
+              minLength: {
+                value: 4,
+                message: "PIN must be exactly 4 characters",
+              },
+              pattern: {
+                value: /^\d{4}$/,
+                message: "PIN must be 4 digits",
+              },
+            })}
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.pin ? "border-red-500" : ""
             }`}
             placeholder="Enter pin"
@@ -279,7 +372,11 @@ const PersonalInfo = () => {
               type="text"
               id="license_number"
               {...register("license_number")}
-              className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
+              className={`${
+                enableEdit === false
+                  ? "bg-[#EAEBF0]"
+                  : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+              } placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
                 errors.license_number ? "border-red-500" : ""
               }`}
               placeholder="Enter License Number"
@@ -293,19 +390,41 @@ const PersonalInfo = () => {
           </div>
         )}
 
-        <div className="col-span-3 mt-12 flex justify-end w-full">
+        <div className="col-span-3 mt-12 flex justify-end w-full gap-3">
           {/* Submit Button */}
-          <button
-            type="submit"
-            className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] ${
-              isDirty
-                ? "bg-[#2648EA] hover:bg-blue-600"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
-            disabled={isDirty === false}
-          >
-            Edit
-          </button>
+          {enableEdit === true && (
+            <button
+              type="button"
+              className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] bg-[#ea9526] hover:bg-orange-600`}
+              onClick={() => reset()}
+            >
+              Discard
+            </button>
+          )}
+
+          {enableEdit === false && (
+            <button
+              type="button"
+              onClick={() => setEnableEdit(true)}
+              className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] bg-[#2648EA] hover:bg-blue-600`}
+            >
+              Edit
+            </button>
+          )}
+
+          {enableEdit === true && (
+            <button
+              type="submit"
+              className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] ${
+                enableEdit && isDirty
+                  ? "bg-[#2648EA] hover:bg-blue-600"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              disabled={isDirty === false}
+            >
+              Edit
+            </button>
+          )}
         </div>
       </div>
     </form>

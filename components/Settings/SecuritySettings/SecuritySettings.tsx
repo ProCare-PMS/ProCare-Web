@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from "lucide-react";
 
 // Define Zod schema for validation
 const PasswordSchema = z.object({
@@ -28,11 +28,13 @@ const SecuritySettings = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [enableEdit, setEnableEdit] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
+    reset,
   } = useForm<PasswordFormValues>({
     resolver: zodResolver(PasswordSchema),
   });
@@ -40,6 +42,7 @@ const SecuritySettings = () => {
   const onSubmit = (data: PasswordFormValues) => {
     console.log("Password Data:", data);
     // Handle password update logic here
+    setEnableEdit(false);
   };
 
   return (
@@ -51,7 +54,10 @@ const SecuritySettings = () => {
       {/* Old Password (full row) */}
       <div className="grid grid-cols-2 max-w-3xl gap-8">
         <div className="relative col-span-1">
-          <label htmlFor="oldPassword" className="block font-medium mb-1 max-2xl:text-sm">
+          <label
+            htmlFor="oldPassword"
+            className="block font-medium mb-1 max-2xl:text-sm"
+          >
             Old Password
           </label>
           <input
@@ -59,7 +65,11 @@ const SecuritySettings = () => {
             id="oldPassword"
             placeholder="Enter old password"
             {...register("oldPassword")}
-            className={`bg-[#EAEBF0] border border-gray-300 placeholder:text-sm placeholder:font-light rounded px-4 pr-[10%] py-3 w-full ${
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } border border-gray-300 placeholder:text-sm placeholder:font-light rounded px-4 pr-[10%] py-3 w-full ${
               errors.oldPassword ? "border-red-500" : ""
             }`}
           />
@@ -81,7 +91,10 @@ const SecuritySettings = () => {
       <div className="grid grid-cols-2 max-w-3xl gap-8">
         {/* New Password */}
         <div className="relative">
-          <label htmlFor="newPassword" className="block font-medium mb-1 max-2xl:text-sm">
+          <label
+            htmlFor="newPassword"
+            className="block font-medium mb-1 max-2xl:text-sm"
+          >
             New Password
           </label>
           <input
@@ -89,7 +102,11 @@ const SecuritySettings = () => {
             id="newPassword"
             placeholder="Enter new password"
             {...register("newPassword")}
-            className={`bg-[#EAEBF0] border border-gray-300 placeholder:text-sm placeholder:font-light rounded px-4 pr-[10%] py-3 w-full ${
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } border border-gray-300 placeholder:text-sm placeholder:font-light rounded px-4 pr-[10%] py-3 w-full ${
               errors.newPassword ? "border-red-500" : ""
             }`}
           />
@@ -109,7 +126,10 @@ const SecuritySettings = () => {
 
         {/* Confirm Password */}
         <div className="relative">
-          <label htmlFor="confirmPassword" className="block font-medium mb-1 max-2xl:text-sm">
+          <label
+            htmlFor="confirmPassword"
+            className="block font-medium mb-1 max-2xl:text-sm"
+          >
             Confirm Password
           </label>
           <input
@@ -117,7 +137,11 @@ const SecuritySettings = () => {
             id="confirmPassword"
             placeholder="Confirm new password"
             {...register("confirmPassword")}
-            className={`bg-[#EAEBF0] border border-gray-300 placeholder:text-sm placeholder:font-light rounded px-4 pr-[10%] py-3 w-full ${
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } border border-gray-300 placeholder:text-sm placeholder:font-light rounded px-4 pr-[10%] py-3 w-full ${
               errors.confirmPassword ? "border-red-500" : ""
             }`}
           />
@@ -135,13 +159,39 @@ const SecuritySettings = () => {
       </div>
 
       {/* Update Password Button */}
-      <div className="mt-6 flex max-w-3xl justify-end">
-        <button
-          type="submit"
-          className="px-6 py-2 bg-[#2648EA] text-white rounded-[0.3rem] shadow-md hover:bg-blue-600"
-        >
-          Update Password
-        </button>
+      <div className="mt-6 flex max-w-3xl justify-end gap-3">
+        {enableEdit === true && (
+          <button
+            type="button"
+            className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] bg-[#ea9526] hover:bg-orange-600`}
+            onClick={() => reset()}
+          >
+            Discard
+          </button>
+        )}
+        {enableEdit === false && (
+          <button
+            type="button"
+            onClick={() => setEnableEdit(true)}
+            className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] bg-[#2648EA] hover:bg-blue-600`}
+          >
+            Edit
+          </button>
+        )}
+
+        {enableEdit === true && (
+          <button
+            type="submit"
+            className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] ${
+              enableEdit && isDirty
+                ? "bg-[#2648EA] hover:bg-blue-600"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
+            disabled={isDirty === false}
+          >
+            Update Password
+          </button>
+        )}
       </div>
     </form>
   );

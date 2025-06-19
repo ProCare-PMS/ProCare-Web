@@ -19,7 +19,9 @@ export default function UserProfile() {
   return (
     <div className="bg-[#F9F9F9] min-h-screen flex justify-center items-center">
       <div className="w-full max-w-lg p-6 flex flex-col items-center justify-between gap-4">
-        <h2 className="text-[#2648EA] font-semibold text-3xl">Who’s on Shift?</h2>
+        <h2 className="text-[#2648EA] font-semibold text-3xl">
+          Who’s on Shift?
+        </h2>
 
         <div className="flex flex-wrap justify-center items-center gap-4">
           {accountInfo.length > 0 ? (
@@ -53,7 +55,9 @@ export default function UserProfile() {
 
         <div>
           <span>Back to </span>
-          <a href="/login" className="text-[#2648EA] underline">Login</a>
+          <a href="/login" className="text-[#2648EA] underline">
+            Login
+          </a>
         </div>
       </div>
     </div>

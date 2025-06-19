@@ -20,9 +20,6 @@ function Page() {
       await customAxios.get(endpoints.inventoryLowStock).then((res) => res),
     select: (findData) => findData?.data,
   });
- 
-  console.log(lowStockData)
-
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -74,7 +71,7 @@ function Page() {
         <div className="mt-5">
           <DashboardTable data={lowStockData || []} columns={Column} />
         </div>
-         
+
         {/* table content end */}
       </div>
     </div>

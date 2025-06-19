@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { X } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
@@ -120,7 +120,6 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
         },
       };
 
-      console.log(product.id)
       return updatedProducts;
     });
     setDropdownStates((prev) => ({ ...prev, [index]: false }));
@@ -163,7 +162,6 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
           purchase_date: purchaseDate,
         };
 
-        console.log("Formatted purchase request:", purchaseRequest);
         return purchaseRequest;
       });
   };
@@ -226,10 +224,10 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white shadow-custom w-[60%] py-4 px-8 mb-12 rounded-[8px] mt-8 grid gap-y-5">
+      <div className="bg-white shadow-custom w-[80%] py-4 px-8 mb-12 rounded-[8px] mt-8 grid gap-y-5">
         <div className="flex items-center justify-between gap-4 mb-4">
           <h3 className="font-bold text-2xl font-inter">Add Purchase</h3>
-          <CloseOutlinedIcon onClick={onClose} className="cursor-pointer" />
+          <X onClick={onClose} className="cursor-pointer" />
         </div>
         <div className="grid">
           <div>
@@ -237,7 +235,7 @@ const AddPurchase = ({ onClose }: AddPurchaseProps) => {
               Purchase Details
             </h2>
             <hr />
-            <form onSubmit={handleSubmit} className="mt-8">
+            <form onSubmit={handleSubmit} className="mt-4">
               <div className="mb-4 hidden">
                 <label className="text-[#323539] font-inter font-medium text-sm">
                   Purchase Date

@@ -7,3 +7,34 @@
       font-family: "Proxima Nova", system-ui, sans-serif;
     }
   }
+
+
+  /* Add this to your global CSS file, e.g., app/globals.css */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(50px); /* Adjust the slide distance as needed */
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideInFromBottom {
+  animation: slideInFromBottom 0.4s ease-out forwards;
+}

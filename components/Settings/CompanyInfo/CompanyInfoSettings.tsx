@@ -16,6 +16,7 @@ type ProfileFormValues = z.infer<typeof CompanySchema>;
 const CompanyInfoSettings = () => {
   const [profileImage, setProfileImage] = useState("/RxPMSlogo.png");
   const queryClient = useQueryClient();
+  const [enableEdit, setEnableEdit] = useState(false);
 
   const getPharmacy = JSON.parse(
     localStorage.getItem("user") || "{}"
@@ -58,6 +59,7 @@ const CompanyInfoSettings = () => {
       onSuccess: () => {
         SwalToaster("Company Information Updated successfully!", "success");
         queryClient.invalidateQueries({ queryKey: ["companyInformation"] });
+        setEnableEdit(false)
       },
       onError: () => {
         SwalToaster("Error updating company information!", "error");
@@ -136,10 +138,16 @@ const CompanyInfoSettings = () => {
             type="text"
             id="facility_name"
             {...register("facility_name")}
-            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
-              errors.facility_name ? "border-red-500" : ""
-            }`}
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            }
+               placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
+                 errors.facility_name ? "border-red-500" : ""
+               }`}
             placeholder="Enter company name"
+            disabled={enableEdit === false}
           />
           {errors.facility_name && (
             <p className="text-red-500 text-sm mt-1">
@@ -160,10 +168,15 @@ const CompanyInfoSettings = () => {
             type="text"
             id="ghana_post_address"
             {...register("ghana_post_address")}
-            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.ghana_post_address ? "border-red-500" : ""
             }`}
             placeholder="Enter location"
+            disabled={enableEdit === false}
           />
           {errors.ghana_post_address && (
             <p className="text-red-500 text-sm mt-1">
@@ -184,7 +197,11 @@ const CompanyInfoSettings = () => {
             type="text"
             id="otherNames"
             {...register("license_number")}
-            className="bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3"
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3`}
             placeholder="Enter pharmacy ID"
             disabled
           />
@@ -199,10 +216,15 @@ const CompanyInfoSettings = () => {
             type="email"
             id="email"
             {...register("facility_email")}
-            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.facility_email ? "border-red-500" : ""
             }`}
             placeholder="Enter email address"
+            disabled={enableEdit === false}
           />
           {errors.facility_email && (
             <p className="text-red-500 text-sm mt-1">
@@ -220,10 +242,15 @@ const CompanyInfoSettings = () => {
             type="tel"
             id="phone"
             {...register("facility_number")}
-            className={`bg-[#EAEBF0] placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
+            className={`${
+              enableEdit === false
+                ? "bg-[#EAEBF0]"
+                : "bg-[#FFFF] border-2 border-[#EAEBF0]"
+            } placeholder:text-[#858C95] placeholder:text-sm rounded px-4 py-3 ${
               errors.facility_number ? "border-red-500" : ""
             }`}
             placeholder="Enter Phone Number"
+            disabled={enableEdit === false}
           />
           {errors.facility_number && (
             <p className="text-red-500 text-sm mt-1">
@@ -232,20 +259,42 @@ const CompanyInfoSettings = () => {
           )}
         </div>
 
-        <div className="col-span-3 mt-6 flex justify-end w-full">
+        <div className="col-span-3 mt-6 flex justify-end w-full gap-3">
           {/* Submit Button */}
 
-          <button
-            type="submit"
-            className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] ${
-              isDirty
-                ? "bg-[#2648EA] hover:bg-blue-600"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
-            disabled={isDirty === false} // Disable button when no changes are made
-          >
-            Edit
-          </button>
+          {enableEdit === true && (
+            <button
+              type="button"
+              className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] bg-[#ea9526] hover:bg-orange-600`}
+              onClick={() => reset()}
+            >
+              Discard
+            </button>
+          )}
+
+          {enableEdit === false && (
+            <button
+              type="button"
+              onClick={() => setEnableEdit(true)}
+              className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] bg-[#2648EA] hover:bg-blue-600`}
+            >
+              Edit
+            </button>
+          )}
+
+          {enableEdit === true && (
+            <button
+              type="submit"
+              className={`px-6 py-2 text-white shadow-md w-48 rounded-[0.3rem] ${
+                enableEdit && isDirty
+                  ? "bg-[#2648EA] hover:bg-blue-600"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              disabled={isDirty === false}
+            >
+              Edit
+            </button>
+          )}
         </div>
       </div>
     </form>

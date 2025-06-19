@@ -1,8 +1,6 @@
 "use client";
 
-import { DashboardTransactions, dashboardTransactions } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 import { useState } from "react";
 import DashboardModal from "../Modals/DashboardModal";
 import clsx from "clsx";
@@ -50,7 +48,7 @@ export interface DashboardRecentTransactions {
 
 interface ActionsCellProps {
   row: {
-    original: DashboardRecentTransactions;
+    original: DashboardRecentTransactions; 
   };
 }
 

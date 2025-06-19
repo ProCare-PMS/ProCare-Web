@@ -20,6 +20,9 @@ export default async function DashboardPage() {
       await customAxios.get(`${endpoints.sales}?page=1`).then((res) => res.data),
   });
 
+  
+
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <DashboardHomePage />

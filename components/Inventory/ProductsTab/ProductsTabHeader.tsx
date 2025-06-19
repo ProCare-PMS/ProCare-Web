@@ -61,13 +61,11 @@ const ProductsTabHeader: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [searchValues, setSearchValues] = useState<string>("");
   const [showImport, setShowImport] = useState<boolean>(false);
-  const [sortOption, setSortOption] = useState<SortOption>("alphabetical"); // Default to alphabetical
+  const [sortOption, setSortOption] = useState<SortOption>("alphabetical");
   const [showSortOptions, setShowSortOptions] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const filterRef = useRef<HTMLDivElement | null>(null);
   const sortRef = useRef<HTMLDivElement | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState<number>(10);
   const [filters, setFilters] = useState<FilterState>({
     unit: "",
     category: "",
@@ -84,7 +82,7 @@ const ProductsTabHeader: React.FC = () => {
   });
   
   // Apply filtering, searching, and sorting to all data
-  const filteredProducts = useMemo(() => {
+  const processedData = useMemo(() => {
     if (!allProductsData) return [];
     
     let results = [...allProductsData];
@@ -134,15 +132,12 @@ const ProductsTabHeader: React.FC = () => {
     // Apply sorting based on selected option
     switch (sortOption) {
       case "alphabetical":
-        // Sort alphabetically by name
         return results.sort((a, b) => a.name.localeCompare(b.name));
       case "newest":
-        // Sort by newest first (creation date)
         return results.sort(
           (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
       case "oldest":
-        // Sort by oldest first (creation date)
         return results.sort(
           (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
         );
@@ -151,26 +146,8 @@ const ProductsTabHeader: React.FC = () => {
     }
   }, [allProductsData, searchValues, filters, sortOption]);
   
-  // Create paginated data for the current view
-  const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    const paginatedResults = filteredProducts.slice(startIndex, endIndex);
-    
-    return {
-      results: paginatedResults,
-      count: filteredProducts.length,
-      total_pages: Math.ceil(filteredProducts.length / pageSize),
-      links: {
-        next: currentPage < Math.ceil(filteredProducts.length / pageSize) ? "has-next" : null,
-        previous: currentPage > 1 ? "has-previous" : null
-      }
-    };
-  }, [filteredProducts, currentPage, pageSize]);
-  
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
-    setCurrentPage(1); // Reset to first page when filters change
   };
   
   const toggleMenu = (): void => {
@@ -194,23 +171,10 @@ const ProductsTabHeader: React.FC = () => {
   const handleSortOptionChange = (option: SortOption): void => {
     setSortOption(option);
     setShowSortOptions(false);
-    setCurrentPage(1); // Reset to first page when sort changes
   };
-
- 
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchValues(event.target.value);
-    setCurrentPage(1); // Reset to first page when search changes
-  };
-  
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
-  
-  const handlePageSizeChange = (newSize: number) => {
-    setPageSize(newSize);
-    setCurrentPage(1); // Reset to first page when page size changes
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -256,17 +220,19 @@ const ProductsTabHeader: React.FC = () => {
   return (
     <div>
       <div className="flex flex-col md:flex-row items-center justify-between mb-8">
-        <h2 className="text-[#202224] font-semibold text-2xl">Products</h2>
+        <h2 className="text-[#202224] font-semibold text-2xl mb-4 md:mb-0">Products</h2>
 
-        <div className="flex flex-col md:flex-row items-center gap-3">
-          <SearchFieldInput
-            value={searchValues}
-            onChange={handleSearchChange}
-            placeholder="Search for product"
-          />
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          <div className="w-full sm:w-auto">
+            <SearchFieldInput
+              value={searchValues}
+              onChange={handleSearchChange}
+              placeholder="Search for product"
+            />
+          </div>
 
           {/* Sort Dropdown */}
-          <div className="relative" ref={sortRef}>
+          <div className="relative w-full sm:w-auto" ref={sortRef}>
             <Button
               type="button"
               className="flex items-center gap-2 rounded-[12px] bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-inter w-full md:w-[120px]"
@@ -278,7 +244,7 @@ const ProductsTabHeader: React.FC = () => {
 
             {showSortOptions && (
               <div 
-                className="bg-white absolute w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300"
+                className="bg-white absolute w-full md:w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300"
               >
                 <ul className="flex flex-col text-[#344054] items-center divide-y divide-gray-300">
                   <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
@@ -313,10 +279,10 @@ const ProductsTabHeader: React.FC = () => {
             )}
           </div>
 
-          <div className="relative" ref={menuRef}>
+          <div className="relative w-full sm:w-auto" ref={menuRef}>
             <Button
               type="button"
-              className="text-white flex items-center gap-2 rounded-[12px] font-inter w-full md:w-[149px]"
+              className="text-white flex items-center gap-2 font-semibold text-sm rounded-[12px] font-inter w-full md:w-[149px] justify-center"
               variant="secondary"
               onClick={toggleMenu}
             >
@@ -325,7 +291,7 @@ const ProductsTabHeader: React.FC = () => {
 
             {showMenu && (
               <div 
-                className="bg-white absolute w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300"
+                className="bg-white absolute w-full md:w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300"
               >
                 <ul className="flex flex-col text-[#344054] items-center divide-y divide-gray-300">
                   <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
@@ -360,7 +326,7 @@ const ProductsTabHeader: React.FC = () => {
             </div>
 
             {showFilters && (
-              <div className="absolute top-2 left-24 md:right-0 z-20 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="absolute top-2 left-24 md:left-auto md:right-0 z-20 animate-in fade-in slide-in-from-top-2 duration-300">
                 <FilterDropdown onFilterChange={handleFilterChange} />
               </div>
             )}
@@ -370,12 +336,10 @@ const ProductsTabHeader: React.FC = () => {
 
       <DataTable
         columns={productsTabColumns}
-        data={paginatedData}
+        data={processedData}
         searchValue={searchValues}
         isLoading={isLoadingAllProducts}
-        onPageChange={handlePageChange}
-        onPageSizeChange={handlePageSizeChange}
-        pageSize={pageSize}
+        initialPageSize={10}
       />
 
       {isModalOpen && (

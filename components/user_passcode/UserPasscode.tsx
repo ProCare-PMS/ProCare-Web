@@ -70,15 +70,15 @@ const UserPasscode = () => {
       return;
     }
     const otpValue = otp.join("");
+    const passcode = otpValue.toString();
 
     loginMutation.mutate(
       {
         account_id: accountId,
-        passcode: otpValue.toString(),
+        passcode: passcode,
       },
       {
         onSuccess: (responseData) => {
-          //console.log("Login successful:", responseData);
           const token = responseData?.access;
           const user = responseData?.user;
           const refreshToken = responseData?.refresh;
@@ -91,7 +91,7 @@ const UserPasscode = () => {
             localStorage.setItem("accountType", accountType);
             toast.success("Login successful! Redirecting to the dashboard.");
             dispatch(loginSuccess({ token, refreshToken, user, accountType }));
-            dispatch(setAccountType(accountType));
+            dispatch(setAccountType({ accountType, passcode }));
             router.push("/dashboard");
             localStorage.removeItem("accountId");
           }

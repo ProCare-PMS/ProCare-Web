@@ -20,7 +20,6 @@ const PurchasesTab = () => {
     select: (findData) => findData?.data,
   });
 
-  console.log(inventoryPurchasesData)
 
 
   const handleSearchValueChange = (
