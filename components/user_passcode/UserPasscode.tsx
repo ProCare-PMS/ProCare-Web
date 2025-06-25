@@ -170,6 +170,16 @@ export default function UserPasscode() {
       { accountId: currentUser.id, passcode: code },
       {
         onSuccess: (data) => {
+          // Save tokens and user info to localStorage
+          if (data.access) {
+            localStorage.setItem("authToken", data.access)
+          }
+          if (data.refresh) {
+            localStorage.setItem("refreshToken", data.refresh)
+          }
+          if (data.user) {
+            localStorage.setItem("user", JSON.stringify(data.user))
+          }
           toast.success("Access granted!")
           dispatch(loginSuccess(data))
           router.push("/dashboard")
