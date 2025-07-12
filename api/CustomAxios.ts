@@ -21,7 +21,7 @@ customAxios.interceptors.request.use(
   (config) => {
     // Get the token from localStorage (or any other storage)
     const token = localStorage?.getItem("authToken");
-    if (token) {
+    if (token && token !== "undefined") {
       // Set the Authorization header if the token exists
       config.headers.Authorization = `Bearer ${token}`;
     }
