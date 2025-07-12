@@ -37,17 +37,26 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
   const router = useRouter();
   const getAccountDetails = localStorage.getItem("accounts");
   const accounts = getAccountDetails ? JSON.parse(getAccountDetails) : null;
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState(0)
   const paymentMethods = {
     cash: '0',
     momo: '0',
     bank: '0',
     insurance: '0',
     total: Number(total.toFixed(2)),
+  }
+  const [amountReceived, setAmountReceived] =  useState(paymentMethods)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const logoutUser = async () => {
+    const getRefreshToken = localStorage.getItem("refreshToken") || "";
+    await customAxios
+      .post(
+        endpoints.logout,
+        !!getRefreshToken ? { refresh: getRefreshToken } : { refresh: "" }
+      )
+      .then((res) => res);
   };
-  const [amountReceived, setAmountReceived] = useState(paymentMethods);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmountReceived({ ...amountReceived, [e.target.name]: e.target.value });
@@ -60,75 +69,56 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
   };
 
   useEffect(() => {
-    const totalReceived = (amountReceived: paymentMethods) => {
-      let sum = 0;
-      for (const [key, value] of Object.entries(amountReceived)) {
-        if (key !== 'total') {
-          sum += Number(value);
+    const totalReceived = (amountReceived : paymentMethods) => {
+      let sum = 0
+      for(const[key, value] of Object.entries(amountReceived)){
+        if(key !== 'total') {
+          sum += Number(value)
         }
-      }
-      setTotal(sum);
-      setAmountReceived(prev => ({ ...prev, total: sum }));
-    };
-    totalReceived(amountReceived);
-  }, [amountReceived.cash, amountReceived.momo, amountReceived.bank, amountReceived.insurance]);
+      } 
+      setTotal(sum)
+      setAmountReceived(prev => ({...prev, total: sum}))
+    }
+    totalReceived(amountReceived)
+  }, [amountReceived])
 
-  // Getting the logout info from the backend
+  //Getting the logout info from the backend
   const { data: logoutSummary } = useQuery<logoutSummaryType>({
     queryKey: ["logoutSummaryData"],
     queryFn: () =>
       customAxios.get(endpoints.logoutSummary).then((res) => res?.data),
   });
 
-  // This function will handle the API logout call
-  const logoutUser = async () => {
-    const getRefreshToken = localStorage.getItem("refreshToken") || "";
-    return customAxios.post(
-      endpoints.logout,
-      !!getRefreshToken ? { refresh: getRefreshToken } : { refresh: "" }
-    );
-  };
-
-  // Submit payment methods to the backend
-  const submitPaymentMethods = async (data: paymentMethods) => {
-    return customAxios.post(endpoints.logoutSummary, data);
-  };
-
-  // Optimized logout process that doesn't block the UI
-  const performOptimisticLogout = async (data: paymentMethods) => {
-    try {
-      setIsSubmitting(true);
-      
-      // Store the data for submission
-      const paymentData = { ...data };
-      const refreshToken = localStorage.getItem("refreshToken") || "";
-      
-      // Clear storage and redirect immediately
+  const logoutMutation = useMutation({
+    mutationKey: ["logout"],
+    mutationFn: logoutUser,
+    onSuccess: () => {
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
       localStorage.removeItem("accounts");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("accountType");
-      
-      // Show success message and redirect
-      toast.success("User logged out successfully");
       router.push("/login");
-      
-      // After redirecting, continue with API calls in the background
-      try {
-        // These requests run after the user is redirected
-        await submitPaymentMethods(paymentData);
-        await logoutUser();
-      } catch (error) {
-        // We can log errors but user won't see them as they're already redirected
-        console.error("Background logout process failed:", error);
-      }
-    } catch (error) {
-      // This would only trigger for errors in the immediate code before redirect
-      setIsSubmitting(false);
+      toast.success("User logged out successfully");
+    },
+    onError: (error) => {
       toast.error("Failed to log out");
-    }
-  };
+    },
+  });
+
+
+  const submitPaymentMethodsMutation = useMutation({
+    mutationKey: ["submitPaymentMethods"],
+    mutationFn: (data: paymentMethods) => 
+      customAxios.post(endpoints.logoutSummary, data).then((res) => res?.data),
+    onSuccess: () => {
+      logoutMutation.mutate();
+    },
+    onError: (error) => {
+      toast.error("Failed to submit payment methods");
+    },
+  });
+
 
   const validateInputs = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -141,7 +131,9 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
       if (amountReceived[field as keyof paymentMethods] === '') {
         newErrors[field] = `Please enter ${field} amount`;
         isValid = false;
-      } else if (!numberRegex.test(String(amountReceived[field as keyof paymentMethods]))) {
+      }
+    
+      else if (!numberRegex.test(String(amountReceived[field as keyof paymentMethods]))) {
         newErrors[field] = `Please enter a valid amount (e.g. 123 or 123.45)`;
         isValid = false;
       }
@@ -151,10 +143,10 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
     return isValid;
   };
 
-  // Handle the logout process
+  // pre-validating and then submitting payment data
   const handleLogout = () => {
     if (validateInputs()) {
-      performOptimisticLogout(amountReceived);
+      submitPaymentMethodsMutation.mutate(amountReceived);
     } else {
       toast.error("Please correct the errors before ending shift");
     }
@@ -168,7 +160,6 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
           <button
             className="text-gray-500 hover:text-gray-800"
             onClick={setModal}
-            disabled={isSubmitting}
           >
             <CloseOutlinedIcon />
           </button>
@@ -183,6 +174,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
               <div className="flex flex-col gap-0.5">
                 <label className="flex items-center gap-1">
                   <p>Cash</p>
+                  {/* <HiCash className="text-green-500"/> */}
                 </label>
                 <div className="inputField">
                   <input
@@ -192,12 +184,11 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                     autoComplete="off"
                     name="cash"
                     required
-                    disabled={isSubmitting}
                     pattern="^\d+(\.\d{1,2})?$" 
                     title="Enter a valid amount (e.g. 123 or 123.45)"
                     id="cash"
                     placeholder="Enter cash amount"
-                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.cash ? 'border-red-500' : ''} ${isSubmitting ? 'bg-gray-100' : ''}`}
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.cash ? 'border-red-500' : ''}`}
                   />
                   {errors.cash && <p className="text-red-500 text-xs mt-1">{errors.cash}</p>}
                 </div>
@@ -211,13 +202,12 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                     onChange={handleChange}
                     autoComplete="off"
                     required
-                    disabled={isSubmitting}
                     pattern="^\d+(\.\d{1,2})?$" 
                     title="Enter a valid amount (e.g. 123 or 123.45)"
                     name="momo"
                     id="momo"
                     placeholder="Enter mobile money amount"
-                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.momo ? 'border-red-500' : ''} ${isSubmitting ? 'bg-gray-100' : ''}`}
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.momo ? 'border-red-500' : ''}`}
                   />
                   {errors.momo && <p className="text-red-500 text-xs mt-1">{errors.momo}</p>}
                 </div>
@@ -232,12 +222,11 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                     autoComplete="off"
                     name="bank"
                     required
-                    disabled={isSubmitting}
                     pattern="^\d+(\.\d{1,2})?$" 
                     title="Enter a valid amount (e.g. 123 or 123.45)"
                     id="bank"
                     placeholder="Enter bank amount"
-                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.bank ? 'border-red-500' : ''} ${isSubmitting ? 'bg-gray-100' : ''}`}
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.bank ? 'border-red-500' : ''}`}
                   />
                   {errors.bank && <p className="text-red-500 text-xs mt-1">{errors.bank}</p>}
                 </div>
@@ -251,13 +240,12 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                     onChange={handleChange}
                     autoComplete="off"
                     required
-                    disabled={isSubmitting}
                     pattern="^\d+(\.\d{1,2})?$" 
                     title="Enter a valid amount (e.g. 123 or 123.45)"
                     name="insurance"
                     id="insurance"
                     placeholder="Enter insurance amount"
-                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.insurance ? 'border-red-500' : ''} ${isSubmitting ? 'bg-gray-100' : ''}`}
+                    className={`border w-full font-semibold placeholder:font-medium placeholder:text-sm border-gray-300 rounded px-4 py-1 ${errors.insurance ? 'border-red-500' : ''}`}
                   />
                   {errors.insurance && <p className="text-red-500 text-xs mt-1">{errors.insurance}</p>}
                 </div>
@@ -265,6 +253,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
             </div>
             <div className="button section mt-12">
               <div className="flex gap-3 justify-between items-center w-full">
+
                 <div className="font-medium">
                   Total Amount: <span className="font-semibold text-sm">GH¢ {total.toFixed(2)}</span>
                 </div>
@@ -273,8 +262,7 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                   <button
                     type="button"
                     onClick={setModal}
-                    disabled={isSubmitting}
-                    className={`px-6 py-2 bg-white text-dark shadow-md w-56 rounded-[0.3rem] ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className="px-6 py-2 bg-white text-dark shadow-md w-56 rounded-[0.3rem]"
                   >
                     Cancel
                   </button>
@@ -282,16 +270,18 @@ const EndShiftModal = ({ setModal }: EndShiftModalProps) => {
                   <button
                     type="submit"
                     onClick={handleLogout}
-                    disabled={isSubmitting}
-                    className={`px-6 py-2 bg-[#2648EA] text-white text-center shadow-md hover:bg-blue-600 w-56 rounded-[0.3rem] ${isSubmitting ? 'bg-blue-400 cursor-not-allowed' : ''}`}
+                    className="px-6 py-2 bg-[#2648EA] text-white text-center shadow-md hover:bg-blue-600 w-56 rounded-[0.3rem]"
                   >
-                    {isSubmitting ? "Processing..." : "End Shift"}
+                    End Shift
                   </button>
                 </div>
+
               </div>
             </div>
           </div>
         </div>
+
+        {/* Close Button */}
       </div>
     </div>
   );
