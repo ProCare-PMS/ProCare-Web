@@ -15,6 +15,7 @@ interface PharmacyForm {
   pharmacyName: string;
   location: string;
   contact: string;
+  email: string
 }
 
 const AddPharmacyModal = ({ onClose }: AddPharmacyModalProps) => {
@@ -23,6 +24,7 @@ const AddPharmacyModal = ({ onClose }: AddPharmacyModalProps) => {
     pharmacyName: "",
     location: "",
     contact: "",
+    email: ''
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [pharmacyFound, setPharmacyFound] = useState<boolean>(false);
@@ -109,6 +111,7 @@ const AddPharmacyModal = ({ onClose }: AddPharmacyModalProps) => {
               `${foundPharmacy.address}, ${foundPharmacy.city}, ${foundPharmacy.region}` ||
               "",
             contact: foundPharmacy.facility_number || "",
+            email: foundPharmacy.facility_email ||""
           });
           setPharmacyFound(true);
         } else {
@@ -156,6 +159,7 @@ const AddPharmacyModal = ({ onClose }: AddPharmacyModalProps) => {
       pharmacyName: "",
       location: "",
       contact: "",
+      email: ""
     });
     setPharmacyFound(false);
     setIsLoading(false);
@@ -166,6 +170,7 @@ const AddPharmacyModal = ({ onClose }: AddPharmacyModalProps) => {
       pharmacyId: id,
       pharmacyName: "",
       location: "",
+      email: "",
       contact: "",
     });
   };
@@ -177,6 +182,7 @@ const AddPharmacyModal = ({ onClose }: AddPharmacyModalProps) => {
       pharmacy_name: string;
       location: string;
       contact: string;
+      pharmacy_email: string
     }) => {
       const response = await customAxios.post(
         endpoints.otherPharmacies,
@@ -214,6 +220,7 @@ const AddPharmacyModal = ({ onClose }: AddPharmacyModalProps) => {
         pharmacy_name: formData.pharmacyName,
         location: formData.location,
         contact: formData.contact,
+        pharmacy_email: formData.email
       });
     } else {
       SwalToaster("Pharmacy not found with this ID.", "error");
@@ -299,6 +306,23 @@ const AddPharmacyModal = ({ onClose }: AddPharmacyModalProps) => {
                 value={formData.contact}
                 className="text-[#858C95] bg-[#EAEBF0] border-[#E5E5E7] rounded-[4px] border tracking-normal text-sm font-normal leading-6 px-4 py-3"
                 placeholder="Contact number"
+              />
+            </div>
+            <div className="grid gap-y-2">
+              <label
+                htmlFor="email"
+                className="text-[#323539] font-medium text-sm tracking-[-0.1px]"
+              >
+                Contact
+              </label>
+              <input
+                readOnly
+                type="email"
+                name="email"
+                id="email"
+                value={formData.email}
+                className="text-[#858C95] bg-[#EAEBF0] border-[#E5E5E7] rounded-[4px] border tracking-normal text-sm font-normal leading-6 px-4 py-3"
+                placeholder="Email"
               />
             </div>
           </div>

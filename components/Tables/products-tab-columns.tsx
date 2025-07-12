@@ -39,11 +39,12 @@ export interface ProductsType {
   supplier: string;
   unit: string;
   unit_price: string | null;
-  
 }
+
 interface ProductsCellProps {
   row: {
     original: ProductsType;
+    getValue: (key: string) => any;
   };
 }
 
@@ -79,9 +80,7 @@ const ProductActionCell = ({ row }: ProductsCellProps) => {
         <DropdownMenuContent className="bg-white w-[150px] mr-12">
           <DropdownMenuItem>View Details</DropdownMenuItem>
           <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => mutate(row.original.slug)} 
-          >
+          <DropdownMenuItem onClick={() => mutate(row.original.slug)}>
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -95,21 +94,10 @@ const ProductActionCell = ({ row }: ProductsCellProps) => {
   );
 };
 
-export const productsTabColumns: ColumnDef<ProductsType>[] = [
+export const productsTabColumns: ColumnDef<ProductsType, unknown>[] = [
   {
     accessorKey: "name",
-    //header: "Product Name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Product Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: "Product Name"
   },
   {
     accessorKey: "unit",
@@ -122,13 +110,14 @@ export const productsTabColumns: ColumnDef<ProductsType>[] = [
   {
     accessorKey: "quantity",
     header: "Quantity",
+    cell: ({ row }) => row.getValue("quantity"),
   },
   {
     accessorKey: "expiry_date",
     header: "Expiry Date",
-    cell: ({ row }: { row: { getValue: (key: string) => string } }) => {
-      const rawDate: string = row.getValue("expiry_date");
-      const formattedDate: string = new Intl.DateTimeFormat("en-GB", {
+    cell: ({ row }) => {
+      const rawDate = row.getValue("expiry_date") as string;
+      const formattedDate = new Intl.DateTimeFormat("en-GB", {
         year: "numeric",
         month: "2-digit", 
         day: "2-digit",
@@ -141,13 +130,8 @@ export const productsTabColumns: ColumnDef<ProductsType>[] = [
     accessorKey: "selling_price",
     header: "Unit Price",
     cell: ({ row }) => {
-      const value = row.getValue("selling_price");
-      // Convert string to number and handle invalid/empty values
-      const amount = typeof value === "string" ? parseFloat(value) : 0;
-
-      if (isNaN(amount)) {
-        return <div className="!text-left">GHS 0.00</div>;
-      }
+      const value = row.getValue("selling_price") as string;
+      const amount = parseFloat(value) || 0;
 
       const formatted = new Intl.NumberFormat("en-GH", {
         style: "currency",
@@ -182,6 +166,6 @@ export const productsTabColumns: ColumnDef<ProductsType>[] = [
   },
   {
     id: "actions",
-    cell: ProductActionCell,
+    cell: ({ row }) => <ProductActionCell row={row} />,
   },
 ];

@@ -36,7 +36,7 @@ const initialFormData: FormData = {
   unit: "",
   quantity: "",
   expiry_date: "",
-  reorder_level: "", 
+  reorder_level: "",
   cost_price: "",
   markup_percentage: "",
   selling_price: "",
@@ -60,13 +60,13 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
     if (formData.cost_price && formData.markup_percentage) {
       const costPrice = parseFloat(formData.cost_price);
       const markupPercentage = parseFloat(formData.markup_percentage) / 100;
-      
+
       // Calculate selling price: Cost Price + (Cost Price × Markup Percentage)
-      const sellingPrice = costPrice + (costPrice * markupPercentage);
-      
-      setFormData(prev => ({
+      const sellingPrice = costPrice + costPrice * markupPercentage;
+
+      setFormData((prev) => ({
         ...prev,
-        selling_price: sellingPrice.toFixed(2)
+        selling_price: sellingPrice.toFixed(2),
       }));
     }
   }, [formData.cost_price, formData.markup_percentage]);
@@ -84,8 +84,6 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
     if (!formData.cost_price) newErrors.cost_price = "Cost price is required";
     if (!formData.selling_price)
       newErrors.selling_price = "Selling price is required";
-
-    
 
     // Number validation
     if (formData.quantity && isNaN(Number(formData.quantity))) {
@@ -152,7 +150,6 @@ const AddProducts: React.FC<AddProductsProps> = ({ title, setModal }) => {
         .get(endpoints.inventorySupplier)
         .then((res) => res?.data?.results),
   });
-
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>

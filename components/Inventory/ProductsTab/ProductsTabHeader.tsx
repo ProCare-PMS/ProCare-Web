@@ -1,362 +1,109 @@
 "use client";
 
-import React, { useState, ChangeEvent, useRef, useEffect, useMemo } from "react";
-import { Plus, SlidersVertical, ChevronDown } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { Plus, SlidersVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import FilterDropdown from "@/components/DropDown/FilterDropDown";
-import {
-  productsTabColumns,
-  ProductsType,
-} from "@/components/Tables/products-tab-columns";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
-import { useQuery } from "@tanstack/react-query";
-import customAxios from "@/api/CustomAxios";
-import { endpoints } from "@/api/Endpoints";
-import DataTable from "@/components/Tables/data-table";
-import AddProducts from "@/app/(dashboard)/inventory/_components/AddProductsModal";
-import ImportProductsModal from "@/app/(dashboard)/inventory/_importProductsComponents/ImportProductsModal";
+import FilterDropdown from "@/components/DropDown/FilterDropDown";
+//import SortDropdown from "./SortDropdown";
+//import ActionDropdown from "./ActionDropdown";
+import { useClickOutside } from "@/hooks/useClickOutside";
+import { SortOption } from "@/types/sortOption";
+import { FilterState } from "@/types/filter";
+import SortDropdown from "@/components/DropDown/SortDropDown";
+import ActionDropdown from "./ActionDropDown";
+//import { FilterState, SortOption } from "@/types/products";
 
-interface FilterState {
-  unit: string;
-  category: string;
-  reorderLevel: string;
-  expiryDate: string;
-  status: string;
+interface ProductsHeaderProps {
+  searchValue: string;
+  onSearchChange: (value: string) => void;
+  sortOption: SortOption;
+  onSortChange: (option: SortOption) => void;
+  onFilterChange: (filters: FilterState) => void;
+  onAddProduct: () => void;
+  onImportProducts: () => void;
 }
 
-// Define sort options
-type SortOption = "alphabetical" | "newest" | "oldest";
+const ProductsHeader: React.FC<ProductsHeaderProps> = ({
+  searchValue,
+  onSearchChange,
+  sortOption,
+  onSortChange,
+  onFilterChange,
+  onAddProduct,
+  onImportProducts,
+}) => {
+  const [showActionMenu, setShowActionMenu] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [showSortOptions, setShowSortOptions] = useState(false);
 
-// Fetch all data function - this can be reused
-const fetchAllInventoryProducts = async () => {
-  let allResults: ProductsType[] = [];
-  let nextUrl = endpoints.inventoryProduct;
-  
-  // Keep fetching until there's no next page
-  while (nextUrl) {
-    const response = await customAxios.get(nextUrl);
-    allResults = [...allResults, ...response.data.results];
-    nextUrl = response.data.links.next;
-    
-    // If using actual URLs for pagination, extract the endpoint
-    if (nextUrl && nextUrl.includes('https://')) {
-      const url = new URL(nextUrl);
-      let pathname = url.pathname;
-      
-      // Fix duplicate /api/api/ issue
-      if (pathname.includes('/api/')) {
-        pathname = pathname.replace('/api/', '');
-      }
-      
-      nextUrl = pathname + url.search;
-    }
-  }
-  
-  return allResults;
-};
+  const actionMenuRef = useRef<HTMLDivElement>(null);
+  const filterRef = useRef<HTMLDivElement>(null);
+  const sortRef = useRef<HTMLDivElement>(null);
 
-const ProductsTabHeader: React.FC = () => {
-  const [showMenu, setShowMenu] = useState<boolean>(false);
-  const [showFilters, setShowFilters] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [searchValues, setSearchValues] = useState<string>("");
-  const [showImport, setShowImport] = useState<boolean>(false);
-  const [sortOption, setSortOption] = useState<SortOption>("alphabetical");
-  const [showSortOptions, setShowSortOptions] = useState<boolean>(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const filterRef = useRef<HTMLDivElement | null>(null);
-  const sortRef = useRef<HTMLDivElement | null>(null);
-  const [filters, setFilters] = useState<FilterState>({
-    unit: "",
-    category: "",
-    reorderLevel: "",
-    expiryDate: "",
-    status: "",
-  });
-  
-  // Fetch all inventory products data
-  const { data: allProductsData, isLoading: isLoadingAllProducts } = useQuery({
-    queryKey: ["inventoryProducts"],
-    queryFn: fetchAllInventoryProducts,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes to reduce API calls
-  });
-  
-  // Apply filtering, searching, and sorting to all data
-  const processedData = useMemo(() => {
-    if (!allProductsData) return [];
-    
-    let results = [...allProductsData];
-    
-    // Apply search filter
-    if (searchValues) {
-      const searchLower = searchValues.toLowerCase();
-      results = results.filter(product => 
-        product.name.toLowerCase().includes(searchLower) ||
-        product.slug.toLowerCase().includes(searchLower) ||
-        (product.brand && product.brand.toLowerCase().includes(searchLower))
-      );
-    }
-    
-    // Apply other filters
-    if (filters.unit) {
-      results = results.filter(product => product.unit === filters.unit);
-    }
-    
-    if (filters.category) {
-      results = results.filter(product => product.category === filters.category);
-    }
-    
-    if (filters.reorderLevel) {
-      results = results.filter(product => 
-        product.reorder_level === parseInt(filters.reorderLevel)
-      );
-    }
-    
-    if (filters.expiryDate) {
-      results = results.filter(product => {
-        const productExpiryDate = new Date(product.expiry_date);
-        const selectedExpiryDate = new Date(filters.expiryDate);
-        return (
-          productExpiryDate.toISOString().split("T")[0] ===
-          selectedExpiryDate.toISOString().split("T")[0]
-        );
-      });
-    }
-    
-    if (filters.status) {
-      results = results.filter(product => 
-        product.product_status === filters.status
-      );
-    }
-    
-    // Apply sorting based on selected option
-    switch (sortOption) {
-      case "alphabetical":
-        return results.sort((a, b) => a.name.localeCompare(b.name));
-      case "newest":
-        return results.sort(
-          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-      case "oldest":
-        return results.sort(
-          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        );
-      default:
-        return results;
-    }
-  }, [allProductsData, searchValues, filters, sortOption]);
-  
-  const handleFilterChange = (newFilters: FilterState) => {
-    setFilters(newFilters);
-  };
-  
-  const toggleMenu = (): void => {
-    setShowMenu((prev) => !prev);
-    setShowFilters(false);
-    setShowSortOptions(false);
-  };
+  useClickOutside(
+    [actionMenuRef, filterRef, sortRef],
+    [
+      () => setShowActionMenu(false),
+      () => setShowFilters(false),
+      () => setShowSortOptions(false),
+    ]
+  );
 
-  const toggleFilters = (): void => {
-    setShowFilters((prev) => !prev);
-    setShowMenu(false);
-    setShowSortOptions(false);
-  };
-
-  const toggleSortOptions = (): void => {
-    setShowSortOptions((prev) => !prev);
-    setShowMenu(false);
-    setShowFilters(false);
-  };
-
-  const handleSortOptionChange = (option: SortOption): void => {
-    setSortOption(option);
-    setShowSortOptions(false);
-  };
-
-  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setSearchValues(event.target.value);
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-      setShowMenu(false);
-    }
-    if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
-      setShowFilters(false);
-    }
-    if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
-      setShowSortOptions(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // Functions to handle modal opening with dropdown closing
-  const openAddProductModal = () => {
-    setIsModalOpen(true);
-    setShowMenu(false);
-  };
-
-  const openImportModal = () => {
-    setShowImport(true);
-    setShowMenu(false);
-  };
-
-  // Get sort option display text
-  const getSortOptionText = (option: SortOption): string => {
-    switch (option) {
-      case "alphabetical": return "A-Z";
-      case "newest": return "Newest";
-      case "oldest": return "Oldest";
-      default: return "Sort";
-    }
+  const toggleDropdown = (dropdown: 'action' | 'filter' | 'sort') => {
+    setShowActionMenu(dropdown === 'action');
+    setShowFilters(dropdown === 'filter');
+    setShowSortOptions(dropdown === 'sort');
   };
 
   return (
-    <div>
-      <div className="flex flex-col md:flex-row items-center justify-between mb-8">
-        <h2 className="text-[#202224] font-semibold text-2xl mb-4 md:mb-0">Products</h2>
+    <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+      <h2 className="text-[#202224] font-semibold text-2xl mb-4 md:mb-0">
+        Products
+      </h2>
 
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-          <div className="w-full sm:w-auto">
-            <SearchFieldInput
-              value={searchValues}
-              onChange={handleSearchChange}
-              placeholder="Search for product"
-            />
+      <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+        <div className="w-full sm:w-auto">
+          <SearchFieldInput
+            value={searchValue}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="Search for product"
+          />
+        </div>
+
+        <SortDropdown
+          ref={sortRef}
+          sortOption={sortOption}
+          onSortChange={onSortChange}
+          isOpen={showSortOptions}
+          onToggle={() => toggleDropdown('sort')}
+        />
+
+        <ActionDropdown
+          ref={actionMenuRef}
+          isOpen={showActionMenu}
+          onToggle={() => toggleDropdown('action')}
+          onAddProduct={onAddProduct}
+          onImportProducts={onImportProducts}
+        />
+
+        <div className="relative" ref={filterRef}>
+          <div
+            className="border p-2 cursor-pointer border-[#494A50] rounded-[12px] hover:bg-gray-50 transition-colors"
+            onClick={() => toggleDropdown('filter')}
+          >
+            <SlidersVertical className="text-[#494A50]" />
           </div>
 
-          {/* Sort Dropdown */}
-          <div className="relative w-full sm:w-auto" ref={sortRef}>
-            <Button
-              type="button"
-              className="flex items-center gap-2 rounded-[12px] bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-inter w-full md:w-[120px]"
-              variant="outline"
-              onClick={toggleSortOptions}
-            >
-              {getSortOptionText(sortOption)} <ChevronDown size={16} />
-            </Button>
-
-            {showSortOptions && (
-              <div 
-                className="bg-white absolute w-full md:w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300"
-              >
-                <ul className="flex flex-col text-[#344054] items-center divide-y divide-gray-300">
-                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
-                    <button 
-                      type="button" 
-                      onClick={() => handleSortOptionChange("alphabetical")}
-                      className={`w-full text-left ${sortOption === "alphabetical" ? "font-semibold" : ""}`}
-                    >
-                      A-Z
-                    </button>
-                  </li>
-                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
-                    <button 
-                      type="button" 
-                      onClick={() => handleSortOptionChange("newest")}
-                      className={`w-full text-left ${sortOption === "newest" ? "font-semibold" : ""}`}
-                    >
-                      Newest
-                    </button>
-                  </li>
-                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
-                    <button 
-                      type="button" 
-                      onClick={() => handleSortOptionChange("oldest")}
-                      className={`w-full text-left ${sortOption === "oldest" ? "font-semibold" : ""}`}
-                    >
-                      Oldest
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-
-          <div className="relative w-full sm:w-auto" ref={menuRef}>
-            <Button
-              type="button"
-              className="text-white flex items-center gap-2 font-semibold text-sm rounded-[12px] font-inter w-full md:w-[149px] justify-center"
-              variant="secondary"
-              onClick={toggleMenu}
-            >
-              <Plus /> Add Product
-            </Button>
-
-            {showMenu && (
-              <div 
-                className="bg-white absolute w-full md:w-[160px] top-12 left-0 z-20 rounded-[8px] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300"
-              >
-                <ul className="flex flex-col text-[#344054] items-center divide-y divide-gray-300">
-                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
-                    <button 
-                      type="button" 
-                      onClick={openAddProductModal}
-                      className="w-full text-left"
-                    >
-                      Add Individually
-                    </button>
-                  </li>
-                  <li className="px-3 py-2 text-sm w-full hover:bg-gray-50 transition-colors">
-                    <button 
-                      type="button" 
-                      onClick={openImportModal}
-                      className="w-full text-left"
-                    >
-                      Import Products
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-
-          <div className="relative" ref={filterRef}>
-            <div
-              className="border p-2 cursor-pointer border-[#494A50] rounded-[12px] hover:bg-gray-50 transition-colors"
-              onClick={toggleFilters}
-            >
-              <SlidersVertical className="text-[#494A50]" />
+          {showFilters && (
+            <div className="absolute top-2 left-24 md:left-auto md:right-0 z-20 animate-in fade-in slide-in-from-top-2 duration-300">
+              <FilterDropdown onFilterChange={onFilterChange} />
             </div>
-
-            {showFilters && (
-              <div className="absolute top-2 left-24 md:left-auto md:right-0 z-20 animate-in fade-in slide-in-from-top-2 duration-300">
-                <FilterDropdown onFilterChange={handleFilterChange} />
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
-
-      <DataTable
-        columns={productsTabColumns}
-        data={processedData}
-        searchValue={searchValues}
-        isLoading={isLoadingAllProducts}
-        initialPageSize={10}
-      />
-
-      {isModalOpen && (
-        <AddProducts
-          title="Add Product"
-          setModal={() => setIsModalOpen(false)}
-        />
-      )}
-
-      {showImport && (
-        <ImportProductsModal
-          setModal={() => setShowImport(false)}
-          title="Product"
-        />
-      )}
     </div>
   );
 };
 
-export default ProductsTabHeader;
+export default ProductsHeader;
