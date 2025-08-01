@@ -65,10 +65,6 @@ const HeldTransactions = () => {
         </div>
       </div>
 
-      {data && data.results.length === 0 && !isLoading && (
-        <div className="text-center text-gray-500 py-8">No held transactions found.</div>
-      )}
-
       <DataTable
         columns={heldTransactionsColumns}
         data={adaptDataForTable(data)}
