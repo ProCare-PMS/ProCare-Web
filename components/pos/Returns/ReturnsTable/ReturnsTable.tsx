@@ -57,16 +57,8 @@ const ReturnsTable = () => {
               value={searchValues}
               onChange={handleSearchValueChange}
               placeholder="Search for transaction ID"
+              className="w-[375px]"
             />
-
-            <Button
-              type="button"
-              className="text-white flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
-              variant="secondary"
-              onClick={toggleCreateReturn}
-            >
-              <Plus /> Create Return
-            </Button>
 
             <div className="relative">
               <div
@@ -78,13 +70,22 @@ const ReturnsTable = () => {
 
               {showFilters && <ReturnsFilters />}
             </div>
+
+            <Button
+              type="button"
+              className="text-white flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
+              variant="secondary"
+              onClick={toggleCreateReturn}
+            >
+              <Plus /> Create Return
+            </Button>
           </div>
         </div>
 
         {/* Databele Here */}
         <DataTable
           columns={returnHistoryColumns}
-          data={returnsData  || { results: [], count: 0, links: { next: null, previous: null }, total_pages: 0 }}
+          data={returnsData || { results: [], count: 0, links: { next: null, previous: null }, total_pages: 0 }}
           searchValue={searchValues}
           isLoading={isLoading}
         />
