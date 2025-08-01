@@ -20,7 +20,7 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
     ]);
   };
 
-  const handleReceiptChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleReceiptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setReceiptSelected(event.target.value !== "");
   };
 
@@ -47,30 +47,27 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                 htmlFor="name"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Select Receipt
+                Enter Receipt
               </label>
             </div>
-            <select
-              id="category"
-              name="category"
+            <input
+              id="receipt"
+              name="receipt"
+              type="text"
+              placeholder="Enter receipt number"
               onChange={handleReceiptChange}
-              className="border w-[40%] text-[#858C95] text-base font-normal h-12 border-[#E6E6E6] outline-none shadow-sm rounded-[6px]"
-            >
-              <option value="">Select and search receipt</option>
-              <option key="receipt123" value="receipt123">
-                Receipt 123
-              </option>
-            </select>
+              className="border w-[40%] text-[#858C95] text-base font-normal h-11 border-[#E6E6E6] outline-none rounded-[6px] px-3"
+            />
           </div>
 
           <hr className="my-4" />
 
           {/* Products Details */}
           <div>
-            <h2 className="text-[#202224] font-bold text-base font-inter">
+            <h2 className="text-[#202224] font-bold text-base font-inter mb-4">
               Products Details
             </h2>
-            <div className="overflow-y-auto h-[200px] p-3">
+            <div className="overflow-y-auto h-[200px]">
               {products.map((product, index) => (
                 <div
                   key={product.id}

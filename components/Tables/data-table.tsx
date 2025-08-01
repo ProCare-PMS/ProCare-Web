@@ -104,7 +104,7 @@ function DataTable<TData, TValue>({
             <Table>
               <TableHeader className="border-none">
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id} className="bg-transparent hover:bg-[#dbdee2] border-none">
+                  <TableRow key={headerGroup.id} className="bg-transparent border-none">
                     {headerGroup.headers.map((header, index) => (
                       <TableHead
                         key={header.id}
