@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface BackendPaginationData {
   count: number;
@@ -49,9 +49,6 @@ function DataTable<TData, TValue>({
   const [currentPage, setCurrentPage] = useState(1);
   const [globalFilter, setGlobalFilter] = useState("");
   const [pageTransitioning, setPageTransitioning] = useState(false);
-  
-  // Available page sizes
-  const pageSizeOptions = [5, 10, 20, 50, 100];
 
   // Update global filter when search value changes
   useEffect(() => {
@@ -79,40 +76,7 @@ function DataTable<TData, TValue>({
     onGlobalFilterChange: setGlobalFilter,
   });
 
-  // Improved page number generation with better spacing
-  const pageNumbers = useMemo(() => {
-    const totalPages = data.total_pages || 0;
-    const current = currentPage;
-    
-    if (totalPages <= 0) return [];
-    if (totalPages <= 7) {
-      // If fewer than 7 pages, show all page numbers
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-    }
 
-    // More complex pagination with ellipses
-    let pages = [1]; // Always include first page
-    
-    if (current > 3) {
-      pages.push(-1); // Add ellipsis
-    }
-    
-    // Add pages around current page
-    const rangeStart = Math.max(2, current - 1);
-    const rangeEnd = Math.min(totalPages - 1, current + 1);
-    
-    for (let i = rangeStart; i <= rangeEnd; i++) {
-      pages.push(i);
-    }
-    
-    if (current < totalPages - 2) {
-      pages.push(-2); // Add ellipsis
-    }
-    
-    pages.push(totalPages); // Always include last page
-    
-    return pages;
-  }, [currentPage, data.total_pages]);
 
   const handlePageChange = (page: number) => {
     if (page > 0 && page <= data.total_pages && page !== currentPage) {
@@ -130,19 +94,7 @@ function DataTable<TData, TValue>({
     }
   };
 
-  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSize = parseInt(e.target.value);
-    if (onPageSizeChange) {
-      setPageTransitioning(true);
-      setCurrentPage(1);
-      onPageSizeChange(newSize);
-      
-      // Simulate network delay if necessary
-      setTimeout(() => {
-        setPageTransitioning(false);
-      }, 300);
-    }
-  };
+
 
   return (
     <div className="rounded-md w-full">
@@ -203,104 +155,31 @@ function DataTable<TData, TValue>({
       </div>
 
       {!isLoading && data.total_pages > 0 && (
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between py-4 px-2">
-          <div className="flex items-center gap-2">
-            <label htmlFor="page-size-select" className="text-sm text-gray-600">
-              Show:
-            </label>
-            <select
-              id="page-size-select"
-              value={pageSize}
-              onChange={handlePageSizeChange}
-              className="p-1 border rounded-md text-sm bg-white"
-              disabled={isLoading || pageTransitioning}
-            >
-              {pageSizeOptions.map(size => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
-            <span className="text-sm text-gray-600">per page</span>
-          </div>
-          
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {/* First Page Button */}
-            <button
-              onClick={() => handlePageChange(1)}
-              disabled={currentPage === 1 || isLoading || pageTransitioning}
-              className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors"
-              aria-label="First page"
-            >
-              <ChevronsLeft className="h-4 w-4" />
-            </button>
+        <div className="flex items-center justify-end gap-4 py-4 px-2">
+          {/* Previous Button */}
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1 || isLoading || pageTransitioning}
+            className="px-4 py-2 border border-[#D1D5DB] rounded-[12px] bg-white text-[#374151] font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+            aria-label="Previous page"
+          >
+            Previous
+          </button>
 
-            {/* Previous Page Button */}
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1 || isLoading || pageTransitioning}
-              className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors"
-              aria-label="Previous page"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
+          {/* Next Button */}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === data.total_pages || isLoading || pageTransitioning}
+            className="px-4 py-2 border border-[#D1D5DB] rounded-[12px] bg-white text-[#374151] font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+            aria-label="Next page"
+          >
+            Next
+          </button>
 
-            {/* Page Numbers */}
-            <div className="flex items-center">
-              {pageNumbers.map((pageNum, index) => {
-                if (pageNum < 0) {
-                  // It's an ellipsis
-                  return <span key={`ellipsis-${index}`} className="px-2 text-gray-500">...</span>;
-                }
-                
-                const isActive = pageNum === currentPage;
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => handlePageChange(pageNum)}
-                    disabled={isLoading || pageTransitioning}
-                    className={`px-3 py-1 mx-0.5 border rounded-md text-sm transition-colors ${
-                      isActive 
-                        ? 'bg-blue-500 text-white border-blue-500' 
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                    aria-current={isActive ? "page" : undefined}
-                    aria-label={`Page ${pageNum}`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Next Page Button */}
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === data.total_pages || isLoading || pageTransitioning}
-              className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors"
-              aria-label="Next page"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-
-            {/* Last Page Button */}
-            <button
-              onClick={() => handlePageChange(data.total_pages)}
-              disabled={currentPage === data.total_pages || isLoading || pageTransitioning}
-              className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors"
-              aria-label="Last page"
-            >
-              <ChevronsRight className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Page Info */}
-          <div className="text-sm text-gray-600">
-            Page {currentPage} of {data.total_pages} 
-            <span className="ml-2 text-gray-500">
-              ({data.count} total items)
-            </span>
-          </div>
+          {/* Result Info */}
+          <span className="text-[#374151] font-medium">
+            Result {currentPage} of {data.total_pages}
+          </span>
         </div>
       )}
     </div>
