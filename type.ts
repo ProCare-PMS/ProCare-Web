@@ -152,6 +152,30 @@ export const dashboardTransactions = [
 
 export type DashboardTransactions = (typeof dashboardTransactions)[number];
 
+// API Held Transaction Types
+export type HeldTransactionProduct = {
+  name: string;
+  quantity: number;
+  price: string;
+};
+
+export type HeldTransaction = {
+  id: string;
+  sale_items_count: number;
+  sale_items: HeldTransactionProduct[];
+  amount: string;
+  status: string;
+  created_at: string;
+  modified_at: string;
+};
+
+export type HeldTransactionApiResponse = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: HeldTransaction[];
+};
+
 export const productsTabTable = [
   {
     productName: "Paracetamol Krunch 250mg",
