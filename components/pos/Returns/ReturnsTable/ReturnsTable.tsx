@@ -73,7 +73,7 @@ const ReturnsTable = () => {
 
             <Button
               type="button"
-              className="text-white flex items-center gap-2 rounded-[12px] font-inter w-[149px]"
+              className="text-white flex items-center gap-2 rounded-[10px] font-inter w-[149px]"
               variant="secondary"
               onClick={toggleCreateReturn}
             >

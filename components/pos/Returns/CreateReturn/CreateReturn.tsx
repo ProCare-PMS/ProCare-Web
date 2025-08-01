@@ -133,7 +133,7 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
 
           {/* Products Details */}
           <div>
-            <h2 className="text-[#202224] font-bold text-base font-inter mb-4">
+            <h2 className="text-[#202224] font-bold text-base font-inter">
               Products Details
             </h2>
             <div className="overflow-y-auto h-[200px]">
@@ -223,7 +223,7 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                   className={`border flex-1 rounded-[4px] py-2 px-8 font-inter font-semibold text-sm ${
                     receiptSelected
                       ? " text-[#2648EA] border-[#2648EA]"
-                      : "text-[#323539] border-[#323539]"
+                      : "text-[#858C95] border-[#858C95]"
                   }`}
                 >
                   Add Product
@@ -231,7 +231,7 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                 <button
                   type="submit"
                   className={`rounded-[4px] flex-1 py-2 px-8 text-white font-inter font-semibold text-sm ${
-                    receiptSelected ? "  bg-[#2648EA]" : " bg-[#323539]"
+                    receiptSelected ? "  bg-[#2648EA]" : " bg-[#858C95]"
                   }`}
                 >
                   Confirm Return
