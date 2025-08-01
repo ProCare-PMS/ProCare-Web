@@ -97,61 +97,71 @@ function DataTable<TData, TValue>({
 
 
   return (
-    <div className="rounded-md w-full">
-      <div className="overflow-x-auto border rounded-md">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="bg-gray-100 hover:bg-gray-200">
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    className="font-bold text-sm text-gray-900 cursor-pointer whitespace-nowrap p-3"
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    {header.isPlaceholder ? null : (
-                      <div className="flex items-center gap-1">
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        <span className="inline-block w-4">
-                          {header.column.getIsSorted() === "desc" ? " 🔽" : header.column.getIsSorted() ? " 🔼" : ""}
-                        </span>
-                      </div>
-                    )}
-                  </TableHead>
+    <div className="w-full">
+      <div className="overflow-x-auto">
+        <div className="bg-white">
+          <div className="bg-[#F1F4F9] rounded-2xl">
+            <Table>
+              <TableHeader className="border-none">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id} className="bg-transparent hover:bg-[#dbdee2] border-none">
+                    {headerGroup.headers.map((header, index) => (
+                      <TableHead
+                        key={header.id}
+                        className={`font-bold text-sm text-[#202224] cursor-pointer whitespace-nowrap p-3 border-none ${
+                          index === 0 ? 'rounded-tl-lg' : ''
+                        } ${
+                          index === headerGroup.headers.length - 1 ? 'rounded-tr-lg' : ''
+                        }`}
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {header.isPlaceholder ? null : (
+                          <div className="flex items-center gap-1">
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            <span className="inline-block w-4">
+                              {header.column.getIsSorted() === "desc" ? " 🔽" : header.column.getIsSorted() ? " 🔼" : ""}
+                            </span>
+                          </div>
+                        )}
+                      </TableHead>
+                    ))}
+                  </TableRow>
                 ))}
-              </TableRow>
-            ))}
-          </TableHeader>
+              </TableHeader>
+            </Table>
+          </div>
 
-          <TableBody>
-            {isLoading || pageTransitioning ? (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-96">
-                  <div className="flex items-center justify-center h-full">
-                    <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-                    <span className="ml-2 text-gray-600">Loading data...</span>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : data?.results?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} className="hover:bg-gray-50">
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-sm text-gray-700 p-3">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+          <Table>
+            <TableBody>
+              {isLoading || pageTransitioning ? (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-96">
+                    <div className="flex items-center justify-center h-full">
+                      <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                      <span className="ml-2 text-gray-600">Loading data...</span>
+                    </div>
+                  </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-32 text-center text-gray-500">
-                  No results found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ) : data?.results?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id} className="hover:bg-gray-50">
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="text-sm text-gray-700 p-3">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-32 text-center text-gray-500">
+                    No results found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       {!isLoading && data.total_pages > 0 && (
