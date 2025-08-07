@@ -1,12 +1,7 @@
-import DataTable from "@/components/Tables/data-table";
 import React, { useState } from "react";
 import Image from "next/image";
 import { Columns } from "./Columns";
-import { Data } from "./Data";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
-import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
-import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { useQuery } from "@tanstack/react-query";
@@ -22,16 +17,16 @@ function StockAdjustment() {
     resolver: zodResolver(dateSchema),
   });
 
-  const { data: stockAdjustmentData } = useQuery({
-    queryKey: ["StockAdjustment"],
-    queryFn: () =>
-      customAxios
-        .get(endpoints.analytics + "stock-adjustments/recent/")
-        .then((res) => res),
-    select: (foundData) => foundData?.data || [],
+  const { data: stockAdjustmentData, isLoading, error } = useQuery({
+    queryKey: ["stockAdjustmentData"],
+    queryFn: async () => {
+      const response = await customAxios.get(endpoints.analytics + "stock-adjustments/recent/");
+      return response;
+    },
+    select: (foundData) => {
+      return foundData?.data?.results || [];
+    },
   });
-
-  console.log(stockAdjustmentData);
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -47,6 +42,7 @@ function StockAdjustment() {
         </h2>
 
         <div className="flex gap-4">
+
           <div className="w-48">
             <DatePicker
               name="date"
@@ -63,26 +59,13 @@ function StockAdjustment() {
               height={100}
             />
           </span>
-          {/* <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
-            <span>
-              <CloudUploadOutlinedIcon />
-            </span>
-            <span>Export</span>
-          </div>
-          <Link
-            href={"/page_under_construction"}
-            className="text-[#2648EA] font-inter flex items-center gap-1 font-semibold text-sm"
-          >
-            Open
-            <ExternalLink className="text-[#2648EA]" />
-          </Link> */}
         </div>
       </div>
 
       <DashboardTable
         columns={Columns}
         data={stockAdjustmentData || []}
-        searchValue={searchValues}
+        isLoading={isLoading}
       />
     </div>
   );
