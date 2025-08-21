@@ -47,7 +47,9 @@ function BestPerformingProductTable() {
         ...data,
         products: sortedProducts.map((product) => ({
           ...product,
-          performance: `${((product.sales_value / data.total_sales_value) * 100).toFixed(2)}%`,
+          performance: data.total_sales_value === 0
+            ? "0.00%"
+            : `${((product.sales_value / data.total_sales_value) * 100).toFixed(2)}%`,
         })),
       };
     },

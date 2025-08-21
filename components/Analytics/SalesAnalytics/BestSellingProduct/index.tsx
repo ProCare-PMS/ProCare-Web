@@ -1,31 +1,23 @@
-import DataTable from "@/components/Tables/data-table";
 import React, { useState } from "react";
 import Image from "next/image";
-import { Data } from "./Data";
-import { Columns } from "./Column";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
-import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
-import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
-import DashboardTable from "@/components/Tables/DashbaordTable";
+import ProductStats from "@/components/Tables/ProductStats";
 
 function BestSellingProductTable() {
   const [searchValues, setSetSearchValues] = useState<string>("");
 
   //fetch all best selling data
-  const { data: bestSellingData } = useQuery({
+  const { data: bestSellingData, isLoading } = useQuery({
     queryKey: ["bestSellingData"],
     queryFn: async () =>
       customAxios
         .get(endpoints.analytics + "products/best-performing/")
         .then((res) => res),
-    select: (foundData) => foundData?.data || [],
+    select: (foundData) => foundData?.data?.products || [],
   });
-
-  //console.log({ bestSellingData });
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -54,29 +46,14 @@ function BestSellingProductTable() {
               height={100}
             />
           </span>
-          {/* <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
-            <span>
-              <CloudUploadOutlinedIcon />
-            </span>
-            <span>Export</span>
-          </div>
-          <Link
-            href={"/page_under_construction"}
-            className="text-[#2648EA] font-inter flex items-center gap-1 font-semibold text-sm"
-          >
-            Open
-            <ExternalLink className="text-[#2648EA]" />
-          </Link> */}
         </div>
       </div>
 
-      
-      <DashboardTable
-        columns={Columns}
-        data={bestSellingData || []}
+      <ProductStats
+        products={bestSellingData || []}
         searchValue={searchValues}
+        isLoading={isLoading}
       />
-      
     </div>
   );
 }

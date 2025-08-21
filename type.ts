@@ -164,7 +164,7 @@ export type HeldTransaction = {
   sale_items_count: number;
   sale_items: HeldTransactionProduct[];
   amount: string;
-  status: string;
+  status: "on_hold" | "completed";
   created_at: string;
   modified_at: string;
 };

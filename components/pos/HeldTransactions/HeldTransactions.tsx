@@ -3,7 +3,6 @@
 import DataTable from "@/components/Tables/data-table";
 import React, { useState } from "react";
 import { heldTransactionsColumns } from "./Columns";
-import { heldTransactions } from "./Data";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import { SlidersVertical } from "lucide-react";
 import { useHeldTransactions } from "@/hooks/customer/useHeldTransactions";

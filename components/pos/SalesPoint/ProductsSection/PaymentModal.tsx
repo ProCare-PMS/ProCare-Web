@@ -17,6 +17,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import SwalToaster from "@/components/SwalToaster/SwalToaster";
 import { Plus } from "lucide-react";
 import ThermalReceipt from "./ThermalReceipt";
+import { useCreateHeldTransaction, useCompleteHeldTransaction } from "@/hooks/customer/useHeldTransactionActions";
 
 interface PaymentModalProps {
   onClose: () => void;
@@ -35,6 +36,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     useState<boolean>(false);
   const [cashAmount, setCashAmount] = useState<number>(0);
   const [mobileMoneyAmount, setMobileMoneyAmount] = useState<number>(0);
+  const [heldTransactionId, setHeldTransactionId] = useState<string | null>(null);
+  const [isResumedTransaction, setIsResumedTransaction] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -43,6 +46,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     const savedCustomer = localStorage.getItem("selectedCustomer");
     const employee = localStorage.getItem("user");
     const discount = localStorage.getItem("discount");
+    const heldTransactionIdFromStorage = localStorage.getItem("heldTransactionId");
+    const isResumedFromStorage = localStorage.getItem("isResumedTransaction");
 
     if (savedOrderList) {
       setOrderItems(JSON.parse(savedOrderList));
@@ -57,6 +62,11 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
 
     if (discount) {
       setDiscount(JSON.parse(discount));
+    }
+
+    if (heldTransactionIdFromStorage) {
+      setHeldTransactionId(heldTransactionIdFromStorage);
+      setIsResumedTransaction(isResumedFromStorage === 'true');
     }
 
     // Disable scrolling when modal is open
@@ -146,6 +156,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     },
   });
 
+  const createHeldTransactionMutation = useCreateHeldTransaction();
+  const completeHeldTransactionMutation = useCompleteHeldTransaction();
+
   const getPaymentMethods = (title: string) => {
     const paymentMethods: { [key: string]: string[] } = {
       "Mobile Money": ["mobile_money"],
@@ -162,15 +175,115 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
     localStorage.removeItem("orderList");
     localStorage.removeItem("selectedCustomer");
     localStorage.removeItem("discount");
+    localStorage.removeItem("heldTransactionId");
+    localStorage.removeItem("isResumedTransaction");
 
     // Clear state
     setOrderItems([]);
     setCustomer(null);
     setDiscount(null);
+    setHeldTransactionId(null);
+    setIsResumedTransaction(false);
   };
 
   const fullName = `${user?.first_name} ${user?.last_name}`;
   console.log(fullName);
+
+  const handleHoldTransaction = () => {
+    if (orderItems.length === 0) {
+      SwalToaster(
+        "No Items",
+        "error",
+        "Please add items to the cart before holding the transaction."
+      );
+      return;
+    }
+
+    // Calculate the total amount
+    const totalAmount = orderItems.reduce((total, item) => {
+      return total + parseFloat(item.selling_price) * item.quantity;
+    }, 0);
+    
+    const finalAmount = totalAmount - (discount || 0);
+
+    // Use the correct field names that the held transactions API expects
+    const heldTransactionData = {
+      discount_type: "percentage",
+      discount_value: discount || 0,
+      payment_methods: getPaymentMethods(title),
+      sale_items: orderItems.map((item) => ({
+        product_id: item.id || `temp_${Math.random()}`,
+        product: item.name,
+        quantity: item.quantity,
+        total_item_price: parseFloat(item.selling_price),
+      })),
+      amount: finalAmount.toFixed(2),
+      employee: {
+        full_name: user?.full_name || fullName || "Unknown Employee",
+        email: user?.email,
+        contact: user?.phone_number,
+        address: user?.address || user?.pharmacy?.address,
+        license_number: user?.license_number || user?.pharmacy?.license_number,
+        is_manager: user?.is_manager || false,
+        is_pharmacist: user?.is_pharmacist || false,
+        is_mca: user?.is_mca || false,
+      },
+      status: "on_hold" as const,
+    };
+
+    console.log("Held Transaction Data being sent:", JSON.stringify(heldTransactionData, null, 2));
+
+    createHeldTransactionMutation.mutate(heldTransactionData, {
+      onSuccess: () => {
+        clearAllData();
+        onClose();
+        
+        SwalToaster(
+          "Transaction Held Successfully!",
+          "success",
+          "The transaction has been saved and can be resumed later from the Held Transactions tab."
+        );
+      },
+      onError: (error: any) => {
+        console.error("Hold transaction error:", error);
+        
+        // Log detailed error information
+        if (error.response) {
+          console.error("Error status:", error.response.status);
+          console.error("Error data:", error.response.data);
+          console.error("Error headers:", error.response.headers);
+          
+          // Show more specific error message from server if available
+          let errorMessage = "Unable to hold the transaction. Please check the console for details.";
+          
+          if (error.response.data) {
+            // If it's a validation error with field-specific errors
+            if (typeof error.response.data === 'object') {
+              const errors = [];
+              for (const [field, messages] of Object.entries(error.response.data)) {
+                if (Array.isArray(messages)) {
+                  errors.push(`${field}: ${messages.join(', ')}`);
+                }
+              }
+              if (errors.length > 0) {
+                errorMessage = `Validation errors: ${errors.join('; ')}`;
+              }
+            } else {
+              errorMessage = error.response.data?.message || 
+                           error.response.data?.detail || 
+                           error.response.data?.error ||
+                           errorMessage;
+            }
+          }
+          
+          SwalToaster("Hold Failed", "error", errorMessage);
+        } else {
+          console.error("Error message:", error.message);
+          SwalToaster("Hold Failed", "error", "Network error. Please try again.");
+        }
+      },
+    });
+  };
 
   const handleFinalize = () => {
     if (title === "Multipay") {
@@ -212,56 +325,94 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
       paymentAmounts.credit_card = itemPrice;
     }
 
-    const salesItemsData = {
-      discount_type: "percentage",
-      discount_value: discount,
-      payment_methods: getPaymentMethods(title),
-      saleitem_set: orderItems.map((item) => ({
-        product_id: item.id,
+    // Check if this is a resumed held transaction
+    if (isResumedTransaction && heldTransactionId) {
+      // Complete the held transaction
+      const updatedItems = orderItems.map((item) => ({
+        product_id: item.id || `temp_${Math.random()}`,
         product: item.name,
         quantity: item.quantity,
         total_item_price: parseFloat(item.selling_price),
-      })),
-      //total_base_price: totalPrice,
-      //total_price_with_discount: finalPrice,
-      employee: {
-        full_name: `${user.full_name}` || `${fullName}`,
-        email: user.email,
-        contact: user.phone_number,
-        address: user.address || user.pharmacy.address,
-        license_number: user.license_number || user.pharmacy.license_number,
-        is_manager: user?.is_manager,
-        is_pharmacist: user?.is_pharmacist,
-        is_mca: user?.is_mca,
-      },
-      status: "completed",
-    };
+      }));
 
-    finalizePaymentMutation.mutate(salesItemsData, {
-      onSuccess: () => {
-        clearAllData();
-        queryClient.invalidateQueries({ queryKey: ["recentTransactionsData"] });
+      completeHeldTransactionMutation.mutate(
+        {
+          transactionId: heldTransactionId,
+          updatedItems,
+        },
+        {
+          onSuccess: () => {
+            clearAllData();
+            queryClient.invalidateQueries({ queryKey: ["recentTransactionsData"] });
+            queryClient.invalidateQueries({ queryKey: ["heldTransactions"] });
 
-        onClose();
+            onClose();
+            window.location.reload();
 
-        window.location.reload();
+            SwalToaster(
+              "Held transaction completed successfully!",
+              "success",
+              `Total amount: ${finalPrice.toFixed(2)}`
+            );
+          },
+          onError: (error) => {
+            console.error("Complete held transaction error:", error);
+            SwalToaster("Sale Failed", "error", "Unable to complete the held transaction. Please try again.");
+          },
+        }
+      );
+    } else {
+      // Create new sale
+      const salesItemsData = {
+        discount_type: "percentage",
+        discount_value: discount,
+        payment_methods: getPaymentMethods(title),
+        saleitem_set: orderItems.map((item) => ({
+          product_id: item.id || `temp_${Math.random()}`,
+          product: item.name,
+          quantity: item.quantity,
+          total_item_price: parseFloat(item.selling_price),
+        })),
+        //total_base_price: totalPrice,
+        //total_price_with_discount: finalPrice,
+        employee: {
+          full_name: `${user.full_name}` || `${fullName}`,
+          email: user.email,
+          contact: user.phone_number,
+          address: user.address || user.pharmacy.address,
+          license_number: user.license_number || user.pharmacy.license_number,
+          is_manager: user?.is_manager,
+          is_pharmacist: user?.is_pharmacist,
+          is_mca: user?.is_mca,
+        },
+        status: "completed",
+      };
 
-        // Show success message
-        SwalToaster(
-          "Sale completed successfully!",
-          "success",
-          `Total amount: ${finalPrice.toFixed(2)}`
-        );
-      },
-      onError: (error) => {
-        console.error("Payment finalization error:", error);
+      finalizePaymentMutation.mutate(salesItemsData, {
+        onSuccess: () => {
+          clearAllData();
+          queryClient.invalidateQueries({ queryKey: ["recentTransactionsData"] });
 
-        // More specific error message based on the error type
-        const errorMessage = "Unable to process the sale. Please try again.";
+          onClose();
+          window.location.reload();
 
-        SwalToaster("Sale Failed", "error", errorMessage);
-      },
-    });
+          // Show success message
+          SwalToaster(
+            "Sale completed successfully!",
+            "success",
+            `Total amount: ${finalPrice.toFixed(2)}`
+          );
+        },
+        onError: (error) => {
+          console.error("Payment finalization error:", error);
+
+          // More specific error message based on the error type
+          const errorMessage = "Unable to process the sale. Please try again.";
+
+          SwalToaster("Sale Failed", "error", errorMessage);
+        },
+      });
+    }
   };
 
   return (
@@ -481,8 +632,12 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
         </div>
 
         <div className="p-6 bg-gray-50 rounded-b-xl border-t flex items-center justify-end gap-3">
-          <button className="px-6 py-2.5 border border-[#2648EA] text-[#2648EA] font-semibold rounded-lg hover:bg-blue-50 transition-colors">
-            Hold Transaction
+          <button 
+            onClick={handleHoldTransaction}
+            disabled={createHeldTransactionMutation.isPending}
+            className="px-6 py-2.5 border border-[#2648EA] text-[#2648EA] font-semibold rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {createHeldTransactionMutation.isPending ? "Holding..." : "Hold Transaction"}
           </button>
           <button
             onClick={() => handlePrint()}
@@ -493,9 +648,15 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ onClose, title }) => {
           </button>
           <button
             onClick={() => handleFinalize()}
-            className="px-6 py-2.5 bg-[#2648EA] text-white font-semibold rounded-lg hover:bg-[#2648EA] transition-colors"
+            disabled={finalizePaymentMutation.isPending || completeHeldTransactionMutation.isPending}
+            className="px-6 py-2.5 bg-[#2648EA] text-white font-semibold rounded-lg hover:bg-[#2648EA] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Finalize Payment
+            {finalizePaymentMutation.isPending || completeHeldTransactionMutation.isPending 
+              ? "Processing..." 
+              : isResumedTransaction 
+                ? "Complete Held Transaction" 
+                : "Finalize Payment"
+            }
           </button>
         </div>
       </div>

@@ -19,233 +19,348 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CustomSelect from "@/components/CustomSelect/CustomSelect";
 import { DatePicker } from "@/components/CustomDatePicker/DatePicker";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { dateSchema } from "@/lib/schema/schema";
+import { useQuery } from "@tanstack/react-query";
+import customAxios from "@/api/CustomAxios";
+import { endpoints, analyticsUrls } from "@/api/Endpoints";
+import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 
-export const description = "A linear area chart";
+// Define the form data type for react-hook-form
+interface FormData {
+  date?: string | Date | null;
+}
 
-const chartData = [
-  // { day: "1", Stock: 450 },
-  // { day: "2", Stock: 760 },
-  // { day: "3", Stock: 920 },
-  // { day: "4", Stock: 530 },
-  // { day: "5", Stock: 610 },
-  // { day: "6", Stock: 870 },
-  // { day: "7", Stock: 740 },
-  // { day: "8", Stock: 680 },
-  // { day: "9", Stock: 820 },
-  // { day: "10", Stock: 330 },
-  // { day: "11", Stock: 750 },
-  // { day: "12", Stock: 620 },
-  // { day: "13", Stock: 900 },
-  // { day: "14", Stock: 430 },
-  // { day: "15", Stock: 820 },
-  // { day: "16", Stock: 780 },
-  // { day: "17", Stock: 920 },
-  // { day: "18", Stock: 250 },
-  // { day: "19", Stock: 770 },
-  // { day: "20", Stock: 980 },
-  // { day: "21", Stock: 840 },
-  // { day: "22", Stock: 660 },
-  // { day: "23", Stock: 350 },
-  // { day: "24", Stock: 800 },
-  // { day: "25", Stock: 910 },
-  // { day: "26", Stock: 220 },
-  // { day: "27", Stock: 710 },
-  // { day: "28", Stock: 940 },
-  // { day: "29", Stock: 380 },
-  // { day: "30", Stock: 870 },
-  // { day: "31", Stock: 560 },
-];
+export const description = "Stock levels chart with product search";
 
-const chartData2 = [
-  // { day: "1", stock: 300 },
-  // { day: "2", stock: 450 },
-  // { day: "3", stock: 600 },
-  // { day: "4", stock: 400 },
-  // { day: "5", stock: 520 },
-  // { day: "6", stock: 690 },
-  // { day: "7", stock: 530 },
-  // { day: "8", stock: 620 },
-  // { day: "9", stock: 740 },
-  // { day: "10", stock: 280 },
-  // { day: "11", stock: 670 },
-  // { day: "12", stock: 540 },
-  // { day: "13", stock: 710 },
-  // { day: "14", stock: 380 },
-  // { day: "15", stock: 680 },
-  // { day: "16", stock: 750 },
-  // { day: "17", stock: 800 },
-  // { day: "18", stock: 290 },
-  // { day: "19", stock: 650 },
-  // { day: "20", stock: 880 },
-  // { day: "21", stock: 730 },
-  // { day: "22", stock: 590 },
-  // { day: "23", stock: 310 },
-  // { day: "24", stock: 710 },
-  // { day: "25", stock: 830 },
-  // { day: "26", stock: 250 },
-  // { day: "27", stock: 650 },
-  // { day: "28", stock: 850 },
-  // { day: "29", stock: 320 },
-  // { day: "30", stock: 700 },
-  // { day: "31", stock: 490 },
-];
+// Interface for stock level data based on API response
+interface StockLevelEntry {
+  date: string;
+  total_quantity: number;
+  product_name?: string;
+  product_id?: string;
+}
+
+interface StockLevelResponse {
+  links: {
+    next: string | null;
+    previous: string | null;
+  };
+  count: number;
+  total_pages: number;
+  results: StockLevelEntry[];
+  summary: {
+    total_products: number;
+    average_stock_level: number;
+    low_stock_products: number;
+  };
+}
+
+// Interface for product options
+interface ProductOption {
+  id: string;
+  name: string;
+  dateName: string;
+  date: string;
+}
 
 const chartConfig = {
-  desktop: {
-    label: "Stock",
-    color: "hsl(var(--chart-1))",
+  total_quantity: {
+    label: "Stock Quantity",
+    color: "#2648EA",
   },
 } satisfies ChartConfig;
 
 export function StockLevelChart() {
-  const [timeRange, setTimeRange] = useState("90d");
-  const { control, setValue } = useForm<FormData>({
+  const [selectedProduct, setSelectedProduct] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>(
+    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 30 days ago
+  );
+  const [endDate, setEndDate] = useState<string>(
+    new Date().toISOString().split('T')[0] // Today
+  );
+
+  const { control, setValue, watch } = useForm<FormData>({
     resolver: zodResolver(dateSchema),
   });
 
+  const selectedDate = watch("date");
+
+  // Update start date when date picker changes
+  useEffect(() => {
+    if (selectedDate instanceof Date) {
+      setStartDate(selectedDate.toISOString().split('T')[0]);
+    }
+  }, [selectedDate]);
+
+  // Fetch available products for the dropdown - using inventory products endpoint
+  const { data: productsData } = useQuery({
+    queryKey: ["inventoryProducts"],
+    queryFn: async () =>
+      customAxios
+        .get(endpoints.inventoryProduct)
+        .then((res) => res),
+    select: (foundData) => {
+      const products = foundData?.data?.results || foundData?.data || [];
+      return products.map((product: any) => ({
+        id: product.id,
+        name: product.name,
+        dateName: product.name,
+        date: product.id,
+      }));
+    },
+  });
+
+  // Fetch stock level data using the new endpoint with startdate/enddate
+  const { data: stockLevelData, isLoading, refetch } = useQuery({
+    queryKey: ["stockLevels", selectedProduct, startDate, endDate],
+    queryFn: async () => {
+      const url = analyticsUrls.stockLevels({
+        startdate: startDate,
+        enddate: endDate,
+        product_id: selectedProduct || undefined,
+      });
+      const response = await customAxios.get(url);
+      console.log("Stock levels response:", response);
+      return response;
+    },
+    select: (foundData): StockLevelResponse => {
+      const data = foundData?.data || {};
+      console.log("Selected stock data:", data);
+      
+      // Handle the case where results is an object with month keys
+      let flatResults: StockLevelEntry[] = [];
+      
+      if (data.results && typeof data.results === 'object') {
+        // If results is an object with month keys, flatten it
+        Object.entries(data.results).forEach(([month, entries]: [string, any]) => {
+          if (Array.isArray(entries)) {
+            flatResults = [...flatResults, ...entries];
+          }
+        });
+      } else if (Array.isArray(data.results)) {
+        // If results is already an array
+        flatResults = data.results;
+      }
+      
+      return {
+        links: data.links || { next: null, previous: null },
+        count: data.count || flatResults.length,
+        total_pages: data.total_pages || 1,
+        results: flatResults,
+        summary: data.summary || {
+          total_products: 0,
+          average_stock_level: 0,
+          low_stock_products: 0,
+        },
+      };
+    },
+  });
+
+
+
+  const handleSearchValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleExport = () => {
+    console.log("Exporting stock levels data...");
+  };
+
+  // Filter products based on search
+  const filteredProducts = productsData?.filter((product: ProductOption) =>
+    product.name.toLowerCase().includes(searchValue.toLowerCase())
+  ) || [];
+
+  // Prepare chart data - now working with flat array
+  const chartData = stockLevelData?.results?.map(item => ({
+    date: new Date(item.date).toLocaleDateString(),
+    total_quantity: item.total_quantity,
+    product_name: item.product_name,
+  })) || [];
+
   return (
-    <div className="w-full bg-white rounded-xl">
-      <Card className="rounded-xl">
-        <CardHeader className="my-1 flex items-center gap-2 space-y-0 border-b py-2 sm:flex-row">
-          <div className="grid flex-1 gap-1 text-center sm:text-left">
-            <CardTitle>Stock Levels</CardTitle>
-            <CardDescription>
-              Current Stock Level:{" "}
-              <span className="text-blue-700 font-bold"></span>
-            </CardDescription>
-          </div>
+    <div className="bg-white shadow-custom p-4 mb-12 rounded-[8px] mt-8">
+      <div className="flex justify-between items-center my-3">
+        <h2 className="text-2xl font-bold font-nunito_sans text-[#202224]">
+          Stock Levels Analytics
+        </h2>
 
-          <div className="flex gap-2">
-            <CustomSelect
-              idField={"date"}
-              nameField={"dateName"}
-              optionData={[]}
-              className="w-[15rem]"
+        <div className="flex gap-4">
+          <div className="w-48">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              max={endDate}
             />
-
-            <div className="w-48">
-              <DatePicker
-                name="date"
-                placeholder="Select Date"
-                control={control}
-              />
-            </div>
-
-            {/* <div className="border border-x-purple-100 w-32 flex justify-center items-center rounded-[0.5rem] gap-2">
-              <span>
-                <CloudUploadOutlinedIcon />
-              </span>
-              <span>Export</span>
-            </div> */}
           </div>
+          
+          <div className="w-48">
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              min={startDate}
+            />
+          </div>
+          
+          <SearchFieldInput
+            value={searchValue}
+            onChange={handleSearchValueChange}
+            placeholder="Search products..."
+          />
+
+          <div className="w-48">
+            <CustomSelect
+              idField="date"
+              nameField="dateName"
+              optionData={[
+                { date: "", dateName: "All Products" },
+                ...filteredProducts.map((product: ProductOption) => ({
+                  date: product.id,
+                  dateName: product.name,
+                }))
+              ]}
+              value={selectedProduct ? 
+                { date: selectedProduct, dateName: filteredProducts.find((p: ProductOption) => p.id === selectedProduct)?.name || "" } : 
+                { date: "", dateName: "All Products" }
+              }
+              onChange={(selected) => setSelectedProduct(selected?.date || "")}
+            />
+          </div>
+
+          <span className="iconHolder w-10 h-10 cursor-pointer">
+            <Image
+              src="/assets/images/filterFrame.svg"
+              alt="filter icon"
+              width={100}
+              height={100}
+            />
+          </span>
+          
+          <button
+            onClick={handleExport}
+            className="border border-gray-200 w-32 flex justify-center items-center rounded-[0.5rem] gap-2 py-2 px-4 hover:bg-gray-50"
+          >
+            <CloudUploadOutlinedIcon fontSize="small" />
+            <span>Export</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600">
+              Total Products
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-[#2648EA]">
+              {stockLevelData?.summary?.total_products || 0}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600">
+              Average Stock Level
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">
+              {stockLevelData?.summary?.average_stock_level?.toFixed(0) || 0}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600">
+              Low Stock Products
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">
+              {stockLevelData?.summary?.low_stock_products || 0}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Stock Levels Trend</CardTitle>
+          <CardDescription>
+            Showing stock levels from {startDate} to {endDate}
+            {selectedProduct && ` - ${filteredProducts.find((p: ProductOption) => p.id === selectedProduct)?.name}`}
+          </CardDescription>
         </CardHeader>
-        {chartData.length !== 0 ? (
-          <>
-            <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                <AreaChart
-                  accessibilityLayer
-                  data={[]}
-                  margin={{
-                    left: 12,
-                    right: 12,
-                  }}
-                  //className="h-[200px]"
-                >
-                  <defs>
-                    <linearGradient
-                      id="gradientColor"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="0%" stopColor="rgba(38, 72, 234, 0.3)" />
-                      <stop offset="100%" stopColor="rgba(255, 255, 255, 0)" />
-                    </linearGradient>
-                    <linearGradient
-                      id="gradientColor2"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="0%" stopColor="rgba(153, 153, 153, 0.5)" />
-                      <stop offset="100%" stopColor="rgba(255, 255, 255, 0)" />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid vertical={true} />
-                  <XAxis
-                    dataKey="day"
-                    tickLine={true}
-                    axisLine={true}
-                    tickMargin={8}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                  />
-
-                  <YAxis
-                    //dataKey={"price"}
-                    domain={[200, 1000]}
-                    tickCount={5}
-                    tickFormatter={(value) => `₵ ${value}`}
-                  />
-
-                  <ChartTooltip
-                    cursor={false}
-                    content={
-                      <ChartTooltipContent
-                        indicator="dot"
-                        hideLabel
-                        className="bg-white cursor-pointer"
-                      />
-                    }
-                  />
-                  <Area
-                    dataKey="Stock"
-                    type="linear"
-                    fill="url(#gradientColor)"
-                    fillOpacity={0.4}
-                    stroke="#2648EA"
-                  />
-                  <Area
-                    dataKey="stock"
-                    type="linear"
-                    fill="url(#gradientColor2)"
-                    fillOpacity={0.4}
-                    stroke="#BABABA"
-                    data={[]}
-                  />
-                </AreaChart>
-              </ChartContainer>
-            </CardContent>
-            <CardFooter>
-              <div className="flex justify-between w-full text-sm">
-                <div>
-                  <p>Day against Stock remaining</p>
-                </div>
-                <div className="flex gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="block w-2 h-2 bg-blue-500 rounded-full"></span>
-                    <span className="block">October</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="block w-2 h-2 bg-gray-500 rounded-full"></span>
-                    <span className="block">September</span>
-                  </div>
-                </div>
+        <CardContent>
+          <ChartContainer config={chartConfig}>
+            <AreaChart
+              data={chartData}
+              margin={{
+                left: 12,
+                right: 12,
+              }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tick={{ fontSize: 12 }}
+                angle={-45}
+                textAnchor="end"
+              />
+              <YAxis />
+              <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+              <Area
+                dataKey="total_quantity"
+                type="natural"
+                fill={chartConfig.total_quantity.color}
+                fillOpacity={0.4}
+                stroke={chartConfig.total_quantity.color}
+                stackId="a"
+              />
+            </AreaChart>
+          </ChartContainer>
+        </CardContent>
+        <CardFooter>
+          <div className="flex w-full items-start gap-2 text-sm">
+            <div className="grid gap-2">
+              <div className="flex items-center gap-2 font-medium leading-none">
+                Stock levels from {startDate} to {endDate}
+                <TrendingUp className="h-4 w-4" />
               </div>
-            </CardFooter>
-          </>
-        ) : (
-          <p className="text-center">No data</p>
-        )}
+              <div className="flex items-center gap-2 leading-none text-muted-foreground">
+                {stockLevelData?.count || 0} data points analyzed
+              </div>
+            </div>
+          </div>
+        </CardFooter>
       </Card>
+
+      {isLoading && (
+        <div className="flex justify-center items-center py-8">
+          <div className="text-gray-500">Loading stock levels...</div>
+        </div>
+      )}
     </div>
   );
 }
+
+export default StockLevelChart;
