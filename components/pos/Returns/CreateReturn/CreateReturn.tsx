@@ -39,20 +39,42 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
   const { data: allSalesData, isLoading: isLoadingSales } = useQuery({
     queryKey: ["allSalesData"],
     queryFn: async () => {
+      // console.log("Fetching sales data from API...");
       const response = await customAxios.get(`${endpoints.sales}`);
+      // console.log("API Response:", response);
+      // console.log("Sales data structure:", response.data);
       return response.data;
     },
   });
 
   // Find the specific sale by receipt number
   const salesData = React.useMemo(() => {
-    if (!receiptNumber || !allSalesData?.results) return null;
+    // console.log("Searching for receipt:", receiptNumber);
+    // console.log("Available sales data:", allSalesData?.results);
+    
+    if (!receiptNumber || !allSalesData?.results) {
+      // console.log("No receipt number or sales data available");
+      return null;
+    }
+    
+    // Clean the receipt number (remove # and spaces)
+    const cleanReceipt = receiptNumber.replace(/[#\s]/g, '').toLowerCase();
+    // console.log("Cleaned receipt number:", cleanReceipt);
     
     // Search through all sales to find matching receipt
-    return allSalesData.results.find((sale: SalesData) => 
-      sale.id.toLowerCase().includes(receiptNumber.toLowerCase()) ||
-      sale.id.startsWith(receiptNumber)
-    ) as SalesData || null;
+    const foundSale = allSalesData.results.find((sale: SalesData) => {
+      const saleId = sale.id.toLowerCase();
+      // console.log(`Checking sale ID: ${saleId} against receipt: ${cleanReceipt}`);
+      
+      // Check if the receipt number is contained within the sale ID
+      const isMatch = saleId.includes(cleanReceipt) || saleId.startsWith(cleanReceipt);
+      // console.log(`Match result: ${isMatch}`);
+      
+      return isMatch;
+    }) as SalesData || null;
+    
+    // console.log("Found sale:", foundSale);
+    return foundSale;
   }, [receiptNumber, allSalesData]);
 
   // Function to add a new product form
@@ -65,13 +87,19 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
 
   const handleReceiptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
+    // console.log("Receipt number changed to:", value);
     setReceiptNumber(value);
     setReceiptSelected(value !== "");
   };
 
   // Auto-populate products when sales data is loaded
   useEffect(() => {
+    // console.log("useEffect triggered - salesData:", salesData);
+    // console.log("receiptNumber:", receiptNumber);
+    // console.log("allSalesData:", allSalesData);
+    
     if (salesData?.saleitem_set && salesData.saleitem_set.length > 0) {
+      // console.log("Found sales data, populating products:", salesData.saleitem_set);
       const populatedProducts = salesData.saleitem_set.map((item, index) => ({
         id: index + 1,
         productId: item.product.id,
@@ -79,7 +107,10 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
         quantity: item.quantity,
         unitPrice: parseFloat(item.product.selling_price || item.product.unit_price || "0"),
       }));
+      // console.log("Populated products:", populatedProducts);
       setProducts(populatedProducts);
+    } else {
+      // console.log("No sales data found or no saleitem_set");
     }
   }, [salesData]);
 
@@ -122,7 +153,7 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
               <p className="text-sm text-blue-600 mt-1">Loading sales data...</p>
             )}
             {receiptNumber.length >= 3 && !isLoadingSales && salesData && (
-              <p className="text-sm text-green-600 mt-1">Receipt found! Products loaded.</p>
+              <p className="text-sm text-green-600 mt-1">Receipt found!</p>
             )}
             {receiptNumber.length >= 3 && !isLoadingSales && !salesData && (
               <p className="text-sm text-red-600 mt-1">Receipt not found. Please check the receipt number.</p>

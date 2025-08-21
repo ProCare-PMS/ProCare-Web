@@ -80,8 +80,9 @@ const MainNav = () => {
                 src="/RxPMSlogo.png"
                 width={180}
                 height={100}
-                className="mt-[-0.8rem]"
+                className="mt-[-0.8rem] w-auto h-auto"
                 alt="RxPMS"
+                priority
               />
             </Link>
 
