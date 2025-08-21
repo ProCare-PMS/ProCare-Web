@@ -3,7 +3,7 @@
 import { ColumnDef, CellContext } from "@tanstack/react-table";
 import { useState } from "react";
 import clsx from "clsx";
-import { HeldTransaction } from "@/Types";
+import { HeldTransaction } from "@/type";
 import { Button } from "@/components/ui/button";
 import SwalToaster from "@/components/SwalToaster/SwalToaster";
 import { usePosContext } from "../context/PosContext";
@@ -57,7 +57,7 @@ const ActionsCell = ({ row }: CellContext<HeldTransaction, unknown>) => {
           onClick={handleResumeTransaction}
           disabled={isLoading}
           size="sm"
-          className="bg-[#2648EA] hover:bg-[#1d3ba8] text-white"
+          className="bg-[#2648EA] hover:bg-[#1d3ba8] text-white rounded-[12px]"
         >
           {isLoading ? "Resuming..." : "Resume"}
         </Button>
