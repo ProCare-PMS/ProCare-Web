@@ -179,14 +179,12 @@ const ActionsCell = ({ row }: CellContext<HeldTransaction, unknown>) => {
   return (
     <div className="flex gap-2">
       {transaction.status === "on_hold" && (
-        <Button
+        <span
           onClick={handleResumeTransaction}
-          disabled={isLoading}
-          size="sm"
-          className="bg-[#2648EA] hover:bg-[#1d3ba8] text-white rounded-[12px]"
+          className={`cursor-pointer text-[#2648EA] font-bold hover:underline ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          {isLoading ? "Resuming..." : "Resume"}
-        </Button>
+          {isLoading ? "Loading..." : "View"}
+        </span>
       )}
     </div>
   );
@@ -267,7 +265,7 @@ export const heldTransactionsColumns: ColumnDef<HeldTransaction>[] = [
   },
   {
     id: "actions",
-    header: "Actions",
+    header: "", // "Actions" - commented out
     size: 120,
     maxSize: 120,
     cell: ActionsCell,
