@@ -31,7 +31,7 @@ interface SalesData {
 
 const CreateReturn = ({ setModal }: CreateReturnProps) => {
   // State to keep track of product forms
-  const [products, setProducts] = useState([{ id: 1 }]);
+  const [products, setProducts] = useState([{ id: 1, quantity: 0 }]);
   const [receiptSelected, setReceiptSelected] = useState(false);
   const [receiptNumber, setReceiptNumber] = useState("");
 
@@ -81,7 +81,7 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
   const handleAddProduct = () => {
     setProducts((prevProducts) => [
       ...prevProducts,
-      { id: prevProducts.length + 1 },
+      { id: prevProducts.length + 1, quantity: 0 },
     ]);
   };
 
@@ -102,9 +102,9 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
       // console.log("Found sales data, populating products:", salesData.saleitem_set);
       const populatedProducts = salesData.saleitem_set.map((item, index) => ({
         id: index + 1,
+        quantity: item.quantity,
         productId: item.product.id,
         productName: item.product.name,
-        quantity: item.quantity,
         unitPrice: parseFloat(item.product.selling_price || item.product.unit_price || "0"),
       }));
       // console.log("Populated products:", populatedProducts);
@@ -175,27 +175,21 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                     key={product.id}
                     className="grid grid-cols-3 gap-5 mt-3 pb-3 mb-3"
                   >
-                    {/* Select Product */}
+                    {/* Product Name */}
                     <div className="grid gap-y-2">
                       <label
                         htmlFor=""
                         className="text-[#323539] font-inter font-medium text-sm"
                       >
-                        Select Product
+                        Product Name
                       </label>
-                      <select 
+                      <input
+                        type="text"
+                        placeholder="Product name"
+                        value={saleItem?.product.name || ""}
+                        readOnly={true}
                         className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
-                        value={saleItem?.product.id || ""}
-                        disabled={!!saleItem}
-                        onChange={() => {}} // Empty onChange to satisfy React
-                      >
-                        <option value="">Select product</option>
-                        {saleItem && (
-                          <option value={saleItem.product.id}>
-                            {saleItem.product.name}
-                          </option>
-                        )}
-                      </select>
+                      />
                     </div>
                     {/* Quantity */}
                     <div className="grid gap-y-2">
@@ -208,10 +202,20 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                       <input
                         type="number"
                         placeholder="Enter Quantity"
-                        value={saleItem?.quantity || ""}
-                        readOnly={!!saleItem}
-                        onChange={() => {}} // Empty onChange to satisfy React
-                        className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                        value={products[index]?.quantity || ""}
+                        readOnly={!saleItem}
+                        onChange={(e) => {
+                          // Update the quantity in the products state
+                          const newProducts = [...products];
+                          newProducts[index] = {
+                            ...newProducts[index],
+                            quantity: parseInt(e.target.value) || 0
+                          };
+                          setProducts(newProducts);
+                        }}
+                        className={`rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-sm font-normal ${
+                          !saleItem ? "bg-gray-100 text-gray-400" : "text-[#858C95]"
+                        }`}
                       />
                     </div>
                     {/* Unit Price */}
@@ -223,12 +227,13 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                         Unit Price(GHS)
                       </label>
                       <input
-                        type="number"
-                        placeholder="Enter Unit Price"
-                        value={saleItem ? parseFloat(saleItem.product.selling_price || saleItem.product.unit_price || "0") : ""}
-                        readOnly={!!saleItem}
-                        onChange={() => {}} // Empty onChange to satisfy React
-                        className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                        type="text"
+                        placeholder="Unit price"
+                        value={saleItem ? `GHS ${parseFloat(saleItem.product.selling_price || saleItem.product.unit_price || "0").toFixed(2)}` : ""}
+                        readOnly={true}
+                        className={`rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-sm font-normal ${
+                          saleItem ? "bg-gray-100 text-gray-500" : "text-[#858C95]"
+                        }`}
                       />
                     </div>
                   </div>
@@ -242,7 +247,14 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                   TOTAL AMOUNT(GHS)
                 </h3>
                 <span className="font-bold text-xl mt-2 font-inter text-[#202224]">
-                  GHS {salesData?.saleitem_set?.reduce((total, item) => total + item.total_item_price, 0).toFixed(2) || "0.00"}
+                  GHS {products.reduce((total, product, index) => {
+                    const saleItem = salesData?.saleitem_set?.[index];
+                    if (saleItem && product.quantity > 0) {
+                      const unitPrice = parseFloat(saleItem.product.selling_price || saleItem.product.unit_price || "0");
+                      return total + (unitPrice * product.quantity);
+                    }
+                    return total;
+                  }, 0).toFixed(2)}
                 </span>
               </div>
 
