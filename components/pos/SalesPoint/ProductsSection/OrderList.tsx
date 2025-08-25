@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Plus, X, Minus } from "lucide-react";
 import PaymentOptions from "./PaymentOptions";
+import { generateProductKey } from "@/lib/productUtils";
 
 export type Product = {
   id?: string;
@@ -131,7 +132,14 @@ const OrderList = ({
   };
 
   const calculatedTotalPrice = orderList.reduce((total, product) => {
-    return total + parseFloat(product.selling_price) * product.quantity;
+    const price = parseFloat(product.selling_price);
+    const quantity = product.quantity;
+    
+            if (isNaN(price) || isNaN(quantity)) {
+          return total;
+        }
+    
+    return total + (price * quantity);
   }, 0);
 
   const finalPrice = calculatedTotalPrice - discount;
@@ -158,15 +166,15 @@ const OrderList = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orderList.map((product) => (
-              <TableRow key={product.name} className="hover:bg-gray-100">
+            {orderList.map((product, index) => (
+              <TableRow key={generateProductKey(product, index)} className="hover:bg-gray-100">
                 <TableCell className="px-4 py-4 border-b">
-                  {product.name}
+                  {product.name || 'Unknown Product'}
                 </TableCell>
                 <TableCell className="px-4 py-4 border-b">
                   <div className="flex items-center space-x-2">
                     <button
-                      onClick={() => handleIncreaseDecrease(product.name, -1)}
+                      onClick={() => handleIncreaseDecrease(typeof product.name === 'string' ? product.name : '', -1)}
                       className="text-red-600 rounded-full border border-red-600 p-1"
                     >
                       <Minus />
@@ -174,14 +182,14 @@ const OrderList = ({
                     <input
                       type="text"
                       min={0}
-                      value={quantityInputs[product.name] ?? product.quantity}
+                      value={quantityInputs[typeof product.name === 'string' ? product.name : ''] ?? (typeof product.quantity === 'number' ? product.quantity : 0)}
                       onChange={(e) =>
-                        handleQuantityChange(product.name, e.target.value)
+                        handleQuantityChange(typeof product.name === 'string' ? product.name : '', e.target.value)
                       }
                       className="w-16 text-center border rounded-md p-1"
                     />
                     <button
-                      onClick={() => handleIncreaseDecrease(product.name, 1)}
+                      onClick={() => handleIncreaseDecrease(typeof product.name === 'string' ? product.name : '', 1)}
                       className="text-green-600 rounded-full border border-green-600 p-1"
                     >
                       <Plus />
@@ -190,15 +198,31 @@ const OrderList = ({
                 </TableCell>
                 <TableCell className="px-4 py-4 border-b">
                   GH₵
-                  {(
-                    parseFloat(product.selling_price) * product.quantity
-                  ).toFixed(2)}
+                  {(() => {
+                    // Safety check for data types
+                    if (typeof product.selling_price !== 'string' && typeof product.selling_price !== 'number') {
+                      return '0.00';
+                    }
+                    
+                    if (typeof product.quantity !== 'number') {
+                      return '0.00';
+                    }
+                    
+                    const price = parseFloat(product.selling_price.toString());
+                    const quantity = product.quantity;
+                    
+                    if (isNaN(price) || isNaN(quantity)) {
+                      return '0.00';
+                    }
+                    
+                    return (price * quantity).toFixed(2);
+                  })()}
                 </TableCell>
                 <TableCell className="px-4 py-4 border-b">
                   <button
                     className="text-red-600"
-                    onClick={() => handleRemoveItem(product.name)}
-                    aria-label={`Remove ${product.name}`}
+                    onClick={() => handleRemoveItem(typeof product.name === 'string' ? product.name : '')}
+                    aria-label={`Remove ${typeof product.name === 'string' ? product.name : 'Invalid Product'}`}
                   >
                     <X />
                   </button>

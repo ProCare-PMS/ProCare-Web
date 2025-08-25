@@ -128,39 +128,36 @@ function DataTable<TData, TValue>({
                   </TableRow>
                 ))}
               </TableHeader>
-            </Table>
-          </div>
-
-          <Table>
-            <TableBody>
-              {isLoading || pageTransitioning ? (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-96">
-                    <div className="flex items-center justify-center h-full">
-                      <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-                      <span className="ml-2 text-gray-600">Loading data...</span>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ) : data?.results?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} className="hover:bg-gray-50">
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="text-sm text-gray-700 p-3">
+              <TableBody>
+                {isLoading || pageTransitioning ? (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-96">
+                      <div className="flex items-center justify-center h-full">
+                        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                        <span className="ml-2 text-gray-600">Loading data...</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : data?.results?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id} className="hover:bg-gray-50">
+                      {row.getVisibleCells().map((cell) => (
+                                              <TableCell key={cell.id} className="text-sm text-gray-700 p-3">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
-                    ))}
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-32 text-center text-gray-500">
+                      No results found.
+                    </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-32 text-center text-gray-500">
-                    No results found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </div>
 

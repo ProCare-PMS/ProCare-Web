@@ -6,6 +6,7 @@ import { heldTransactionsColumns } from "./Columns";
 import SearchFieldInput from "@/components/SearchFieldInput/SearchFieldInput";
 import { SlidersVertical } from "lucide-react";
 import { useHeldTransactions } from "@/hooks/customer/useHeldTransactions";
+import CacheStatus from "./CacheStatus";
 
 const HeldTransactions = () => {
   const [searchValues, setSetSearchValues] = useState<string>("");
@@ -50,6 +51,7 @@ const HeldTransactions = () => {
         <h2 className="text-2xl font-bold  text-[#202224]">Held Transactions</h2>
 
         <div className="flex items-center gap-3">
+          <CacheStatus />
           <SearchFieldInput
             value={searchValues}
             onChange={handleSearchValueChange}
@@ -63,6 +65,8 @@ const HeldTransactions = () => {
           </div>
         </div>
       </div>
+      
+
 
       <DataTable
         columns={heldTransactionsColumns}
