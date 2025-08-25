@@ -31,7 +31,7 @@ interface SalesData {
 
 const CreateReturn = ({ setModal }: CreateReturnProps) => {
   // State to keep track of product forms
-  const [products, setProducts] = useState([{ id: 1, quantity: 0 }]);
+  const [products, setProducts] = useState([{ id: 1, quantity: 0, included: true }]);
   const [receiptSelected, setReceiptSelected] = useState(false);
   const [receiptNumber, setReceiptNumber] = useState("");
 
@@ -81,7 +81,7 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
   const handleAddProduct = () => {
     setProducts((prevProducts) => [
       ...prevProducts,
-      { id: prevProducts.length + 1, quantity: 0 },
+      { id: prevProducts.length + 1, quantity: 0, included: true },
     ]);
   };
 
@@ -103,6 +103,7 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
       const populatedProducts = salesData.saleitem_set.map((item, index) => ({
         id: index + 1,
         quantity: item.quantity,
+        included: true,
         productId: item.product.id,
         productName: item.product.name,
         unitPrice: parseFloat(item.product.selling_price || item.product.unit_price || "0"),
@@ -173,10 +174,11 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                 return (
                   <div
                     key={product.id}
-                    className="grid grid-cols-3 gap-5 mt-3 pb-3 mb-3"
+                    className="grid grid-cols-4 gap-4 mt-3 pb-3 mb-3"
+                    style={{ gridTemplateColumns: '1fr 1fr 1fr auto' }}
                   >
                     {/* Product Name */}
-                    <div className="grid gap-y-2">
+                    <div className="grid gap-y-2 min-w-0">
                       <label
                         htmlFor=""
                         className="text-[#323539] font-inter font-medium text-sm"
@@ -188,11 +190,11 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                         placeholder="Product name"
                         value={saleItem?.product.name || ""}
                         readOnly={true}
-                        className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal"
+                        className="rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-[#858C95] text-sm font-normal w-full min-w-0 max-w-none focus:outline-none"
                       />
                     </div>
                     {/* Quantity */}
-                    <div className="grid gap-y-2">
+                    <div className="grid gap-y-2 min-w-0">
                       <label
                         htmlFor=""
                         className="text-[#323539] font-inter font-medium text-sm"
@@ -202,24 +204,29 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                       <input
                         type="number"
                         placeholder="Enter Quantity"
+                        min="1"
                         value={products[index]?.quantity || ""}
                         readOnly={!saleItem}
                         onChange={(e) => {
                           // Update the quantity in the products state
+                          const value = parseInt(e.target.value) || 0;
+                          const minQuantity = 1;
+                          const validQuantity = Math.max(value, minQuantity);
+                          
                           const newProducts = [...products];
                           newProducts[index] = {
                             ...newProducts[index],
-                            quantity: parseInt(e.target.value) || 0
+                            quantity: validQuantity
                           };
                           setProducts(newProducts);
                         }}
-                        className={`rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-sm font-normal ${
+                        className={`rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-sm font-normal w-full min-w-0 max-w-none ${
                           !saleItem ? "bg-gray-100 text-gray-400" : "text-[#858C95]"
                         }`}
                       />
                     </div>
                     {/* Unit Price */}
-                    <div className="grid gap-y-2">
+                    <div className="grid gap-y-2 min-w-0">
                       <label
                         htmlFor=""
                         className="text-[#323539] font-inter font-medium text-sm"
@@ -231,9 +238,32 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                         placeholder="Unit price"
                         value={saleItem ? `GHS ${parseFloat(saleItem.product.selling_price || saleItem.product.unit_price || "0").toFixed(2)}` : ""}
                         readOnly={true}
-                        className={`rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-sm font-normal ${
+                        className={`rounded-[4px] py-3 px-2 border border-[#E5E5E7] text-sm font-normal w-full min-w-0 max-w-none focus:outline-none ${
                           saleItem ? "bg-gray-100 text-gray-500" : "text-[#858C95]"
                         }`}
+                      />
+                    </div>
+                    
+                    {/* Include */}
+                    <div className="grid gap-y-2">
+                      <label
+                        htmlFor=""
+                        className="text-[#323539] font-inter font-medium text-sm"
+                      >
+                        Include
+                      </label>
+                      <input
+                        type="checkbox"
+                        checked={products[index]?.included !== false}
+                        onChange={(e) => {
+                          const newProducts = [...products];
+                          newProducts[index] = {
+                            ...newProducts[index],
+                            included: e.target.checked
+                          };
+                          setProducts(newProducts);
+                        }}
+                        className="w-5 h-5 text-[#2648EA] bg-gray-100 border-gray-300 rounded focus:outline-none"
                       />
                     </div>
                   </div>
@@ -273,8 +303,9 @@ const CreateReturn = ({ setModal }: CreateReturnProps) => {
                 </button>
                 <button
                   type="submit"
+                  disabled={!receiptSelected || !products.some(product => product.included)}
                   className={`rounded-[4px] flex-1 py-2 px-8 text-white font-inter font-semibold text-sm ${
-                    receiptSelected ? "  bg-[#2648EA]" : " bg-[#858C95]"
+                    receiptSelected && products.some(product => product.included) ? "bg-[#2648EA]" : "bg-[#858C95]"
                   }`}
                 >
                   Confirm Return
