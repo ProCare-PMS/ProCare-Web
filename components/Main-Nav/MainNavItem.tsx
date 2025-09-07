@@ -15,7 +15,7 @@ const MainNavItem = ({ href, icon: Icon, label, toggleMobileNav }: MainNavItemPr
   const pathname = usePathname();
   const router = useRouter();
 
-  const isActive = pathname === href;
+ const isActive = pathname.startsWith(href);
 
   const handleClick = () => {
     // Only toggle mobile nav if on mobile screen

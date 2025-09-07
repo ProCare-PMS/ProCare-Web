@@ -1,3 +1,4 @@
+"use client"
 import DataTable from "@/components/Tables/data-table";
 import { purchasesTabColumns } from "@/components/Tables/purchases-tab-columns";
 import React, { useState } from "react";

@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import CategoriesTabStats from "./CategoriesTabStats";
 import CategoriesTabProducts from "./CategoriesTabProducts";
@@ -8,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const CategoriesTab = () => {
   const { data: categories, isLoading } = useQuery({
-    queryKey: ["dashboardData"],
+    queryKey: ["dashboardData"], 
     queryFn: async () =>
       await customAxios.get(endpoints.inventoryCategories).then((res) => res),
     select: (findData) => findData?.data?.results,

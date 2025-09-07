@@ -2,7 +2,7 @@ import React from 'react'
 
 const ProductStockTable = () => {
   return (
-    <div>ProductStockTable</div>
+    <div>ProductStockTable</div> 
   )
 }
 

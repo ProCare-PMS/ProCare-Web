@@ -14,12 +14,14 @@ import StockTakingForm from "../ProductStock/StockTakingForm";
 
 interface ProductsHeaderProps {
   searchValue: string;
-  onSearchChange: (value: string) => void;
+  onSearchChange: (value: string) => void;  
   sortOption: SortOption;
   onSortChange: (option: SortOption) => void;
   onFilterChange: (filters: FilterState) => void;
   onAddProduct: () => void;
   onImportProducts: () => void;
+  activeTab: number;
+  onTabChange: (tab: number) => void;
 }
 
 const ProductsHeader: React.FC<ProductsHeaderProps> = ({
@@ -30,12 +32,13 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({
   onFilterChange,
   onAddProduct,
   onImportProducts,
+  activeTab,
+  onTabChange,
 }) => {
   const [showActionMenu, setShowActionMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [showStock, setShowStock] = useState(false);
-  const [toggleShow, setToggleShow] = useState<number>(1);
 
   const actionMenuRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -59,29 +62,31 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({
   return (
     <div>
       <div className="flex flex-col md:flex-row items-center justify-between mb-8">
-        <div className="bg-gray-100 flex gap-3 p-2 rounded-xl">
+        {/* Tab Switcher */}
+        <div className="bg-[#F5F5F5] flex gap-3 p-2 rounded-[10px]">
           <span
-            className={`block cursor-pointer py-1 px-3 rounded-xl ${
-              toggleShow === 1
-                ? "bg-white border border-gray-300 shadow"
-                : "hover:bg-gray-200 text-gray-400"
+            className={`block cursor-pointer py-1 w-[100px] text-center px-3 rounded-[8px] font-medium ${
+              activeTab === 1
+                ? "bg-white text-[#0B2B23] shadow-[0px_2.13px_5.32px_0px_#0A13091F] text-base border-gray-300"
+                : "text-[#858C95] hover:bg-gray-200"
             }`}
-            onClick={() => setToggleShow(1)}
+            onClick={() => onTabChange(1)}
           >
             Product
           </span>
           <span
-            className={`block cursor-pointer py-1 px-3 rounded-xl ${
-              toggleShow === 2
-                ? "bg-white border border-gray-300 shadow"
-                : "hover:bg-gray-200 text-gray-400"
+            className={`block cursor-pointer py-1 w-[100px] text-center px-3 rounded-[8px] font-medium ${
+              activeTab === 2
+                ? "bg-white text-[#0B2B23] shadow-[0px_2.13px_5.32px_0px_#0A13091F] text-base border-gray-300"
+                : "text-[#858C95] hover:bg-gray-200"
             }`}
-            onClick={() => setToggleShow(2)}
+            onClick={() => onTabChange(2)}
           >
             Stocks
           </span>
         </div>
 
+        {/* Controls */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
           <div className="w-full sm:w-auto">
             <SearchFieldInput
@@ -99,7 +104,8 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({
             onToggle={() => toggleDropdown('sort')}
           />
 
-          {toggleShow === 1 && (
+          {/* Product Tab Actions */}
+          {activeTab === 1 && (
             <ActionDropdown
               ref={actionMenuRef}
               isOpen={showActionMenu}
@@ -109,7 +115,8 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({
             />
           )}
 
-          {toggleShow === 2 && (
+          {/* Stock Tab Actions */}
+          {activeTab === 2 && (
             <Button
               type="button"
               className="text-white flex items-center gap-2 rounded-[12px] font-inter w-full md:w-[149px]"
@@ -120,6 +127,7 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({
             </Button>
           )}
 
+          {/* Filter Button */}
           <div className="relative" ref={filterRef}>
             <div
               className="border p-2 cursor-pointer border-[#494A50] rounded-[12px] hover:bg-gray-50 transition-colors"
@@ -137,6 +145,7 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({
         </div>
       </div>
 
+      {/* Stock Taking Modal */}
       {showStock && (
         <StockTakingForm
           title="Add Stock Taking"

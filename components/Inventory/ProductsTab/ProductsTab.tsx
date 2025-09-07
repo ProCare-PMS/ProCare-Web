@@ -1,13 +1,14 @@
+"use client"
 import React from "react";
 import ProductsTabStats from "./ProductsTabStats";
-import ProductsTabHeader from "./ProductsTabHeader";
+// import ProductsTabHeader from "./ProductsTabHeader";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 import { useQuery } from "@tanstack/react-query";
 import ProductsContent from "./ProductsContent";
 
 const ProductsTab = () => {
-  const { data: dashboardData, isLoading } = useQuery({
+  const { data: dashboardData, isLoading } = useQuery({ 
     queryKey: ["dashboardData"],
     queryFn: async () =>
       await customAxios.get(endpoints.dashboard).then((res) => res),

@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, ChangeEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
@@ -12,7 +13,7 @@ import StockTransferHistory from "./StockTransferHistory/StockTransferHistory";
 import { Button } from "@/components/ui/button";
 import AddPharmacyModal from "@/components/Modals/AddPharmacyModal";
 
-const StockTransferTab = () => {
+const BranchSyncTab = () => {
   const [searchValues, setSearchValues] = useState<string>("");
   const [page, setPage] = useState(1);
   const [showRequests, setShowRequets] = useState<boolean>(false); //showing the requests table
@@ -107,7 +108,7 @@ const StockTransferTab = () => {
               </div>
 
               {/* DataTable*/}
-              <DataTable
+              {/* <DataTable
                 columns={otherPharmaciesColumns}
                 data={
                   pharmaciesData || {
@@ -120,7 +121,7 @@ const StockTransferTab = () => {
                 searchValue={searchValues}
                 isLoading={isLoading}
                 onPageChange={handlePageChange}
-              />
+              /> */}
             </div>
           </div>
 
@@ -131,4 +132,4 @@ const StockTransferTab = () => {
   );
 };
 
-export default StockTransferTab;
+export default BranchSyncTab;

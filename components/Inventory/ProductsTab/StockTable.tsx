@@ -1,11 +1,11 @@
 import React from "react";
 import DataTable from "@/components/Tables/data-table";
-import { productsTabColumns } from "@/components/Tables/products-tab-columns";
+// import { productsStockTabColumns } from "@/components/Tables/products-stock-tab-columns";
 import { ProductsType } from "@/types/product";
 import { PaginationState } from "@/types/pagination";
-//import { ProductsType, PaginationState } from "@/types/products";
+import { productsStockTabColumns } from "../ProductStock/ProductStockColumn";
 
-interface ProductsTableProps {
+interface StockTableProps {
   data: ProductsType[];
   searchValue: string;
   isLoading: boolean;
@@ -14,7 +14,7 @@ interface ProductsTableProps {
   onPageSizeChange: (pageSize: number) => void;
 }
 
-const ProductsTable: React.FC<ProductsTableProps> = ({
+const StockTable: React.FC<StockTableProps> = ({
   data,
   searchValue,
   isLoading,
@@ -22,13 +22,12 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
   onPageChange,
   onPageSizeChange,
 }) => {
-  // Calculate paginated data
   const startIndex = (pagination.page - 1) * pagination.pageSize;
   const paginatedData = data.slice(startIndex, startIndex + pagination.pageSize);
 
-  return ( 
+  return (
     <DataTable
-      columns={productsTabColumns}
+      columns={productsStockTabColumns}
       data={paginatedData}
       searchValue={searchValue}
       isLoading={isLoading}
@@ -39,4 +38,4 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
   );
 };
 
-export default ProductsTable;
+export default StockTable;

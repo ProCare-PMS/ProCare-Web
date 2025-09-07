@@ -117,9 +117,9 @@ function DataTable<TData, TValue>({
       <div className="overflow-x-auto border rounded-md">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups()?.map((headerGroup) => (
               <TableRow key={headerGroup.id} className="bg-gray-100 hover:bg-gray-200">
-                {headerGroup.headers.map((header) => (
+                {headerGroup.headers?.map((header) => (
                   <TableHead
                     key={header.id}
                     className="font-bold text-sm text-gray-900 cursor-pointer whitespace-nowrap p-3"
@@ -164,7 +164,7 @@ function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-32 text-center text-gray-500">
+                <TableCell colSpan={columns?.length} className="h-32 text-center text-gray-500">
                   No results found.
                 </TableCell>
               </TableRow>

@@ -36,10 +36,10 @@ const DashboardHomePage = () => {
       <div className="hidden md:block">
         <DashboardNote />
       </div>
-      {(user?.is_pharmacist || user?.is_manager) && (
+      {/* {(user?.is_pharmacist || user?.is_manager) && (
         <DashboardStats dashboardData={dashboardData} isLoading={isLoading} />
-      )}
-      <div className="flex overflow-hidden flex-col md:flex-row items-center gap-6">
+      )} */}
+      {/* <div className="flex overflow-hidden flex-col md:flex-row items-center gap-6">
         <DashboardSubTables
           title="Expiry List"
           data={dashboardData?.expiring_soon_products_list}
@@ -51,7 +51,7 @@ const DashboardHomePage = () => {
           isLoading={isLoading}
         />
         <DashbaordChart data={dashboardData?.top_categories || []} />
-      </div>
+      </div> */}
       <div className="bg-white shadow-custom p-4 mb-12 mt-4 rounded-[8px] w-full overflow-hidden">
         <DashboardTableHeader />
         <div className="w-full overflow-x-auto">
