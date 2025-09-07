@@ -335,7 +335,7 @@ const RegistrationPage = () => {
 
             <button
               type="submit"
-              className=" w-full hidden md:w-[140px] bg-blue-600 text-white rounded-[5px] px-5 py-2 font-semibold text-sm"
+              className=" w-full  md:w-[140px] bg-blue-600 text-white rounded-[5px] px-5 py-2 font-semibold text-sm"
             >
               Next
             </button>

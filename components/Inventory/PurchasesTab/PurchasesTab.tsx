@@ -1,3 +1,4 @@
+"use client"
 import DataTable from "@/components/Tables/data-table";
 import { purchasesTabColumns } from "@/components/Tables/purchases-tab-columns";
 import React, { useState } from "react";
@@ -20,7 +21,7 @@ const PurchasesTab = () => {
     select: (findData) => findData?.data,
   });
 
-  console.log(inventoryPurchasesData);
+
 
   const handleSearchValueChange = (
     event: React.ChangeEvent<HTMLInputElement>

@@ -74,7 +74,8 @@ export default function UserProfile() {
         {accountInfo.length > 0 ? (
           <>
             {/* User Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            {/* grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 */}
+            <div className="flex items-center justify-between gap-6 mb-8">
               {accountInfo.map((account, index) => (
                 <div key={account.id || index} className="group">
                   <button

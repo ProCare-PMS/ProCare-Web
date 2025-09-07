@@ -1,13 +1,16 @@
 "use client";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   useReactTable,
   SortingState,
+  ColumnFiltersState,
+  PaginationState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -19,21 +22,12 @@ import {
 } from "@/components/ui/table";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2 } from "lucide-react";
 
-interface BackendPaginationData {
-  count: number;
-  links: { next: string | null; previous: string | null };
-  results: any[];
-  total_pages: number;
-}
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: BackendPaginationData;
+  data: TData[];
   searchValue?: string;
   isLoading?: boolean;
-  onPageChange?: (page: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
-  pageSize?: number;
+  initialPageSize?: number;
 }
 
 function DataTable<TData, TValue>({
@@ -41,107 +35,81 @@ function DataTable<TData, TValue>({
   data,
   searchValue = "",
   isLoading = false,
-  onPageChange,
-  onPageSizeChange,
-  pageSize = 10,
+  initialPageSize = 10,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [pageTransitioning, setPageTransitioning] = useState(false);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: initialPageSize,
+  });
   
   // Available page sizes
   const pageSizeOptions = [5, 10, 20, 50, 100];
 
-  // Update global filter when search value changes
-  useEffect(() => {
-    setGlobalFilter(searchValue);
-  }, [searchValue]);
-
-  // Reset to page 1 when search value changes
-  useEffect(() => {
-    if (searchValue !== globalFilter) {
-      setCurrentPage(1);
-    }
-  }, [searchValue, globalFilter]);
-
   const table = useReactTable({
-    data: data?.results || [],
+    data,
     columns,
     state: {
-      globalFilter,
       sorting,
+      columnFilters,
+      pagination,
+      globalFilter: searchValue,
     },
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    // Enable manual pagination if you want server-side pagination
+    // manualPagination: true,
+    // pageCount: Math.ceil(totalCount / pagination.pageSize),
   });
 
-  // Improved page number generation with better spacing
-  const pageNumbers = useMemo(() => {
-    const totalPages = data.total_pages || 0;
-    const current = currentPage;
-    
-    if (totalPages <= 0) return [];
-    if (totalPages <= 7) {
-      // If fewer than 7 pages, show all page numbers
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
+  // Reset to first page when search changes
+  useEffect(() => {
+    table.setPageIndex(0);
+  }, [searchValue, table]);
+
+  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    table.setPageSize(Number(e.target.value));
+  };
+
+  // Get pagination info
+  const pageIndex = table.getState().pagination.pageIndex;
+  const pageSize = table.getState().pagination.pageSize;
+  const pageCount = table.getPageCount();
+  const canPreviousPage = table.getCanPreviousPage();
+  const canNextPage = table.getCanNextPage();
+
+  // Generate page numbers for pagination UI
+  const getPageNumbers = () => {
+    if (pageCount <= 7) {
+      return Array.from({ length: pageCount }, (_, i) => i);
     }
 
-    // More complex pagination with ellipses
-    let pages = [1]; // Always include first page
+    const pages: (number | string)[] = [0]; // First page
     
-    if (current > 3) {
-      pages.push(-1); // Add ellipsis
+    if (pageIndex > 3) {
+      pages.push('...');
     }
     
-    // Add pages around current page
-    const rangeStart = Math.max(2, current - 1);
-    const rangeEnd = Math.min(totalPages - 1, current + 1);
+    const rangeStart = Math.max(1, pageIndex - 1);
+    const rangeEnd = Math.min(pageCount - 2, pageIndex + 1);
     
     for (let i = rangeStart; i <= rangeEnd; i++) {
       pages.push(i);
     }
     
-    if (current < totalPages - 2) {
-      pages.push(-2); // Add ellipsis
+    if (pageIndex < pageCount - 4) {
+      pages.push('...');
     }
     
-    pages.push(totalPages); // Always include last page
+    pages.push(pageCount - 1); // Last page
     
     return pages;
-  }, [currentPage, data.total_pages]);
-
-  const handlePageChange = (page: number) => {
-    if (page > 0 && page <= data.total_pages && page !== currentPage) {
-      setPageTransitioning(true);
-      setCurrentPage(page);
-      
-      if (onPageChange) {
-        onPageChange(page);
-      }
-      
-      // Simulate network delay if necessary
-      setTimeout(() => {
-        setPageTransitioning(false);
-      }, 300);
-    }
-  };
-
-  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSize = parseInt(e.target.value);
-    if (onPageSizeChange) {
-      setPageTransitioning(true);
-      setCurrentPage(1);
-      onPageSizeChange(newSize);
-      
-      // Simulate network delay if necessary
-      setTimeout(() => {
-        setPageTransitioning(false);
-      }, 300);
-    }
   };
 
   return (
@@ -149,9 +117,9 @@ function DataTable<TData, TValue>({
       <div className="overflow-x-auto border rounded-md">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups()?.map((headerGroup) => (
               <TableRow key={headerGroup.id} className="bg-gray-100 hover:bg-gray-200">
-                {headerGroup.headers.map((header) => (
+                {headerGroup.headers?.map((header) => (
                   <TableHead
                     key={header.id}
                     className="font-bold text-sm text-gray-900 cursor-pointer whitespace-nowrap p-3"
@@ -161,7 +129,10 @@ function DataTable<TData, TValue>({
                       <div className="flex items-center gap-1">
                         {flexRender(header.column.columnDef.header, header.getContext())}
                         <span className="inline-block w-4">
-                          {header.column.getIsSorted() === "desc" ? " 🔽" : header.column.getIsSorted() ? " 🔼" : ""}
+                          {{
+                            asc: " 🔼",
+                            desc: " 🔽",
+                          }[header.column.getIsSorted() as string] ?? ""}
                         </span>
                       </div>
                     )}
@@ -172,7 +143,7 @@ function DataTable<TData, TValue>({
           </TableHeader>
 
           <TableBody>
-            {isLoading || pageTransitioning ? (
+            {isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-96">
                   <div className="flex items-center justify-center h-full">
@@ -181,7 +152,7 @@ function DataTable<TData, TValue>({
                   </div>
                 </TableCell>
               </TableRow>
-            ) : data?.results?.length ? (
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} className="hover:bg-gray-50">
                   {row.getVisibleCells().map((cell) => (
@@ -193,7 +164,7 @@ function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-32 text-center text-gray-500">
+                <TableCell colSpan={columns?.length} className="h-32 text-center text-gray-500">
                   No results found.
                 </TableCell>
               </TableRow>
@@ -202,7 +173,7 @@ function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {!isLoading && data.total_pages > 0 && (
+      {!isLoading && pageCount > 0 && (
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-between py-4 px-2">
           <div className="flex items-center gap-2">
             <label htmlFor="page-size-select" className="text-sm text-gray-600">
@@ -213,7 +184,7 @@ function DataTable<TData, TValue>({
               value={pageSize}
               onChange={handlePageSizeChange}
               className="p-1 border rounded-md text-sm bg-white"
-              disabled={isLoading || pageTransitioning}
+              disabled={isLoading}
             >
               {pageSizeOptions.map(size => (
                 <option key={size} value={size}>
@@ -227,8 +198,8 @@ function DataTable<TData, TValue>({
           <div className="flex flex-wrap items-center justify-center gap-2">
             {/* First Page Button */}
             <button
-              onClick={() => handlePageChange(1)}
-              disabled={currentPage === 1 || isLoading || pageTransitioning}
+              onClick={() => table.setPageIndex(0)}
+              disabled={!canPreviousPage || isLoading}
               className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors"
               aria-label="First page"
             >
@@ -237,8 +208,8 @@ function DataTable<TData, TValue>({
 
             {/* Previous Page Button */}
             <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1 || isLoading || pageTransitioning}
+              onClick={() => table.previousPage()}
+              disabled={!canPreviousPage || isLoading}
               className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors"
               aria-label="Previous page"
             >
@@ -247,27 +218,26 @@ function DataTable<TData, TValue>({
 
             {/* Page Numbers */}
             <div className="flex items-center">
-              {pageNumbers.map((pageNum, index) => {
-                if (pageNum < 0) {
-                  // It's an ellipsis
+              {getPageNumbers().map((pageNum, index) => {
+                if (typeof pageNum === 'string') {
                   return <span key={`ellipsis-${index}`} className="px-2 text-gray-500">...</span>;
                 }
                 
-                const isActive = pageNum === currentPage;
+                const isActive = pageNum === pageIndex;
                 return (
                   <button
                     key={pageNum}
-                    onClick={() => handlePageChange(pageNum)}
-                    disabled={isLoading || pageTransitioning}
+                    onClick={() => table.setPageIndex(pageNum)}
+                    disabled={isLoading}
                     className={`px-3 py-1 mx-0.5 border rounded-md text-sm transition-colors ${
                       isActive 
                         ? 'bg-blue-500 text-white border-blue-500' 
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                     aria-current={isActive ? "page" : undefined}
-                    aria-label={`Page ${pageNum}`}
+                    aria-label={`Page ${pageNum + 1}`}
                   >
-                    {pageNum}
+                    {pageNum + 1}
                   </button>
                 );
               })}
@@ -275,8 +245,8 @@ function DataTable<TData, TValue>({
 
             {/* Next Page Button */}
             <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === data.total_pages || isLoading || pageTransitioning}
+              onClick={() => table.nextPage()}
+              disabled={!canNextPage || isLoading}
               className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors"
               aria-label="Next page"
             >
@@ -285,8 +255,8 @@ function DataTable<TData, TValue>({
 
             {/* Last Page Button */}
             <button
-              onClick={() => handlePageChange(data.total_pages)}
-              disabled={currentPage === data.total_pages || isLoading || pageTransitioning}
+              onClick={() => table.setPageIndex(pageCount - 1)}
+              disabled={!canNextPage || isLoading}
               className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors"
               aria-label="Last page"
             >
@@ -296,9 +266,9 @@ function DataTable<TData, TValue>({
 
           {/* Page Info */}
           <div className="text-sm text-gray-600">
-            Page {currentPage} of {data.total_pages} 
+            Page {pageIndex + 1} of {pageCount}
             <span className="ml-2 text-gray-500">
-              ({data.count} total items)
+              ({table.getFilteredRowModel().rows.length} total items)
             </span>
           </div>
         </div>

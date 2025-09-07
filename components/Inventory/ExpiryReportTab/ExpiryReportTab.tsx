@@ -1,3 +1,4 @@
+"use client"
 import ExpiryReportStats from "./ExpiryReportStats";
 import DataTable from "@/components/Tables/data-table";
 import { expiryTabColumns } from "@/components/Tables/expiry-tab-columns";
@@ -31,7 +32,6 @@ const ExpiryReportTab = () => {
     select: (findData) => findData?.data,
   });
 
-  console.log(inventoryExpiryReportsData);
   const product = inventoryExpiryReportsData?.results
 
   const handleSearchValueChange = (

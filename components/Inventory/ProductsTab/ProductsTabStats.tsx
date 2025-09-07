@@ -37,7 +37,7 @@ const ProductsTabStats = ({ dashboardData, isLoading }: ProductsTabStatsProps) =
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
       {statsCounts.map((statItem: any, index: number) => (
         <div key={index}>
           <div className={`flex items-center py-4 w-full px-2 rounded-[8px] justify-between border border-[#D0D5DD] ${

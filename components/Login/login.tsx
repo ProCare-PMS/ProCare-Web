@@ -13,7 +13,7 @@ import customAxios from "@/api/CustomAxios"
 import { toast } from "sonner"
 import { useMutation } from "@tanstack/react-query"
 import { firstLoginFailure, setfirstLoginSuccess } from "@/redux/firstLoginSlice"
-import { Mail, Lock, AlertCircle } from "lucide-react"
+import { Mail, Lock, AlertCircle, Eye, EyeOff } from "lucide-react"
 
 // Define Zod schema for validation
 const loginSchema = z.object({
@@ -145,7 +145,7 @@ export default function Login() {
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 className={`
-                  block w-full pl-10 pr-3 py-3 border rounded-[8px] text-[#323539] placeholder-gray-500
+                  block w-full pl-10 pr-10 py-3 border rounded-[8px] text-[#323539] placeholder-gray-500
                   focus:outline-none focus:ring-1 focus:border-transparent
                   transition-colors duration-200 min-h-[44px] bg-white
                   ${errors.password ? "border-red-500 bg-red-50" : "border-gray-300"}
@@ -154,6 +154,18 @@ export default function Login() {
                 aria-invalid={errors.password ? "true" : "false"}
                 aria-describedby={errors.password ? "password-error" : undefined}
               />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                ) : (
+                  <Eye className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                )}
+              </button>
             </div>
             {errors.password && (
               <div id="password-error" className="flex items-center gap-2 text-sm text-red-600" role="alert">

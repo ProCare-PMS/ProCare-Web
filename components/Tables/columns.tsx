@@ -1,8 +1,6 @@
 "use client";
 
-import { DashboardTransactions, dashboardTransactions } from "@/type";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 import { useState } from "react";
 import DashboardModal from "../Modals/DashboardModal";
 import clsx from "clsx";
@@ -50,7 +48,7 @@ export interface DashboardRecentTransactions {
 
 interface ActionsCellProps {
   row: {
-    original: DashboardRecentTransactions;
+    original: DashboardRecentTransactions; 
   };
 }
 
@@ -89,7 +87,7 @@ export const dashboardTransactionColumns: ColumnDef<DashboardRecentTransactions>
       header: "Transaction",
       cell: ({ row }) => {
         const transactionId = row.original.id.substring(0, 5); // Get the first 5 characters
-        return <span>{`Receipt #${transactionId}`}</span>;
+        return <span>{`Receipt #${transactionId}...`}</span>;
       },
     },
     {

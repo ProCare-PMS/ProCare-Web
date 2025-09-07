@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import SuppliersTabStats from "./SuppliersTabStats";
 import { ExpandableDataTable } from "@/components/Tables/expandable-data-table";

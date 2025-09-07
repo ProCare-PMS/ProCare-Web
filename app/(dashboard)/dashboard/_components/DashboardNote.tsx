@@ -1,13 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
-import { useSelector } from "react-redux";
+import { useSelector,  useDispatch} from "react-redux";
 import { RootState } from "@/redux/store";
-import { useDispatch } from "react-redux";
 import { updateUser } from "@/redux/authSlice";
 
 const DashboardNote = () => {
