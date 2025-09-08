@@ -17,7 +17,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2 } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  Loader2,
+} from "lucide-react";
 
 interface BackendPaginationData {
   count: number;
@@ -49,7 +55,7 @@ function DataTable<TData, TValue>({
   const [currentPage, setCurrentPage] = useState(1);
   const [globalFilter, setGlobalFilter] = useState("");
   const [pageTransitioning, setPageTransitioning] = useState(false);
-  
+
   // Available page sizes
   const pageSizeOptions = [5, 10, 20, 50, 100];
 
@@ -83,7 +89,7 @@ function DataTable<TData, TValue>({
   const pageNumbers = useMemo(() => {
     const totalPages = data.total_pages || 0;
     const current = currentPage;
-    
+
     if (totalPages <= 0) return [];
     if (totalPages <= 7) {
       // If fewer than 7 pages, show all page numbers
@@ -92,25 +98,25 @@ function DataTable<TData, TValue>({
 
     // More complex pagination with ellipses
     let pages = [1]; // Always include first page
-    
+
     if (current > 3) {
       pages.push(-1); // Add ellipsis
     }
-    
+
     // Add pages around current page
     const rangeStart = Math.max(2, current - 1);
     const rangeEnd = Math.min(totalPages - 1, current + 1);
-    
+
     for (let i = rangeStart; i <= rangeEnd; i++) {
       pages.push(i);
     }
-    
+
     if (current < totalPages - 2) {
       pages.push(-2); // Add ellipsis
     }
-    
+
     pages.push(totalPages); // Always include last page
-    
+
     return pages;
   }, [currentPage, data.total_pages]);
 
@@ -118,11 +124,11 @@ function DataTable<TData, TValue>({
     if (page > 0 && page <= data.total_pages && page !== currentPage) {
       setPageTransitioning(true);
       setCurrentPage(page);
-      
+
       if (onPageChange) {
         onPageChange(page);
       }
-      
+
       // Simulate network delay if necessary
       setTimeout(() => {
         setPageTransitioning(false);
@@ -136,7 +142,7 @@ function DataTable<TData, TValue>({
       setPageTransitioning(true);
       setCurrentPage(1);
       onPageSizeChange(newSize);
-      
+
       // Simulate network delay if necessary
       setTimeout(() => {
         setPageTransitioning(false);
@@ -146,22 +152,37 @@ function DataTable<TData, TValue>({
 
   return (
     <div className="rounded-md w-full">
-      <div className="overflow-x-auto border rounded-md">
-        <Table>
+      <div className="overflow-x-auto rounded-[14px]">
+        <Table >
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="bg-gray-100 hover:bg-gray-200">
-                {headerGroup.headers.map((header) => (
+              <TableRow
+                key={headerGroup.id}
+                className="bg-[#F1F4F9] rounded-[14px] hover:bg-gray-200"
+              >
+                {headerGroup.headers.map((header, index) => (
                   <TableHead
                     key={header.id}
-                    className="font-bold text-sm text-gray-900 cursor-pointer whitespace-nowrap p-3"
-                    onClick={header.column.getToggleSortingHandler()}
+                    className={`font-bold text-sm text-gray-900 cursor-pointer whitespace-nowrap p-3 ${
+                      index === 0
+                        ? "rounded-bl-[12px]"
+                        : index === headerGroup.headers.length - 1
+                        ? "rounded-br-[12px]"
+                        : ""
+                    }`}
                   >
                     {header.isPlaceholder ? null : (
                       <div className="flex items-center gap-1">
-                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                         <span className="inline-block w-4">
-                          {header.column.getIsSorted() === "desc" ? " 🔽" : header.column.getIsSorted() ? " 🔼" : ""}
+                          {header.column.getIsSorted() === "desc"
+                            ? " 🔽"
+                            : header.column.getIsSorted()
+                            ? " 🔼"
+                            : ""}
                         </span>
                       </div>
                     )}
@@ -172,33 +193,39 @@ function DataTable<TData, TValue>({
           </TableHeader>
 
           <TableBody>
-            {isLoading || pageTransitioning ? (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-96">
-                  <div className="flex items-center justify-center h-full">
-                    <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-                    <span className="ml-2 text-gray-600">Loading data...</span>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : data?.results?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} className="hover:bg-gray-50">
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-sm text-gray-700 p-3">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-32 text-center text-gray-500">
-                  No results found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
+  {isLoading || pageTransitioning ? (
+    <TableRow>
+      <TableCell colSpan={columns.length} className="h-96 border-t-0">
+        <div className="flex items-center justify-center h-full">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+          <span className="ml-2 text-gray-600">Loading data...</span>
+        </div>
+      </TableCell>
+    </TableRow>
+  ) : data?.results?.length ? (
+    table.getRowModel().rows.map((row, index) => (
+      <TableRow 
+        key={row.id} 
+        className="hover:bg-gray-50"
+      >
+        {row.getVisibleCells().map((cell) => (
+          <TableCell 
+            key={cell.id} 
+            className={`text-sm text-gray-700 p-3 ${index === 0 ? 'border-t-0' : ''}`}
+          >
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </TableCell>
+        ))}
+      </TableRow>
+    ))
+  ) : (
+    <TableRow>
+      <TableCell colSpan={columns.length} className="h-32 text-center text-gray-500 border-t-0">
+        No results found.
+      </TableCell>
+    </TableRow>
+  )}
+</TableBody>
         </Table>
       </div>
 
@@ -215,7 +242,7 @@ function DataTable<TData, TValue>({
               className="p-1 border rounded-md text-sm bg-white"
               disabled={isLoading || pageTransitioning}
             >
-              {pageSizeOptions.map(size => (
+              {pageSizeOptions.map((size) => (
                 <option key={size} value={size}>
                   {size}
                 </option>
@@ -223,7 +250,7 @@ function DataTable<TData, TValue>({
             </select>
             <span className="text-sm text-gray-600">per page</span>
           </div>
-          
+
           <div className="flex flex-wrap items-center justify-center gap-2">
             {/* First Page Button */}
             <button
@@ -250,9 +277,16 @@ function DataTable<TData, TValue>({
               {pageNumbers.map((pageNum, index) => {
                 if (pageNum < 0) {
                   // It's an ellipsis
-                  return <span key={`ellipsis-${index}`} className="px-2 text-gray-500">...</span>;
+                  return (
+                    <span
+                      key={`ellipsis-${index}`}
+                      className="px-2 text-gray-500"
+                    >
+                      ...
+                    </span>
+                  );
                 }
-                
+
                 const isActive = pageNum === currentPage;
                 return (
                   <button
@@ -260,9 +294,9 @@ function DataTable<TData, TValue>({
                     onClick={() => handlePageChange(pageNum)}
                     disabled={isLoading || pageTransitioning}
                     className={`px-3 py-1 mx-0.5 border rounded-md text-sm transition-colors ${
-                      isActive 
-                        ? 'bg-blue-500 text-white border-blue-500' 
-                        : 'text-gray-700 hover:bg-gray-100'
+                      isActive
+                        ? "bg-blue-500 text-white border-blue-500"
+                        : "text-gray-700 hover:bg-gray-100"
                     }`}
                     aria-current={isActive ? "page" : undefined}
                     aria-label={`Page ${pageNum}`}
@@ -276,7 +310,11 @@ function DataTable<TData, TValue>({
             {/* Next Page Button */}
             <button
               onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === data.total_pages || isLoading || pageTransitioning}
+              disabled={
+                currentPage === data.total_pages ||
+                isLoading ||
+                pageTransitioning
+              }
               className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors"
               aria-label="Next page"
             >
@@ -286,7 +324,11 @@ function DataTable<TData, TValue>({
             {/* Last Page Button */}
             <button
               onClick={() => handlePageChange(data.total_pages)}
-              disabled={currentPage === data.total_pages || isLoading || pageTransitioning}
+              disabled={
+                currentPage === data.total_pages ||
+                isLoading ||
+                pageTransitioning
+              }
               className="p-2 border rounded-md disabled:opacity-50 hover:bg-gray-100 transition-colors"
               aria-label="Last page"
             >
@@ -296,7 +338,7 @@ function DataTable<TData, TValue>({
 
           {/* Page Info */}
           <div className="text-sm text-gray-600">
-            Page {currentPage} of {data.total_pages} 
+            Page {currentPage} of {data.total_pages}
             <span className="ml-2 text-gray-500">
               ({data.count} total items)
             </span>
