@@ -57,11 +57,11 @@ const DashboardSubTables = ({ title, data, isLoading }: TableProps) => {
         <h2 className="text-2xl font-medium font-nunito_sans text-gray-900">
           {title}
         </h2>
-        {/* 
-        <Link href="/inventory?tab=4" className="text-blue-600 font-inter flex items-center gap-1 font-semibold text-sm">
+        
+        <Link href="/dashboard/expiry_report" className="text-blue-600 font-inter flex items-center gap-1 font-semibold text-sm">
           Open <ExternalLink className="text-blue-600" />
         </Link>
-        */}
+       
       </div>
 
       <div className="overflow-x-auto">
