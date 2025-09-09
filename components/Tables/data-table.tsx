@@ -82,11 +82,11 @@ function DataTable<TData, TValue>({
     if (page > 0 && page <= data.total_pages && page !== currentPage) {
       setPageTransitioning(true);
       setCurrentPage(page);
-      
+
       if (onPageChange) {
         onPageChange(page);
       }
-      
+
       // Simulate network delay if necessary
       setTimeout(() => {
         setPageTransitioning(false);
