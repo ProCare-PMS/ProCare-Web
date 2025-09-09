@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import customAxios from "@/api/CustomAxios";
 import { Ellipsis } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,8 +51,10 @@ const ProductActionCell = ({ cell }: CellContext<SuppliersType, unknown>) => {
   return (
     <div>
       <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Ellipsis />
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <Ellipsis />
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-white w-[150px] mr-12">
           <DropdownMenuItem>View Details</DropdownMenuItem>

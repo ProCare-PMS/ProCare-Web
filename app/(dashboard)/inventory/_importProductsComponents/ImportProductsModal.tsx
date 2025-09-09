@@ -4,7 +4,7 @@ import { CloudUpload } from "lucide-react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { toast } from "sonner";
 import ShowElementComponent from "@/components/UploadComponents/ShowElementComponent";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import customAxios from "@/api/CustomAxios";
 import { endpoints } from "@/api/Endpoints";
 
@@ -22,6 +22,7 @@ const ImportProductsModal = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showImport, setShowImport] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
   const uploadData = useMutation({
     mutationKey: ["product"],
@@ -40,6 +41,9 @@ const ImportProductsModal = ({
       );
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["inventoryProducts"] });
+      queryClient.invalidateQueries({ queryKey: ["inventoryProductsStock"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboardData"] });
       toast.success("Bulk Upload Successful");
       setSelectedFile(null); // Clear the file input after successful upload
       setShowImport(false);

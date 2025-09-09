@@ -73,8 +73,10 @@ const ProductActionCell = ({ row }: ProductsCellProps) => {
   return (
     <div>
       <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Ellipsis />
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <Ellipsis />
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-white w-[150px] mr-12">
           <DropdownMenuItem>View Details</DropdownMenuItem>
