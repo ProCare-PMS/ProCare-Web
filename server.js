@@ -4,8 +4,8 @@ const next = require("next");
 
 const dev = process.env.NODE_ENV !== "production";
 // FIXED: Use 0.0.0.0 for Docker/Kubernetes, fallback to localhost for local dev
-const hostname = process.env.HOSTNAME || (dev ? "localhost" : "0.0.0.0");
-const port = 3000;
+const hostname = "0.0.0.0";
+const port = 6325;
 
 console.log(`🚀 Starting server on ${hostname}:${port} (dev: ${dev})`);
 
