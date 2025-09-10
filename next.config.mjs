@@ -1,23 +1,35 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // output: "export",
+  output: 'standalone',
+  productionBrowserSourceMaps: false,
   images: {
-    domains: ["images.unsplash.com"], // Add the domain of the image source here
+    domains: ["images.unsplash.com"],
     unoptimized: false,
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 86400,
   },
+  
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production', // Remove console in production
+    removeConsole: process.env.NODE_ENV === 'production',
   },
+  
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
+  
+  swcMinify: true,
+  
   experimental: {
     serverActions: {},
+    optimizeCss: true,
+    legacyBrowsers: false,
+    esmExternals: true,
   },
+  
   async redirects() {
     return [
       {
@@ -26,6 +38,15 @@ const nextConfig = {
         permanent: false,
       },
     ];
+  },
+  
+  webpack: (config, { dev, isServer }) => {
+    if (!dev && !isServer) {
+      config.optimization.usedExports = true;
+      config.optimization.sideEffects = false;
+    }
+    
+    return config;
   },
 };
 

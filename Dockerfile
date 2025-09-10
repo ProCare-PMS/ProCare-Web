@@ -1,28 +1,51 @@
-FROM node:18-alpine
+FROM node:18.19-alpine AS base
 
+# Install dependencies only when needed
+FROM base AS deps
 WORKDIR /app
 
-# Copy package.json and package-lock.json to install dependencies first (so Docker can cache it effectively)
-COPY package*.json ./
+# Copy package files
+COPY package.json package-lock.json* ./
 
-# Install all dependencies including dev dependencies
-RUN npm install --legacy-peer-deps
+RUN npm ci --only=production --legacy-peer-deps && npm cache clean --force
 
-# Copy the source code into the container
+FROM base AS builder
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+
+RUN npm ci --legacy-peer-deps
+
 COPY . .
 
-# Build the Next.js app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
 RUN npm run build
 
-# Set environment variables for production
+FROM base AS runner
+WORKDIR /app
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy built application
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# Set runtime environment variables
 ENV NODE_ENV=production
 ENV NEXTAUTH_SECRET=adminsecretorcapplication
 ENV NEXT_PUBLIC_API_URL="https://api.rxpms.prohealium.com/api"
 ENV NEXT_PUBLIC_MS_CLARITY_ID="pnmwnhdol7"
 ENV NEXT_PUBLIC_GOOGLE_ANALYTICS_ID="G-75Y3BYG07B"
 
-# Expose the port for the app
+RUN chown -R nextjs:nodejs /app
+USER nextjs
+
+# Expose the port
 EXPOSE 6325
 
-# Start the app in production mode
-CMD ["npm", "start"]
+# Start the application
+CMD ["node", "server.js"]
