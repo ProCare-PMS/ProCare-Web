@@ -1,0 +1,14 @@
+# This workflow is deprecated and intentionally disabled.
+on:
+  workflow_dispatch: # Only allow manual runs
+    inputs:
+      deprecated:
+        description: 'This workflow is deprecated. Do not use.'
+        required: false
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deprecated workflow
+        run: echo "This workflow is deprecated and intentionally disabled."
