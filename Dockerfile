@@ -45,7 +45,7 @@ RUN chown -R nextjs:nodejs /app
 USER nextjs
 
 # Expose the port
-EXPOSE 6325
+EXPOSE 3000
 
 # Start the application
 CMD ["node", "server.js"]
