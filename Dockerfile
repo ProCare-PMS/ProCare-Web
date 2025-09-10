@@ -7,14 +7,14 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json* ./
 
-RUN npm ci --only=production --legacy-peer-deps && npm cache clean --force
+RUN npm ci --only=production && npm cache clean --force
 
 FROM base AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
 
-RUN npm ci --legacy-peer-deps
+RUN npm install
 
 COPY . .
 
