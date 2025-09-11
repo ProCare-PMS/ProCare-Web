@@ -23,8 +23,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const clarityId = process.env.NEXT_PUBLIC_MS_CLARITY_ID;
-  const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
+  const clarityId = process.env.NEXT_PUBLIC_MS_CLARITY_ID || "pnmwnhdol7";
+  const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || "G-75Y3BYG07B";
 
   return (
     <html lang="en" translate="no" className={inter.className}>
