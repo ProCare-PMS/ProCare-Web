@@ -47,5 +47,5 @@ USER nextjs
 # Expose the port
 EXPOSE 6325
 
-# Start the application
-CMD ["node", "server.js"]
+# Start the app in production mode
+CMD ["npm", "start"]
