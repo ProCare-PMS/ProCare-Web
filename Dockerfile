@@ -40,6 +40,7 @@ ENV NEXTAUTH_SECRET=adminsecretorcapplication
 ENV NEXT_PUBLIC_API_URL="https://api.rxpms.prohealium.com/api"
 ENV NEXT_PUBLIC_MS_CLARITY_ID="pnmwnhdol7"
 ENV NEXT_PUBLIC_GOOGLE_ANALYTICS_ID="G-75Y3BYG07B"
+ENV PORT=6325
 
 RUN chown -R nextjs:nodejs /app
 USER nextjs
@@ -47,5 +48,5 @@ USER nextjs
 # Expose the port
 EXPOSE 6325
 
-# Start the app in production mode
-CMD ["npm", "start"]
+# Start the application
+CMD ["node", "server.js"]
