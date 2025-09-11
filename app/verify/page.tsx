@@ -11,12 +11,12 @@ function VerifyContent() {
 
     if (token) {
       // Redirect to backend verify endpoint with the token
-      let endpoint = process.env.NEXT_PUBLIC_API_URL
+      let endpoint = process.env.NEXT_PUBLIC_API_URL || "https://api.rxpms.prohealium.com/api"
       if (!endpoint) {
         alert("An error occurred. Please try again later.");
         return;
       }
-      window.location.href = `${endpoint}/api/verify-email?token=${token}`;
+      window.location.href = `${endpoint}/verify-email?token=${token}`;
     }
   }, [searchParams]);
 
