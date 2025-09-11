@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 // Define the base URL for the API
 export const _baseUrl =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:6325";
+  process.env.NEXT_PUBLIC_API_URL || "https://api.rxpms.prohealium.com/api";
 
 //updated
 
