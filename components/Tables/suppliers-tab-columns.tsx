@@ -90,13 +90,24 @@ export const suppliersTabColumns: ColumnDef<SuppliersType>[] = [
     header: "Last Purchase",
     cell: ({ row }: { row: { getValue: (key: string) => string } }) => {
       const rawDate: string = row.getValue("last_purchase_date");
-      const formattedDate: string = new Intl.DateTimeFormat("en-GB", {
-        year: "numeric",
-        month: "2-digit", 
-        day: "2-digit",
-      }).format(new Date(rawDate));
+      
+      // Safe date formatting to prevent hydration mismatches
+      const formatDate = (dateString: string) => {
+        try {
+          const date = new Date(dateString);
+          if (isNaN(date.getTime())) return "Invalid Date";
+          
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          
+          return `${day}/${month}/${year}`;
+        } catch {
+          return "Invalid Date";
+        }
+      };
 
-      return <div>{formattedDate}</div>;
+      return <div>{formatDate(rawDate)}</div>;
     },
   },
   {
