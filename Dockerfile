@@ -7,14 +7,14 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json* ./
 
-RUN npm ci --only=production --legacy-peer-deps && npm cache clean --force
+RUN npm ci --only=production && npm cache clean --force
 
 FROM base AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
 
-RUN npm ci --legacy-peer-deps
+RUN npm install
 
 COPY . .
 
@@ -40,6 +40,7 @@ ENV NEXTAUTH_SECRET=adminsecretorcapplication
 ENV NEXT_PUBLIC_API_URL="https://api.rxpms.prohealium.com/api"
 ENV NEXT_PUBLIC_MS_CLARITY_ID="pnmwnhdol7"
 ENV NEXT_PUBLIC_GOOGLE_ANALYTICS_ID="G-75Y3BYG07B"
+ENV PORT=6325
 
 RUN chown -R nextjs:nodejs /app
 USER nextjs

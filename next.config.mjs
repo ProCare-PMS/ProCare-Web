@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  
   output: 'standalone',
+  
   productionBrowserSourceMaps: false,
+  
   images: {
     domains: ["images.unsplash.com"],
     unoptimized: false,
@@ -21,12 +24,11 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  swcMinify: true,
-  
+  // Enhanced experimental features (Next.js 15 compatible)
   experimental: {
     serverActions: {},
-    optimizeCss: true,
-    legacyBrowsers: false,
+    // Remove optimizeCss as it's causing the critters dependency issue
+    // optimizeCss: true,
     esmExternals: true,
   },
   

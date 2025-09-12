@@ -11,7 +11,12 @@ function VerifyContent() {
 
     if (token) {
       // Redirect to backend verify endpoint with the token
-      window.location.href = `https://procare-backend.onrender.com/api/verify-email?token=${token}`;
+      let endpoint = process.env.NEXT_PUBLIC_API_URL || "https://api.rxpms.prohealium.com/api"
+      if (!endpoint) {
+        alert("An error occurred. Please try again later.");
+        return;
+      }
+      window.location.href = `${endpoint}/verify-email?token=${token}`;
     }
   }, [searchParams]);
 
