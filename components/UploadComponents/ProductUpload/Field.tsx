@@ -39,4 +39,12 @@ export const fields = [
       type: "input",
     },
   },
+  {
+    label: "Brand",
+    key: "brand",
+    alternateMatches: ["brand", "Brand"],
+    fieldType: {
+      type: "input",
+    },
+  },
 ] as const;
