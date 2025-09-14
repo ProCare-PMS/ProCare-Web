@@ -93,7 +93,7 @@ export function ExpandableDataTable<TData, TValue>({
          {table.getHeaderGroups().map((headerGroup) => (
            <TableRow
              key={headerGroup.id}
-             className="bg-[#F1F4F9] hover:bg-slate-200 font-inter p-1 w-full rounded-[10px]"
+             className="bg-[#F1F4F9] font-inter p-1 w-full rounded-[10px]"
            >
              {headerGroup.headers.map((header) => (
                <TableHead

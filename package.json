@@ -34,6 +34,7 @@
     "@reduxjs/toolkit": "^2.2.5",
     "@tanstack/react-query": "^5.59.15",
     "@tanstack/react-table": "^8.20.5",
+    "@types/xlsx": "^0.0.35",
     "axios": "^1.7.7",
     "chakra-react-select": "^4.0.0",
     "chakra-ui-steps": "^2.1.0",
@@ -61,9 +62,10 @@
     "recharts": "^2.13.3",
     "redux-persist": "^6.0.0",
     "sonner": "^1.7.3",
-    "sweetalert2": "^11.14.5",
+    "sweetalert2": "^11.6.13",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "xlsx": "^0.18.5",
     "zod": "^3.23.5"
   },
   "devDependencies": {

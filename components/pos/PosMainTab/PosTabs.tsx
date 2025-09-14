@@ -10,6 +10,7 @@ import SalesPoint from "../SalesPoint";
 import Customers from "../Customers";
 import Returns from "../Returns";
 import HeldTransactions from "../HeldTransactions/HeldTransactions";
+import { PosProvider, usePosContext } from "../context/PosContext";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -18,8 +19,8 @@ interface TabPanelProps {
   className?: string;
 }
 
-export default function PosMainPage() {
-  const [value, setValue] = React.useState(0);
+function PosMainPageContent() {
+  const { activeTab, setActiveTab } = usePosContext();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -49,7 +50,7 @@ export default function PosMainPage() {
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setActiveTab(newValue);
     if (isMobile) {
       setMobileMenuOpen(false);
     }
@@ -82,7 +83,7 @@ export default function PosMainPage() {
             className="w-full p-3 bg-[#F5F5F5] flex items-center justify-between"
           >
             <span className="font-inter text-sm font-semibold text-[#858C95]">
-              {tabLabels[value]}
+              {tabLabels[activeTab]}
             </span>
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -93,7 +94,7 @@ export default function PosMainPage() {
                 <div 
                   key={index}
                   onClick={() => {
-                    setValue(index);
+                    setActiveTab(index);
                     setMobileMenuOpen(false);
                   }}
                   className={`
@@ -101,7 +102,7 @@ export default function PosMainPage() {
                     text-sm 
                     font-inter 
                     font-semibold 
-                    ${value === index 
+                    ${activeTab === index 
                       ? 'bg-blue-50 text-blue-600' 
                       : 'text-[#858C95] hover:bg-gray-100'}
                   `}
@@ -124,7 +125,7 @@ export default function PosMainPage() {
           }}
         >
           <Tabs
-            value={value}
+            value={activeTab}
             onChange={handleChange}
             aria-label="pos tabs"
             variant="standard"
@@ -158,19 +159,27 @@ export default function PosMainPage() {
           marginInline: "auto",
         }}
       >
-        <CustomTabPanel value={value} index={0}>
+        <CustomTabPanel value={activeTab} index={0}>
           <SalesPoint />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
+        <CustomTabPanel value={activeTab} index={1}>
           <Customers />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
+        <CustomTabPanel value={activeTab} index={2}>
           <Returns />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
+        <CustomTabPanel value={activeTab} index={3}>
           <HeldTransactions />
         </CustomTabPanel>
       </Box>
     </Box>
+  );
+}
+
+export default function PosMainPage() {
+  return (
+    <PosProvider>
+      <PosMainPageContent />
+    </PosProvider>
   );
 }

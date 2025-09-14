@@ -3,7 +3,7 @@ import React from "react";
 import {
   ClipboardList,
   Settings,
-  Workflow,
+  Grid2x2,
   LineChart,
   Store,
   GanttChart,
@@ -12,7 +12,7 @@ import MainNavItem from "./MainNavItem";
 
 const navRoutes = [
   {
-    icon: Workflow,
+    icon: Grid2x2,
     label: "Dashboard",
     href: "/dashboard",
     roles: ["is_manager", "is_mca", "is_pharmacist"],

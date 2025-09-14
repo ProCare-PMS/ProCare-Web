@@ -22,12 +22,20 @@ const DashboardSubTables = ({ title, data, isLoading }: TableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const formatDate = (dateString: string) =>
-    new Intl.DateTimeFormat("en-US", {
-      year: "2-digit",
-      month: "2-digit",
-      day: "2-digit",
-    }).format(new Date(dateString));
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return "Invalid Date";
+      
+      const year = String(date.getFullYear()).slice(-2);
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      
+      return `${month}/${day}/${year}`;
+    } catch {
+      return "Invalid Date";
+    }
+  };
 
   // Calculate total pages
   const totalPages = Math.ceil(data?.length / itemsPerPage);
