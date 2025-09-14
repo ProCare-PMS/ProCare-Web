@@ -12,6 +12,7 @@ import { endpoints } from "@/api/Endpoints";
 import { ProductsType } from "@/components/Tables/products-tab-columns";
 import { Button } from "@/components/ui/button";
 
+
 // Define sort options
 type SortOption = "alphabetical" | "newest" | "oldest";
 
@@ -119,6 +120,8 @@ const ProductsSection = () => {
 
   useEffect(() => {
     const savedOrderList = localStorage.getItem('orderList');
+    const isResumedTransaction = localStorage.getItem('isResumedTransaction');
+    
     if (savedOrderList) {
       try {
         const parsedOrderList = JSON.parse(savedOrderList);
@@ -126,9 +129,25 @@ const ProductsSection = () => {
   
         setCartItemCount(validOrderList.reduce((total: number, item: ProductsType) => total + item.quantity, 0));
         setOrderList(validOrderList);
+        
+        // If this is a resumed transaction, show the order list automatically
+        if (isResumedTransaction === 'true' && validOrderList.length > 0) {
+          setIsOrderListVisible(true);
+          
+
+          
+          // Clear the resumed transaction flag but keep cache for potential fallback
+          localStorage.removeItem('isResumedTransaction');
+        }
       } catch (error) {
         console.error("Error parsing order list from localStorage:", error);
+        
+
+        
+        // Clear corrupted data
         localStorage.removeItem('orderList');
+        localStorage.removeItem('isResumedTransaction');
+        localStorage.removeItem('heldTransactionId');
       }
     }
   }, []);

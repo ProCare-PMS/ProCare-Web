@@ -79,7 +79,7 @@ function DashboardTable<TData, TValue>({
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow
-              className="bg-[#F1F4F9] font-inter p-1 w-full !rounded-[60px] hover:bg-[#dbdee2]"
+              className="bg-[#F1F4F9] font-inter p-1 w-full !rounded-[60px]"
               key={headerGroup.id}
             >
               {headerGroup.headers.map((header) => (

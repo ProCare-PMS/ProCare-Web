@@ -5,13 +5,7 @@ import Providers from "./Provider";
 import LoadingWrapper from "@/components/Loader/LoadingWrapper";
 import Script from "next/script";
 
-import { Inter } from "next/font/google";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  preload: true,
-});
+import { inter } from "./fonts";
 
 export const metadata: Metadata = {
   title: "RxPMS ",

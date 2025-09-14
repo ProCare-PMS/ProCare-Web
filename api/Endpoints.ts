@@ -25,6 +25,7 @@ export const endpoints = {
   otherPharmacies: "/inventories/stock-transfers/",
   logoutSummary: "/logout-summary/",
   changepasscode: "/change-passcode/",
+  heldTransactions: "/sales/held-transactions/",
   
   analyticsTotalSales: "/analytics/total-sales/",
   analyticsExpenses: "/analytics/expenses/",
