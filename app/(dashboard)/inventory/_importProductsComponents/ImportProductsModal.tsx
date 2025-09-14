@@ -133,9 +133,13 @@ const ImportProductsModal = ({
                 throw new Error(`Row ${index + 2}: Product name too long (max 100 characters)`);
               }
               
-              // Match the exact format from API docs - only include fields with values
+              // Match the exact format from API docs - include required fields
               const transformedProduct: any = {
                 name: product.name, // Required
+                // Add required fields with default values since Excel doesn't have them
+                category: null, // Will be set to default category if needed
+                supplier: null, // Will be set to default supplier if needed
+                product_status: "Available", // Default status
               };
 
               // Add fields only if they have values (like the working AddProductsModal)
