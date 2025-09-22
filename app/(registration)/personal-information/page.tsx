@@ -6,6 +6,9 @@ import { MdLinearScale } from "react-icons/md";
 import { TbSquareRoundedNumber2, TbSquareRoundedNumber3 } from "react-icons/tb";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Eye, EyeOff } from "lucide-react";
 import { userRegistrationSchema } from "@/lib/schema/schema";
 import { endpoints } from "@/api/Endpoints";
@@ -16,10 +19,116 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { setPersonalInfoResponse } from "@/redux/personalInformationResponse";
+import {
+  Building2,
+  Hash,
+  Mail,
+  AlertCircle,
+  User,
+  CreditCard,
+  Lock
+} from "lucide-react";
+
+
+
+// Implementing Zod validation schema
+const personalInfoSchema = z.object({
+  first_name: z.string().min(1, { message: "First name is required" }),
+  last_name: z.string().min(1, { message: "Last name is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  phone_number: z.string().min(1, { message: "Phone number is required" }),
+  password: z.string().min(1, { message: "Password is required" }),
+  password2: z.string().min(1, { message: "Confirm password is required" }),
+  ghana_card: z.string().min(1, { message: "Ghana card is required" }),
+});
+
+type PersonalInfoFormData = z.infer<typeof personalInfoSchema>;
+
+
+// Input Field Component with Login styling
+const InputField = ({
+  label,
+  name,
+  type = "text",
+  placeholder,
+  icon: Icon,
+  register,
+  error,
+  rightIcon,
+  ...props
+}: {
+  label: string;
+  name: keyof PersonalInfoFormData;
+  type?: string;
+  placeholder: string;
+  icon: any;
+  register: any;
+  error?: string;
+  rightIcon?: React.ReactNode;
+  // ...other props
+} & any) => {
+  return (
+    <div className="space-y-2">
+      <label
+        htmlFor={name}
+        className="block text-sm font-medium text-[#323539]"
+      >
+        {label}
+      </label>
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+        </div>
+        <input
+          {...register(name)}
+          id={name}
+          type={type}
+          placeholder={placeholder}
+          className={`
+            block w-full pl-10 pr-3 py-3 border rounded-[8px] text-[#323539] placeholder-gray-500
+            focus:outline-none focus:ring-1 focus:border-transparent bg-[#F8F9FB]
+            transition-colors duration-200 min-h-[44px]
+            ${
+              error
+                ? "border-red-500 bg-red-50"
+                : "border-gray-300 focus:border-[#2648EA] focus:ring-[#2648EA]"
+            }
+          `}
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby={error ? `${name}-error` : undefined}
+          {...props}
+        />
+         {/* Eye Icon Area */}
+        {rightIcon && (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center z-10">
+            {rightIcon}
+          </div>
+        )}
+      </div>
+      {error && (
+        <div
+          id={`${name}-error`}
+          className="flex items-center gap-2 text-sm text-red-600"
+          role="alert"
+        >
+          <AlertCircle className="h-4 w-4" aria-hidden="true" />
+          <span>{error}</span>
+        </div>
+        
+      )}
+    </div>
+  );
+};
+
+
+
+
 
 //type FacilityFormData = z.infer<typeof userRegistrationSchema>;
 
 const RegistrationPage = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register, handleSubmit: rhfHandleSubmit } = useForm();
   const router = useRouter();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -27,6 +136,7 @@ const RegistrationPage = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch<AppDispatch>();
   const pharmacyId = useSelector((state: RootState) => state.pharmacyId?.id);
+  
 
   // Mutation function
   const postPersonalInformation = useMutation({
@@ -44,6 +154,7 @@ const RegistrationPage = () => {
   // Handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+     setIsSubmitting(true); // Set submitting state to true
 
     const formData = new FormData(event.currentTarget);
 
@@ -104,6 +215,7 @@ const RegistrationPage = () => {
             console.log("Registration failed:", data.data.message);
             toast.error("Personal Information Not Created");
           }
+          
         },
         onError: (error: any) => {
           console.error(
@@ -116,7 +228,8 @@ const RegistrationPage = () => {
   };
 
   return (
-    <div className="w-full h-screen mx-auto py-6 px-8 bg-home">
+    <div className="min-h-screen bg-[#F9F9F9] font-inter">
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:gap-4 items-center md:ml-6 mb-6">
               <Image
                 src="/RxPMSlogo.png"
@@ -128,13 +241,18 @@ const RegistrationPage = () => {
               <span className="font-bold text-2xl font-inter">Registration</span>
             </div>
 
-      <div className="flex flex-col items-center justify-center">
-        <h1 className="text-2xl md:text-3xl font-inter text-center font-bold mb-2">
-          Personal Information
-        </h1>
-        <p className="font-roboto text-xl mb-6">Admin Details</p>
-        <div className="flex items-center gap-2 px-4">
-          <span className="text-main text-sm  hidden md:flex gap-2 font-inter items-center font-semibold">
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Title Section */}
+        <div className="text-center mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#323539] mb-2">
+            Personal Information
+          </h1>
+          <p className="text-gray-600">Admin Details</p>
+        </div>
+        {/* Advance Stepper */}
+        <div className="flex flex-col items-center justify-center mb-8">
+          <div className="flex items-center gap-2 px-4">
+          <span className="text-main text-sm hidden md:flex gap-2 font-inter items-center font-semibold">
             <IoIosCheckmarkCircle className="text-main text-4xl" />
             Pharmacy Details
             <MdLinearScale className="text-main hidden md:block text-xl" />
@@ -148,182 +266,135 @@ const RegistrationPage = () => {
             <TbSquareRoundedNumber3 className="text-3xl text-slate-400" />
             Make Payment
           </span>
+
+          </div>
         </div>
+      {/* Main Content section */}
+    <div className="max-w-4xl mx-auto">
+      {/* Form Card */}
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 md:p-12">
+        <form onSubmit={handleSubmit} className="space-y-6">
 
-        <form onSubmit={handleSubmit} className="mt-4">
-          <div className="flex flex-col  w-[23rem] md:w-[55.5rem]  md:gap-4 md:flex-row bg-white px-[1.62rem] py-[2.62rem] rounded-2xl my-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 my-0 p-0">
-              {/* First Name */}
+            {/* Form Field Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              {/* First Name input field */}
               <div>
-                <div className="flex justify-between">
-                  <label htmlFor="first_name" className="font-semibold text-base text-[#323539]">
-                    First Name
-                  </label>
-                  {errors.first_name && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.first_name}
-                    </p>
-                  )}
-                </div>
-
-                <Input
-                  id="first_name"
-                  name="first_name"
-                  type="text"
-                  autoFocus
-                  className="bg-home border rounded-[5px] border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                  placeholder="First Name"
-                />
-              </div>
-              {/* Last Name */}
-              <div>
-                <div className="flex justify-between">
-                  <label htmlFor="last_name" className="font-semibold text-base text-[#323539]">
-                    Last Name
-                  </label>
-                  {errors.last_name && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.last_name}
-                    </p>
-                  )}
-                </div>
-
-                <Input
-                  id="last_name"
-                  name="last_name"
-                  type="text"
-                  className="bg-home rounded-[5px] w-full border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                  placeholder="Last Name"
-                />
+                <div >
+                 <InputField
+                    label="First Name"
+                    name="first_name"
+                    placeholder="Enter first name"
+                    icon={User}
+                    register={register}
+                    error={errors.first_name? errors.first_name : undefined}
+                    />
+                </div>           
               </div>
 
-              {/* Email */}
+              {/* Last Name input field*/}
               <div>
-                <div className="flex justify-between">
-                  <label htmlFor="email"className="font-semibold text-base text-[#323539]">
-                    Email
-                  </label>
-                  {errors.email && (
-                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                  )}
-                </div>
+                <InputField
+                    label="Last Name"
+                    name="last_name"
+                    placeholder="Enter last name"
+                    icon={User}
+                    register={register}
+                    error={errors.last_name? errors.last_name : undefined}
+                    />          
+              </div>
 
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  className="bg-home border rounded-[5px] border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                  placeholder="Email Address"
+              {/* Email input field */}
+              <div>
+                <InputField
+                    label="Email"
+                    name="email"
+                    placeholder="example23@gmail.com"
+                    icon={Mail}
+                    register={register}
+                    error={errors.email? errors.email : undefined}
+                    />                       
+              </div>
+
+              {/* Phone Number input field */}
+              <div>
+                <InputField
+                label="Phone Number"
+                name="phone_number"
+                placeholder="+233 000 000 000"
+                icon={Hash}
+                register={register}
+                error={errors.phone_number? errors.phone_number : undefined}
                 />
               </div>
 
-              {/* Phone Number */}
+              {/* Password */}
               <div>
-                <div className="flex justify-between">
-                  <label htmlFor="phone_number" className="font-semibold text-base text-[#323539]">
-                    Phone Number
-                  </label>
-                  {errors.phone_number && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.phone_number}
-                    </p>
-                  )}
-                </div>
-
-                <Input
-                  id="phone_number"
-                  name="phone_number"
-                  type="tel"
-                  className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                  placeholder="Phone Number"
-                />
-              </div>
-
-              {/* Pasword */}
-              <div>
-                <div className="flex justify-between">
-                  <label htmlFor="password" className="font-semibold text-base text-[#323539]">
-                    Password
-                  </label>
-                  {errors.password && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.password}
-                    </p>
-                  )}
-                </div>
-
-                <div className="relative">
-                  <Input
-                    id="password"
+                <div>
+                  <InputField
+                    label="Password"
                     name="password"
+                    placeholder="password"
+                    icon={Lock}
                     type={showPassword ? "text" : "password"}
-                    className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                    placeholder="Password"
-                  />
+                    error={errors.password? errors.password : undefined}
+                    register={register}
+                    rightIcon={
+                   
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 px-3 py-2 text-sm"
+                    className="text-gray-500 hover:text-gray-700 focus:outline-none"
                   >
-                    {showPassword ? <EyeOff /> : <Eye />}
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
+                  }
+                    
+                 />
+                    
                 </div>
               </div>
 
               {/* Confirm Password */}
               <div>
-                <div className="flex justify-between">
-                  <label htmlFor="password2" className="font-semibold text-base text-[#323539]">
-                    Confirm Password
-                  </label>
-                  {errors.password2 && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.password2}
-                    </p>
-                  )}
-                </div>
-
-                <div className="relative">
-                  <Input
-                    id="password2"
+                <div>
+                  <InputField
+                    label="Confirm Password"
                     name="password2"
+                    placeholder="confirm password"
+                    icon={Lock}
                     type={showConfirmPassword ? "text" : "password"}
-                    className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
-                    placeholder="Confirm Password"
-                  />
+                    error={errors.password2? errors.password2 : undefined}
+                    register={register}
+                    rightIcon={
+                      
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 px-3 py-2 text-sm"
+                    className="text-gray-500 hover:text-gray-700 focus:outline-none"
                   >
-                    {showConfirmPassword ? <EyeOff /> : <Eye />}
+                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
+                  }
+                  />
+
                 </div>
+                  
               </div>
 
               {/* Ghana Card */}
               <div>
-                <div className="flex justify-between">
-                  <label htmlFor="ghana_card" className="font-semibold text-base text-[#323539]">
-                    Ghana Card
-                  </label>
-                  {errors.ghana_card && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.ghana_card}
-                    </p>
-                  )}
-                </div>
-
-                <Input
-                  id="ghana_card"
+                <InputField
+                  label="Ghana Card"
                   name="ghana_card"
-                  type="text"
-                  className="bg-home w-full rounded-[5px] border border-[#E5E5E7] text-[#323539] font-medium text-sm font-inter"
+                  icon={CreditCard}
                   placeholder="GHA-000000000-0"
+                  register={register}
+                  error={errors.ghana_card? errors.ghana_card : undefined}
                 />
               </div>
             </div>
-          </div>
+    
 
           <div className="flex flex-col md:flex-row gap-4 px-[1.62rem] md:px-0 items-center justify-between">
             <Link
@@ -335,12 +406,14 @@ const RegistrationPage = () => {
 
             <button
               type="submit"
-              className=" w-full hidden md:w-[140px] bg-blue-600 text-white rounded-[5px] px-5 py-2 font-semibold text-sm"
+              className=" w-full md:w-[140px] bg-blue-600 text-white rounded-[5px] px-5 py-2 font-semibold text-sm"
             >
               Next
             </button>
           </div>
-        </form> 
+        </form>
+      </div>
+    </div> 
       </div>
     </div>
   );
