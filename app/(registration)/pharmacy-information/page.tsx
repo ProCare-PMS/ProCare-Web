@@ -48,6 +48,26 @@ const facilitySchema = z.object({
 
 type FacilityFormData = z.infer<typeof facilitySchema>;
 
+//Regions of Ghana for dropdown
+const regions = [
+  "Ahafo Region",
+  "Ashanti Region",
+  "Bono Region",
+  "Bono East Region",
+  "Central Region",
+  "Eastern Region",
+  "Greater Accra Region",
+  "North East Region",
+  "Northern Region",
+  "Oti Region",
+  "Savannah Region",
+  "Upper East Region",
+  "Upper West Region",
+  "Volta Region",
+  "Western Region",
+  "Western North Region",
+]
+
 // Progress Step Component
 const ProgressStep = ({
   step,
@@ -115,47 +135,69 @@ const InputField = ({
   icon: Icon,
   register,
   error,
+  options = [],
   ...props
 }: {
   label: string;
   name: keyof FacilityFormData;
   type?: string;
-  placeholder: string;
+  placeholder?: string;
   icon: any;
   register: any;
   error?: string;
+  options?: string[];
 } & any) => {
   return (
     <div className="space-y-2">
-      <label
-        htmlFor={name}
-        className="block text-sm font-medium text-[#323539]"
-      >
+      <label htmlFor={name} className="block text-sm font-medium text-[#323539]">
         {label}
       </label>
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
         </div>
-        <input
-          {...register(name)}
-          id={name}
-          type={type}
-          placeholder={placeholder}
-          className={`
-            block w-full pl-10 pr-3 py-3 border rounded-[8px] text-[#323539] placeholder-gray-500
-            focus:outline-none focus:ring-1 focus:border-transparent bg-[#F8F9FB]
-            transition-colors duration-200 min-h-[44px]
-            ${
-              error
-                ? "border-red-500 bg-red-50"
-                : "border-gray-300 focus:border-[#2648EA] focus:ring-[#2648EA]"
-            }
-          `}
-          aria-invalid={error ? "true" : "false"}
-          aria-describedby={error ? `${name}-error` : undefined}
-          {...props}
-        />
+
+        {/* Render select if type is 'select', else input */}
+        {type === "select" ? (
+          <select
+            {...register(name)}
+            id={name}
+            className={`
+              block w-full pl-10 pr-3 py-3 border rounded-[8px] text-[#323539] bg-[#F8F9FB]
+              focus:outline-none focus:ring-1 focus:border-transparent transition-colors duration-200 min-h-[44px]
+              ${error ? "border-red-500 bg-red-50" : "border-gray-300 focus:border-[#2648EA] focus:ring-[#2648EA]"}
+            `}
+            aria-invalid={error ? "true" : "false"}
+            aria-describedby={error ? `${name}-error` : undefined}
+            defaultValue=""
+            {...props}
+          >
+            <option value="" disabled>
+              -- Choose a Region --
+            </option>
+            {options.map((region: string) => (
+              <option key={region} value={region}>
+                {region}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            {...register(name)}
+            id={name}
+            type={type}
+            placeholder={placeholder}
+            className={`
+              block w-full pl-10 pr-3 py-3 border rounded-[8px] text-[#323539] placeholder-gray-500
+              focus:outline-none focus:ring-1 focus:border-transparent bg-[#F8F9FB]
+              transition-colors duration-200 min-h-[44px]
+              ${error ? "border-red-500 bg-red-50" : "border-gray-300 focus:border-[#2648EA] focus:ring-[#2648EA]"}
+            `}
+            aria-invalid={error ? "true" : "false"}
+            aria-describedby={error ? `${name}-error` : undefined}
+            {...props}
+          />
+        )}
       </div>
       {error && (
         <div
@@ -271,6 +313,7 @@ export default function RegistrationPage() {
 
           </div>
         </div>
+        
 
         {/* Main Content */}
         <div className="max-w-4xl mx-auto">
@@ -332,7 +375,9 @@ export default function RegistrationPage() {
                 <InputField
                   label="Region"
                   name="region"
-                  placeholder="Enter region"
+                  type="select"
+                  options={regions}
+                  placeholder="--choose a region--"
                   icon={Globe}
                   register={register}
                   error={errors.region?.message}
