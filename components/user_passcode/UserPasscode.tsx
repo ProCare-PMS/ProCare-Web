@@ -144,6 +144,7 @@ export default function UserPasscode() {
         newPasscode[i] = pastedData[i]
       }
       setPasscode(newPasscode)
+      setError('')
 
       // Focus the next empty input or the last input
       const nextIndex = Math.min(pastedData.length, 3)
@@ -151,10 +152,14 @@ export default function UserPasscode() {
 
       // Auto-submit if 4 digits pasted
       if (pastedData.length === 4) {
-        handleSubmit(pastedData)
+        setPasscode(pastedData.split(""))
+        // Use setTimeout to ensure state is updated before submission
+        setTimeout(() => {
+          handleSubmit(pastedData)
+        }, 100)
       }
     }
-  }, [])
+  }, [currentUser])
 
   // Submit passcode
   const handleSubmit = async (code: string) => {
@@ -288,7 +293,7 @@ export default function UserPasscode() {
           </div>
 
           {/* Passcode Input Section */}
-          <div className="mb-8">
+          <form onSubmit={(e)=>{e.preventDefault(); handleSubmit(passcode.join(''))}} className="mb-8">
             {/* OTP Input Grid */}
             <div className="flex gap-4 justify-center mb-6">
               {passcode.map((digit, index) => (
@@ -341,7 +346,7 @@ export default function UserPasscode() {
                 <span>Verifying...</span>
               </div>
             )}
-          </div>
+          </form>
 
           {/* Forgot Passcode Link */}
           <div className="text-center">
